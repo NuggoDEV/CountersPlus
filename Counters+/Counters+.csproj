@@ -36,8 +36,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Beat Saber_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="BeatSaberCustomUI">
-      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\BeatSaberCustomUI.dll</HintPath>
+    <Reference Include="BeatSaberCustomUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Plugins\BeatSaberCustomUI.dll</HintPath>
     </Reference>
     <Reference Include="IllusionPlugin">
       <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Beat Saber_Data\Managed\IllusionPlugin.dll</HintPath>

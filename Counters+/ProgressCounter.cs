@@ -38,11 +38,27 @@ namespace CountersPlus.Counters
             Init();
         }
 
-        private void Awake()
+        void Awake()
         {
             settings = CountersController.settings.progressConfig;
             useTimeLeft = settings.ProgressTimeLeft;
-            StartCoroutine(WaitForLoad());
+            if (transform.parent == null)
+                StartCoroutine(WaitForLoad());
+            else
+                Init();
+            StartCoroutine(DeletBaseCounter());
+        }
+
+        IEnumerator DeletBaseCounter()
+        {
+            GameObject baseCounter;
+            while (true)
+            {
+                baseCounter = GameObject.Find("SongProgressPanel");
+                if (baseCounter != null) break;
+                yield return new WaitForSeconds(0.1f);
+            }
+            Destroy(baseCounter);
         }
 
         void Init()
@@ -99,6 +115,8 @@ namespace CountersPlus.Counters
 
         void Update()
         {
+            transform.position = CountersController.determinePosition(settings.Position, settings.Index);
+
             if (_audioTimeSync == false)
             {
                 _audioTimeSync = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().FirstOrDefault();

@@ -102,6 +102,7 @@ namespace CountersPlus
             LoadCounter<AccuracyConfigModel, AccuracyCounter>("Accuracy", settings.accuracyConfig);
             LoadCounter<ScoreConfigModel, ScoreCounter>("Score", settings.scoreConfig);
             LoadCounter<ProgressConfigModel, ProgressCounter>("Progress", settings.progressConfig);
+
             //LoadCounter<PBConfigModel, PBCounter>("PB", settings.pBConfig); //Later, when I actually fix PB
         }
 
@@ -112,20 +113,20 @@ namespace CountersPlus
             switch (position)
             {
                 case Config.CounterPositions.BelowCombo:
-                    pos = new Vector3(-3.25f, 0, 7);
+                    pos = new Vector3(-3f, 0, 7);
                     break;
                 case Config.CounterPositions.AboveCombo:
-                    pos = new Vector3(-3.25f, 1.5f, 7);
-                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1)
+                    pos = new Vector3(-3f, 1.5f, 7);
+                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.UseOld)
                         offset += new Vector3(0, -0.75f, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.5f, 0);
                     break;
                 case Config.CounterPositions.BelowMultiplier:
-                    pos = new Vector3(3.25f, 0, 7);
+                    pos = new Vector3(3f, 0, 7);
                     break;
                 case Config.CounterPositions.AboveMultiplier:
-                    pos = new Vector3(-3.25f, 1.5f, 7);
-                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1)
+                    pos = new Vector3(-3f, 1.5f, 7);
+                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.UseOld)
                         offset += new Vector3(0, -0.75f, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;

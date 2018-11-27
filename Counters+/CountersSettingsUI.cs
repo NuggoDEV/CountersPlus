@@ -12,7 +12,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Reflection;
 using VRUIControls;
-using BeatSaberCustomUI;
+using CustomUI.Settings;
 
 namespace CountersPlus
 {
@@ -71,12 +71,12 @@ namespace CountersPlus
                 CountersController.settings.scoreConfig.DisplayRank = value;
                 CountersController.settings.save();
             };
-            var scoreOverride = scoreSub.AddBool("Override Base Game Counter");
+            /*var scoreOverride = scoreSub.AddBool("Override Base Game Counter");
             scoreOverride.GetValue += delegate { return CountersController.settings.scoreConfig.UseOld; };
             scoreOverride.SetValue += delegate (bool value) {
                 CountersController.settings.scoreConfig.UseOld = value;
                 CountersController.settings.save();
-            };
+            };*/
             float[] scorePrec = new float[6] { 0, 1, 2, 3, 4, 5 };
             var scorePrecision = scoreSub.AddList("Percentage Decimal Precision", scorePrec);
             scorePrecision.GetValue += delegate { return CountersController.settings.scoreConfig.DecimalPrecision; };
@@ -95,13 +95,12 @@ namespace CountersPlus
                 CountersController.settings.progressConfig.ProgressTimeLeft = value;
                 CountersController.settings.save();
             };
-            var progressOverride = progressSub.AddBool("Override Base Game Counter");
+            /*var progressOverride = progressSub.AddBool("Override Base Game Counter");
             progressOverride.GetValue += delegate { return CountersController.settings.progressConfig.UseOld; };
             progressOverride.SetValue += delegate (bool value) {
                 CountersController.settings.progressConfig.UseOld = value;
                 CountersController.settings.save();
-            };
-            float[] progressPrec = new float[6] { 0, 1, 2, 3, 4, 5 };
+            };*/
         }
 
         static SubMenu createBase<T>(string name, T configItem) where T : Config.ConfigModel

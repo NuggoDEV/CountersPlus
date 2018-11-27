@@ -35,7 +35,7 @@ namespace CountersPlus.Config
                     Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Progress", "Position", "BelowEnergy", true)),
                     ProgressTimeLeft = ModPrefs.GetBool("Counters+ | Progress", "ProgressTimeLeft", false, true),
                     Index = ModPrefs.GetInt("Counters+ | Progress", "Index", 0, true),
-                    UseOld = ModPrefs.GetBool("Counters+ | Progress", "UseOld", false, true),
+                    UseOld = ModPrefs.GetBool("Counters+ | Progress", "UseOld", true, true),
                 },
                 scoreConfig = new ScoreConfigModel {
                     Enabled = ModPrefs.GetBool("Counters+ | Score", "Enabled", true, true),
@@ -43,7 +43,7 @@ namespace CountersPlus.Config
                     DecimalPrecision = ModPrefs.GetInt("Counters+ | Score", "DecimalPrecision", 2, true),
                     DisplayRank = ModPrefs.GetBool("Counters+ | Score", "DisplayRank", true, true),
                     Index = ModPrefs.GetInt("Counters+ | Score", "Index", 0, true),
-                    UseOld = ModPrefs.GetBool("Counters+ | Score", "UseOld", false, true),
+                    UseOld = ModPrefs.GetBool("Counters+ | Score", "UseOld", true, true),
                 },
                 pBConfig = new PBConfigModel
                 {

@@ -47,18 +47,24 @@ namespace CountersPlus.Counters
                 StartCoroutine(WaitForLoad());
             else
                 Init();
+            StartCoroutine(DeletBaseCounter());
+        }
+
+        IEnumerator DeletBaseCounter()
+        {
+            GameObject baseCounter;
+            while (true)
+            {
+                baseCounter = GameObject.Find("ScorePanel");
+                if (baseCounter != null) break;
+                yield return new WaitForSeconds(0.1f);
+            }
+            Destroy(baseCounter);
         }
 
         void Update()
         {
-            if (transform.parent == null)
-            {
-                transform.position = CountersController.determinePosition(settings.Position, settings.Index);
-            }
-            else
-            {
-                transform.localPosition = CountersController.determinePosition(settings.Position, settings.Index);
-            }
+            transform.position = CountersController.determinePosition(settings.Position, settings.Index);
         }
 
         private void Init()
