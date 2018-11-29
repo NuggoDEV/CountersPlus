@@ -37,7 +37,6 @@ namespace CountersPlus
             mainEnabled.GetValue += delegate { return CountersController.settings.Enabled; };
             mainEnabled.SetValue += delegate (bool value) {
                 CountersController.settings.Enabled = value;
-                CountersController.settings.save();
             };
 
             
@@ -51,14 +50,12 @@ namespace CountersPlus
             accuracyPercentage.GetValue += delegate { return CountersController.settings.accuracyConfig.ShowPercentage; };
             accuracyPercentage.SetValue += delegate (bool value) {
                 CountersController.settings.accuracyConfig.ShowPercentage = value;
-                CountersController.settings.save();
             };
             float[] accuracyPrec = new float[6] { 0, 1, 2, 3, 4, 5 };
             var accuracyPrecision = accuracySub.AddList("Percentage Decimal Precision", accuracyPrec);
             accuracyPrecision.GetValue += delegate { return CountersController.settings.accuracyConfig.DecimalPrecision; };
             accuracyPrecision.SetValue += delegate (float v) {
                 CountersController.settings.accuracyConfig.DecimalPrecision = (int)Math.Floor(v);
-                CountersController.settings.save();
             };
             accuracyPrecision.FormatValue += delegate (float v) { return v.ToString(); };
 
@@ -69,7 +66,6 @@ namespace CountersPlus
             scoreRank.GetValue += delegate { return CountersController.settings.scoreConfig.DisplayRank; };
             scoreRank.SetValue += delegate (bool value) {
                 CountersController.settings.scoreConfig.DisplayRank = value;
-                CountersController.settings.save();
             };
             /*var scoreOverride = scoreSub.AddBool("Override Base Game Counter");
             scoreOverride.GetValue += delegate { return CountersController.settings.scoreConfig.UseOld; };
@@ -82,7 +78,6 @@ namespace CountersPlus
             scorePrecision.GetValue += delegate { return CountersController.settings.scoreConfig.DecimalPrecision; };
             scorePrecision.SetValue += delegate (float v) {
                 CountersController.settings.scoreConfig.DecimalPrecision = (int)Math.Floor(v);
-                CountersController.settings.save();
             };
             scorePrecision.FormatValue += delegate (float v) { return v.ToString(); };
 
@@ -93,7 +88,6 @@ namespace CountersPlus
             progressRank.GetValue += delegate { return CountersController.settings.progressConfig.ProgressTimeLeft; };
             progressRank.SetValue += delegate (bool value) {
                 CountersController.settings.progressConfig.ProgressTimeLeft = value;
-                CountersController.settings.save();
             };
             /*var progressOverride = progressSub.AddBool("Override Base Game Counter");
             progressOverride.GetValue += delegate { return CountersController.settings.progressConfig.UseOld; };
@@ -111,7 +105,7 @@ namespace CountersPlus
             enabled.SetValue += v =>
             {
                 configItem.Enabled = v;
-                CountersController.settings.save();
+                CountersController.settings.save(name, configItem);
             };
             var position = @base.AddListSetting<PositionSettingsViewController>("Position");
             position.values = positions;
@@ -120,14 +114,14 @@ namespace CountersPlus
             position.SetValue = v =>
             {
                 configItem.Position = v.Item1;
-                CountersController.settings.save();
+                CountersController.settings.save(name, configItem);
             };
             var index = @base.AddInt("Index", 0, 5, 1);
             index.GetValue += () => configItem.Index;
             index.SetValue += v =>
             {
                 configItem.Index = v;
-                CountersController.settings.save();
+                CountersController.settings.save(name, configItem);
             };
             return @base;
         }

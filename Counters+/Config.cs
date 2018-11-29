@@ -80,37 +80,33 @@ namespace CountersPlus.Config
         public ScoreConfigModel scoreConfig;
         public PBConfigModel pBConfig;
 
-        public void save()
+        public void save<T>(string name, T settings) where T : ConfigModel
         {
-            ModPrefs.SetBool("Counters+ | Main", "Enabled", Enabled);
+            ModPrefs.SetBool("Counters+ | " + name, "Enabled", settings.Enabled);
+            ModPrefs.SetString("Counters+ | " + name, "Position", settings.Position.ToString());
+            ModPrefs.SetInt("Counters+ | " + name, "Index", settings.Index);
+        }
 
-            ModPrefs.SetBool("Counters+ | Missed", "Enabled", missedConfig.Enabled);
-            ModPrefs.SetString("Counters+ | Missed", "Position", missedConfig.Position.ToString());
-            ModPrefs.SetInt("Counters+ | Missed", "Index", missedConfig.Index);
+        public void save(string name, AccuracyConfigModel settings)
+        {
+            save(name, settings as ConfigModel);
+            ModPrefs.SetBool("Counters+ | " + name, "ShowPercentage", settings.ShowPercentage);
+            ModPrefs.SetInt("Counters+ | " + name, "DecimalPrecision", settings.DecimalPrecision);
+        }
 
-            ModPrefs.SetBool("Counters+ | Accuracy", "Enabled", accuracyConfig.Enabled);
-            ModPrefs.SetString("Counters+ | Accuracy", "Position", accuracyConfig.Position.ToString());
-            ModPrefs.SetBool("Counters+ | Accuracy", "ShowPercentage", accuracyConfig.ShowPercentage);
-            ModPrefs.SetInt("Counters+ | Accuracy", "DecimalPrecision", accuracyConfig.DecimalPrecision);
-            ModPrefs.SetInt("Counters+ | Accuracy", "Index", accuracyConfig.Index);
+        public void save(string name, ProgressConfigModel settings)
+        {
+            save(name, settings as ConfigModel);
+            ModPrefs.SetBool("Counters+ | " + name, "UseOld", settings.UseOld);
+            ModPrefs.SetBool("Counters+ | " + name, "ProgressTimeLeft", settings.ProgressTimeLeft);
+        }
 
-            ModPrefs.SetBool("Counters+ | Progress", "Enabled", progressConfig.Enabled);
-            ModPrefs.SetString("Counters+ | Progress", "Position", progressConfig.Position.ToString());
-            ModPrefs.SetBool("Counters+ | Progress", "UseOld", progressConfig.UseOld);
-            ModPrefs.SetBool("Counters+ | Progress", "Enabled", progressConfig.ProgressTimeLeft);
-            ModPrefs.SetInt("Counters+ | Progress", "Index", progressConfig.Index);
-
-            ModPrefs.SetBool("Counters+ | Score", "Enabled", scoreConfig.Enabled);
-            ModPrefs.SetString("Counters+ | Score", "Position", scoreConfig.Position.ToString());
-            ModPrefs.SetInt("Counters+ | Score", "DecimalPrecision", scoreConfig.DecimalPrecision);
-            ModPrefs.SetBool("Counters+ | Score", "DisplayRank", scoreConfig.DisplayRank);
-            ModPrefs.SetInt("Counters+ | Score", "Index", scoreConfig.Index);
-            ModPrefs.SetBool("Counters+ | Score", "UseOld", scoreConfig.UseOld);
-
-            ModPrefs.SetBool("Counters+ | PB", "Enabled", pBConfig.Enabled);
-            ModPrefs.SetString("Counters+ | PB", "Position", pBConfig.Position.ToString());
-            ModPrefs.SetInt("Counters+ | PB", "DecimalPrecision", pBConfig.DecimalPrecision);
-            ModPrefs.SetInt("Counters+ | PB", "Index", pBConfig.Index);
+        public void save(string name, ScoreConfigModel settings)
+        {
+            save(name, settings as ConfigModel);
+            ModPrefs.SetBool("Counters+ | " + name, "UseOld", settings.UseOld);
+            ModPrefs.SetBool("Counters+ | " + name, "DisplayRank", settings.DisplayRank);
+            ModPrefs.SetInt("Counters+ | " + name, "DecimalPrecision", settings.DecimalPrecision);
         }
     }
 
