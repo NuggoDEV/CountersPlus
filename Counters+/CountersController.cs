@@ -145,6 +145,10 @@ namespace CountersPlus
                     pos = new Vector3(0, -1.5f, 7);
                     break;
             }
+            if (settings.progressConfig.Position == position && settings.progressConfig.Index == index)
+            {
+                offset += new Vector3(0.25f, 0, 0);
+            }
             return pos + offset;
         }
     }
