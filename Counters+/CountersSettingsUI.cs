@@ -20,10 +20,6 @@ namespace CountersPlus
 {
     class CountersSettingsUI : MonoBehaviour
     {
-        public static MissedConfigModel missed = CountersController.settings.missedConfig;
-        public static AccuracyConfigModel accuracy = CountersController.settings.accuracyConfig;
-        public static ProgressConfigModel progress = CountersController.settings.progressConfig;
-        public static ScoreConfigModel score = CountersController.settings.scoreConfig;
         public class PositionSettingsViewController : TupleViewController<Tuple<Config.CounterPositions, string>> { }
         static List<Tuple<Config.CounterPositions, string>> positions = new List<Tuple<Config.CounterPositions, string>> {
             {Config.CounterPositions.BelowCombo, "Below Combo" },
@@ -94,17 +90,15 @@ namespace CountersPlus
             };
 
             var accuracyPercentage = accuracySub.AddBool("Show Percentage");
-            accuracyPercentage.GetValue += delegate { return accuracy.ShowPercentage; };
+            accuracyPercentage.GetValue += delegate { return CountersController.settings.accuracyConfig.ShowPercentage; };
             accuracyPercentage.SetValue += delegate (bool value) {
                 CountersController.settings.accuracyConfig.ShowPercentage = value;
             };
-            float[] accuracyPrec = new float[6] { 0, 1, 2, 3, 4, 5 };
-            var accuracyPrecision = accuracySub.AddList("Percentage Decimal Precision", accuracyPrec);
-            accuracyPrecision.GetValue += delegate { return accuracy.DecimalPrecision; };
-            accuracyPrecision.SetValue += delegate (float v) {
-                CountersController.settings.accuracyConfig.DecimalPrecision = (int)Math.Floor(v);
+            var accuracyPrecision = accuracySub.AddInt("Percentage Decimal Precision", 0, 5, 1);
+            accuracyPrecision.GetValue += delegate { return CountersController.settings.accuracyConfig.DecimalPrecision; };
+            accuracyPrecision.SetValue += delegate (int v) {
+                CountersController.settings.accuracyConfig.DecimalPrecision = v;
             };
-            accuracyPrecision.FormatValue += delegate (float v) { return v.ToString(); };
 
             //Score
             var scoreSub = SettingsUI.CreateSubMenu("Counters+ | Score");
@@ -130,7 +124,7 @@ namespace CountersPlus
             };
 
             var scoreRank = scoreSub.AddBool("Display Rank");
-            scoreRank.GetValue += delegate { return score.DisplayRank; };
+            scoreRank.GetValue += delegate { return CountersController.settings.scoreConfig.DisplayRank; };
             scoreRank.SetValue += delegate (bool value) {
                 CountersController.settings.scoreConfig.DisplayRank = value;
             };
@@ -142,7 +136,7 @@ namespace CountersPlus
             };*/
             float[] scorePrec = new float[6] { 0, 1, 2, 3, 4, 5 };
             var scorePrecision = scoreSub.AddList("Percentage Decimal Precision", scorePrec);
-            scorePrecision.GetValue += delegate { return score.DecimalPrecision; };
+            scorePrecision.GetValue += delegate { return CountersController.settings.scoreConfig.DecimalPrecision; };
             scorePrecision.SetValue += delegate (float v) {
                 CountersController.settings.scoreConfig.DecimalPrecision = (int)Math.Floor(v);
             };
@@ -184,6 +178,15 @@ namespace CountersPlus
             };*/
         }
 
+        /*
+         *
+         * So you may be thinking, why am I not using this perfectly good helper function?
+         * 
+         * Well, as it turns out, using this base function breaks settings saving, as I assume the T variable messes some things up.
+         * Either way, the three main options would not save at all. The extras I added on after, however, did.
+         * RIP trying to condense code. RIP readability.
+         * 
+         */
         static SubMenu createBase<T>(string name, T configItem) where T : Config.ConfigModel
         {
             var @base = SettingsUI.CreateSubMenu("Counters+ | " + name);

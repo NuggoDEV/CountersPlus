@@ -110,7 +110,7 @@ namespace CountersPlus.Counters
 
             g.GetComponent<RectTransform>().SetParent(this.transform, false);
             g.transform.localPosition = new Vector3(-0.25f, .25f, 0f);
-            transform.position += new Vector3(0.25f, 0, 0);
+            transform.position += new Vector3(0.5f, 0, 0);
         }
 
         void Update()

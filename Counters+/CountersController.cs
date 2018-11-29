@@ -136,7 +136,7 @@ namespace CountersPlus
                     pos = new Vector3(3f, 0, 7);
                     break;
                 case Config.CounterPositions.AboveMultiplier:
-                    pos = new Vector3(-3f, 1.5f, 7);
+                    pos = new Vector3(3f, 1.5f, 7);
                     if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.UseOld)
                         offset += new Vector3(0, -0.75f, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
