@@ -96,43 +96,43 @@ namespace CountersPlus
             var accuracyPercentage = accuracySub.AddBool("Show Percentage");
             accuracyPercentage.GetValue += delegate { return accuracy.ShowPercentage; };
             accuracyPercentage.SetValue += delegate (bool value) {
-                accuracy.ShowPercentage = value;
+                CountersController.settings.accuracyConfig.ShowPercentage = value;
             };
             float[] accuracyPrec = new float[6] { 0, 1, 2, 3, 4, 5 };
             var accuracyPrecision = accuracySub.AddList("Percentage Decimal Precision", accuracyPrec);
             accuracyPrecision.GetValue += delegate { return accuracy.DecimalPrecision; };
             accuracyPrecision.SetValue += delegate (float v) {
-                accuracy.DecimalPrecision = (int)Math.Floor(v);
+                CountersController.settings.accuracyConfig.DecimalPrecision = (int)Math.Floor(v);
             };
             accuracyPrecision.FormatValue += delegate (float v) { return v.ToString(); };
 
             //Score
             var scoreSub = SettingsUI.CreateSubMenu("Counters+ | Score");
             var scoreEnabled = scoreSub.AddBool("Enabled");
-            scoreEnabled.GetValue += () => CountersController.settings.accuracyConfig.Enabled;
+            scoreEnabled.GetValue += () => CountersController.settings.scoreConfig.Enabled;
             scoreEnabled.SetValue += v =>
             {
-                CountersController.settings.accuracyConfig.Enabled = v;
+                CountersController.settings.scoreConfig.Enabled = v;
             };
             var scorePosition = scoreSub.AddListSetting<PositionSettingsViewController>("Position");
             scorePosition.values = positions;
-            scorePosition.GetValue = () => positions.Where((Tuple<Config.CounterPositions, string> x) => (x.Item1 == CountersController.settings.accuracyConfig.Position)).FirstOrDefault();
+            scorePosition.GetValue = () => positions.Where((Tuple<Config.CounterPositions, string> x) => (x.Item1 == CountersController.settings.scoreConfig.Position)).FirstOrDefault();
             scorePosition.GetTextForValue = (value) => value.Item2;
             scorePosition.SetValue = v =>
             {
-                CountersController.settings.accuracyConfig.Position = v.Item1;
+                CountersController.settings.scoreConfig.Position = v.Item1;
             };
             var scoreIndex = scoreSub.AddInt("Index", 0, 5, 1);
-            scoreIndex.GetValue += () => CountersController.settings.accuracyConfig.Index;
+            scoreIndex.GetValue += () => CountersController.settings.scoreConfig.Index;
             scoreIndex.SetValue += v =>
             {
-                CountersController.settings.accuracyConfig.Index = v;
+                CountersController.settings.scoreConfig.Index = v;
             };
 
             var scoreRank = scoreSub.AddBool("Display Rank");
             scoreRank.GetValue += delegate { return score.DisplayRank; };
             scoreRank.SetValue += delegate (bool value) {
-                score.DisplayRank = value;
+                CountersController.settings.scoreConfig.DisplayRank = value;
             };
             /*var scoreOverride = scoreSub.AddBool("Override Base Game Counter");
             scoreOverride.GetValue += delegate { return CountersController.settings.scoreConfig.UseOld; };
@@ -144,37 +144,37 @@ namespace CountersPlus
             var scorePrecision = scoreSub.AddList("Percentage Decimal Precision", scorePrec);
             scorePrecision.GetValue += delegate { return score.DecimalPrecision; };
             scorePrecision.SetValue += delegate (float v) {
-                score.DecimalPrecision = (int)Math.Floor(v);
+                CountersController.settings.scoreConfig.DecimalPrecision = (int)Math.Floor(v);
             };
             scorePrecision.FormatValue += delegate (float v) { return v.ToString(); };
 
             //Progress
             var progressSub = SettingsUI.CreateSubMenu("Counters+ | Progress");
             var progressEnabled = progressSub.AddBool("Enabled");
-            progressEnabled.GetValue += () => CountersController.settings.accuracyConfig.Enabled;
+            progressEnabled.GetValue += () => CountersController.settings.progressConfig.Enabled;
             progressEnabled.SetValue += v =>
             {
-                CountersController.settings.accuracyConfig.Enabled = v;
+                CountersController.settings.progressConfig.Enabled = v;
             };
             var progressPosition = progressSub.AddListSetting<PositionSettingsViewController>("Position");
             progressPosition.values = positions;
-            progressPosition.GetValue = () => positions.Where((Tuple<Config.CounterPositions, string> x) => (x.Item1 == CountersController.settings.accuracyConfig.Position)).FirstOrDefault();
+            progressPosition.GetValue = () => positions.Where((Tuple<Config.CounterPositions, string> x) => (x.Item1 == CountersController.settings.progressConfig.Position)).FirstOrDefault();
             progressPosition.GetTextForValue = (value) => value.Item2;
             progressPosition.SetValue = v =>
             {
-                CountersController.settings.accuracyConfig.Position = v.Item1;
+                CountersController.settings.progressConfig.Position = v.Item1;
             };
             var progressIndex = progressSub.AddInt("Index", 0, 5, 1);
-            progressIndex.GetValue += () => CountersController.settings.accuracyConfig.Index;
+            progressIndex.GetValue += () => CountersController.settings.progressConfig.Index;
             progressIndex.SetValue += v =>
             {
-                CountersController.settings.accuracyConfig.Index = v;
+                CountersController.settings.progressConfig.Index = v;
             };
 
             var progressRank = progressSub.AddBool("Show Time Left");
             progressRank.GetValue += delegate { return CountersController.settings.progressConfig.ProgressTimeLeft; };
             progressRank.SetValue += delegate (bool value) {
-                progress.ProgressTimeLeft = value;
+                CountersController.settings.progressConfig.ProgressTimeLeft = value;
             };
             /*var progressOverride = progressSub.AddBool("Override Base Game Counter");
             progressOverride.GetValue += delegate { return CountersController.settings.progressConfig.UseOld; };
