@@ -19,7 +19,7 @@ namespace CountersPlus
 
         public float pbPercent { get; private set; }
 
-        private StandardLevelDetailViewController sldvc;
+        private static bool reloadConfig = false;
 
         public static void OnLoad()
         {
@@ -38,11 +38,22 @@ namespace CountersPlus
             SceneManager.activeSceneChanged += activeSceneChanged;
         }
 
+        public static void FlagConfigForReload()
+        {
+            reloadConfig = true;
+        }
+
         void activeSceneChanged(Scene arg, Scene arg1)
         {
             if (arg1.name == "Menu") {
                 //StartCoroutine(GetStandardLevelDetailViewController());
                 loadedCounters.Clear();
+            }
+            if (reloadConfig)
+            {
+                settings.save();
+                settings = Config.Config.loadSettings();
+                reloadConfig = false;
             }
         }
 

@@ -80,6 +80,14 @@ namespace CountersPlus.Config
         public ScoreConfigModel scoreConfig;
         public PBConfigModel pBConfig;
 
+        public void save()
+        {
+            save("Missed", missedConfig);
+            save("Accuracy", accuracyConfig);
+            save("Progress", progressConfig);
+            save("Score", scoreConfig);
+        }
+
         public void save<T>(string name, T settings) where T : ConfigModel
         {
             ModPrefs.SetBool("Counters+ | " + name, "Enabled", settings.Enabled);
