@@ -38,10 +38,16 @@ namespace CountersPlus
             mainEnabled.GetValue += delegate { return CountersController.settings.Enabled; };
             mainEnabled.SetValue += delegate (bool value) {
                 CountersController.settings.Enabled = value;
-                CountersController.FlagConfigForReload();
+                CountersController.FlagConfigForReload(true);
             };
 
             if (!CountersController.settings.Enabled) return;
+
+            var mainRNG = mainSub.AddBool("Random Counter Properties");
+            mainRNG.GetValue += delegate { return CountersController.settings.RNG; };
+            mainRNG.SetValue += delegate (bool value) {
+                CountersController.settings.RNG = value;
+            };
 
             //Missed
             var missedMenu = SettingsUI.CreateSubMenu("Counters+ | Missed");
@@ -219,7 +225,7 @@ namespace CountersPlus
         {
             item.Index = v;
             CountersController.settings.save(name, item);
-            CountersController.FlagConfigForReload();
+            CountersController.FlagConfigForReload(true);
         }
         static async void UpdateEnabled<T>(string name, T item, bool v) where T : Config.ConfigModel
         {

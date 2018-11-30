@@ -22,6 +22,7 @@ namespace CountersPlus.Counters
         void Awake()
         {
             settings = CountersController.settings.missedConfig;
+            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             if (transform.parent == null)
                 StartCoroutine(GetRequired());
             else
@@ -73,14 +74,20 @@ namespace CountersPlus.Counters
 
         void Update()
         {
-            if (transform.parent == null)
+            if (CountersController.rng)
             {
-                transform.position = CountersController.determinePosition(settings.Position, settings.Index);
+                settings.Index = UnityEngine.Random.Range(0, 5);
+                settings.Position = (CounterPositions)UnityEngine.Random.Range(0, 4);
+                transform.position = Vector3.Lerp(
+                    transform.position,
+                    CountersController.determinePosition(gameObject, settings.Position, settings.Index),
+                    Time.deltaTime);
             }
             else
             {
-                transform.localPosition = CountersController.determinePosition(settings.Position, settings.Index);
+                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             }
+            
         }
 
         private void onNoteCut(NoteData data, NoteCutInfo info, int c)

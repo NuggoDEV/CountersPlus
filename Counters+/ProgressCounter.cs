@@ -18,7 +18,7 @@ namespace CountersPlus.Counters
         TextMeshPro _timeMesh;
         AudioTimeSyncController _audioTimeSync;
         Image _image;
-        ProgressConfigModel settings;
+        private ProgressConfigModel settings;
 
         bool useTimeLeft = false;
 
@@ -115,7 +115,15 @@ namespace CountersPlus.Counters
 
         void Update()
         {
-            transform.position = CountersController.determinePosition(settings.Position, settings.Index);
+            if (CountersController.rng)
+            {
+                settings.Index = UnityEngine.Random.Range(0, 5);
+                settings.Position = (CounterPositions)UnityEngine.Random.Range(0, 4);
+            }
+            transform.position = Vector3.Lerp(
+                transform.position,
+                CountersController.determinePosition(gameObject, settings.Position, settings.Index),
+                Time.deltaTime);
 
             if (_audioTimeSync == false)
             {

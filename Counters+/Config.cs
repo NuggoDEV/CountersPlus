@@ -15,6 +15,7 @@ namespace CountersPlus.Config
             MainConfigModel model = new MainConfigModel
             {
                 Enabled = ModPrefs.GetBool("Counters+ | Main", "Enabled", true, true),
+                RNG = ModPrefs.GetBool("Counters+ | Main", "RNG", false, true),
                 missedConfig = new MissedConfigModel
                 {
                     Enabled = ModPrefs.GetBool("Counters+ | Missed", "Enabled", true, true),
@@ -74,6 +75,7 @@ namespace CountersPlus.Config
 
     public struct MainConfigModel {
         public bool Enabled;
+        public bool RNG;
         public MissedConfigModel missedConfig;
         public AccuracyConfigModel accuracyConfig;
         public ProgressConfigModel progressConfig;
@@ -82,6 +84,8 @@ namespace CountersPlus.Config
 
         public void save()
         {
+            ModPrefs.SetBool("Counters+ | Main", "Enabled", Enabled);
+            ModPrefs.SetBool("Counters+ | Main", "RNG", RNG);
             save("Missed", missedConfig);
             save("Accuracy", accuracyConfig);
             save("Progress", progressConfig);

@@ -75,14 +75,10 @@ namespace CountersPlus.Counters
 
         void Update()
         {
-            if (transform.parent == null)
-            {
-                transform.position = CountersController.determinePosition(settings.Position, settings.Index);
-            }
-            else
-            {
-                transform.localPosition = CountersController.determinePosition(settings.Position, settings.Index);
-            }
+            transform.position = Vector3.Lerp(
+                transform.position,
+                CountersController.determinePosition(gameObject, settings.Position, settings.Index),
+                Time.deltaTime);
         }
 
         public void UpdateScore(int score)

@@ -19,7 +19,8 @@ namespace CountersPlus
 
         public float pbPercent { get; private set; }
 
-        private static bool reloadConfig = false;
+        public static bool reloadConfig { get; private set; } = false;
+        private static bool saveOnReload = false;
 
         public static void OnLoad()
         {
@@ -38,9 +39,10 @@ namespace CountersPlus
             SceneManager.activeSceneChanged += activeSceneChanged;
         }
 
-        public static void FlagConfigForReload()
+        public static void FlagConfigForReload(bool SaveOnReload = false)
         {
             reloadConfig = true;
+            saveOnReload = SaveOnReload;
         }
 
         void activeSceneChanged(Scene arg, Scene arg1)
@@ -51,9 +53,10 @@ namespace CountersPlus
             }
             if (reloadConfig)
             {
-                settings.save();
+                if (saveOnReload) settings.save();
                 settings = Config.Config.loadSettings();
                 reloadConfig = false;
+                saveOnReload = false;
             }
         }
 
@@ -100,7 +103,7 @@ namespace CountersPlus
         {
             if (!settings.Enabled || GameObject.Find("Counters+ | " + name + " Counter")) return;
             GameObject counter = new GameObject("Counters+ | " + name + " Counter");
-            counter.transform.position = determinePosition(settings.Position, settings.Index);
+            counter.transform.position = determinePosition(counter, settings.Position, settings.Index);
             counter.AddComponent(typeof(R));
             Plugin.Log("Loaded Counter: " + name);
             loadedCounters.Add(counter);
@@ -113,11 +116,12 @@ namespace CountersPlus
             LoadCounter<AccuracyConfigModel, AccuracyCounter>("Accuracy", settings.accuracyConfig);
             LoadCounter<ScoreConfigModel, ScoreCounter>("Score", settings.scoreConfig);
             LoadCounter<ProgressConfigModel, ProgressCounter>("Progress", settings.progressConfig);
-
-            //LoadCounter<PBConfigModel, PBCounter>("PB", settings.pBConfig); //Later, when I actually fix PB
+            if (settings.RNG) new GameObject("Counters+ | Randomizer").AddComponent<RandomizePositions>();
         }
 
-        public static Vector3 determinePosition(Config.CounterPositions position, int index)
+        public static bool rng;
+
+        public static Vector3 determinePosition(GameObject counter, Config.CounterPositions position, int index)
         {
             Vector3 pos = new Vector3();
             Vector3 offset = new Vector3(0, -0.75f * (index), 0);
@@ -145,7 +149,7 @@ namespace CountersPlus
                     pos = new Vector3(0, -1.5f, 7);
                     break;
             }
-            if (settings.progressConfig.Position == position && settings.progressConfig.Index == index)
+            if (counter.name.Contains("Progress"))
             {
                 offset += new Vector3(0.25f, 0, 0);
             }

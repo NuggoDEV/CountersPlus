@@ -21,7 +21,7 @@ namespace CountersPlus
 
         private void SceneManager_sceneLoaded(Scene arg0, Scene arg1)
         {
-            if (arg1.name == "GameCore") CountersController.LoadCounters();
+            if (arg1.name == "GameCore" && CountersController.settings.Enabled) CountersController.LoadCounters();
         }
 
         private void addUI(Scene arg, LoadSceneMode hiBrian)

@@ -64,7 +64,18 @@ namespace CountersPlus.Counters
 
         void Update()
         {
-            transform.position = CountersController.determinePosition(settings.Position, settings.Index);
+            if (CountersController.rng)
+            {
+                settings.Index = UnityEngine.Random.Range(0, 5);
+                settings.Position = (CounterPositions)UnityEngine.Random.Range(0, 4);
+                settings.DecimalPrecision = UnityEngine.Random.Range(0, 5);
+                settings.DisplayRank = UnityEngine.Random.Range(0, 1) == 1 ? true : false;
+                roundMultiple = (float)Math.Pow(100, settings.DecimalPrecision);
+            }
+            transform.position = Vector3.Lerp(
+                transform.position,
+                CountersController.determinePosition(gameObject, settings.Position, settings.Index),
+                Time.deltaTime);
         }
 
         private void Init()
