@@ -138,12 +138,14 @@ namespace CountersPlus
                     break;
                 case Config.CounterPositions.BelowMultiplier:
                     pos = new Vector3(3f, 0, 7);
+                    if (GameObject.Find("FCDisplay")) offset += new Vector3(0, -0.25f, 0);
                     break;
                 case Config.CounterPositions.AboveMultiplier:
                     pos = new Vector3(3f, 1.5f, 7);
                     if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.UseOld)
                         offset += new Vector3(0, -0.75f, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
+                    if (GameObject.Find("FCDisplay")) offset += new Vector3(0, -0.25f, 0);
                     break;
                 case Config.CounterPositions.BelowEnergy:
                     pos = new Vector3(0, -1.5f, 7);
