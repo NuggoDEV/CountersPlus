@@ -113,9 +113,10 @@ namespace CountersPlus
         {//ScorePanel, SongProgressPanel
             Plugin.Log("Loading Counters...");
             LoadCounter<MissedConfigModel, MissedCounter>("Missed", settings.missedConfig);
-            LoadCounter<AccuracyConfigModel, AccuracyCounter>("Accuracy", settings.accuracyConfig);
+            LoadCounter<AccuracyConfigModel, AccuracyCounter>("Notes", settings.accuracyConfig);
             LoadCounter<ScoreConfigModel, ScoreCounter>("Score", settings.scoreConfig);
             LoadCounter<ProgressConfigModel, ProgressCounter>("Progress", settings.progressConfig);
+            LoadCounter<SpeedConfigModel, SpeedCounter>("Speed", settings.speedConfig);
             if (settings.RNG) new GameObject("Counters+ | Randomizer").AddComponent<RandomizePositions>();
         }
 
@@ -123,8 +124,8 @@ namespace CountersPlus
 
         public static Vector3 determinePosition(GameObject counter, Config.CounterPositions position, int index)
         {
-            Vector3 pos = new Vector3();
-            Vector3 offset = new Vector3(0, -0.75f * (index), 0);
+            Vector3 pos = new Vector3(); //Base position
+            Vector3 offset = new Vector3(0, -0.75f * (index), 0); //Offset for any overlapping, indexes, etc.
             switch (position)
             {
                 case Config.CounterPositions.BelowCombo:
@@ -144,11 +145,17 @@ namespace CountersPlus
                     pos = new Vector3(3f, 1.5f, 7);
                     if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.UseOld)
                         offset += new Vector3(0, -0.75f, 0);
-                    offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     if (GameObject.Find("FCDisplay")) offset += new Vector3(0, -0.25f, 0);
+                    offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
                 case Config.CounterPositions.BelowEnergy:
                     pos = new Vector3(0, -1.5f, 7);
+                    break;
+                case Config.CounterPositions.AboveHighway:
+                    pos = new Vector3(0, 2.25f, 7);
+                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.UseOld)
+                        offset += new Vector3(0, -0.75f, 0);
+                    offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
             }
             if (counter.name.Contains("Progress"))

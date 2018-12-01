@@ -10,18 +10,20 @@ using CountersPlus.Config;
 
 namespace CountersPlus.Counters
 {
-    class AccuracyCounter : MonoBehaviour
+    class SpeedCounter : MonoBehaviour
     {
 
-        private ScoreController scoreController;
-        private AccuracyConfigModel settings;
+        private PlayerController playerController;
+        private SpeedConfigModel settings;
         private TextMeshPro counterText;
+        private Saber right;
+        private Saber left;
         private int counter;
         private int total;
 
         void Awake()
         {
-            settings = CountersController.settings.accuracyConfig;
+            settings = CountersController.settings.speedConfig;
             transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             if (transform.parent == null)
                 StartCoroutine(GetRequired());
@@ -33,42 +35,31 @@ namespace CountersPlus.Counters
         {
             while (true)
             {
-                scoreController = Resources.FindObjectsOfTypeAll<ScoreController>().FirstOrDefault();
-                if (scoreController != null) break;
+                playerController = Resources.FindObjectsOfTypeAll<PlayerController>().FirstOrDefault();
+                if (playerController != null) break;
                 yield return new WaitForSeconds(0.1f);
             }
-
             Init();
         }
 
         private void Init()
         {
+            right = playerController.rightSaber;
+            left = playerController.leftSaber;
             counterText = gameObject.AddComponent<TextMeshPro>();
-            counterText.text = settings.ShowPercentage ? "0 / 0 - (100%)" : "0 / 0";
+            counterText.text = settings.CombinedSpeed ? "0" : "0 | 0";
             counterText.fontSize = 4;
             counterText.color = Color.white;
             counterText.alignment = TextAlignmentOptions.Center;
             counterText.rectTransform.position = new Vector3(0, -0.4f, 0);
 
-            GameObject labelGO = new GameObject("Counters+ | Notes Label");
+            GameObject labelGO = new GameObject("Counters+ | Speed Label");
             labelGO.transform.parent = transform;
             TextMeshPro label = labelGO.AddComponent<TextMeshPro>();
-            label.text = "Notes";
+            label.text = "Saber Speed";
             label.fontSize = 3;
             label.color = Color.white;
             label.alignment = TextAlignmentOptions.Center;
-
-            if (scoreController != null)
-            {
-                scoreController.noteWasCutEvent += onNoteCut;
-                scoreController.noteWasMissedEvent += onNoteMiss;
-            }
-        }
-
-        void OnDestroy()
-        {
-            scoreController.noteWasCutEvent -= onNoteCut;
-            scoreController.noteWasMissedEvent -= onNoteMiss;
         }
 
         void Update()
@@ -78,37 +69,27 @@ namespace CountersPlus.Counters
                 settings.Index = UnityEngine.Random.Range(0, 5);
                 settings.Position = (CounterPositions)UnityEngine.Random.Range(0, 4);
                 settings.DecimalPrecision = UnityEngine.Random.Range(0, 5);
-                transform.position = Vector3.Lerp(
-                    transform.position,
-                    CountersController.determinePosition(gameObject, settings.Position, settings.Index),
-                    Time.deltaTime);
             }
             else
             {
-                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+                if (CountersController.settings.RNG)
+                {
+                    transform.position = Vector3.Lerp(
+                    transform.position,
+                    CountersController.determinePosition(gameObject, settings.Position, settings.Index),
+                    Time.deltaTime);
+                }else
+                    transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             }
-            
-        }
-
-        private void onNoteCut(NoteData data, NoteCutInfo info, int c)
-        {
-            if (data.noteType != NoteType.Bomb && info.allIsOK)
-                increment(true);
+            if (settings.CombinedSpeed)
+            {
+                counterText.text = ((right.bladeSpeed + left.bladeSpeed) / 2).ToString("00.00");
+            }
             else
-                increment(false);
-        }
-
-        private void onNoteMiss(NoteData data, int what)
-        {
-            if (data.noteType != NoteType.Bomb) increment(false);
-        }
-
-        private void increment(bool incCounter)
-        {
-            total++;
-            if (incCounter) counter++;
-            counterText.text = counter.ToString() + " / " + total.ToString();
-            if (settings.ShowPercentage) counterText.text += string.Format(" - ({0}%)", Math.Round(((float)counter / (float)total) * 100, settings.DecimalPrecision));
+            {
+                counterText.text = string.Format("{0} | {1}", left.bladeSpeed.ToString("00.00"), right.bladeSpeed.ToString("00.00"));
+                if (settings.ShowUnit) counterText.text += "\n<size=50%>m/s</size>";
+            }
         }
     }
 }

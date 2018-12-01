@@ -12,10 +12,24 @@ namespace CountersPlus.Config
     {
         public static MainConfigModel loadSettings()
         {
-            MainConfigModel model = new MainConfigModel
+            MainConfigModel model = new MainConfigModel();
+            if (ModPrefs.HasKey("Counters+ | Accuracy", "Enabled") && !ModPrefs.HasKey("Counters+ | Notes", "Enabled"))
+            {
+                AccuracyConfigModel newModel = new AccuracyConfigModel
+                {
+                    Enabled = ModPrefs.GetBool("Counters+ | Accuracy", "Enabled", true, true),
+                    Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Accuracy", "Position", "BelowCombo", true)),
+                    ShowPercentage = ModPrefs.GetBool("Counters+ | Accuracy", "ShowPercentage", true, true),
+                    Index = ModPrefs.GetInt("Counters+ | Accuracy", "Index", 1, true),
+                    DecimalPrecision = ModPrefs.GetInt("Counters+ | Accuracy", "DecimalPrecision", 1, true),
+                };
+                model.save("Notes", newModel);
+            }
+            model = new MainConfigModel
             {
                 Enabled = ModPrefs.GetBool("Counters+ | Main", "Enabled", true, true),
                 RNG = ModPrefs.GetBool("Counters+ | Main", "RNG", false, true),
+                DisableMenus = ModPrefs.GetBool("Counters+ | Main", "DisableMenus", false, true),
                 missedConfig = new MissedConfigModel
                 {
                     Enabled = ModPrefs.GetBool("Counters+ | Missed", "Enabled", true, true),
@@ -24,11 +38,11 @@ namespace CountersPlus.Config
                 },
                 accuracyConfig = new AccuracyConfigModel
                 {
-                    Enabled = ModPrefs.GetBool("Counters+ | Accuracy", "Enabled", true, true),
-                    Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Accuracy", "Position", "BelowCombo", true)),
-                    ShowPercentage = ModPrefs.GetBool("Counters+ | Accuracy", "ShowPercentage", true, true),
-                    Index = ModPrefs.GetInt("Counters+ | Accuracy", "Index", 1, true),
-                    DecimalPrecision = ModPrefs.GetInt("Counters+ | Accuracy", "DecimalPrecision", 1, true),
+                    Enabled = ModPrefs.GetBool("Counters+ | Notes", "Enabled", true, true),
+                    Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Notes", "Position", "BelowCombo", true)),
+                    ShowPercentage = ModPrefs.GetBool("Counters+ | Notes", "ShowPercentage", true, true),
+                    Index = ModPrefs.GetInt("Counters+ | Notes", "Index", 1, true),
+                    DecimalPrecision = ModPrefs.GetInt("Counters+ | Notes", "DecimalPrecision", 1, true),
                 },
                 progressConfig = new ProgressConfigModel
                 {
@@ -52,8 +66,24 @@ namespace CountersPlus.Config
                     Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | PB", "Position", "BelowMultiplier", true)),
                     DecimalPrecision = ModPrefs.GetInt("Counters+ | PB", "DecimalPrecision", 2, true),
                     Index = ModPrefs.GetInt("Counters+ | PB", "Index", 1, true),
+                },
+                speedConfig = new SpeedConfigModel
+                {
+                    Enabled = ModPrefs.GetBool("Counters+ | Speed", "Enabled", false, true),
+                    Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Speed", "Position", "AboveHighway", true)),
+                    DecimalPrecision = ModPrefs.GetInt("Counters+ | Speed", "DecimalPrecision", 2, true),
+                    Index = ModPrefs.GetInt("Counters+ | Speed", "Index", 0, true),
+                    CombinedSpeed = ModPrefs.GetBool("Counters+ | Speed", "CombinedSpeed", false, true),
+                    ShowUnit = ModPrefs.GetBool("Counters+ | Speed", "ShowUnit", true, true),
+                },
+                cutConfig = new CutConfigModel
+                {
+                    Enabled = ModPrefs.GetBool("Counters+ | Cut", "Enabled", true, true),
+                    Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Cut", "Position", "AboveHighway", true)),
+                    Index = ModPrefs.GetInt("Counters+ | Cut", "Index", 0, true),
                 }
             };
+            
             return model;
         }
 
@@ -76,20 +106,26 @@ namespace CountersPlus.Config
     public struct MainConfigModel {
         public bool Enabled;
         public bool RNG;
+        public bool DisableMenus;
         public MissedConfigModel missedConfig;
         public AccuracyConfigModel accuracyConfig;
         public ProgressConfigModel progressConfig;
         public ScoreConfigModel scoreConfig;
         public PBConfigModel pBConfig;
+        public SpeedConfigModel speedConfig;
+        public CutConfigModel cutConfig;
 
         public void save()
         {
             ModPrefs.SetBool("Counters+ | Main", "Enabled", Enabled);
             ModPrefs.SetBool("Counters+ | Main", "RNG", RNG);
+            ModPrefs.SetBool("Counters+ | Main", "DisableMenus", DisableMenus);
             save("Missed", missedConfig);
-            save("Accuracy", accuracyConfig);
+            save("Notes", accuracyConfig);
             save("Progress", progressConfig);
             save("Score", scoreConfig);
+            save("Speed", speedConfig);
+            save("Cut", cutConfig);
         }
 
         public void save<T>(string name, T settings) where T : ConfigModel
@@ -118,6 +154,14 @@ namespace CountersPlus.Config
             save(name, settings as ConfigModel);
             ModPrefs.SetBool("Counters+ | " + name, "UseOld", settings.UseOld);
             ModPrefs.SetBool("Counters+ | " + name, "DisplayRank", settings.DisplayRank);
+            ModPrefs.SetInt("Counters+ | " + name, "DecimalPrecision", settings.DecimalPrecision);
+        }
+
+        public void save(string name, SpeedConfigModel settings)
+        {
+            save(name, settings as ConfigModel);
+            ModPrefs.SetBool("Counters+ | " + name, "CombinedSpeed", settings.CombinedSpeed);
+            ModPrefs.SetBool("Counters+ | " + name, "ShowUnit", settings.ShowUnit);
             ModPrefs.SetInt("Counters+ | " + name, "DecimalPrecision", settings.DecimalPrecision);
         }
     }
@@ -178,5 +222,26 @@ namespace CountersPlus.Config
         public int DecimalPrecision;
     }
 
-    public enum CounterPositions { BelowCombo, AboveCombo, BelowMultiplier, AboveMultiplier, BelowEnergy }
+    public struct SpeedConfigModel : ConfigModel
+    {
+        public bool Enabled { get; set; }
+
+        public CounterPositions Position { get; set; }
+
+        public int Index { get; set; }
+        public int DecimalPrecision;
+        public bool CombinedSpeed;
+        public bool ShowUnit;
+    }
+
+    public struct CutConfigModel : ConfigModel
+    {
+        public bool Enabled { get; set; }
+
+        public CounterPositions Position { get; set; }
+
+        public int Index { get; set; }
+    }
+
+    public enum CounterPositions { BelowCombo, AboveCombo, BelowMultiplier, AboveMultiplier, BelowEnergy, AboveHighway }
 }
