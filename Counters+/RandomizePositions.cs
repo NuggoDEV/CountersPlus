@@ -14,7 +14,6 @@ namespace CountersPlus.Counters
     {
 
         private StandardLevelDetailViewController sldvc;
-        private TextMeshPro missedText;
         private float beatsPerSecond;
         private float delay;
         private float superSecretSauce = 4;

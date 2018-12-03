@@ -29,6 +29,14 @@ namespace CountersPlus
             {Config.CounterPositions.BelowEnergy, "Below Energy" },
             {Config.CounterPositions.AboveHighway, "Over Highway" }
         };
+        public class SpeedModeViewController : TupleViewController<Tuple<SpeedConfigModel.CounterMode, string>> { }
+        static List<Tuple<SpeedConfigModel.CounterMode, string>> mode = new List<Tuple<SpeedConfigModel.CounterMode, string>> {
+            {SpeedConfigModel.CounterMode.Average, "Mean Speed" },
+            {SpeedConfigModel.CounterMode.Top5Sec, "Top (5 Sec.)" },
+            {SpeedConfigModel.CounterMode.Both, "Both" },
+            {SpeedConfigModel.CounterMode.SplitAverage, "Split Mean" },
+            {SpeedConfigModel.CounterMode.SplitBoth, "Both w/Split" },
+        };
 
 
         public static void CreateSettingsUI()
@@ -205,71 +213,41 @@ namespace CountersPlus
             {
                 CountersController.settings.speedConfig.Index = v;
             };
-
-            var speedRank = speedSub.AddBool("Combine Saber Speeds", "Combine the speeds of the left and right saber into one average.");
-            speedRank.GetValue += delegate { return CountersController.settings.speedConfig.CombinedSpeed; };
-            speedRank.SetValue += delegate (bool value) {
-                CountersController.settings.speedConfig.CombinedSpeed = value;
-            };
             var speedPrecision = speedSub.AddInt("Decimal Precision", "How precise will the counter go to?", 0, 5, 1);
             speedPrecision.GetValue += delegate { return CountersController.settings.speedConfig.DecimalPrecision; };
             speedPrecision.SetValue += delegate (int v) {
                 CountersController.settings.speedConfig.DecimalPrecision = v;
             };
+            var speedMode = speedSub.AddListSetting<SpeedModeViewController>("Mode", determineModeText());
+            speedMode.values = mode;
+            speedMode.GetValue = () => mode.Where((Tuple<SpeedConfigModel.CounterMode, string> x) => (x.Item1 == CountersController.settings.speedConfig.Mode)).FirstOrDefault();
+            speedMode.GetTextForValue = (value) => value.Item2;
+            speedMode.SetValue = v =>
+            {
+                CountersController.settings.speedConfig.Mode = v.Item1;
+            };
         }
 
-        /*
-         *
-         * So you may be thinking, why am I not using this perfectly good helper function?
-         * 
-         * Well, as it turns out, using this base function breaks settings saving, as I assume the T variable messes some things up.
-         * Either way, the three main options would not save at all. The extras I added on after, however, did.
-         * RIP trying to condense code. RIP readability.
-         * 
-         */
-        static SubMenu createBase<T>(string name, T configItem) where T : Config.ConfigModel
-        {
-            var @base = SettingsUI.CreateSubMenu("Counters+ | " + name);
-            var enabled = @base.AddBool("Enabled", "Toggles this counter on or off.");
-            T item = configItem;
-            enabled.GetValue += () => item.Enabled;
-            enabled.SetValue += v =>
-            {
-                UpdateEnabled(name, configItem, v);
-            };
-            var position = @base.AddListSetting<PositionSettingsViewController>("Position", "The relative positions of common UI elements of which to go off of.");
-            position.values = positions;
-            position.GetValue = () => positions.Where((Tuple<Config.CounterPositions, string> x) => (x.Item1 == item.Position)).FirstOrDefault();
-            position.GetTextForValue = (value) => value.Item2;
-            position.SetValue = v =>
-            {
-                UpdatePosition(name, configItem, v.Item1);
-            };
-            var index = @base.AddInt("Index", "How far from the position the counter will be. A higher number means farther away.", 0, 5, 1);
-            index.GetValue += () => item.Index;
-            index.SetValue += v =>
-            {
-                UpdateIndex(name, configItem, v);
-            };
-            configItem = item;
-            return @base;
-        }
-
-        static async void UpdateIndex<T>(string name, T item, int v) where T : Config.ConfigModel
-        {
-            item.Index = v;
-            CountersController.settings.save(name, item);
-            CountersController.FlagConfigForReload(true);
-        }
-        static async void UpdateEnabled<T>(string name, T item, bool v) where T : Config.ConfigModel
-        {
-            item.Enabled = v;
-            CountersController.settings.save(name, item);
-        }
-        static async void UpdatePosition<T>(string name, T item, Config.CounterPositions v) where T : Config.ConfigModel
-        {
-            item.Position = v;
-            CountersController.settings.save(name, item);
+        static string determineModeText(){
+            string mode = "Unavilable mode!";
+            switch(CountersController.settings.speedConfig.Mode){
+                case SpeedConfigModel.CounterMode.Average:
+                    mode = "Mean Speed: Average speed of both sabers.";
+                    break;
+                case SpeedConfigModel.CounterMode.Top5Sec:
+                    mode = "Top: Fastest saber speed in the last 5 seconds.";
+                    break;
+                case SpeedConfigModel.CounterMode.Both:
+                    mode = "Both: A secondary Counter will be added so both Average and Top will be displayed.";
+                    break;
+                case SpeedConfigModel.CounterMode.SplitAverage:
+                    mode = "Split Mean: Displays averages for each saber, separately.";
+                    break;
+                case SpeedConfigModel.CounterMode.SplitBoth:
+                    mode = "Split Both: Displays both metrics, except the Average is split between two sabers.";
+                    break;
+            }
+            return "How should this Counter display data?\n" + mode;
         }
     }
 }

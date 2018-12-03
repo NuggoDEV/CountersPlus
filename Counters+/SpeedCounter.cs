@@ -16,19 +16,17 @@ namespace CountersPlus.Counters
         private PlayerController playerController;
         private SpeedConfigModel settings;
         private TextMeshPro counterText;
+        private TextMeshPro altCounterText;
         private Saber right;
         private Saber left;
-        private int counter;
-        private int total;
+        private List<float> rSpeedList = new List<float>();
+        private List<float> lSpeedList = new List<float>();
 
         void Awake()
         {
             settings = CountersController.settings.speedConfig;
             transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-            if (transform.parent == null)
-                StartCoroutine(GetRequired());
-            else
-                Init();
+            StartCoroutine(GetRequired());
         }
 
         IEnumerator GetRequired()
@@ -46,20 +44,95 @@ namespace CountersPlus.Counters
         {
             right = playerController.rightSaber;
             left = playerController.leftSaber;
-            counterText = gameObject.AddComponent<TextMeshPro>();
-            counterText.text = settings.CombinedSpeed ? "0" : "0 | 0";
-            counterText.fontSize = 4;
-            counterText.color = Color.white;
-            counterText.alignment = TextAlignmentOptions.Center;
-            counterText.rectTransform.position = new Vector3(0, -0.4f, 0);
+            if (settings.Mode == SpeedConfigModel.CounterMode.Average || settings.Mode == SpeedConfigModel.CounterMode.SplitAverage)
+            {
+                counterText = gameObject.AddComponent<TextMeshPro>();
+                counterText.text = settings.Mode == SpeedConfigModel.CounterMode.Average ? "0" : "0 | 0";
+                counterText.fontSize = 4;
+                counterText.color = Color.white;
+                counterText.alignment = TextAlignmentOptions.Center;
+                counterText.rectTransform.position = new Vector3(0, -0.4f, 0);
 
-            GameObject labelGO = new GameObject("Counters+ | Speed Label");
-            labelGO.transform.parent = transform;
-            TextMeshPro label = labelGO.AddComponent<TextMeshPro>();
-            label.text = "Saber Speed";
-            label.fontSize = 3;
-            label.color = Color.white;
-            label.alignment = TextAlignmentOptions.Center;
+                GameObject labelGO = new GameObject("Counters+ | Speed Label");
+                labelGO.transform.parent = transform;
+                TextMeshPro label = labelGO.AddComponent<TextMeshPro>();
+                label.text = "Average Speed";
+                label.fontSize = 3;
+                label.color = Color.white;
+                label.alignment = TextAlignmentOptions.Center;
+            }else if (settings.Mode == SpeedConfigModel.CounterMode.Top5Sec)
+            {
+                counterText = gameObject.AddComponent<TextMeshPro>();
+                counterText.text = "00.00";
+                counterText.fontSize = 4;
+                counterText.color = Color.white;
+                counterText.alignment = TextAlignmentOptions.Center;
+                counterText.rectTransform.position = new Vector3(0, -0.4f, 0);
+
+                GameObject labelGO = new GameObject("Counters+ | Highest Speed Label");
+                labelGO.transform.parent = transform;
+                TextMeshPro label = labelGO.AddComponent<TextMeshPro>();
+                label.text = "Top Speed (5 Sec.)";
+                label.fontSize = 3;
+                label.color = Color.white;
+                label.alignment = TextAlignmentOptions.Center;
+
+                StartCoroutine(FastestSpeed());
+            }else if (settings.Mode == SpeedConfigModel.CounterMode.Both || settings.Mode == SpeedConfigModel.CounterMode.SplitBoth){
+                counterText = gameObject.AddComponent<TextMeshPro>();
+                counterText.text = settings.Mode == SpeedConfigModel.CounterMode.Both ? "0" : "0 | 0";
+                counterText.fontSize = 4;
+                counterText.color = Color.white;
+                counterText.alignment = TextAlignmentOptions.Center;
+                counterText.rectTransform.position = new Vector3(0, -0.4f, 0);
+
+                GameObject labelGO = new GameObject("Counters+ | Speed Label");
+                labelGO.transform.parent = transform;
+                TextMeshPro label = labelGO.AddComponent<TextMeshPro>();
+                label.text = "Average Speed";
+                label.fontSize = 3;
+                label.color = Color.white;
+                label.alignment = TextAlignmentOptions.Center;
+
+                GameObject altGO = new GameObject("Counters+ | Highest Speed");
+                altGO.transform.parent = transform;
+                altGO.transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index + 1) - transform.position;
+                altCounterText = gameObject.AddComponent<TextMeshPro>();
+                altCounterText.text = "00.00";
+                altCounterText.fontSize = 4;
+                altCounterText.color = Color.white;
+                altCounterText.alignment = TextAlignmentOptions.Center;
+                altCounterText.rectTransform.position = new Vector3(0, -0.4f, 0);
+
+                GameObject altLabelGO = new GameObject("Counters+ | Highest Speed Label");
+                altLabelGO.transform.parent = transform;
+                TextMeshPro altLabel = altLabelGO.AddComponent<TextMeshPro>();
+                altLabel.text = "Top Speed (5 Sec.)";
+                altLabel.fontSize = 3;
+                altLabel.color = Color.white;
+                altLabel.alignment = TextAlignmentOptions.Center;
+
+                StartCoroutine(FastestSpeed());
+            }
+        }
+
+        IEnumerator FastestSpeed()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(5);
+                rSpeedList.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
+                float top = 0;
+                foreach (float speed in rSpeedList)
+                {
+                    if (speed > top) top = speed;
+                }
+                rSpeedList.Clear();
+                if (settings.Mode == SpeedConfigModel.CounterMode.Both || settings.Mode == SpeedConfigModel.CounterMode.SplitBoth)
+                    altCounterText.text = top.ToString("00.00");
+                else
+                    counterText.text = top.ToString("00.00");
+            }
         }
 
         void Update()
@@ -81,14 +154,37 @@ namespace CountersPlus.Counters
                 }else
                     transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             }
-            if (settings.CombinedSpeed)
+            if (settings.Mode == SpeedConfigModel.CounterMode.Average)
             {
-                counterText.text = ((right.bladeSpeed + left.bladeSpeed) / 2).ToString("00.00");
+                rSpeedList.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
+                float average = 0;
+                foreach (float speed in rSpeedList)
+                {
+                    average += speed;
+                }
+                average /= rSpeedList.Count;
+                counterText.text = average.ToString("00.00");
             }
-            else
+            else if (settings.Mode == SpeedConfigModel.CounterMode.SplitAverage)
             {
-                counterText.text = string.Format("{0} | {1}", left.bladeSpeed.ToString("00.00"), right.bladeSpeed.ToString("00.00"));
-                if (settings.ShowUnit) counterText.text += "\n<size=50%>m/s</size>";
+                rSpeedList.Add(right.bladeSpeed);
+                float rAverage = 0;
+                foreach (float speed in rSpeedList)
+                {
+                    rAverage += speed;
+                }
+                rAverage /= rSpeedList.Count;
+                lSpeedList.Add(left.bladeSpeed);
+                float lAverage = 0;
+                foreach (float speed in lSpeedList)
+                {
+                    lAverage += speed;
+                }
+                lAverage /= lSpeedList.Count;
+                counterText.text = string.Format("{0} | {1}", lAverage.ToString("00.00"), rAverage.ToString("00.00"));
+            }else if (settings.Mode == SpeedConfigModel.CounterMode.Top5Sec)
+            {
+                rSpeedList.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
             }
         }
     }

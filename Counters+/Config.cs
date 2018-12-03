@@ -73,8 +73,7 @@ namespace CountersPlus.Config
                     Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Speed", "Position", "AboveHighway", true)),
                     DecimalPrecision = ModPrefs.GetInt("Counters+ | Speed", "DecimalPrecision", 2, true),
                     Index = ModPrefs.GetInt("Counters+ | Speed", "Index", 0, true),
-                    CombinedSpeed = ModPrefs.GetBool("Counters+ | Speed", "CombinedSpeed", false, true),
-                    ShowUnit = ModPrefs.GetBool("Counters+ | Speed", "ShowUnit", true, true),
+                    Mode = (SpeedConfigModel.CounterMode)Enum.Parse(typeof(SpeedConfigModel.CounterMode), ModPrefs.GetString("Counters+ | Speed", "Mode", "Average", true)),
                 },
                 cutConfig = new CutConfigModel
                 {
@@ -160,8 +159,7 @@ namespace CountersPlus.Config
         public void save(string name, SpeedConfigModel settings)
         {
             save(name, settings as ConfigModel);
-            ModPrefs.SetBool("Counters+ | " + name, "CombinedSpeed", settings.CombinedSpeed);
-            ModPrefs.SetBool("Counters+ | " + name, "ShowUnit", settings.ShowUnit);
+            ModPrefs.SetString("Counters+ | " + name, "Mode", settings.Mode.ToString());
             ModPrefs.SetInt("Counters+ | " + name, "DecimalPrecision", settings.DecimalPrecision);
         }
     }
@@ -230,8 +228,8 @@ namespace CountersPlus.Config
 
         public int Index { get; set; }
         public int DecimalPrecision;
-        public bool CombinedSpeed;
-        public bool ShowUnit;
+        public enum CounterMode { Average, Top5Sec, Both, SplitAverage, SplitBoth };
+        public CounterMode Mode;
     }
 
     public struct CutConfigModel : ConfigModel
