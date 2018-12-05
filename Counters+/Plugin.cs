@@ -21,7 +21,15 @@ namespace CountersPlus
 
         private void SceneManager_sceneLoaded(Scene arg0, Scene arg1)
         {
-            if (arg1.name == "GameCore" && CountersController.settings.Enabled) CountersController.LoadCounters();
+            if (arg1.name == "GameCore" &&
+                CountersController.settings.Enabled &&
+                (!Resources.FindObjectsOfTypeAll<PlayerDataModelSO>()
+                    .FirstOrDefault()?
+                    .currentLocalPlayer.playerSpecificSettings.noTextsAndHuds ?? true)
+                )
+            {
+                CountersController.LoadCounters();
+            }
         }
 
         private void addUI(Scene arg, LoadSceneMode hiBrian)
