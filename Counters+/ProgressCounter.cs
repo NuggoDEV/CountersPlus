@@ -41,15 +41,13 @@ namespace CountersPlus.Counters
         void Awake()
         {
             settings = CountersController.settings.progressConfig;
-            useTimeLeft = settings.ProgressTimeLeft;
-            if (transform.parent == null)
+            if (settings.UseOld && gameObject.name != "SongProgressPanel")
+                StartCoroutine(YeetToBaseCounter());
+            else if (!settings.UseOld)
                 StartCoroutine(WaitForLoad());
-            else
-                Init();
-            StartCoroutine(DeletBaseCounter());
         }
 
-        IEnumerator DeletBaseCounter()
+        IEnumerator YeetToBaseCounter()
         {
             GameObject baseCounter;
             while (true)
@@ -58,11 +56,14 @@ namespace CountersPlus.Counters
                 if (baseCounter != null) break;
                 yield return new WaitForSeconds(0.1f);
             }
-            Destroy(baseCounter);
+            baseCounter.AddComponent<ProgressCounter>();
+            Plugin.Log("Progress Counter has been moved to the base game counter!");
+            Destroy(gameObject);
         }
 
         void Init()
         {
+            if (GameObject.Find("SongProgressPanel") != null) Destroy(GameObject.Find("SongProgressPanel"));
             _timeMesh = this.gameObject.AddComponent<TextMeshPro>();
             _timeMesh.text = "0:00";
             _timeMesh.fontSize = 4;
@@ -120,10 +121,18 @@ namespace CountersPlus.Counters
                 settings.Index = UnityEngine.Random.Range(0, 5);
                 settings.Position = (CounterPositions)UnityEngine.Random.Range(0, 4);
             }
-            transform.position = Vector3.Lerp(
-                transform.position,
-                CountersController.determinePosition(gameObject, settings.Position, settings.Index),
-                Time.deltaTime);
+            else
+            {
+                if (CountersController.settings.RNG)
+                {
+                    transform.position = Vector3.Lerp(
+                    transform.position,
+                    CountersController.determinePosition(gameObject, settings.Position, settings.Index),
+                    Time.deltaTime);
+                }
+                else
+                    transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            }
 
             if (_audioTimeSync == false)
             {

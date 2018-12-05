@@ -12,7 +12,7 @@ namespace CountersPlus.Counters
 {
     public class PBCounter : MonoBehaviour
     {
-        /*
+        ///*
         ScoreController _scoreController;
         StandardLevelSceneSetupDataSO _objectRatingRecorder;
 
@@ -113,6 +113,6 @@ namespace CountersPlus.Counters
                         _PbTrackerText.color = Color.white;
                 }
             }
-        }*/
+        }//*/
     }
 }

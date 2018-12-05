@@ -143,12 +143,11 @@ namespace CountersPlus
             scoreRank.SetValue += delegate (bool value) {
                 CountersController.settings.scoreConfig.DisplayRank = value;
             };
-            /*var scoreOverride = scoreSub.AddBool("Override Base Game Counter");
+            var scoreOverride = scoreSub.AddBool("Override Base Game Counter");
             scoreOverride.GetValue += delegate { return CountersController.settings.scoreConfig.UseOld; };
             scoreOverride.SetValue += delegate (bool value) {
                 CountersController.settings.scoreConfig.UseOld = value;
-                CountersController.settings.save();
-            };*/
+            };
             float[] scorePrec = new float[6] { 0, 1, 2, 3, 4, 5 };
             var scorePrecision = scoreSub.AddList("Percentage Decimal Precision", scorePrec, "How accuracy the percentage will be.");
             scorePrecision.GetValue += delegate { return CountersController.settings.scoreConfig.DecimalPrecision; };
@@ -185,12 +184,11 @@ namespace CountersPlus
             progressRank.SetValue += delegate (bool value) {
                 CountersController.settings.progressConfig.ProgressTimeLeft = value;
             };
-            /*var progressOverride = progressSub.AddBool("Override Base Game Counter");
+            var progressOverride = progressSub.AddBool("Override Base Game Counter");
             progressOverride.GetValue += delegate { return CountersController.settings.progressConfig.UseOld; };
             progressOverride.SetValue += delegate (bool value) {
                 CountersController.settings.progressConfig.UseOld = value;
-                CountersController.settings.save();
-            };*/
+            };
 
             var speedSub = SettingsUI.CreateSubMenu("Counters+ | Speed");
             var speedEnabled = speedSub.AddBool("Enabled", "Toggles this counter on or off.");

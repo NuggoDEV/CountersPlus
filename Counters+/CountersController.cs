@@ -158,9 +158,10 @@ namespace CountersPlus
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
             }
-            if (counter.name.Contains("Progress"))
+            if (counter.GetComponent<ProgressCounter>() != null)
             {
                 offset += new Vector3(0.25f, 0, 0);
+                if (settings.progressConfig.UseOld) offset -= new Vector3(0.25f, 0, 0);
             }
             return pos + offset;
         }

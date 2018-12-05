@@ -43,14 +43,13 @@ namespace CountersPlus.Counters
         void Awake()
         {
             settings = CountersController.settings.scoreConfig;
-            if (transform.parent == null)
+            if (settings.UseOld && gameObject.name != "ScorePanel")
+                StartCoroutine(YeetToBaseCounter());
+            else if (!settings.UseOld)
                 StartCoroutine(WaitForLoad());
-            else
-                Init();
-            StartCoroutine(DeletBaseCounter());
         }
 
-        IEnumerator DeletBaseCounter()
+        IEnumerator YeetToBaseCounter()
         {
             GameObject baseCounter;
             while (true)
@@ -59,7 +58,9 @@ namespace CountersPlus.Counters
                 if (baseCounter != null) break;
                 yield return new WaitForSeconds(0.1f);
             }
-            Destroy(baseCounter);
+            baseCounter.AddComponent<ScoreCounter>();
+            Plugin.Log("Score Counter has been moved to the base game counter!");
+            Destroy(gameObject);
         }
 
         void Update()
@@ -69,17 +70,31 @@ namespace CountersPlus.Counters
                 settings.Index = UnityEngine.Random.Range(0, 5);
                 settings.Position = (CounterPositions)UnityEngine.Random.Range(0, 4);
                 settings.DecimalPrecision = UnityEngine.Random.Range(0, 5);
-                settings.DisplayRank = UnityEngine.Random.Range(0, 1) == 1 ? true : false;
-                roundMultiple = (float)Math.Pow(100, settings.DecimalPrecision);
             }
-            transform.position = Vector3.Lerp(
-                transform.position,
-                CountersController.determinePosition(gameObject, settings.Position, settings.Index),
-                Time.deltaTime);
+            else
+            {
+                if (CountersController.settings.RNG)
+                {
+                    transform.position = Vector3.Lerp(
+                    transform.position,
+                    CountersController.determinePosition(gameObject, settings.Position, settings.Index),
+                    Time.deltaTime);
+                }
+                else
+                    transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            }
         }
 
         private void Init()
         {
+            if (GameObject.Find("ScorePanel") != null)
+            {
+                for(int i = 0; i < GameObject.Find("ScorePanel").transform.childCount; i++)
+                {
+                    Transform child = GameObject.Find("ScorePanel").transform.GetChild(i);
+                    if (child.name != "RelativeScoreText") Destroy(child);
+                }
+            }
             roundMultiple = (float)Math.Pow(100, settings.DecimalPrecision);
 
             _scoreMesh = this.gameObject.AddComponent<TextMeshPro>();

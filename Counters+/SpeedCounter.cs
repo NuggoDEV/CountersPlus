@@ -21,6 +21,7 @@ namespace CountersPlus.Counters
         private Saber left;
         private List<float> rSpeedList = new List<float>();
         private List<float> lSpeedList = new List<float>();
+        private List<float> fastest = new List<float>();
 
         void Awake()
         {
@@ -96,8 +97,7 @@ namespace CountersPlus.Counters
 
                 GameObject altGO = new GameObject("Counters+ | Highest Speed");
                 altGO.transform.parent = transform;
-                altGO.transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index + 1) - transform.position;
-                altCounterText = gameObject.AddComponent<TextMeshPro>();
+                altCounterText = altGO.AddComponent<TextMeshPro>();
                 altCounterText.text = "00.00";
                 altCounterText.fontSize = 4;
                 altCounterText.color = Color.white;
@@ -112,6 +112,16 @@ namespace CountersPlus.Counters
                 altLabel.color = Color.white;
                 altLabel.alignment = TextAlignmentOptions.Center;
 
+                if (settings.Position == CounterPositions.AboveCombo || settings.Position == CounterPositions.AboveHighway || settings.Position == CounterPositions.AboveMultiplier)
+                {
+                    altCounterText.rectTransform.position += new Vector3(0, 1, 0);
+                    altLabel.rectTransform.position += new Vector3(0, 1, 0);
+                }
+                else
+                {
+                    altCounterText.rectTransform.position += new Vector3(0, -0.75f, 0);
+                    altLabel.rectTransform.position += new Vector3(0, -0.75f, 0);
+                }
                 StartCoroutine(FastestSpeed());
             }
         }
@@ -121,13 +131,13 @@ namespace CountersPlus.Counters
             while (true)
             {
                 yield return new WaitForSeconds(5);
-                rSpeedList.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
+                fastest.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
                 float top = 0;
-                foreach (float speed in rSpeedList)
+                foreach (float speed in fastest)
                 {
                     if (speed > top) top = speed;
                 }
-                rSpeedList.Clear();
+                fastest.Clear();
                 if (settings.Mode == SpeedConfigModel.CounterMode.Both || settings.Mode == SpeedConfigModel.CounterMode.SplitBoth)
                     altCounterText.text = top.ToString("00.00");
                 else
@@ -184,7 +194,40 @@ namespace CountersPlus.Counters
                 counterText.text = string.Format("{0} | {1}", lAverage.ToString("00.00"), rAverage.ToString("00.00"));
             }else if (settings.Mode == SpeedConfigModel.CounterMode.Top5Sec)
             {
-                rSpeedList.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
+                fastest.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
+            }
+            else
+            {
+                fastest.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
+                if (settings.Mode == SpeedConfigModel.CounterMode.Both)
+                {
+                    rSpeedList.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
+                    float average = 0;
+                    foreach (float speed in rSpeedList)
+                    {
+                        average += speed;
+                    }
+                    average /= rSpeedList.Count;
+                    counterText.text = average.ToString("00.00");
+                }
+                else if (settings.Mode == SpeedConfigModel.CounterMode.SplitBoth)
+                {
+                    rSpeedList.Add(right.bladeSpeed);
+                    float rAverage = 0;
+                    foreach (float speed in rSpeedList)
+                    {
+                        rAverage += speed;
+                    }
+                    rAverage /= rSpeedList.Count;
+                    lSpeedList.Add(left.bladeSpeed);
+                    float lAverage = 0;
+                    foreach (float speed in lSpeedList)
+                    {
+                        lAverage += speed;
+                    }
+                    lAverage /= lSpeedList.Count;
+                    counterText.text = string.Format("{0} | {1}", lAverage.ToString("00.00"), rAverage.ToString("00.00"));
+                }
             }
         }
     }
