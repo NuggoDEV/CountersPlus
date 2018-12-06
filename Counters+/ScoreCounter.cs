@@ -87,14 +87,8 @@ namespace CountersPlus.Counters
 
         private void Init()
         {
-            if (GameObject.Find("ScorePanel") != null)
-            {
-                for(int i = 0; i < GameObject.Find("ScorePanel").transform.childCount; i++)
-                {
-                    Transform child = GameObject.Find("ScorePanel").transform.GetChild(i);
-                    if (child.name != "RelativeScoreText") Destroy(child);
-                }
-            }
+            if (GameObject.Find("RelativeScoreText") != null) GameObject.Find("RelativeScoreText").transform.parent = transform;
+            if (GameObject.Find("ScorePanel") != null) Destroy(GameObject.Find("ScorePanel"));
             roundMultiple = (float)Math.Pow(100, settings.DecimalPrecision);
 
             _scoreMesh = this.gameObject.AddComponent<TextMeshPro>();
