@@ -22,12 +22,17 @@ namespace CountersPlus.Counters
         private List<float> rSpeedList = new List<float>();
         private List<float> lSpeedList = new List<float>();
         private List<float> fastest = new List<float>();
+        private string precision = "00.";
 
         void Awake()
         {
             settings = CountersController.settings.speedConfig;
             transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             StartCoroutine(GetRequired());
+            for (var i = 0; i < settings.DecimalPrecision; i++)
+            {
+                precision += "0";
+            }
         }
 
         IEnumerator GetRequired()
@@ -139,9 +144,9 @@ namespace CountersPlus.Counters
                 }
                 fastest.Clear();
                 if (settings.Mode == SpeedConfigModel.CounterMode.Both || settings.Mode == SpeedConfigModel.CounterMode.SplitBoth)
-                    altCounterText.text = top.ToString("00.00");
+                    altCounterText.text = top.ToString(precision);
                 else
-                    counterText.text = top.ToString("00.00");
+                    counterText.text = top.ToString(precision);
             }
         }
 
@@ -173,7 +178,7 @@ namespace CountersPlus.Counters
                     average += speed;
                 }
                 average /= rSpeedList.Count;
-                counterText.text = average.ToString("00.00");
+                counterText.text = average.ToString(precision);
             }
             else if (settings.Mode == SpeedConfigModel.CounterMode.SplitAverage)
             {
@@ -191,7 +196,7 @@ namespace CountersPlus.Counters
                     lAverage += speed;
                 }
                 lAverage /= lSpeedList.Count;
-                counterText.text = string.Format("{0} | {1}", lAverage.ToString("00.00"), rAverage.ToString("00.00"));
+                counterText.text = string.Format("{0} | {1}", lAverage.ToString(precision), rAverage.ToString(precision));
             }else if (settings.Mode == SpeedConfigModel.CounterMode.Top5Sec)
             {
                 fastest.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
@@ -208,7 +213,7 @@ namespace CountersPlus.Counters
                         average += speed;
                     }
                     average /= rSpeedList.Count;
-                    counterText.text = average.ToString("00.00");
+                    counterText.text = average.ToString(precision);
                 }
                 else if (settings.Mode == SpeedConfigModel.CounterMode.SplitBoth)
                 {
@@ -226,7 +231,7 @@ namespace CountersPlus.Counters
                         lAverage += speed;
                     }
                     lAverage /= lSpeedList.Count;
-                    counterText.text = string.Format("{0} | {1}", lAverage.ToString("00.00"), rAverage.ToString("00.00"));
+                    counterText.text = string.Format("{0} | {1}", lAverage.ToString(precision), rAverage.ToString(precision));
                 }
             }
         }
