@@ -190,6 +190,7 @@ namespace CountersPlus
                 CountersController.settings.progressConfig.UseOld = value;
             };
 
+            //Speed
             var speedSub = SettingsUI.CreateSubMenu("Counters+ | Speed");
             var speedEnabled = speedSub.AddBool("Enabled", "Toggles this counter on or off.");
             speedEnabled.GetValue += () => CountersController.settings.speedConfig.Enabled;
@@ -224,9 +225,32 @@ namespace CountersPlus
             {
                 CountersController.settings.speedConfig.Mode = v.Item1;
             };
+
+            //Cut
+            var cutMenu = SettingsUI.CreateSubMenu("Counters+ | Cut");
+            var cutEnabled = cutMenu.AddBool("Enabled", "Toggles this counter on or off.");
+            cutEnabled.GetValue += () => CountersController.settings.cutConfig.Enabled;
+            cutEnabled.SetValue += v =>
+            {
+                CountersController.settings.cutConfig.Enabled = v;
+            };
+            var cutPosition = cutMenu.AddListSetting<PositionSettingsViewController>("Position", "The relative positions of common UI elements of which to go off of.");
+            cutPosition.values = positions;
+            cutPosition.GetValue = () => positions.Where((Tuple<Config.CounterPositions, string> x) => (x.Item1 == CountersController.settings.cutConfig.Position)).FirstOrDefault();
+            cutPosition.GetTextForValue = (value) => value.Item2;
+            cutPosition.SetValue = v =>
+            {
+                CountersController.settings.cutConfig.Position = v.Item1;
+            };
+            var cutIndex = cutMenu.AddInt("Index", "How far from the position the counter will be. A higher number means farther away.", 0, 5, 1);
+            cutIndex.GetValue += () => CountersController.settings.cutConfig.Index;
+            cutIndex.SetValue += v =>
+            {
+                CountersController.settings.cutConfig.Index = v;
+            };
         }
 
-        static string determineModeText(){
+        private static string determineModeText(){
             string mode = "Unavilable mode!";
             switch(CountersController.settings.speedConfig.Mode){
                 case SpeedConfigModel.CounterMode.Average:

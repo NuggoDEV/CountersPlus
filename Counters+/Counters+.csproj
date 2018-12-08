@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Counters\AccuracyCounter.cs" />
+    <Compile Include="Counters\CutCounter.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="CountersController.cs" />
     <Compile Include="CountersSettingsUI.cs" />

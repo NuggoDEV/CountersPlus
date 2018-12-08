@@ -117,6 +117,7 @@ namespace CountersPlus
             LoadCounter<ScoreConfigModel, ScoreCounter>("Score", settings.scoreConfig);
             LoadCounter<ProgressConfigModel, ProgressCounter>("Progress", settings.progressConfig);
             LoadCounter<SpeedConfigModel, SpeedCounter>("Speed", settings.speedConfig);
+            LoadCounter<CutConfigModel, CutCounter>("Cut", settings.cutConfig);
             if (settings.RNG) new GameObject("Counters+ | Randomizer").AddComponent<RandomizePositions>();
         }
 

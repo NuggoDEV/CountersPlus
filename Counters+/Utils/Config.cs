@@ -85,21 +85,6 @@ namespace CountersPlus.Config
             
             return model;
         }
-
-        public static Vector3 ParseVector(string v)
-        {
-            string[] split = v.Split('|');
-            if (split.Count() == 3)
-            {
-                return new Vector3(float.Parse(split[0]), float.Parse(split[1]), float.Parse(split[2]));
-            }
-            return Vector3.zero;
-        }
-
-        public static string ParseVector(Vector3 v)
-        {
-            return string.Format("{0}|{1}|{2}", v.x, v.y, v.z);
-        }
     }
 
     public struct MainConfigModel {
@@ -173,17 +158,13 @@ namespace CountersPlus.Config
     public struct MissedConfigModel : ConfigModel
     {
         public bool Enabled { get; set; }
-
         public CounterPositions Position { get; set; }
-        
         public int Index { get; set; }
     }
 
     public struct AccuracyConfigModel : ConfigModel {
         public bool Enabled { get; set; }
-
         public CounterPositions Position { get; set; }
-
         public int Index { get; set; }
         public bool ShowPercentage;
         public int DecimalPrecision;
@@ -191,9 +172,7 @@ namespace CountersPlus.Config
 
     public struct ProgressConfigModel : ConfigModel {
         public bool Enabled { get; set; }
-
         public CounterPositions Position { get; set; }
-
         public int Index { get; set; }
         public bool UseOld;
         public bool ProgressTimeLeft;
@@ -202,9 +181,7 @@ namespace CountersPlus.Config
     public struct ScoreConfigModel : ConfigModel
     {
         public bool Enabled { get; set; }
-
         public CounterPositions Position { get; set; }
-
         public int Index { get; set; }
         public bool UseOld;
         public int DecimalPrecision;
@@ -213,9 +190,7 @@ namespace CountersPlus.Config
 
     public struct PBConfigModel : ConfigModel{
         public bool Enabled { get; set; }
-
         public CounterPositions Position { get; set; }
-
         public int Index { get; set; }
         public int DecimalPrecision;
     }
@@ -223,9 +198,7 @@ namespace CountersPlus.Config
     public struct SpeedConfigModel : ConfigModel
     {
         public bool Enabled { get; set; }
-
         public CounterPositions Position { get; set; }
-
         public int Index { get; set; }
         public int DecimalPrecision;
         public enum CounterMode { Average, Top5Sec, Both, SplitAverage, SplitBoth };
@@ -235,9 +208,7 @@ namespace CountersPlus.Config
     public struct CutConfigModel : ConfigModel
     {
         public bool Enabled { get; set; }
-
         public CounterPositions Position { get; set; }
-
         public int Index { get; set; }
     }
 
