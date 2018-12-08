@@ -9,7 +9,7 @@ namespace CountersPlus
     public class Plugin : IPlugin
     {
         public string Name => "Counters+";
-        public string Version => "1.0.1";
+        public string Version => "1.1.0";
         public enum LogInfo { Info, Warning, Error, Fatal };
 
         public void OnApplicationStart()

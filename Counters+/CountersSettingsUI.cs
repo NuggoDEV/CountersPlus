@@ -50,12 +50,18 @@ namespace CountersPlus
                 CountersController.FlagConfigForReload(true);
             };
 
-            if (!CountersController.settings.Enabled) return;
+            if (!CountersController.settings.Enabled || CountersController.settings.DisableMenus) return;
 
             var mainRNG = mainSub.AddBool("Random Counter Properties", "Add some RNG to the position and settings of some Counters.");
             mainRNG.GetValue += delegate { return CountersController.settings.RNG; };
             mainRNG.SetValue += delegate (bool value) {
                 CountersController.settings.RNG = value;
+            };
+
+            var mainDisable = mainSub.AddBool("Disable Menus", "Removes clutter in the Settings option by removing all settings options, while keeping the Counters enabled.");
+            mainRNG.GetValue += delegate { return CountersController.settings.DisableMenus; };
+            mainRNG.SetValue += delegate (bool value) {
+                CountersController.settings.DisableMenus = value;
             };
 
             //Missed
