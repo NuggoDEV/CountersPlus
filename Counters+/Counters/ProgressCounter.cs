@@ -63,7 +63,7 @@ namespace CountersPlus.Counters
 
         void Init()
         {
-            if (GameObject.Find("SongProgressPanel") != null) Destroy(GameObject.Find("SongProgressPanel"));
+            
             _timeMesh = this.gameObject.AddComponent<TextMeshPro>();
             _timeMesh.text = "0:00";
             _timeMesh.fontSize = 4;
@@ -116,6 +116,7 @@ namespace CountersPlus.Counters
 
         void Update()
         {
+            if (GameObject.Find("SongProgressPanel") != null) Destroy(GameObject.Find("SongProgressPanel"));
             if (CountersController.rng)
             {
                 settings.Index = UnityEngine.Random.Range(0, 5);

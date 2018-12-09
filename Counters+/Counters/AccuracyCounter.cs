@@ -48,7 +48,7 @@ namespace CountersPlus.Counters
             counterText.fontSize = 4;
             counterText.color = Color.white;
             counterText.alignment = TextAlignmentOptions.Center;
-            counterText.rectTransform.position = new Vector3(0, -0.4f, 0);
+            counterText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
 
             GameObject labelGO = new GameObject("Counters+ | Notes Label");
             labelGO.transform.parent = transform;
@@ -78,16 +78,20 @@ namespace CountersPlus.Counters
                 settings.Index = UnityEngine.Random.Range(0, 5);
                 settings.Position = (CounterPositions)UnityEngine.Random.Range(0, 4);
                 settings.DecimalPrecision = UnityEngine.Random.Range(0, 5);
-                transform.position = Vector3.Lerp(
-                    transform.position,
-                    CountersController.determinePosition(gameObject, settings.Position, settings.Index),
-                    Time.deltaTime);
             }
             else
             {
-                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+                if (CountersController.settings.RNG)
+                {
+                    transform.position = Vector3.Lerp(
+                    transform.position,
+                    CountersController.determinePosition(gameObject, settings.Position, settings.Index),
+                    Time.deltaTime);
+                }
+                else
+                    transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             }
-            
+
         }
 
         private void onNoteCut(NoteData data, NoteCutInfo info, int c)

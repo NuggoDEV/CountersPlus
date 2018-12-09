@@ -49,7 +49,7 @@ namespace CountersPlus.Counters
             missedText.fontSize = 4;
             missedText.color = Color.white;
             missedText.alignment = TextAlignmentOptions.Center;
-            missedText.rectTransform.position = new Vector3(0, -0.4f, 0);
+            missedText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
 
             GameObject labelGO = new GameObject("Counters+ | Missed Label");
             labelGO.transform.parent = transform;
@@ -78,16 +78,20 @@ namespace CountersPlus.Counters
             {
                 settings.Index = UnityEngine.Random.Range(0, 5);
                 settings.Position = (CounterPositions)UnityEngine.Random.Range(0, 4);
-                transform.position = Vector3.Lerp(
-                    transform.position,
-                    CountersController.determinePosition(gameObject, settings.Position, settings.Index),
-                    Time.deltaTime);
             }
             else
             {
-                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+                if (CountersController.settings.RNG)
+                {
+                    transform.position = Vector3.Lerp(
+                    transform.position,
+                    CountersController.determinePosition(gameObject, settings.Position, settings.Index),
+                    Time.deltaTime);
+                }
+                else
+                    transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             }
-            
+
         }
 
         private void onNoteCut(NoteData data, NoteCutInfo info, int c)

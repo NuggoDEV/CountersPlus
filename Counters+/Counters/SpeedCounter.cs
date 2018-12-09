@@ -57,7 +57,7 @@ namespace CountersPlus.Counters
                 counterText.fontSize = 4;
                 counterText.color = Color.white;
                 counterText.alignment = TextAlignmentOptions.Center;
-                counterText.rectTransform.position = new Vector3(0, -0.4f, 0);
+                counterText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
 
                 GameObject labelGO = new GameObject("Counters+ | Speed Label");
                 labelGO.transform.parent = transform;
@@ -73,7 +73,7 @@ namespace CountersPlus.Counters
                 counterText.fontSize = 4;
                 counterText.color = Color.white;
                 counterText.alignment = TextAlignmentOptions.Center;
-                counterText.rectTransform.position = new Vector3(0, -0.4f, 0);
+                counterText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
 
                 GameObject labelGO = new GameObject("Counters+ | Highest Speed Label");
                 labelGO.transform.parent = transform;
@@ -90,7 +90,7 @@ namespace CountersPlus.Counters
                 counterText.fontSize = 4;
                 counterText.color = Color.white;
                 counterText.alignment = TextAlignmentOptions.Center;
-                counterText.rectTransform.position = new Vector3(0, -0.4f, 0);
+                counterText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
 
                 GameObject labelGO = new GameObject("Counters+ | Speed Label");
                 labelGO.transform.parent = transform;
@@ -107,10 +107,10 @@ namespace CountersPlus.Counters
                 altCounterText.fontSize = 4;
                 altCounterText.color = Color.white;
                 altCounterText.alignment = TextAlignmentOptions.Center;
-                altCounterText.rectTransform.position = new Vector3(0, -0.4f, 0);
+                altCounterText.rectTransform.localPosition = new Vector3(0, -0.2f, 0);
 
                 GameObject altLabelGO = new GameObject("Counters+ | Highest Speed Label");
-                altLabelGO.transform.parent = transform;
+                altLabelGO.transform.parent = altGO.transform;
                 TextMeshPro altLabel = altLabelGO.AddComponent<TextMeshPro>();
                 altLabel.text = "Top Speed (5 Sec.)";
                 altLabel.fontSize = 3;
@@ -119,13 +119,11 @@ namespace CountersPlus.Counters
 
                 if (settings.Position == CounterPositions.AboveCombo || settings.Position == CounterPositions.AboveHighway || settings.Position == CounterPositions.AboveMultiplier)
                 {
-                    altCounterText.rectTransform.position += new Vector3(0, 1, 0);
-                    altLabel.rectTransform.position += new Vector3(0, 1, 0);
+                    altGO.transform.position += new Vector3(0, 1f, 0);
                 }
                 else
                 {
-                    altCounterText.rectTransform.position += new Vector3(0, -0.75f, 0);
-                    altLabel.rectTransform.position += new Vector3(0, -0.75f, 0);
+                    altGO.transform.position += new Vector3(0, -0.75f, 0);
                 }
                 StartCoroutine(FastestSpeed());
             }

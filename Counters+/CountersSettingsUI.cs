@@ -50,8 +50,6 @@ namespace CountersPlus
                 CountersController.FlagConfigForReload(true);
             };
 
-            if (!CountersController.settings.Enabled || CountersController.settings.DisableMenus) return;
-
             var mainRNG = mainSub.AddBool("Random Counter Properties", "Add some RNG to the position and settings of some Counters.");
             mainRNG.GetValue += delegate { return CountersController.settings.RNG; };
             mainRNG.SetValue += delegate (bool value) {
@@ -63,6 +61,8 @@ namespace CountersPlus
             mainRNG.SetValue += delegate (bool value) {
                 CountersController.settings.DisableMenus = value;
             };
+
+            if (!CountersController.settings.Enabled || CountersController.settings.DisableMenus) return;
 
             //Missed
             var missedMenu = SettingsUI.CreateSubMenu("Counters+ | Missed");
