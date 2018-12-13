@@ -110,7 +110,7 @@ namespace CountersPlus
         }
 
         public static void LoadCounters()
-        {//ScorePanel, SongProgressPanel
+        {
             Plugin.Log("Loading Counters...");
             LoadCounter<MissedConfigModel, MissedCounter>("Missed", settings.missedConfig);
             LoadCounter<AccuracyConfigModel, AccuracyCounter>("Notes", settings.accuracyConfig);
