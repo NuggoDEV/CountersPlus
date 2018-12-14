@@ -36,7 +36,7 @@ namespace CountersPlus
         {
             try
             {
-                if (arg.name == "Menu" && !CountersController.settings.DisableMenus) CountersSettingsUI.CreateSettingsUI();
+                if (arg.name == "Menu") CountersSettingsUI.CreateSettingsUI();
             }catch(Exception e)
             {
                 Log(e.ToString(), LogInfo.Fatal);
