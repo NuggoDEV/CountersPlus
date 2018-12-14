@@ -58,13 +58,13 @@ namespace CountersPlus
                 CountersController.settings.RNG = value;
             };
 
-            var mainDisable = mainSub.AddBool("Disable Menus", "Removes clutter in the Settings option by removing all settings options, while keeping the Counters enabled.");
+            /*var mainDisable = mainSub.AddBool("Disable Menus", "Removes clutter in the Settings option by removing all settings options, while keeping the Counters enabled.");
             mainRNG.GetValue += delegate { return CountersController.settings.DisableMenus; };
             mainRNG.SetValue += delegate (bool value) {
                 CountersController.settings.DisableMenus = value;
             };
 
-            if (CountersController.settings.DisableMenus) return;
+            if (CountersController.settings.DisableMenus) return;*/
 
             //Missed
             var missedMenu = SettingsUI.CreateSubMenu("Counters+ | Missed");
