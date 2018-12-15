@@ -19,8 +19,7 @@ namespace CountersPlus
 
         public float pbPercent { get; private set; }
 
-        public static bool reloadConfig { get; private set; } = false;
-        private static bool saveOnReload = false;
+        
 
         public static void OnLoad()
         {
@@ -39,24 +38,11 @@ namespace CountersPlus
             SceneManager.activeSceneChanged += activeSceneChanged;
         }
 
-        public static void FlagConfigForReload(bool SaveOnReload = false)
-        {
-            reloadConfig = true;
-            saveOnReload = SaveOnReload;
-        }
-
         void activeSceneChanged(Scene arg, Scene arg1)
         {
             if (arg1.name == "Menu") {
                 //StartCoroutine(GetStandardLevelDetailViewController());
                 loadedCounters.Clear();
-            }
-            if (reloadConfig)
-            {
-                if (saveOnReload) settings.save();
-                settings = Config.Config.loadSettings();
-                reloadConfig = false;
-                saveOnReload = false;
             }
         }
 
@@ -158,6 +144,13 @@ namespace CountersPlus
                         offset += new Vector3(0, -0.75f, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
+            }
+            if (Plugin.beatSaberVersion == "0.12.1") //Handles slight position changes from Beat Saber v0.12.1
+            {
+                if ((pos.x / Math.Abs(pos.x)) == -1) //If Counter would be on the Combo side
+                    pos -= new Vector3(0.2f, 0, 0);
+                else                                 //If Counter would be on Multiplier side
+                    pos += new Vector3(0.2f, 0.3f, 0);
             }
             if (counter.GetComponent<ProgressCounter>() != null)
             {

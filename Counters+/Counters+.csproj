@@ -104,6 +104,8 @@
   <ItemGroup>
     <Compile Include="Counters\AccuracyCounter.cs" />
     <Compile Include="Counters\CutCounter.cs" />
+    <Compile Include="UI\CountersPlusSettingsFlowCoordinator.cs" />
+    <Compile Include="UI\CountersPlusSettingsViewController.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="CountersController.cs" />
     <Compile Include="CountersSettingsUI.cs" />

@@ -47,7 +47,7 @@ namespace CountersPlus
             mainEnabled.GetValue += delegate { return CountersController.settings.Enabled; };
             mainEnabled.SetValue += delegate (bool value) {
                 CountersController.settings.Enabled = value;
-                CountersController.FlagConfigForReload(true);
+                Plugin.FlagConfigForReload(true);
             };
 
             if (!CountersController.settings.Enabled) return;

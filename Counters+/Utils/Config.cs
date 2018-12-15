@@ -107,6 +107,7 @@ namespace CountersPlus.Config
             save("Score", scoreConfig);
             save("Speed", speedConfig);
             save("Cut", cutConfig);
+            Plugin.Log("Settings saved!");
         }
 
         public void save<T>(string name, T settings) where T : ConfigModel
