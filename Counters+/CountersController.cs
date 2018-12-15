@@ -147,10 +147,13 @@ namespace CountersPlus
             }
             if (Plugin.beatSaberVersion == "0.12.1") //Handles slight position changes from Beat Saber v0.12.1
             {
-                if ((pos.x / Math.Abs(pos.x)) == -1) //If Counter would be on the Combo side
-                    pos -= new Vector3(0.2f, 0, 0);
-                else                                 //If Counter would be on Multiplier side
-                    pos += new Vector3(0.2f, 0.3f, 0);
+                if (position != CounterPositions.AboveHighway && position != CounterPositions.BelowEnergy)
+                {
+                    if ((pos.x / Math.Abs(pos.x)) == -1) //If Counter would be on the Combo side
+                        pos -= new Vector3(0.2f, -0.3f, 0);
+                    else                                 //If Counter would be on Multiplier side
+                        pos += new Vector3(0.2f, 0.3f, 0);
+                }
             }
             if (counter.GetComponent<ProgressCounter>() != null)
             {
