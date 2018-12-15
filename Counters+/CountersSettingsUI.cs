@@ -58,7 +58,7 @@ namespace CountersPlus
                 CountersController.settings.RNG = value;
             };
 
-            var mainMenus = mainSub.AddBool("Disable Menus", "Removes clutter by removing all other Counters+ submenus while keepign Counters+ enabled.");
+            var mainMenus = mainSub.AddBool("Disable Menus", "Removes clutter by removing all other Counters+ submenus while keeping Counters+ enabled.");
             mainMenus.GetValue += delegate { return CountersController.settings.DisableMenus; };
             mainMenus.SetValue += delegate (bool value) {
                 CountersController.settings.DisableMenus = value;
