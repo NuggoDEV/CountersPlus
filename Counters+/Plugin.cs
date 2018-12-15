@@ -11,7 +11,7 @@ namespace CountersPlus
     public class Plugin : IPlugin
     {
         public string Name => "Counters+";
-        public string Version => "1.1.0";
+        public string Version => "1.1.1";
         public static string beatSaberVersion { get; private set; }
         public enum LogInfo { Info, Warning, Error, Fatal };
 

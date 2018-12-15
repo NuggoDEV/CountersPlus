@@ -29,6 +29,7 @@ namespace CountersPlus.Config
             {
                 Enabled = ModPrefs.GetBool("Counters+ | Main", "Enabled", true, true),
                 RNG = ModPrefs.GetBool("Counters+ | Main", "RNG", false, true),
+                DisableMenus = ModPrefs.GetBool("Counters+ | Main", "DisableMenus", false, true),
                 missedConfig = new MissedConfigModel
                 {
                     Enabled = ModPrefs.GetBool("Counters+ | Missed", "Enabled", true, true),
@@ -89,6 +90,7 @@ namespace CountersPlus.Config
     public struct MainConfigModel {
         public bool Enabled;
         public bool RNG;
+        public bool DisableMenus;
         public MissedConfigModel missedConfig;
         public AccuracyConfigModel accuracyConfig;
         public ProgressConfigModel progressConfig;
@@ -101,6 +103,7 @@ namespace CountersPlus.Config
         {
             ModPrefs.SetBool("Counters+ | Main", "Enabled", Enabled);
             ModPrefs.SetBool("Counters+ | Main", "RNG", RNG);
+            ModPrefs.SetBool("Counters+ | Main", "DisableMenus", DisableMenus);
             save("Missed", missedConfig);
             save("Notes", accuracyConfig);
             save("Progress", progressConfig);
