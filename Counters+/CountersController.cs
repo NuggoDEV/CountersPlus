@@ -120,7 +120,7 @@ namespace CountersPlus
                     break;
                 case Config.CounterPositions.AboveCombo:
                     pos = new Vector3(-3f, 1.5f, 7);
-                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.UseOld)
+                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.Mode == CounterMode.BaseGame)
                         offset += new Vector3(0, -0.75f, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
@@ -130,7 +130,7 @@ namespace CountersPlus
                     break;
                 case Config.CounterPositions.AboveMultiplier:
                     pos = new Vector3(3f, 1.5f, 7);
-                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.UseOld)
+                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.Mode == CounterMode.BaseGame)
                         offset += new Vector3(0, -0.75f, 0);
                     if (GameObject.Find("FCDisplay")) offset += new Vector3(0, -0.25f, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
@@ -140,7 +140,7 @@ namespace CountersPlus
                     break;
                 case Config.CounterPositions.AboveHighway:
                     pos = new Vector3(0, 2.25f, 7);
-                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.UseOld)
+                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.Mode == CounterMode.BaseGame)
                         offset += new Vector3(0, -0.75f, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
@@ -158,7 +158,7 @@ namespace CountersPlus
             if (counter.GetComponent<ProgressCounter>() != null)
             {
                 offset += new Vector3(0.25f, 0, 0);
-                if (settings.progressConfig.UseOld) offset -= new Vector3(0.25f, 0, 0);
+                if (settings.progressConfig.Mode != CounterMode.Original) offset -= new Vector3(0.25f, 0, 0);
             }
             return pos + offset;
         }

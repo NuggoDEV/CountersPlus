@@ -29,15 +29,19 @@ namespace CountersPlus
             {Config.CounterPositions.BelowEnergy, "Below Energy" },
             {Config.CounterPositions.AboveHighway, "Over Highway" }
         };
-        public class SpeedModeViewController : TupleViewController<Tuple<SpeedConfigModel.CounterMode, string>> { }
-        static List<Tuple<SpeedConfigModel.CounterMode, string>> mode = new List<Tuple<SpeedConfigModel.CounterMode, string>> {
-            {SpeedConfigModel.CounterMode.Average, "Mean Speed" },
-            {SpeedConfigModel.CounterMode.Top5Sec, "Top (5 Sec.)" },
-            {SpeedConfigModel.CounterMode.Both, "Both" },
-            {SpeedConfigModel.CounterMode.SplitAverage, "Split Mean" },
-            {SpeedConfigModel.CounterMode.SplitBoth, "Both w/Split" },
+        public class ModeViewController : TupleViewController<Tuple<CounterMode, string>> { }
+        static List<Tuple<CounterMode, string>> speedSettings = new List<Tuple<CounterMode, string>> {
+            {CounterMode.Average, "Mean Speed" },
+            {CounterMode.Top5Sec, "Top (5 Sec.)" },
+            {CounterMode.Both, "Both" },
+            {CounterMode.SplitAverage, "Split Mean" },
+            {CounterMode.SplitBoth, "Both w/Split" }
         };
-
+        static List<Tuple<CounterMode, string>> progressSettings = new List<Tuple<CounterMode, string>> {
+            {CounterMode.BaseGame, "Base Game" },
+            {CounterMode.Original, "Original" },
+            {CounterMode.Percent, "Percentage" }
+        };
 
         public static void CreateSettingsUI()
         {
@@ -66,215 +70,146 @@ namespace CountersPlus
 
             if (CountersController.settings.DisableMenus) return;
 
-            //Missed
-            var missedMenu = SettingsUI.CreateSubMenu("Counters+ | Missed");
-            var enabled = missedMenu.AddBool("Enabled", "Toggles this counter on or off.");
-            enabled.GetValue += () => CountersController.settings.missedConfig.Enabled;
-            enabled.SetValue += v =>
+            var items = new Dictionary<string, Tuple<ConfigModel, Action<SubMenu>>>()
             {
-                CountersController.settings.missedConfig.Enabled = v;
+                {
+                    "Missed",
+                    Tuple.Create<ConfigModel,Action<SubMenu>>(
+                        CountersController.settings.missedConfig,
+                        v =>{ }) },
+                {
+                    "Notes",
+                    Tuple.Create<ConfigModel,Action<SubMenu>>(
+                        CountersController.settings.accuracyConfig,
+                        v => {
+                             var accuracyPercentage = v.AddBool("Show Percentage", "Toggles the percentage of notes hit over total notes.");
+                            accuracyPercentage.GetValue += delegate { return CountersController.settings.accuracyConfig.ShowPercentage; };
+                            accuracyPercentage.SetValue += delegate (bool value) {
+                                CountersController.settings.accuracyConfig.ShowPercentage = value;
+                            };
+                            var accuracyPrecision = v.AddInt("Percentage Decimal Precision", "How accuracy the percentage will be.", 0, 5, 1);
+                            accuracyPrecision.GetValue += delegate { return CountersController.settings.accuracyConfig.DecimalPrecision; };
+                            accuracyPrecision.SetValue += delegate (int c) {
+                                CountersController.settings.accuracyConfig.DecimalPrecision = c;
+                            };
+                        }) },
+                {
+                    "Score",
+                    Tuple.Create<ConfigModel,Action<SubMenu>>(
+                        CountersController.settings.scoreConfig,
+                        v => {
+                             var scoreRank = v.AddBool("Display Rank", "Displays the rank as you progress in a song.");
+                            scoreRank.GetValue += delegate { return CountersController.settings.scoreConfig.DisplayRank; };
+                            scoreRank.SetValue += delegate (bool value) {
+                                CountersController.settings.scoreConfig.DisplayRank = value;
+                            };
+                            var scoreOverride = v.AddBool("Override Base Game Counter");
+                            scoreOverride.GetValue += delegate { return CountersController.settings.scoreConfig.UseOld; };
+                            scoreOverride.SetValue += delegate (bool value) {
+                                CountersController.settings.scoreConfig.UseOld = value;
+                            };
+                            float[] scorePrec = new float[6] { 0, 1, 2, 3, 4, 5 };
+                            var scorePrecision = v.AddList("Percentage Decimal Precision", scorePrec, "How accuracy the percentage will be.");
+                            scorePrecision.GetValue += delegate { return CountersController.settings.scoreConfig.DecimalPrecision; };
+                            scorePrecision.SetValue += delegate (float c) {
+                                CountersController.settings.scoreConfig.DecimalPrecision = (int)Math.Floor(c);
+                            };
+                            scorePrecision.FormatValue += delegate (float c) { return c.ToString(); };
+                        }) },
+                {
+                    "Progress",
+                    Tuple.Create<ConfigModel,Action<SubMenu>>(
+                        CountersController.settings.progressConfig,
+                        v => {
+                             var progressRank = v.AddBool("Show Time Left", "Starts the counter from the end of the song and decreases while the song is played.");
+                            progressRank.GetValue += delegate { return CountersController.settings.progressConfig.ProgressTimeLeft; };
+                            progressRank.SetValue += delegate (bool value) {
+                                CountersController.settings.progressConfig.ProgressTimeLeft = value;
+                            };
+                            var progressMode = v.AddListSetting<ModeViewController>("Mode", determineModeText(CountersController.settings.progressConfig.Mode));
+                            progressMode.values = progressSettings;
+                            progressMode.GetValue = () => progressSettings.Where((Tuple<CounterMode, string> x) => (x.Item1 == CountersController.settings.progressConfig.Mode)).FirstOrDefault();
+                            progressMode.GetTextForValue = (value) => value.Item2;
+                            progressMode.SetValue = c =>
+                            {
+                                CountersController.settings.progressConfig.Mode = c.Item1;
+                            };
+                        }) },
+                {
+                    "Speed",
+                    Tuple.Create<ConfigModel,Action<SubMenu>>(
+                        CountersController.settings.speedConfig,
+                        v => {
+                            var speedPrecision = v.AddInt("Decimal Precision", "How precise will the counter go to?", 0, 5, 1);
+                            speedPrecision.GetValue += delegate { return CountersController.settings.speedConfig.DecimalPrecision; };
+                            speedPrecision.SetValue += delegate (int c) {
+                                CountersController.settings.speedConfig.DecimalPrecision = c;
+                            };
+                            var speedMode = v.AddListSetting<ModeViewController>("Mode", determineModeText(CountersController.settings.speedConfig.Mode));
+                            speedMode.values = speedSettings;
+                            speedMode.GetValue = () => speedSettings.Where((Tuple<CounterMode, string> x) => (x.Item1 == CountersController.settings.speedConfig.Mode)).FirstOrDefault();
+                            speedMode.GetTextForValue = (value) => value.Item2;
+                            speedMode.SetValue = c =>
+                            {
+                                CountersController.settings.speedConfig.Mode = c.Item1;
+                            };
+                        }) },
+                {
+                    "Cut",
+                    Tuple.Create<ConfigModel,Action<SubMenu>>(
+                        CountersController.settings.cutConfig,
+                        v =>{ }) },
             };
-            var missedPosition = missedMenu.AddListSetting<PositionSettingsViewController>("Position", "The relative positions of common UI elements of which to go off of.");
-            missedPosition.values = positions;
-            missedPosition.GetValue = () => positions.Where((Tuple<Config.CounterPositions, string> x) => (x.Item1 == CountersController.settings.missedConfig.Position)).FirstOrDefault();
-            missedPosition.GetTextForValue = (value) => value.Item2;
-            missedPosition.SetValue = v =>
+            foreach(var kvp in items)
             {
-                CountersController.settings.missedConfig.Position = v.Item1;
-            };
-            var missedIndex = missedMenu.AddInt("Index", "How far from the position the counter will be. A higher number means farther away.", 0, 5, 1);
-            missedIndex.GetValue += () => CountersController.settings.missedConfig.Index;
-            missedIndex.SetValue += v =>
-            {
-                CountersController.settings.missedConfig.Index = v;
-            };
-
-            //Accuracy
-            var accuracySub = SettingsUI.CreateSubMenu("Counters+ | Notes");
-            var accuracyEnabled = accuracySub.AddBool("Enabled", "Toggles this counter on or off.");
-            accuracyEnabled.GetValue += () => CountersController.settings.accuracyConfig.Enabled;
-            accuracyEnabled.SetValue += v =>
-            {
-                CountersController.settings.accuracyConfig.Enabled = v;
-            };
-            var accuracyPosition = accuracySub.AddListSetting<PositionSettingsViewController>("Position", "The relative positions of common UI elements of which to go off of.");
-            accuracyPosition.values = positions;
-            accuracyPosition.GetValue = () => positions.Where((Tuple<Config.CounterPositions, string> x) => (x.Item1 == CountersController.settings.accuracyConfig.Position)).FirstOrDefault();
-            accuracyPosition.GetTextForValue = (value) => value.Item2;
-            accuracyPosition.SetValue = v =>
-            {
-                CountersController.settings.accuracyConfig.Position = v.Item1;
-            };
-            var accuracyIndex = accuracySub.AddInt("Index", "How far from the position the counter will be. A higher number means farther away.", 0, 5, 1);
-            accuracyIndex.GetValue += () => CountersController.settings.accuracyConfig.Index;
-            accuracyIndex.SetValue += v =>
-            {
-                CountersController.settings.accuracyConfig.Index = v;
-            };
-
-            var accuracyPercentage = accuracySub.AddBool("Show Percentage", "Toggles the percentage of notes hit over total notes.");
-            accuracyPercentage.GetValue += delegate { return CountersController.settings.accuracyConfig.ShowPercentage; };
-            accuracyPercentage.SetValue += delegate (bool value) {
-                CountersController.settings.accuracyConfig.ShowPercentage = value;
-            };
-            var accuracyPrecision = accuracySub.AddInt("Percentage Decimal Precision", "How accuracy the percentage will be.", 0, 5, 1);
-            accuracyPrecision.GetValue += delegate { return CountersController.settings.accuracyConfig.DecimalPrecision; };
-            accuracyPrecision.SetValue += delegate (int v) {
-                CountersController.settings.accuracyConfig.DecimalPrecision = v;
-            };
-
-            //Score
-            var scoreSub = SettingsUI.CreateSubMenu("Counters+ | Score");
-            var scoreEnabled = scoreSub.AddBool("Enabled", "Toggles this counter on or off.");
-            scoreEnabled.GetValue += () => CountersController.settings.scoreConfig.Enabled;
-            scoreEnabled.SetValue += v =>
-            {
-                CountersController.settings.scoreConfig.Enabled = v;
-            };
-            var scorePosition = scoreSub.AddListSetting<PositionSettingsViewController>("Position", "The relative positions of common UI elements of which to go off of.");
-            scorePosition.values = positions;
-            scorePosition.GetValue = () => positions.Where((Tuple<Config.CounterPositions, string> x) => (x.Item1 == CountersController.settings.scoreConfig.Position)).FirstOrDefault();
-            scorePosition.GetTextForValue = (value) => value.Item2;
-            scorePosition.SetValue = v =>
-            {
-                CountersController.settings.scoreConfig.Position = v.Item1;
-            };
-            var scoreIndex = scoreSub.AddInt("Index", "How far from the position the counter will be. A higher number means farther away.", 0, 5, 1);
-            scoreIndex.GetValue += () => CountersController.settings.scoreConfig.Index;
-            scoreIndex.SetValue += v =>
-            {
-                CountersController.settings.scoreConfig.Index = v;
-            };
-
-            var scoreRank = scoreSub.AddBool("Display Rank", "Displays the rank as you progress in a song.");
-            scoreRank.GetValue += delegate { return CountersController.settings.scoreConfig.DisplayRank; };
-            scoreRank.SetValue += delegate (bool value) {
-                CountersController.settings.scoreConfig.DisplayRank = value;
-            };
-            var scoreOverride = scoreSub.AddBool("Override Base Game Counter");
-            scoreOverride.GetValue += delegate { return CountersController.settings.scoreConfig.UseOld; };
-            scoreOverride.SetValue += delegate (bool value) {
-                CountersController.settings.scoreConfig.UseOld = value;
-            };
-            float[] scorePrec = new float[6] { 0, 1, 2, 3, 4, 5 };
-            var scorePrecision = scoreSub.AddList("Percentage Decimal Precision", scorePrec, "How accuracy the percentage will be.");
-            scorePrecision.GetValue += delegate { return CountersController.settings.scoreConfig.DecimalPrecision; };
-            scorePrecision.SetValue += delegate (float v) {
-                CountersController.settings.scoreConfig.DecimalPrecision = (int)Math.Floor(v);
-            };
-            scorePrecision.FormatValue += delegate (float v) { return v.ToString(); };
-
-            //Progress
-            var progressSub = SettingsUI.CreateSubMenu("Counters+ | Progress");
-            var progressEnabled = progressSub.AddBool("Enabled", "Toggles this counter on or off.");
-            progressEnabled.GetValue += () => CountersController.settings.progressConfig.Enabled;
-            progressEnabled.SetValue += v =>
-            {
-                CountersController.settings.progressConfig.Enabled = v;
-            };
-            var progressPosition = progressSub.AddListSetting<PositionSettingsViewController>("Position", "The relative positions of common UI elements of which to go off of.");
-            progressPosition.values = positions;
-            progressPosition.GetValue = () => positions.Where((Tuple<Config.CounterPositions, string> x) => (x.Item1 == CountersController.settings.progressConfig.Position)).FirstOrDefault();
-            progressPosition.GetTextForValue = (value) => value.Item2;
-            progressPosition.SetValue = v =>
-            {
-                CountersController.settings.progressConfig.Position = v.Item1;
-            };
-            var progressIndex = progressSub.AddInt("Index", "How far from the position the counter will be. A higher number means farther away.", 0, 5, 1);
-            progressIndex.GetValue += () => CountersController.settings.progressConfig.Index;
-            progressIndex.SetValue += v =>
-            {
-                CountersController.settings.progressConfig.Index = v;
-            };
-
-            var progressRank = progressSub.AddBool("Show Time Left", "Starts the counter from the end of the song and decreases while the song is played.");
-            progressRank.GetValue += delegate { return CountersController.settings.progressConfig.ProgressTimeLeft; };
-            progressRank.SetValue += delegate (bool value) {
-                CountersController.settings.progressConfig.ProgressTimeLeft = value;
-            };
-            var progressOverride = progressSub.AddBool("Override Base Game Counter");
-            progressOverride.GetValue += delegate { return CountersController.settings.progressConfig.UseOld; };
-            progressOverride.SetValue += delegate (bool value) {
-                CountersController.settings.progressConfig.UseOld = value;
-            };
-
-            //Speed
-            var speedSub = SettingsUI.CreateSubMenu("Counters+ | Speed");
-            var speedEnabled = speedSub.AddBool("Enabled", "Toggles this counter on or off.");
-            speedEnabled.GetValue += () => CountersController.settings.speedConfig.Enabled;
-            speedEnabled.SetValue += v =>
-            {
-                CountersController.settings.speedConfig.Enabled = v;
-            };
-            var speedPosition = speedSub.AddListSetting<PositionSettingsViewController>("Position", "The relative positions of common UI elements of which to go off of.");
-            speedPosition.values = positions;
-            speedPosition.GetValue = () => positions.Where((Tuple<Config.CounterPositions, string> x) => (x.Item1 == CountersController.settings.speedConfig.Position)).FirstOrDefault();
-            speedPosition.GetTextForValue = (value) => value.Item2;
-            speedPosition.SetValue = v =>
-            {
-                CountersController.settings.speedConfig.Position = v.Item1;
-            };
-            var speedIndex = speedSub.AddInt("Index", "How far from the position the counter will be. A higher number means farther away.", 0, 5, 1);
-            speedIndex.GetValue += () => CountersController.settings.speedConfig.Index;
-            speedIndex.SetValue += v =>
-            {
-                CountersController.settings.speedConfig.Index = v;
-            };
-            var speedPrecision = speedSub.AddInt("Decimal Precision", "How precise will the counter go to?", 0, 5, 1);
-            speedPrecision.GetValue += delegate { return CountersController.settings.speedConfig.DecimalPrecision; };
-            speedPrecision.SetValue += delegate (int v) {
-                CountersController.settings.speedConfig.DecimalPrecision = v;
-            };
-            var speedMode = speedSub.AddListSetting<SpeedModeViewController>("Mode", determineModeText());
-            speedMode.values = mode;
-            speedMode.GetValue = () => mode.Where((Tuple<SpeedConfigModel.CounterMode, string> x) => (x.Item1 == CountersController.settings.speedConfig.Mode)).FirstOrDefault();
-            speedMode.GetTextForValue = (value) => value.Item2;
-            speedMode.SetValue = v =>
-            {
-                CountersController.settings.speedConfig.Mode = v.Item1;
-            };
-
-            //Cut
-            var cutMenu = SettingsUI.CreateSubMenu("Counters+ | Cut");
-            var cutEnabled = cutMenu.AddBool("Enabled", "Toggles this counter on or off.");
-            cutEnabled.GetValue += () => CountersController.settings.cutConfig.Enabled;
-            cutEnabled.SetValue += v =>
-            {
-                CountersController.settings.cutConfig.Enabled = v;
-            };
-            var cutPosition = cutMenu.AddListSetting<PositionSettingsViewController>("Position", "The relative positions of common UI elements of which to go off of.");
-            cutPosition.values = positions;
-            cutPosition.GetValue = () => positions.Where((Tuple<Config.CounterPositions, string> x) => (x.Item1 == CountersController.settings.cutConfig.Position)).FirstOrDefault();
-            cutPosition.GetTextForValue = (value) => value.Item2;
-            cutPosition.SetValue = v =>
-            {
-                CountersController.settings.cutConfig.Position = v.Item1;
-            };
-            var cutIndex = cutMenu.AddInt("Index", "How far from the position the counter will be. A higher number means farther away.", 0, 5, 1);
-            cutIndex.GetValue += () => CountersController.settings.cutConfig.Index;
-            cutIndex.SetValue += v =>
-            {
-                CountersController.settings.cutConfig.Index = v;
-            };
+                kvp.Value.Item2(createBase(kvp.Key, kvp.Value.Item1));
+            }
         }
 
-        private static string determineModeText(){
+        static SubMenu createBase<T>(string name, T configItem) where T : Config.ConfigModel
+        {
+            Plugin.Log("Creating base for: " + name);
+            var @base = SettingsUI.CreateSubMenu("Counters+ | " + name);
+            var enabled = @base.AddBool("Enabled", "Toggles this counter on or off.");
+            enabled.GetValue += () => configItem.Enabled;
+            enabled.SetValue += v => configItem.Enabled = v;
+            var position = @base.AddListSetting<PositionSettingsViewController>("Position", "The relative positions of common UI elements of which to go off of.");
+            position.values = positions;
+            position.GetValue = () => positions.Where((Tuple<Config.CounterPositions, string> x) => (x.Item1 == configItem.Position)).FirstOrDefault();
+            position.GetTextForValue = (value) => value.Item2;
+            position.SetValue = v => configItem.Position = v.Item1;
+            var index = @base.AddInt("Index", "How far from the position the counter will be. A higher number means farther away.", 0, 5, 1);
+            index.GetValue += () => configItem.Index;
+            index.SetValue += v => configItem.Index = v;
+            return @base;
+        }
+
+        private static string determineModeText(CounterMode Mode){
             string mode = "Unavilable mode!";
-            switch(CountersController.settings.speedConfig.Mode){
-                case SpeedConfigModel.CounterMode.Average:
+            switch(Mode){
+                case CounterMode.Average:
                     mode = "Mean Speed: Average speed of both sabers.";
                     break;
-                case SpeedConfigModel.CounterMode.Top5Sec:
+                case CounterMode.Top5Sec:
                     mode = "Top: Fastest saber speed in the last 5 seconds.";
                     break;
-                case SpeedConfigModel.CounterMode.Both:
+                case CounterMode.Both:
                     mode = "Both: A secondary Counter will be added so both Average and Top will be displayed.";
                     break;
-                case SpeedConfigModel.CounterMode.SplitAverage:
+                case CounterMode.SplitAverage:
                     mode = "Split Mean: Displays averages for each saber, separately.";
                     break;
-                case SpeedConfigModel.CounterMode.SplitBoth:
+                case CounterMode.SplitBoth:
                     mode = "Split Both: Displays both metrics, except the Average is split between two sabers.";
+                    break;
+                case CounterMode.BaseGame:
+                    mode = "Base Game: Uses the base game counter. Some settings will not apply in this mode.";
+                    break;
+                case CounterMode.Original:
+                    mode = "Original: Uses the original display mode, with a white circle bordering a time.";
+                    break;
+                case CounterMode.Percent:
+                    mode = "Percent : Displays a simple percent of the completed song. Some settings will not apply in this mode.";
                     break;
             }
             return "How should this Counter display data?\n" + mode;

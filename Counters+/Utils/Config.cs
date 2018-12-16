@@ -50,7 +50,7 @@ namespace CountersPlus.Config
                     Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Progress", "Position", "BelowEnergy", true)),
                     ProgressTimeLeft = ModPrefs.GetBool("Counters+ | Progress", "ProgressTimeLeft", false, true),
                     Index = ModPrefs.GetInt("Counters+ | Progress", "Index", 0, true),
-                    UseOld = ModPrefs.GetBool("Counters+ | Progress", "UseOld", true, true),
+                    Mode = (CounterMode)Enum.Parse(typeof(CounterMode), ModPrefs.GetString("Counters+ | Progress", "Mode", "Original", true)),
                 },
                 scoreConfig = new ScoreConfigModel {
                     Enabled = ModPrefs.GetBool("Counters+ | Score", "Enabled", true, true),
@@ -73,7 +73,7 @@ namespace CountersPlus.Config
                     Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Speed", "Position", "AboveHighway", true)),
                     DecimalPrecision = ModPrefs.GetInt("Counters+ | Speed", "DecimalPrecision", 2, true),
                     Index = ModPrefs.GetInt("Counters+ | Speed", "Index", 0, true),
-                    Mode = (SpeedConfigModel.CounterMode)Enum.Parse(typeof(SpeedConfigModel.CounterMode), ModPrefs.GetString("Counters+ | Speed", "Mode", "Average", true)),
+                    Mode = (CounterMode)Enum.Parse(typeof(CounterMode), ModPrefs.GetString("Counters+ | Speed", "Mode", "Average", true)),
                 },
                 cutConfig = new CutConfigModel
                 {
@@ -82,7 +82,7 @@ namespace CountersPlus.Config
                     Index = ModPrefs.GetInt("Counters+ | Cut", "Index", 0, true),
                 }
             };
-            
+            Plugin.Log("Config loaded.");
             return model;
         }
     }
@@ -130,7 +130,7 @@ namespace CountersPlus.Config
         public void save(string name, ProgressConfigModel settings)
         {
             save(name, settings as ConfigModel);
-            ModPrefs.SetBool("Counters+ | " + name, "UseOld", settings.UseOld);
+            ModPrefs.SetString("Counters+ | " + name, "Mode", settings.Mode.ToString());
             ModPrefs.SetBool("Counters+ | " + name, "ProgressTimeLeft", settings.ProgressTimeLeft);
         }
 
@@ -156,14 +156,14 @@ namespace CountersPlus.Config
         int Index { get; set; }
     }
 
-    public struct MissedConfigModel : ConfigModel
+    public class MissedConfigModel : ConfigModel
     {
         public bool Enabled { get; set; }
         public CounterPositions Position { get; set; }
         public int Index { get; set; }
     }
 
-    public struct AccuracyConfigModel : ConfigModel {
+    public class AccuracyConfigModel : ConfigModel {
         public bool Enabled { get; set; }
         public CounterPositions Position { get; set; }
         public int Index { get; set; }
@@ -171,15 +171,15 @@ namespace CountersPlus.Config
         public int DecimalPrecision;
     }
 
-    public struct ProgressConfigModel : ConfigModel {
+    public class ProgressConfigModel : ConfigModel {
         public bool Enabled { get; set; }
         public CounterPositions Position { get; set; }
         public int Index { get; set; }
-        public bool UseOld;
+        public CounterMode Mode;
         public bool ProgressTimeLeft;
     }
 
-    public struct ScoreConfigModel : ConfigModel
+    public class ScoreConfigModel : ConfigModel
     {
         public bool Enabled { get; set; }
         public CounterPositions Position { get; set; }
@@ -189,24 +189,23 @@ namespace CountersPlus.Config
         public bool DisplayRank;
     }
 
-    public struct PBConfigModel : ConfigModel{
+    public class PBConfigModel : ConfigModel{
         public bool Enabled { get; set; }
         public CounterPositions Position { get; set; }
         public int Index { get; set; }
         public int DecimalPrecision;
     }
 
-    public struct SpeedConfigModel : ConfigModel
+    public class SpeedConfigModel : ConfigModel
     {
         public bool Enabled { get; set; }
         public CounterPositions Position { get; set; }
         public int Index { get; set; }
         public int DecimalPrecision;
-        public enum CounterMode { Average, Top5Sec, Both, SplitAverage, SplitBoth };
         public CounterMode Mode;
     }
 
-    public struct CutConfigModel : ConfigModel
+    public class CutConfigModel : ConfigModel
     {
         public bool Enabled { get; set; }
         public CounterPositions Position { get; set; }
@@ -214,4 +213,8 @@ namespace CountersPlus.Config
     }
 
     public enum CounterPositions { BelowCombo, AboveCombo, BelowMultiplier, AboveMultiplier, BelowEnergy, AboveHighway }
+
+    public enum CounterMode { Average, Top5Sec, Both, SplitAverage, SplitBoth, //Speed
+                              BaseGame, Original, Percent //Progress
+    };
 }

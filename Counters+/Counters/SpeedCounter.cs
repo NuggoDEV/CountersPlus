@@ -50,10 +50,10 @@ namespace CountersPlus.Counters
         {
             right = playerController.rightSaber;
             left = playerController.leftSaber;
-            if (settings.Mode == SpeedConfigModel.CounterMode.Average || settings.Mode == SpeedConfigModel.CounterMode.SplitAverage)
+            if (settings.Mode == CounterMode.Average || settings.Mode == CounterMode.SplitAverage)
             {
                 counterText = gameObject.AddComponent<TextMeshPro>();
-                counterText.text = settings.Mode == SpeedConfigModel.CounterMode.Average ? "0" : "0 | 0";
+                counterText.text = settings.Mode == CounterMode.Average ? "0" : "0 | 0";
                 counterText.fontSize = 4;
                 counterText.color = Color.white;
                 counterText.alignment = TextAlignmentOptions.Center;
@@ -66,7 +66,7 @@ namespace CountersPlus.Counters
                 label.fontSize = 3;
                 label.color = Color.white;
                 label.alignment = TextAlignmentOptions.Center;
-            }else if (settings.Mode == SpeedConfigModel.CounterMode.Top5Sec)
+            }else if (settings.Mode == CounterMode.Top5Sec)
             {
                 counterText = gameObject.AddComponent<TextMeshPro>();
                 counterText.text = "00.00";
@@ -84,9 +84,9 @@ namespace CountersPlus.Counters
                 label.alignment = TextAlignmentOptions.Center;
 
                 StartCoroutine(FastestSpeed());
-            }else if (settings.Mode == SpeedConfigModel.CounterMode.Both || settings.Mode == SpeedConfigModel.CounterMode.SplitBoth){
+            }else if (settings.Mode == CounterMode.Both || settings.Mode == CounterMode.SplitBoth){
                 counterText = gameObject.AddComponent<TextMeshPro>();
-                counterText.text = settings.Mode == SpeedConfigModel.CounterMode.Both ? "0" : "0 | 0";
+                counterText.text = settings.Mode == CounterMode.Both ? "0" : "0 | 0";
                 counterText.fontSize = 4;
                 counterText.color = Color.white;
                 counterText.alignment = TextAlignmentOptions.Center;
@@ -141,7 +141,7 @@ namespace CountersPlus.Counters
                     if (speed > top) top = speed;
                 }
                 fastest.Clear();
-                if (settings.Mode == SpeedConfigModel.CounterMode.Both || settings.Mode == SpeedConfigModel.CounterMode.SplitBoth)
+                if (settings.Mode == CounterMode.Both || settings.Mode == CounterMode.SplitBoth)
                     altCounterText.text = top.ToString(precision);
                 else
                     counterText.text = top.ToString(precision);
@@ -167,7 +167,7 @@ namespace CountersPlus.Counters
                 }else
                     transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             }
-            if (settings.Mode == SpeedConfigModel.CounterMode.Average)
+            if (settings.Mode == CounterMode.Average)
             {
                 rSpeedList.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
                 float average = 0;
@@ -178,7 +178,7 @@ namespace CountersPlus.Counters
                 average /= rSpeedList.Count;
                 counterText.text = average.ToString(precision);
             }
-            else if (settings.Mode == SpeedConfigModel.CounterMode.SplitAverage)
+            else if (settings.Mode == CounterMode.SplitAverage)
             {
                 rSpeedList.Add(right.bladeSpeed);
                 float rAverage = 0;
@@ -195,14 +195,14 @@ namespace CountersPlus.Counters
                 }
                 lAverage /= lSpeedList.Count;
                 counterText.text = string.Format("{0} | {1}", lAverage.ToString(precision), rAverage.ToString(precision));
-            }else if (settings.Mode == SpeedConfigModel.CounterMode.Top5Sec)
+            }else if (settings.Mode == CounterMode.Top5Sec)
             {
                 fastest.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
             }
             else
             {
                 fastest.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
-                if (settings.Mode == SpeedConfigModel.CounterMode.Both)
+                if (settings.Mode == CounterMode.Both)
                 {
                     rSpeedList.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
                     float average = 0;
@@ -213,7 +213,7 @@ namespace CountersPlus.Counters
                     average /= rSpeedList.Count;
                     counterText.text = average.ToString(precision);
                 }
-                else if (settings.Mode == SpeedConfigModel.CounterMode.SplitBoth)
+                else if (settings.Mode == CounterMode.SplitBoth)
                 {
                     rSpeedList.Add(right.bladeSpeed);
                     float rAverage = 0;
