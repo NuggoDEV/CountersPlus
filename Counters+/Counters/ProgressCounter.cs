@@ -126,7 +126,7 @@ namespace CountersPlus.Counters
 
         void Update()
         {
-            if (GameObject.Find("SongProgressPanel") != null) Destroy(GameObject.Find("SongProgressPanel"));
+            if (GameObject.Find("SongProgressPanel") != null && settings.Mode != CounterMode.BaseGame) Destroy(GameObject.Find("SongProgressPanel"));
             if (CountersController.rng)
             {
                 settings.Index = UnityEngine.Random.Range(0, 5);

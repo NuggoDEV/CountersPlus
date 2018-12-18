@@ -22,8 +22,6 @@ namespace CountersPlus.Counters
 
         GameObject _RankObject;
         TextMeshPro _RankText;
-        int _maxPossibleScore = 0;
-        float roundMultiple;
 
         IEnumerator WaitForLoad()
         {
@@ -70,8 +68,6 @@ namespace CountersPlus.Counters
 
         private void Init()
         {
-            if (GameObject.Find("RelativeScoreText") != null) GameObject.Find("RelativeScoreText").transform.parent = transform;
-            if (GameObject.Find("ScorePanel") != null) Destroy(GameObject.Find("ScorePanel"));
 
             _scoreMesh = this.gameObject.AddComponent<TextMeshPro>();
             _scoreMesh.text = "Average Cut";

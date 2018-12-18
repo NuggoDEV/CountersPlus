@@ -60,7 +60,6 @@ namespace CountersPlus.Counters
             }
             baseCounter.AddComponent<ScoreCounter>();
             Plugin.Log("Score Counter has been moved to the base game counter!");
-            Destroy(gameObject);
         }
 
         void Update()
@@ -87,8 +86,8 @@ namespace CountersPlus.Counters
 
         private void Init()
         {
-            if (GameObject.Find("RelativeScoreText") != null) GameObject.Find("RelativeScoreText").transform.parent = transform;
-            if (GameObject.Find("ScorePanel") != null) Destroy(GameObject.Find("ScorePanel"));
+            if (GameObject.Find("RelativeScoreText") != null && !settings.UseOld) GameObject.Find("RelativeScoreText").transform.parent = transform;
+            if (GameObject.Find("ScorePanel") != null && !settings.UseOld) Destroy(GameObject.Find("ScorePanel"));
             roundMultiple = (float)Math.Pow(100, settings.DecimalPrecision);
 
             _scoreMesh = this.gameObject.AddComponent<TextMeshPro>();

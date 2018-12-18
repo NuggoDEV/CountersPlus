@@ -32,7 +32,7 @@ namespace CountersPlus
             CountersController.OnLoad();
         }
 
-        public static void FlagConfigForReload(bool SaveOnReload = false)
+        internal static void FlagConfigForReload(bool SaveOnReload = false)
         {
             reloadConfig = true;
             saveOnReload = SaveOnReload;
