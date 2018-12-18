@@ -1,89 +1,91 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IllusionPlugin;
-using UnityEngine;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace CountersPlus.Config
 {
     public class Config
     {
+
         public static MainConfigModel loadSettings()
         {
             MainConfigModel model = new MainConfigModel();
-            if (ModPrefs.HasKey("Counters+ | Accuracy", "Enabled") && !ModPrefs.HasKey("Counters+ | Notes", "Enabled"))
+            if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
             {
-                AccuracyConfigModel newModel = new AccuracyConfigModel
-                {
-                    Enabled = ModPrefs.GetBool("Counters+ | Accuracy", "Enabled", true, true),
-                    Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Accuracy", "Position", "BelowCombo", true)),
-                    ShowPercentage = ModPrefs.GetBool("Counters+ | Accuracy", "ShowPercentage", true, true),
-                    Index = ModPrefs.GetInt("Counters+ | Accuracy", "Index", 1, true),
-                    DecimalPrecision = ModPrefs.GetInt("Counters+ | Accuracy", "DecimalPrecision", 1, true),
-                };
-                model.save("Notes", newModel);
+                model = createDefaultJSON();
+                Plugin.Log("Config JSON can not be found! Creating default JSON...", Plugin.LogInfo.Error);
             }
-            model = new MainConfigModel
+            else
             {
-                Enabled = ModPrefs.GetBool("Counters+ | Main", "Enabled", true, true),
-                RNG = ModPrefs.GetBool("Counters+ | Main", "RNG", false, true),
-                DisableMenus = ModPrefs.GetBool("Counters+ | Main", "DisableMenus", false, true),
-                missedConfig = new MissedConfigModel
+                try
                 {
-                    Enabled = ModPrefs.GetBool("Counters+ | Missed", "Enabled", true, true),
-                    Position = (CounterPositions)Enum.Parse(typeof(CounterPositions),ModPrefs.GetString("Counters+ | Missed", "Position", "BelowCombo", true)),
-                    Index = ModPrefs.GetInt("Counters+ | Missed", "Index", 0, true),
+                    string json = File.ReadAllText(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json");
+                    model = JsonConvert.DeserializeObject<MainConfigModel>(json);
+                }
+                catch (Exception e)
+                {
+                    Plugin.Log("Error loading JSON! Overwriting with default JSON...", Plugin.LogInfo.Error);
+                    Plugin.Log(e.Message, Plugin.LogInfo.Error);
+                    model = createDefaultJSON();
+                }
+            }
+            return model;
+        }
+
+        internal static MainConfigModel createDefaultJSON()
+        {
+            MainConfigModel def = new MainConfigModel { Enabled = true, RNG = false, DisableMenus = false,
+                missedConfig = new MissedConfigModel()
+                {
+                    Enabled = true, Position = CounterPositions.BelowCombo, Index = 0,
                 },
                 accuracyConfig = new AccuracyConfigModel
                 {
-                    Enabled = ModPrefs.GetBool("Counters+ | Notes", "Enabled", true, true),
-                    Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Notes", "Position", "BelowCombo", true)),
-                    ShowPercentage = ModPrefs.GetBool("Counters+ | Notes", "ShowPercentage", true, true),
-                    Index = ModPrefs.GetInt("Counters+ | Notes", "Index", 1, true),
-                    DecimalPrecision = ModPrefs.GetInt("Counters+ | Notes", "DecimalPrecision", 1, true),
+                    Enabled = true, Position = CounterPositions.BelowCombo, Index = 1,
+                    ShowPercentage = true,
+                    DecimalPrecision = 2,
                 },
                 progressConfig = new ProgressConfigModel
                 {
-                    Enabled = ModPrefs.GetBool("Counters+ | Progress", "Enabled", true, true),
-                    Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Progress", "Position", "BelowEnergy", true)),
-                    ProgressTimeLeft = ModPrefs.GetBool("Counters+ | Progress", "ProgressTimeLeft", false, true),
-                    Index = ModPrefs.GetInt("Counters+ | Progress", "Index", 0, true),
-                    Mode = (CounterMode)Enum.Parse(typeof(CounterMode), ModPrefs.GetString("Counters+ | Progress", "Mode", "Original", true)),
+                    Enabled = true, Position = CounterPositions.BelowEnergy, Index = 0,
+                    Mode = CounterMode.Original,
+                    ProgressTimeLeft = false,
                 },
-                scoreConfig = new ScoreConfigModel {
-                    Enabled = ModPrefs.GetBool("Counters+ | Score", "Enabled", true, true),
-                    Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Score", "Position", "BelowMultiplier", true)),
-                    DecimalPrecision = ModPrefs.GetInt("Counters+ | Score", "DecimalPrecision", 2, true),
-                    DisplayRank = ModPrefs.GetBool("Counters+ | Score", "DisplayRank", true, true),
-                    Index = ModPrefs.GetInt("Counters+ | Score", "Index", 0, true),
-                    UseOld = ModPrefs.GetBool("Counters+ | Score", "UseOld", true, true),
+                scoreConfig = new ScoreConfigModel
+                {
+                    Enabled = true, Position = CounterPositions.BelowMultiplier, Index = 0,
+                    UseOld = false,
+                    DecimalPrecision = 2,
+                    DisplayRank = true,
                 },
                 pBConfig = new PBConfigModel
                 {
-                    Enabled = ModPrefs.GetBool("Counters+ | PB", "Enabled", true, true),
-                    Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | PB", "Position", "BelowMultiplier", true)),
-                    DecimalPrecision = ModPrefs.GetInt("Counters+ | PB", "DecimalPrecision", 2, true),
-                    Index = ModPrefs.GetInt("Counters+ | PB", "Index", 1, true),
+                    Enabled = false, Position = CounterPositions.BelowMultiplier, Index = 1,
+                    DecimalPrecision = 2,
                 },
                 speedConfig = new SpeedConfigModel
                 {
-                    Enabled = ModPrefs.GetBool("Counters+ | Speed", "Enabled", false, true),
-                    Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Speed", "Position", "AboveHighway", true)),
-                    DecimalPrecision = ModPrefs.GetInt("Counters+ | Speed", "DecimalPrecision", 2, true),
-                    Index = ModPrefs.GetInt("Counters+ | Speed", "Index", 0, true),
-                    Mode = (CounterMode)Enum.Parse(typeof(CounterMode), ModPrefs.GetString("Counters+ | Speed", "Mode", "Average", true)),
+                    Enabled = false, Position = CounterPositions.AboveHighway, Index = 0,
+                    DecimalPrecision = 2,
+                    Mode = CounterMode.Average,
                 },
                 cutConfig = new CutConfigModel
                 {
-                    Enabled = ModPrefs.GetBool("Counters+ | Cut", "Enabled", true, true),
-                    Position = (CounterPositions)Enum.Parse(typeof(CounterPositions), ModPrefs.GetString("Counters+ | Cut", "Position", "AboveHighway", true)),
-                    Index = ModPrefs.GetInt("Counters+ | Cut", "Index", 0, true),
+                    Enabled = false, Position = CounterPositions.AboveCombo, Index = 0,
                 }
             };
-            Plugin.Log("Config loaded.");
-            return model;
+            using (StreamWriter file = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                JsonConvert.DefaultSettings = new Func<JsonSerializerSettings>(() => {
+                    JsonSerializerSettings settings = new JsonSerializerSettings();
+                    settings.Formatting = Formatting.Indented;
+                    return settings;
+                });
+                serializer.Serialize(file, def);
+            }
+            return def;
         }
     }
 
@@ -98,72 +100,45 @@ namespace CountersPlus.Config
         public PBConfigModel pBConfig;
         public SpeedConfigModel speedConfig;
         public CutConfigModel cutConfig;
+        public List<ConfigModel> customCounters;
 
         public void save()
         {
-            ModPrefs.SetBool("Counters+ | Main", "Enabled", Enabled);
-            ModPrefs.SetBool("Counters+ | Main", "RNG", RNG);
-            ModPrefs.SetBool("Counters+ | Main", "DisableMenus", DisableMenus);
-            save("Missed", missedConfig);
-            save("Notes", accuracyConfig);
-            save("Progress", progressConfig);
-            save("Score", scoreConfig);
-            save("Speed", speedConfig);
-            save("Cut", cutConfig);
+            StreamWriter writer = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json");
+            writer.Write(JsonConvert.SerializeObject(this));
             Plugin.Log("Settings saved!");
-        }
-
-        public void save<T>(string name, T settings) where T : ConfigModel
-        {
-            ModPrefs.SetBool("Counters+ | " + name, "Enabled", settings.Enabled);
-            ModPrefs.SetString("Counters+ | " + name, "Position", settings.Position.ToString());
-            ModPrefs.SetInt("Counters+ | " + name, "Index", settings.Index);
-        }
-
-        public void save(string name, AccuracyConfigModel settings)
-        {
-            save(name, settings as ConfigModel);
-            ModPrefs.SetBool("Counters+ | " + name, "ShowPercentage", settings.ShowPercentage);
-            ModPrefs.SetInt("Counters+ | " + name, "DecimalPrecision", settings.DecimalPrecision);
-        }
-
-        public void save(string name, ProgressConfigModel settings)
-        {
-            save(name, settings as ConfigModel);
-            ModPrefs.SetString("Counters+ | " + name, "Mode", settings.Mode.ToString());
-            ModPrefs.SetBool("Counters+ | " + name, "ProgressTimeLeft", settings.ProgressTimeLeft);
-        }
-
-        public void save(string name, ScoreConfigModel settings)
-        {
-            save(name, settings as ConfigModel);
-            ModPrefs.SetBool("Counters+ | " + name, "UseOld", settings.UseOld);
-            ModPrefs.SetBool("Counters+ | " + name, "DisplayRank", settings.DisplayRank);
-            ModPrefs.SetInt("Counters+ | " + name, "DecimalPrecision", settings.DecimalPrecision);
-        }
-
-        public void save(string name, SpeedConfigModel settings)
-        {
-            save(name, settings as ConfigModel);
-            ModPrefs.SetString("Counters+ | " + name, "Mode", settings.Mode.ToString());
-            ModPrefs.SetInt("Counters+ | " + name, "DecimalPrecision", settings.DecimalPrecision);
         }
     }
 
     public interface ConfigModel {
+        /// <summary>
+        /// The name that will show in the Settings UI.
+        /// </summary>
+        string DisplayName { get; set; }
+        /// <summary>
+        /// Whether or not this counter will be enabled.
+        /// </summary>
         bool Enabled { get; set; }
+        /// <summary>
+        /// The relative position of the counter.
+        /// </summary>
         CounterPositions Position { get; set; }
+        /// <summary>
+        /// A multiplier variable. The higher this is, the farther away it'll be.
+        /// </summary>
         int Index { get; set; }
     }
 
     public class MissedConfigModel : ConfigModel
     {
+        public string DisplayName { get; set; } = "Missed";
         public bool Enabled { get; set; }
         public CounterPositions Position { get; set; }
         public int Index { get; set; }
     }
 
     public class AccuracyConfigModel : ConfigModel {
+        public string DisplayName { get; set; } = "Notes";
         public bool Enabled { get; set; }
         public CounterPositions Position { get; set; }
         public int Index { get; set; }
@@ -172,6 +147,7 @@ namespace CountersPlus.Config
     }
 
     public class ProgressConfigModel : ConfigModel {
+        public string DisplayName { get; set; } = "Progress";
         public bool Enabled { get; set; }
         public CounterPositions Position { get; set; }
         public int Index { get; set; }
@@ -181,6 +157,7 @@ namespace CountersPlus.Config
 
     public class ScoreConfigModel : ConfigModel
     {
+        public string DisplayName { get; set; } = "Score";
         public bool Enabled { get; set; }
         public CounterPositions Position { get; set; }
         public int Index { get; set; }
@@ -190,6 +167,7 @@ namespace CountersPlus.Config
     }
 
     public class PBConfigModel : ConfigModel{
+        public string DisplayName { get; set; } = "PB";
         public bool Enabled { get; set; }
         public CounterPositions Position { get; set; }
         public int Index { get; set; }
@@ -198,6 +176,7 @@ namespace CountersPlus.Config
 
     public class SpeedConfigModel : ConfigModel
     {
+        public string DisplayName { get; set; } = "Speed";
         public bool Enabled { get; set; }
         public CounterPositions Position { get; set; }
         public int Index { get; set; }
@@ -207,6 +186,7 @@ namespace CountersPlus.Config
 
     public class CutConfigModel : ConfigModel
     {
+        public string DisplayName { get; set; } = "Cut";
         public bool Enabled { get; set; }
         public CounterPositions Position { get; set; }
         public int Index { get; set; }

@@ -46,96 +46,80 @@ namespace CountersPlus
         /*
          * Coding help from my dad. This allows me to loop through every item in this list and create the settings submenu for it.
          * 
-         * string: The label that appears in game (And in console)
-         * Tuple: Links the config model to the returned SubMenu of the base creation function.
-         * ConfigModel: The basic model (Enabled, Position, Index)
-         * Action<SubMenu>: Uses the returned SubMenu from createBase to add on to the created SubMenu with more advanced settings.
-         * Some counters do not need extra options, so we just point it to an empty function.
+         * ConfigModel: The model to create the base settings SubMenu from (Enabled, Position, Index)
+         * Action<SubMenu>: Easy way to pass in the SubMenu created into a function so we can add advanced options.
+         * If we don't want any, we can easily just point it to an empty function.
          */
-        public static Dictionary<string, Tuple<ConfigModel, Action<SubMenu>>> counterUIItems { get; private set; } = new Dictionary<string, Tuple<ConfigModel, Action<SubMenu>>>()
-            {
-                { "Missed",
-                    Tuple.Create<ConfigModel,Action<SubMenu>>(
-                        CountersController.settings.missedConfig,
-                        v =>{ }) },
-                { "Notes",
-                    Tuple.Create<ConfigModel,Action<SubMenu>>(
-                        CountersController.settings.accuracyConfig,
-                        v => {
-                             var accuracyPercentage = v.AddBool("Show Percentage", "Toggles the percentage of notes hit over total notes.");
-                            accuracyPercentage.GetValue += delegate { return CountersController.settings.accuracyConfig.ShowPercentage; };
-                            accuracyPercentage.SetValue += delegate (bool value) {
-                                CountersController.settings.accuracyConfig.ShowPercentage = value;
-                            };
-                            var accuracyPrecision = v.AddInt("Percentage Decimal Precision", "How precise should the percentage be?", 0, 5, 1);
-                            accuracyPrecision.GetValue += delegate { return CountersController.settings.accuracyConfig.DecimalPrecision; };
-                            accuracyPrecision.SetValue += delegate (int c) {
-                                CountersController.settings.accuracyConfig.DecimalPrecision = c;
-                            };
-                        }) },
-                { "Score",
-                    Tuple.Create<ConfigModel,Action<SubMenu>>(
-                        CountersController.settings.scoreConfig,
-                        v => {
-                             var scoreRank = v.AddBool("Display Rank", "Displays the rank as you progress in a song.");
-                            scoreRank.GetValue += delegate { return CountersController.settings.scoreConfig.DisplayRank; };
-                            scoreRank.SetValue += delegate (bool value) {
-                                CountersController.settings.scoreConfig.DisplayRank = value;
-                            };
-                            var scoreOverride = v.AddBool("Override Base Game Counter", "Uses the base game counter. Some settings will not apply in this mode.");
-                            scoreOverride.GetValue += delegate { return CountersController.settings.scoreConfig.UseOld; };
-                            scoreOverride.SetValue += delegate (bool value) {
-                                CountersController.settings.scoreConfig.UseOld = value;
-                            };
-                            float[] scorePrec = new float[6] { 0, 1, 2, 3, 4, 5 };
-                            var scorePrecision = v.AddList("Percentage Decimal Precision", scorePrec, "How precise should the percentage be?");
-                            scorePrecision.GetValue += delegate { return CountersController.settings.scoreConfig.DecimalPrecision; };
-                            scorePrecision.SetValue += delegate (float c) {
-                                CountersController.settings.scoreConfig.DecimalPrecision = (int)Math.Floor(c);
-                            };
-                            scorePrecision.FormatValue += delegate (float c) { return c.ToString(); };
-                        }) },
-                { "Progress",
-                    Tuple.Create<ConfigModel,Action<SubMenu>>(
-                        CountersController.settings.progressConfig,
-                        v => {
-                             var progressRank = v.AddBool("Show Time Left", "Starts the counter from the end of the song and decreases while the song is played.");
-                            progressRank.GetValue += delegate { return CountersController.settings.progressConfig.ProgressTimeLeft; };
-                            progressRank.SetValue += delegate (bool value) {
-                                CountersController.settings.progressConfig.ProgressTimeLeft = value;
-                            };
-                            var progressMode = v.AddListSetting<ModeViewController>("Mode", determineModeText(CountersController.settings.progressConfig.Mode));
-                            progressMode.values = progressSettings;
-                            progressMode.GetValue = () => progressSettings.Where((Tuple<CounterMode, string> x) => (x.Item1 == CountersController.settings.progressConfig.Mode)).FirstOrDefault();
-                            progressMode.GetTextForValue = (value) => value.Item2;
-                            progressMode.SetValue = c =>
-                            {
-                                CountersController.settings.progressConfig.Mode = c.Item1;
-                            };
-                        }) },
-                { "Speed",
-                    Tuple.Create<ConfigModel,Action<SubMenu>>(
-                        CountersController.settings.speedConfig,
-                        v => {
-                            var speedPrecision = v.AddInt("Decimal Precision", "How precise will the counter go to?", 0, 5, 1);
-                            speedPrecision.GetValue += delegate { return CountersController.settings.speedConfig.DecimalPrecision; };
-                            speedPrecision.SetValue += delegate (int c) {
-                                CountersController.settings.speedConfig.DecimalPrecision = c;
-                            };
-                            var speedMode = v.AddListSetting<ModeViewController>("Mode", determineModeText(CountersController.settings.speedConfig.Mode));
-                            speedMode.values = speedSettings;
-                            speedMode.GetValue = () => speedSettings.Where((Tuple<CounterMode, string> x) => (x.Item1 == CountersController.settings.speedConfig.Mode)).FirstOrDefault();
-                            speedMode.GetTextForValue = (value) => value.Item2;
-                            speedMode.SetValue = c =>
-                            {
-                                CountersController.settings.speedConfig.Mode = c.Item1;
-                            };
-                        }) },
-                { "Cut",
-                    Tuple.Create<ConfigModel,Action<SubMenu>>(
-                        CountersController.settings.cutConfig,
-                        v =>{ }) },
-            };
+        public static Dictionary<ConfigModel, Action<SubMenu>> counterUIItems { get; private set; } = new Dictionary<ConfigModel, Action<SubMenu>>()
+        {
+            { CountersController.settings.missedConfig, v => { } },
+            { CountersController.settings.accuracyConfig,
+                v => {
+                        var accuracyPercentage = v.AddBool("Show Percentage", "Toggles the percentage of notes hit over total notes.");
+                    accuracyPercentage.GetValue += delegate { return CountersController.settings.accuracyConfig.ShowPercentage; };
+                    accuracyPercentage.SetValue += delegate (bool value) {
+                        CountersController.settings.accuracyConfig.ShowPercentage = value;
+                    };
+                    var accuracyPrecision = v.AddInt("Percentage Decimal Precision", "How precise should the percentage be?", 0, 5, 1);
+                    accuracyPrecision.GetValue += delegate { return CountersController.settings.accuracyConfig.DecimalPrecision; };
+                    accuracyPrecision.SetValue += delegate (int c) {
+                        CountersController.settings.accuracyConfig.DecimalPrecision = c;
+                    };
+                } },
+            { CountersController.settings.scoreConfig,
+                v => {
+                        var scoreRank = v.AddBool("Display Rank", "Displays the rank as you progress in a song.");
+                    scoreRank.GetValue += delegate { return CountersController.settings.scoreConfig.DisplayRank; };
+                    scoreRank.SetValue += delegate (bool value) {
+                        CountersController.settings.scoreConfig.DisplayRank = value;
+                    };
+                    var scoreOverride = v.AddBool("Override Base Game Counter", "Uses the base game counter. Some settings will not apply in this mode.");
+                    scoreOverride.GetValue += delegate { return CountersController.settings.scoreConfig.UseOld; };
+                    scoreOverride.SetValue += delegate (bool value) {
+                        CountersController.settings.scoreConfig.UseOld = value;
+                    };
+                    float[] scorePrec = new float[6] { 0, 1, 2, 3, 4, 5 };
+                    var scorePrecision = v.AddList("Percentage Decimal Precision", scorePrec, "How precise should the percentage be?");
+                    scorePrecision.GetValue += delegate { return CountersController.settings.scoreConfig.DecimalPrecision; };
+                    scorePrecision.SetValue += delegate (float c) {
+                        CountersController.settings.scoreConfig.DecimalPrecision = (int)Math.Floor(c);
+                    };
+                    scorePrecision.FormatValue += delegate (float c) { return c.ToString(); };
+                } },
+            { CountersController.settings.progressConfig,
+                v => {
+                        var progressRank = v.AddBool("Show Time Left", "Starts the counter from the end of the song and decreases while the song is played.");
+                    progressRank.GetValue += delegate { return CountersController.settings.progressConfig.ProgressTimeLeft; };
+                    progressRank.SetValue += delegate (bool value) {
+                        CountersController.settings.progressConfig.ProgressTimeLeft = value;
+                    };
+                    var progressMode = v.AddListSetting<ModeViewController>("Mode", determineModeText(CountersController.settings.progressConfig.Mode));
+                    progressMode.values = progressSettings;
+                    progressMode.GetValue = () => progressSettings.Where((Tuple<CounterMode, string> x) => (x.Item1 == CountersController.settings.progressConfig.Mode)).FirstOrDefault();
+                    progressMode.GetTextForValue = (value) => value.Item2;
+                    progressMode.SetValue = c =>
+                    {
+                        CountersController.settings.progressConfig.Mode = c.Item1;
+                    };
+                } },
+            { CountersController.settings.speedConfig,
+                v => {
+                    var speedPrecision = v.AddInt("Decimal Precision", "How precise will the counter go to?", 0, 5, 1);
+                    speedPrecision.GetValue += delegate { return CountersController.settings.speedConfig.DecimalPrecision; };
+                    speedPrecision.SetValue += delegate (int c) {
+                        CountersController.settings.speedConfig.DecimalPrecision = c;
+                    };
+                    var speedMode = v.AddListSetting<ModeViewController>("Mode", determineModeText(CountersController.settings.speedConfig.Mode));
+                    speedMode.values = speedSettings;
+                    speedMode.GetValue = () => speedSettings.Where((Tuple<CounterMode, string> x) => (x.Item1 == CountersController.settings.speedConfig.Mode)).FirstOrDefault();
+                    speedMode.GetTextForValue = (value) => value.Item2;
+                    speedMode.SetValue = c =>
+                    {
+                        CountersController.settings.speedConfig.Mode = c.Item1;
+                    };
+                } },
+            { CountersController.settings.cutConfig, v => { } },
+        };
 
         internal static void CreateSettingsUI()
         {
@@ -166,7 +150,7 @@ namespace CountersPlus
             
             foreach(var kvp in counterUIItems)
             {
-                kvp.Value.Item2(createBase(kvp.Key, kvp.Value.Item1));
+                kvp.Value(createBase(kvp.Key.DisplayName, kvp.Key));
             }
         }
 
