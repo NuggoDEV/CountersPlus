@@ -11,7 +11,7 @@ using CustomUI.Settings;
 
 namespace CountersPlus.Custom
 {
-    public class CustomCounters
+    public class CustomCounterCreator
     {
         /// <summary>
         /// Adds an outside MonoBehaviour into the Counters+ system. If it already exists in the system, it will be ignored.
@@ -52,34 +52,34 @@ namespace CountersPlus.Custom
         public CustomCounterException(String msg) : base("Counters+ | " + msg) { }
     }
 
-    public abstract class CustomCounter
+    public class CustomCounter
     {
         public CustomCounter() { }
 
         /// <summary>
         /// The name in JSON that'll store variables. Try and keep to one name and not change it. It cannot conflict with other loaded counters.
         /// </summary>
-        public abstract string JSONName { get; set; }
+        public string JSONName { get; set; }
         /// <summary>
         /// The name of the counter. Will be shown in the submenu title.
         /// </summary>
-        public abstract string Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Whether or not a custom settings menu will be created for this counter.
         /// </summary>
-        public abstract bool CreateSettingsUI { get; set; }
+        public bool CreateSettingsUI { get; set; }
         /// <summary>
         /// The plugin that created this custom counter. Will be displayed in the Settings UI.
         /// </summary>
-        public abstract IPlugin Mod { get; set; }
+        public IPlugin Mod { get; set; }
         /// <summary>
         /// The counter that will be added when it gets created.
         /// </summary>
-        public abstract MonoBehaviour Counter { get; set; }
+        public MonoBehaviour Counter { get; set; }
         /// <summary>
         /// A function that will be called when the UI element is created which will allow more advanced options to be displayed.
         /// </summary>
-        public virtual Action<SubMenu> AdvancedOptions { get; set; }
+        public Action<SubMenu> AdvancedOptions { get; set; }
     }
 
     public class CustomConfigModel : IConfigModel
