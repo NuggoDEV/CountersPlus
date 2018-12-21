@@ -41,9 +41,9 @@ namespace CountersPlus.Counters
         void Awake()
         {
             settings = CountersController.settings.progressConfig;
-            if (settings.Mode == CounterMode.BaseGame && gameObject.name != "SongProgressPanel")
+            if (settings.Mode == ICounterMode.BaseGame && gameObject.name != "SongProgressPanel")
                 StartCoroutine(YeetToBaseCounter());
-            else if (settings.Mode != CounterMode.BaseGame)
+            else if (settings.Mode != ICounterMode.BaseGame)
                 StartCoroutine(WaitForLoad());
         }
 
@@ -63,7 +63,7 @@ namespace CountersPlus.Counters
 
         void Init()
         {
-            if (settings.Mode == CounterMode.Original)
+            if (settings.Mode == ICounterMode.Original)
             {
                 _timeMesh = this.gameObject.AddComponent<TextMeshPro>();
                 _timeMesh.text = "0:00";
@@ -113,7 +113,7 @@ namespace CountersPlus.Counters
                 g.GetComponent<RectTransform>().SetParent(this.transform, false);
                 g.transform.localPosition = new Vector3(-0.25f, .25f, 0f);
                 transform.position += new Vector3(0.5f, 0, 0);
-            }else if (settings.Mode == CounterMode.Percent)
+            }else if (settings.Mode == ICounterMode.Percent)
             {
                 _timeMesh = this.gameObject.AddComponent<TextMeshPro>();
                 _timeMesh.text = "0.00%";
@@ -126,11 +126,11 @@ namespace CountersPlus.Counters
 
         void Update()
         {
-            if (GameObject.Find("SongProgressPanel") != null && settings.Mode != CounterMode.BaseGame) Destroy(GameObject.Find("SongProgressPanel"));
+            if (GameObject.Find("SongProgressPanel") != null && settings.Mode != ICounterMode.BaseGame) Destroy(GameObject.Find("SongProgressPanel"));
             if (CountersController.rng)
             {
                 settings.Index = UnityEngine.Random.Range(0, 5);
-                settings.Position = (CounterPositions)UnityEngine.Random.Range(0, 4);
+                settings.Position = (ICounterPositions)UnityEngine.Random.Range(0, 4);
             }
             else
             {
@@ -159,11 +159,11 @@ namespace CountersPlus.Counters
 
             if (time <= 0f)
                 return;
-            if (settings.Mode == CounterMode.Original)
+            if (settings.Mode == ICounterMode.Original)
             {
                 _timeMesh.text = $"{Math.Floor(time / 60):N0}:{Math.Floor(time % 60):00}";
                 _image.fillAmount = _audioTimeSync.songTime / _audioTimeSync.songLength;
-            }else if (settings.Mode == CounterMode.Percent)
+            }else if (settings.Mode == ICounterMode.Percent)
             {
                 _timeMesh.text = $"{((_audioTimeSync.songTime / _audioTimeSync.songLength) * 100).ToString("00")}%";
             }

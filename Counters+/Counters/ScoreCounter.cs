@@ -67,7 +67,7 @@ namespace CountersPlus.Counters
             if (CountersController.rng)
             {
                 settings.Index = UnityEngine.Random.Range(0, 5);
-                settings.Position = (CounterPositions)UnityEngine.Random.Range(0, 4);
+                settings.Position = (ICounterPositions)UnityEngine.Random.Range(0, 4);
                 settings.DecimalPrecision = UnityEngine.Random.Range(0, 5);
             }
             else

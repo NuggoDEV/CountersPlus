@@ -20,27 +20,27 @@ namespace CountersPlus
 {
     class CountersSettingsUI : MonoBehaviour
     {
-        internal class PositionSettingsViewController : TupleViewController<Tuple<Config.CounterPositions, string>> { }
-        static List<Tuple<Config.CounterPositions, string>> positions = new List<Tuple<Config.CounterPositions, string>> {
-            {Config.CounterPositions.BelowCombo, "Below Combo" },
-            {Config.CounterPositions.AboveCombo, "Above Combo" },
-            {Config.CounterPositions.BelowMultiplier, "Below Multi." },
-            {Config.CounterPositions.AboveMultiplier, "Above Multi." },
-            {Config.CounterPositions.BelowEnergy, "Below Energy" },
-            {Config.CounterPositions.AboveHighway, "Over Highway" }
+        internal class PositionSettingsViewController : TupleViewController<Tuple<Config.ICounterPositions, string>> { }
+        static List<Tuple<Config.ICounterPositions, string>> positions = new List<Tuple<Config.ICounterPositions, string>> {
+            {Config.ICounterPositions.BelowCombo, "Below Combo" },
+            {Config.ICounterPositions.AboveCombo, "Above Combo" },
+            {Config.ICounterPositions.BelowMultiplier, "Below Multi." },
+            {Config.ICounterPositions.AboveMultiplier, "Above Multi." },
+            {Config.ICounterPositions.BelowEnergy, "Below Energy" },
+            {Config.ICounterPositions.AboveHighway, "Over Highway" }
         };
-        internal class ModeViewController : TupleViewController<Tuple<CounterMode, string>> { }
-        static List<Tuple<CounterMode, string>> speedSettings = new List<Tuple<CounterMode, string>> {
-            {CounterMode.Average, "Mean Speed" },
-            {CounterMode.Top5Sec, "Top (5 Sec.)" },
-            {CounterMode.Both, "Both" },
-            {CounterMode.SplitAverage, "Split Mean" },
-            {CounterMode.SplitBoth, "Both w/Split" }
+        internal class ModeViewController : TupleViewController<Tuple<ICounterMode, string>> { }
+        static List<Tuple<ICounterMode, string>> speedSettings = new List<Tuple<ICounterMode, string>> {
+            {ICounterMode.Average, "Mean Speed" },
+            {ICounterMode.Top5Sec, "Top (5 Sec.)" },
+            {ICounterMode.Both, "Both" },
+            {ICounterMode.SplitAverage, "Split Mean" },
+            {ICounterMode.SplitBoth, "Both w/Split" }
         };
-        static List<Tuple<CounterMode, string>> progressSettings = new List<Tuple<CounterMode, string>> {
-            {CounterMode.BaseGame, "Base Game" },
-            {CounterMode.Original, "Original" },
-            {CounterMode.Percent, "Percentage" }
+        static List<Tuple<ICounterMode, string>> progressSettings = new List<Tuple<ICounterMode, string>> {
+            {ICounterMode.BaseGame, "Base Game" },
+            {ICounterMode.Original, "Original" },
+            {ICounterMode.Percent, "Percentage" }
         };
 
         /*
@@ -50,7 +50,7 @@ namespace CountersPlus
          * Action<SubMenu>: Easy way to pass in the SubMenu created into a function so we can add advanced options.
          * If we don't want any, we can easily just point it to an empty function.
          */
-        public static Dictionary<ConfigModel, Action<SubMenu>> counterUIItems { get; private set; } = new Dictionary<ConfigModel, Action<SubMenu>>()
+        internal static Dictionary<IConfigModel, Action<SubMenu>> counterUIItems = new Dictionary<IConfigModel, Action<SubMenu>>()
         {
             { CountersController.settings.missedConfig, v => { } },
             { CountersController.settings.accuracyConfig,
@@ -95,7 +95,7 @@ namespace CountersPlus
                     };
                     var progressMode = v.AddListSetting<ModeViewController>("Mode", determineModeText(CountersController.settings.progressConfig.Mode));
                     progressMode.values = progressSettings;
-                    progressMode.GetValue = () => progressSettings.Where((Tuple<CounterMode, string> x) => (x.Item1 == CountersController.settings.progressConfig.Mode)).FirstOrDefault();
+                    progressMode.GetValue = () => progressSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CountersController.settings.progressConfig.Mode)).FirstOrDefault();
                     progressMode.GetTextForValue = (value) => value.Item2;
                     progressMode.SetValue = c =>
                     {
@@ -111,7 +111,7 @@ namespace CountersPlus
                     };
                     var speedMode = v.AddListSetting<ModeViewController>("Mode", determineModeText(CountersController.settings.speedConfig.Mode));
                     speedMode.values = speedSettings;
-                    speedMode.GetValue = () => speedSettings.Where((Tuple<CounterMode, string> x) => (x.Item1 == CountersController.settings.speedConfig.Mode)).FirstOrDefault();
+                    speedMode.GetValue = () => speedSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CountersController.settings.speedConfig.Mode)).FirstOrDefault();
                     speedMode.GetTextForValue = (value) => value.Item2;
                     speedMode.SetValue = c =>
                     {
@@ -154,7 +154,7 @@ namespace CountersPlus
             }
         }
 
-        internal static SubMenu createBase<T>(string name, T configItem) where T : Config.ConfigModel
+        internal static SubMenu createBase<T>(string name, T configItem) where T : Config.IConfigModel
         {
             Plugin.Log("Creating base for: " + name);
             var @base = SettingsUI.CreateSubMenu("Counters+ | " + name);
@@ -163,7 +163,7 @@ namespace CountersPlus
             enabled.SetValue += v => configItem.Enabled = v;
             var position = @base.AddListSetting<PositionSettingsViewController>("Position", "The relative positions of common UI elements of which to go off of.");
             position.values = positions;
-            position.GetValue = () => positions.Where((Tuple<Config.CounterPositions, string> x) => (x.Item1 == configItem.Position)).FirstOrDefault();
+            position.GetValue = () => positions.Where((Tuple<Config.ICounterPositions, string> x) => (x.Item1 == configItem.Position)).FirstOrDefault();
             position.GetTextForValue = (value) => value.Item2;
             position.SetValue = v => configItem.Position = v.Item1;
             var index = @base.AddInt("Index", "How far from the position the counter will be. A higher number means farther away.", 0, 5, 1);
@@ -172,31 +172,31 @@ namespace CountersPlus
             return @base;
         }
 
-        private static string determineModeText(CounterMode Mode){
+        private static string determineModeText(ICounterMode Mode){
             string mode = "Unavilable mode!";
             switch(Mode){
-                case CounterMode.Average:
+                case ICounterMode.Average:
                     mode = "Mean Speed: Average speed of both sabers.";
                     break;
-                case CounterMode.Top5Sec:
+                case ICounterMode.Top5Sec:
                     mode = "Top: Fastest saber speed in the last 5 seconds.";
                     break;
-                case CounterMode.Both:
+                case ICounterMode.Both:
                     mode = "Both: A secondary Counter will be added so both Average and Top will be displayed.";
                     break;
-                case CounterMode.SplitAverage:
+                case ICounterMode.SplitAverage:
                     mode = "Split Mean: Displays averages for each saber, separately.";
                     break;
-                case CounterMode.SplitBoth:
+                case ICounterMode.SplitBoth:
                     mode = "Split Both: Displays both metrics, except the Average is split between two sabers.";
                     break;
-                case CounterMode.BaseGame:
+                case ICounterMode.BaseGame:
                     mode = "Base Game: Uses the base game counter. Some settings will not apply in this mode.";
                     break;
-                case CounterMode.Original:
+                case ICounterMode.Original:
                     mode = "Original: Uses the original display mode, with a white circle bordering a time.";
                     break;
-                case CounterMode.Percent:
+                case ICounterMode.Percent:
                     mode = "Percent : Displays a simple percent of the completed song. Some settings will not apply in this mode.";
                     break;
             }
