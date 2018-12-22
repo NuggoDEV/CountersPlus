@@ -36,7 +36,7 @@ A combination of widely-used counters, all configurable in one mod.
 ### Advanced Options
 ***Decimal Precision*** (*Notes*, *Score*, and *Speed*) | How precise do the decimals go?
 
-***Override Base Game Counter*** (*Progress*, *Score*) | Whether or not to use the base game counter instead of replacing it with our own. **Some features will not be reflected when using the base game counters!**
+***Override Base Game Counter*** (*Score*) | Whether or not to use the base game counter instead of replacing it with our own. **Some features will not be reflected when using the base game counters!**
 
 ***Show Precentage*** (*Notes*) | Shows the precentage
 
@@ -44,4 +44,33 @@ A combination of widely-used counters, all configurable in one mod.
 
 ***Progress Time Left*** (*Progress*) | The counter starts at full, and decreases as you progress though a song.
 
-***Mode*** (*Speed*) | Changes the display mode for the Counter (See Hint Text in-game for more detail)
+***Mode*** (*Speed*, *Progress*) | Changes the display mode for the Counter (See Hint Text in-game for more detail)
+
+## For Developers
+For plugin developers who plan on adding a counter of their own, Counters+ has a way to easily integrate your created counter into the Counters+ system.
+
+Adding your own Counter is a simple as:
+
+```csharp
+using CountersPlus.Custom; //Add CountersPlus.dll as a Reference
+
+public class Plugin : IPlugin {
+
+	public void OnApplicationStart(){
+		try{
+			CustomCounter counter = new CustomCounter {
+				JSONName = "testCounter", //Name in config system. Also used as an identifier. Don't plan on changing this.
+				Name = "Test", //Display name that will appear in the SettingsUI.
+				Mod = this, //IPA Plugin. Will show up in Credits in the SettingsUI.
+				Counter = "testCounterGameObject", //Name of the GameObject that holds your Counter component. Used to hook into the Counters+ system.
+			};
+			CustomCounterCreator.CreateCustomCounter(counter);
+		}catch{}//If the user does not have Counters+ installed, don't worry about it.
+	}
+	
+}
+```
+
+And you're done! If it has not yet been created, Counters+ will create a configuration `.json` file in the `Custom Counters` folder of UserData, and will go off of that from now on. Your Counter can now be subject to the same base configuration settings as every counter!
+
+Custom Counters also have a Delete option (To delete custom counters), and a Credits option which will display the mod that created the counter.
