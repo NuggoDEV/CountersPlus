@@ -1,20 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using HMUI;
-using VRUI;
-using TMPro;
-using UnityEngine.UI;
-using UnityEngine.Events;
-using System.Reflection;
-using VRUIControls;
+using IllusionPlugin;
 using CustomUI.Settings;
 using CountersPlus.Config;
-using System.Threading;
+using System.IO;
+using CountersPlus.Custom;
+using Newtonsoft.Json;
 
 namespace CountersPlus
 {
@@ -42,6 +35,12 @@ namespace CountersPlus
             {ICounterMode.Original, "Original" },
             {ICounterMode.Percent, "Percentage" }
         };
+
+        static List<Tuple<ICounterMode, string>> creditSetting = new List<Tuple<ICounterMode, string>> {
+            {ICounterMode.Original, "Hover" }
+        };
+
+        static List<CustomConfigModel> loadedCustoms = new List<CustomConfigModel>();
 
         /*
          * Coding help from my dad. This allows me to loop through every item in this list and create the settings submenu for it.
@@ -123,6 +122,30 @@ namespace CountersPlus
 
         internal static void CreateSettingsUI()
         {
+            if (Directory.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
+            {
+                foreach (string file in Directory.EnumerateFiles(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
+                {
+                    CustomConfigModel potential = JsonConvert.DeserializeObject<CustomConfigModel>(File.ReadAllText(file));
+                    if (loadedCustoms.Where((CustomConfigModel x) => x.JSONName == potential.JSONName).Count() != 0) continue;
+                    counterUIItems.Add(potential, (SubMenu v) => {
+                        var delete = v.AddBool("Delete?", "Deletes the Custom Counter from the system.\nRelaunching the credited mod will regenerate the file.");
+                        delete.GetValue += delegate { return false; };
+                        delete.SetValue += delegate (bool c)
+                        {
+                            if (c) File.Delete(file);
+                            CountersController.settings.saveCustom(potential);
+                        };
+                        var credits = v.AddListSetting<ModeViewController>("Credits", $"Created by: {potential.ModCreator}");
+                        credits.values = creditSetting;
+                        credits.GetValue = () => creditSetting.First();
+                        credits.GetTextForValue = (value) => "Hover";
+                        credits.SetValue = c => { };
+                    });
+                    loadedCustoms.Add(potential);
+                }
+            }
+
             //Main
             var mainSub = SettingsUI.CreateSubMenu("Counters+ | Main");
             var mainEnabled = mainSub.AddBool("Enabled", "Toggles the plugin on or off.");

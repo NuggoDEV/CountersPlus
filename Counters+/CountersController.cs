@@ -9,6 +9,8 @@ using CountersPlus.Config;
 using CountersPlus.Counters;
 using CountersPlus.Custom;
 using UnityEngine.SceneManagement;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace CountersPlus
 {
@@ -97,16 +99,6 @@ namespace CountersPlus
             loadedCounters.Add(counter);
         }
 
-        static void LoadCustomCounter<T>(string name, T settings, MonoBehaviour mono) where T : IConfigModel
-        {
-            if (!settings.Enabled || GameObject.Find("Counters+ | " + name + " Counter")) return;
-            GameObject counter = new GameObject("Counters+ | " + name + " Counter");
-            counter.transform.position = determinePosition(counter, settings.Position, settings.Index);
-            counter.AddComponent(mono.GetType());
-            Plugin.Log("Loaded Custom Counter: " + name);
-            loadedCounters.Add(counter);
-        }
-
         public static void LoadCounters()
         {
             Plugin.Log("Loading Counters...");
@@ -116,11 +108,17 @@ namespace CountersPlus
             LoadCounter<ProgressConfigModel, ProgressCounter>("Progress", settings.progressConfig);
             LoadCounter<SpeedConfigModel, SpeedCounter>("Speed", settings.speedConfig);
             LoadCounter<CutConfigModel, CutCounter>("Cut", settings.cutConfig);
-            foreach(CustomCounter counter in customCounters)
+            /*foreach(CustomConfigModel counter in settings.CustomCounters)
             {
-                CustomConfigModel model = settings.CustomCounters.Where((CustomConfigModel x) => x.JSONName == counter.JSONName).FirstOrDefault();
-                MonoBehaviour type = counter.Counter;
-                if (model != null) LoadCustomCounter(counter.Name, model, counter.Counter);
+                LoadCounter<CustomConfigModel, CustomCounterHook>(counter.DisplayName, counter);
+            }*/
+            if (Directory.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
+            {
+                foreach (string file in Directory.EnumerateFiles(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/"))
+                {
+                    CustomConfigModel counter = JsonConvert.DeserializeObject<CustomConfigModel>(File.ReadAllText(file));
+                    LoadCounter<CustomConfigModel, CustomCounterHook>(counter.JSONName, counter);
+                }
             }
             if (settings.RNG) new GameObject("Counters+ | Randomizer").AddComponent<RandomizePositions>();
         }
@@ -163,7 +161,7 @@ namespace CountersPlus
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
             }
-            if (Plugin.beatSaberVersion == "0.12.1") //Handles slight position changes from Beat Saber v0.12.1
+            if (Plugin.beatSaberVersion != "0.12.0") //Handles slight position changes from Beat Saber v0.12.1
             {
                 if (position != ICounterPositions.AboveHighway && position != ICounterPositions.BelowEnergy)
                 {

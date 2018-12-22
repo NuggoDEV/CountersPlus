@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 using System.Linq;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace CountersPlus
 {
@@ -25,6 +27,7 @@ namespace CountersPlus
                 string version = File.ReadAllText(Environment.CurrentDirectory.Replace('\\', '/') + "/BeatSaberVersion.txt");
                 if (version.Contains("0.12.0")) beatSaberVersion = "0.12.0";
                 if (version.Contains("0.12.1")) beatSaberVersion = "0.12.1";
+                if (version.Contains("0.12.2")) beatSaberVersion = "0.12.2";
                 Log("Found general Beat Saber version. Running: " + beatSaberVersion);
             }
             SceneManager.activeSceneChanged += SceneManager_sceneLoaded;
@@ -39,7 +42,7 @@ namespace CountersPlus
             Plugin.Log("Config flagged for reload!");
         }
 
-        private void SceneManager_sceneLoaded(Scene arg0, Scene arg1)
+        private async void SceneManager_sceneLoaded(Scene arg0, Scene arg1)
         {
             if (arg1.name == "GameCore" &&
                 CountersController.settings.Enabled &&
@@ -52,12 +55,29 @@ namespace CountersPlus
             }
             if (reloadConfig)
             {
-                if (saveOnReload) CountersController.settings.save();
+                if (saveOnReload)
+                {
+                    CountersController.settings.isSaving = true;
+                    CountersController.settings.save();
+                    await EnsureConfigSaves();
+                }
                 CountersController.settings = Config.Config.loadSettings();
                 if (CountersController.Instance == null) CountersController.OnLoad();
                 reloadConfig = false;
                 saveOnReload = false;
             }
+        }
+
+        private Task EnsureConfigSaves()
+        {
+            return Task.Run(() =>
+            {
+                while (true)
+                {
+                    if (CountersController.settings.isSaving == false) break;
+                    Thread.Sleep(10);
+                }
+            });
         }
 
         private void addUI(Scene arg, LoadSceneMode hiBrian)

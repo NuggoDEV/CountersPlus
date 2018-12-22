@@ -8,21 +8,30 @@ using IllusionPlugin;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using CustomUI.Settings;
+using System.Threading;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace CountersPlus.Custom
 {
-    public class CustomCounterCreator
+    public class CustomCounterCreator : MonoBehaviour
     {
+        static CustomCounterCreator Instance;
         /// <summary>
         /// Adds an outside MonoBehaviour into the Counters+ system. If it already exists in the system, it will be ignored.
         /// </summary>
         public static void CreateCustomCounter<T>(T model) where T : CustomCounter
         {
-            if (CountersController.settings.CustomCounters.Where((CustomConfigModel x) => x.JSONName == model.JSONName).Count() > 0)
+            try
             {
-                Plugin.Log("Attempted custom counter already exists in the system. Ignoring...", Plugin.LogInfo.Warning);
+                if (File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/{model.JSONName}.json"))
+                {
+                    Plugin.Log("Attempted custom counter already exists in the system. Ignoring...", Plugin.LogInfo.Warning);
+                    return;
+                }
             }
-            else
+            catch { }
+            try
             {
                 Scene scene = SceneManager.GetActiveScene();
                 if (scene.name == "" || scene.name == "Init" || scene.name == "EmptyTransition" || scene.name == "HealthWarning")
@@ -30,20 +39,63 @@ namespace CountersPlus.Custom
                     CustomConfigModel counter = new CustomConfigModel
                     {
                         JSONName = model.JSONName,
-                        DisplayName = model.Mod.Name,
+                        DisplayName = model.Name,
+                        Enabled = true,
+                        Position = ICounterPositions.BelowCombo,
+                        Index = 2,
+                        Counter = model.Counter,
+                        ModCreator = model.Mod.Name,
                     };
                     if (string.IsNullOrEmpty(counter.JSONName) || string.IsNullOrEmpty(counter.DisplayName))
                         throw new CustomCounterException("Custom Counter properties invalid. Please make sure JSONName and DisplayName are properly assigned.");
-                    CountersController.settings.CustomCounters.Add(counter);
-                    CountersController.customCounters.Add(model);
-                    Plugin.Log("Custom Counter successfully added!");
-                    Plugin.FlagConfigForReload(true);
+                    EnsureSettingsExist(counter);
                 }
                 else
                 {
                     throw new CustomCounterException("It is too late to add Custom Counters. Please add Custom Counters at launch.");
                 }
             }
+            catch
+            {
+                Plugin.Log("Right here");
+            }
+        }
+
+        internal static Task EnsureSettingsExist(CustomConfigModel counter)
+        {
+            return Task.Run(() =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        if (CountersController.settings != null)
+                        {
+                            add(counter);
+                            Plugin.Log("Settings must exist now!");
+                            break;
+                        }
+                    }
+                    catch(Exception e) { Plugin.Log(e.ToString()); }
+                    Thread.Sleep(10);
+                }
+            });
+        }
+
+        internal static void add(CustomConfigModel counter)
+        {
+            //CountersController.settings.CustomCounters.Add(counter);
+            using (StreamWriter file = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/{counter.JSONName}.json"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                JsonConvert.DefaultSettings = new Func<JsonSerializerSettings>(() => {
+                    JsonSerializerSettings settings = new JsonSerializerSettings();
+                    settings.Formatting = Formatting.Indented;
+                    return settings;
+                });
+                serializer.Serialize(file, counter);
+            }
+            Plugin.Log("Custom Counter successfully added!");
         }
     }
 
@@ -54,7 +106,6 @@ namespace CountersPlus.Custom
 
     public class CustomCounter
     {
-        public CustomCounter() { }
 
         /// <summary>
         /// The name in JSON that'll store variables. Try and keep to one name and not change it. It cannot conflict with other loaded counters.
@@ -73,13 +124,9 @@ namespace CountersPlus.Custom
         /// </summary>
         public IPlugin Mod { get; set; }
         /// <summary>
-        /// The counter that will be added when it gets created.
+        /// The name of the counter that will be added when it gets created.
         /// </summary>
-        public MonoBehaviour Counter { get; set; }
-        /// <summary>
-        /// A function that will be called when the UI element is created which will allow more advanced options to be displayed.
-        /// </summary>
-        public Action<SubMenu> AdvancedOptions { get; set; }
+        public string Counter { get; set; }
     }
 
     public class CustomConfigModel : IConfigModel
@@ -89,5 +136,7 @@ namespace CountersPlus.Custom
         public bool Enabled { get; set; }
         public ICounterPositions Position { get; set; }
         public int Index { get; set; }
+        public string Counter { get; set; }
+        public string ModCreator { get; set; }
     }
 }

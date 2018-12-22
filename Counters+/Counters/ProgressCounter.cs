@@ -41,6 +41,7 @@ namespace CountersPlus.Counters
         void Awake()
         {
             settings = CountersController.settings.progressConfig;
+            useTimeLeft = settings.ProgressTimeLeft;
             if (settings.Mode == ICounterMode.BaseGame && gameObject.name != "SongProgressPanel")
                 StartCoroutine(YeetToBaseCounter());
             else if (settings.Mode != ICounterMode.BaseGame)
