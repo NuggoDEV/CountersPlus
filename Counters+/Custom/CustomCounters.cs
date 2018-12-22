@@ -36,8 +36,6 @@ namespace CountersPlus.Custom
             Scene scene = SceneManager.GetActiveScene();
             if (scene.name == "" || scene.name == "Init" || scene.name == "EmptyTransition" || scene.name == "HealthWarning")
             {
-                if (!model.Counter.ToUpper().Contains("COUNTER"))
-                    throw new CustomCounterException("To ensure nothing outside is effected, please make sure the name of the Counter GameObject contains \"Counter\".");
                 CustomConfigModel counter = new CustomConfigModel
                 {
                     JSONName = model.JSONName,
