@@ -120,6 +120,10 @@ namespace CountersPlus
             { CountersController.settings.cutConfig, v => { } },
         };
 
+        internal static Dictionary<CustomConfigModel, Action<SubMenu>> customCounterUIItems = new Dictionary<CustomConfigModel, Action<SubMenu>>()
+        {
+        };
+
         internal static void CreateSettingsUI()
         {
             if (Directory.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
@@ -128,7 +132,7 @@ namespace CountersPlus
                 {
                     CustomConfigModel potential = JsonConvert.DeserializeObject<CustomConfigModel>(File.ReadAllText(file));
                     if (loadedCustoms.Where((CustomConfigModel x) => x.JSONName == potential.JSONName).Count() != 0) continue;
-                    counterUIItems.Add(potential, (SubMenu v) => {
+                    customCounterUIItems.Add(potential, (SubMenu v) => {
                         var delete = v.AddBool("Delete?", "Deletes the Custom Counter from the system.\nRelaunching the credited mod will regenerate the file.");
                         delete.GetValue += delegate { return false; };
                         delete.SetValue += delegate (bool c)
@@ -175,17 +179,26 @@ namespace CountersPlus
             {
                 kvp.Value(createBase(kvp.Key.DisplayName, kvp.Key));
             }
+            foreach (var kvp in customCounterUIItems)
+            {
+                kvp.Value(createBase(kvp.Key.DisplayName, kvp.Key, kvp.Key.RestrictedPositions));
+            }
         }
 
-        internal static SubMenu createBase<T>(string name, T configItem) where T : Config.IConfigModel
+        internal static SubMenu createBase<T>(string name, T configItem, ICounterPositions[] restricted) where T : Config.IConfigModel
         {
             Plugin.Log("Creating base for: " + name);
+            List<Tuple<ICounterPositions, string>> restrictedList = new List<Tuple<ICounterPositions, string>>();
+            foreach(ICounterPositions pos in restricted)
+            {
+                restrictedList.Add(Tuple.Create(pos, positions.Where((Tuple<ICounterPositions, string> x) => x.Item1 == pos ).First().Item2));
+            }
             var @base = SettingsUI.CreateSubMenu("Counters+ | " + name);
             var enabled = @base.AddBool("Enabled", "Toggles this counter on or off.");
             enabled.GetValue += () => configItem.Enabled;
             enabled.SetValue += v => configItem.Enabled = v;
             var position = @base.AddListSetting<PositionSettingsViewController>("Position", "The relative positions of common UI elements of which to go off of.");
-            position.values = positions;
+            position.values = (restricted.Count() == 0) ? positions : restrictedList;
             position.GetValue = () => positions.Where((Tuple<Config.ICounterPositions, string> x) => (x.Item1 == configItem.Position)).FirstOrDefault();
             position.GetTextForValue = (value) => value.Item2;
             position.SetValue = v => configItem.Position = v.Item1;
@@ -193,6 +206,11 @@ namespace CountersPlus
             index.GetValue += () => configItem.Index;
             index.SetValue += v => configItem.Index = v;
             return @base;
+        }
+
+        internal static SubMenu createBase<T>(string name, T configItem) where T : Config.IConfigModel
+        {
+            return createBase(name, configItem, new ICounterPositions[] { });
         }
 
         private static string determineModeText(ICounterMode Mode){

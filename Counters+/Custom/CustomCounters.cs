@@ -19,8 +19,10 @@ namespace CountersPlus.Custom
         static CustomCounterCreator Instance;
         /// <summary>
         /// Adds an outside MonoBehaviour into the Counters+ system. If it already exists in the system, it will be ignored.
+        /// <param name="model"/>The CustomCounter object.</param>
+        /// <param name="restrictedPositions">Restrict your Custom Counter to any of these positions.</param>
         /// </summary>
-        public static void CreateCustomCounter<T>(T model) where T : CustomCounter
+        public static void CreateCustomCounter<T>(T model, params ICounterPositions[] restrictedPositions) where T : CustomCounter
         {
             try
             {
@@ -31,33 +33,29 @@ namespace CountersPlus.Custom
                 }
             }
             catch { }
-            try
+            Scene scene = SceneManager.GetActiveScene();
+            if (scene.name == "" || scene.name == "Init" || scene.name == "EmptyTransition" || scene.name == "HealthWarning")
             {
-                Scene scene = SceneManager.GetActiveScene();
-                if (scene.name == "" || scene.name == "Init" || scene.name == "EmptyTransition" || scene.name == "HealthWarning")
+                if (!model.Counter.ToUpper().Contains("COUNTER"))
+                    throw new CustomCounterException("To ensure nothing outside is effected, please make sure the name of the Counter GameObject contains \"Counter\".");
+                CustomConfigModel counter = new CustomConfigModel
                 {
-                    CustomConfigModel counter = new CustomConfigModel
-                    {
-                        JSONName = model.JSONName,
-                        DisplayName = model.Name,
-                        Enabled = true,
-                        Position = ICounterPositions.BelowCombo,
-                        Index = 2,
-                        Counter = model.Counter,
-                        ModCreator = model.Mod.Name,
-                    };
-                    if (string.IsNullOrEmpty(counter.JSONName) || string.IsNullOrEmpty(counter.DisplayName))
-                        throw new CustomCounterException("Custom Counter properties invalid. Please make sure JSONName and DisplayName are properly assigned.");
-                    EnsureSettingsExist(counter);
-                }
-                else
-                {
-                    throw new CustomCounterException("It is too late to add Custom Counters. Please add Custom Counters at launch.");
-                }
+                    JSONName = model.JSONName,
+                    DisplayName = model.Name,
+                    Enabled = true,
+                    Position = ICounterPositions.BelowCombo,
+                    Index = 2,
+                    Counter = model.Counter,
+                    ModCreator = model.Mod.Name,
+                    RestrictedPositions = (restrictedPositions.Count() == 0 || restrictedPositions == null) ? null : restrictedPositions,
+                };
+                if (string.IsNullOrEmpty(counter.JSONName) || string.IsNullOrEmpty(counter.DisplayName))
+                    throw new CustomCounterException("Custom Counter properties invalid. Please make sure JSONName and DisplayName are properly assigned.");
+                EnsureSettingsExist(counter);
             }
-            catch
+            else
             {
-                Plugin.Log("Right here");
+                throw new CustomCounterException("It is too late to add Custom Counters. Please add Custom Counters at launch.");
             }
         }
 
@@ -138,5 +136,6 @@ namespace CountersPlus.Custom
         public int Index { get; set; }
         public string Counter { get; set; }
         public string ModCreator { get; set; }
+        public ICounterPositions[] RestrictedPositions { get; set; }
     }
 }

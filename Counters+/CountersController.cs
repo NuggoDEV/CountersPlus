@@ -11,6 +11,8 @@ using CountersPlus.Custom;
 using UnityEngine.SceneManagement;
 using System.IO;
 using Newtonsoft.Json;
+using IllusionInjector;
+using IllusionPlugin;
 
 namespace CountersPlus
 {
@@ -117,7 +119,12 @@ namespace CountersPlus
                 foreach (string file in Directory.EnumerateFiles(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/"))
                 {
                     CustomConfigModel counter = JsonConvert.DeserializeObject<CustomConfigModel>(File.ReadAllText(file));
-                    LoadCounter<CustomConfigModel, CustomCounterHook>(counter.JSONName, counter);
+                    if (!counter.Counter.ToUpper().Contains("COUNTER"))
+                        Plugin.Log("Custom Counter does not meet requirements. Ignoring...");
+                    else if (PluginManager.Plugins.Where((IPlugin x) => x.Name == counter.ModCreator).Count() == 0)
+                        Plugin.Log("Custom Counter cannot find the plugin it originated from. Ignoring...");
+                    else
+                        LoadCounter<CustomConfigModel, CustomCounterHook>(counter.JSONName, counter);
                 }
             }
             if (settings.RNG) new GameObject("Counters+ | Randomizer").AddComponent<RandomizePositions>();
