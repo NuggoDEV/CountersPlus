@@ -53,11 +53,12 @@ Adding your own Counter is a simple as:
 
 ```csharp
 using CountersPlus.Custom; //Add CountersPlus.dll as a Reference
+using IllusionInjector; //Add References from Beat Saber_Data/Managed
 
 public class Plugin : IPlugin {
 
 	public void OnApplicationStart(){
-		try{
+		if(PluginManager.Plugins.Where((IPlugin x) => x.Name == "CountersPlus").Count() > 0) {
 			CustomCounter counter = new CustomCounter {
 				JSONName = "testCounter", //Name in config system. Also used as an identifier. Don't plan on changing this.
 				Name = "Test", //Display name that will appear in the SettingsUI.
@@ -65,7 +66,7 @@ public class Plugin : IPlugin {
 				Counter = "testCounterGameObject", //Name of the GameObject that holds your Counter component. Used to hook into the Counters+ system.
 			};
 			CustomCounterCreator.CreateCustomCounter(counter);
-		}catch{}//If the user does not have Counters+ installed, don't worry about it.
+		}//If the user does not have Counters+ installed, don't worry about it.
 	}
 	
 }
