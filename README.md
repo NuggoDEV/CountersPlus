@@ -58,7 +58,7 @@ using IllusionInjector; //Add References from Beat Saber_Data/Managed
 public class Plugin : IPlugin {
 
 	public void OnApplicationStart(){
-		if(PluginManager.Plugins.Where((IPlugin x) => x.Name == "CountersPlus").Count() > 0) {
+		if(PluginManager.Plugins.Any(x => x.Name == "Counters+")) {
 			CustomCounter counter = new CustomCounter {
 				JSONName = "testCounter", //Name in config system. Also used as an identifier. Don't plan on changing this.
 				Name = "Test", //Display name that will appear in the SettingsUI.
