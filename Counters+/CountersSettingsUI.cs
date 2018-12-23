@@ -130,23 +130,27 @@ namespace CountersPlus
             {
                 foreach (string file in Directory.EnumerateFiles(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
                 {
-                    CustomConfigModel potential = JsonConvert.DeserializeObject<CustomConfigModel>(File.ReadAllText(file));
-                    if (loadedCustoms.Where((CustomConfigModel x) => x.JSONName == potential.JSONName).Count() != 0) continue;
-                    customCounterUIItems.Add(potential, (SubMenu v) => {
-                        var delete = v.AddBool("Delete?", "Deletes the Custom Counter from the system.\nRelaunching the credited mod will regenerate the file.");
-                        delete.GetValue += delegate { return false; };
-                        delete.SetValue += delegate (bool c)
+                    try
+                    {
+                        CustomConfigModel potential = JsonConvert.DeserializeObject<CustomConfigModel>(File.ReadAllText(file));
+                        if (loadedCustoms.Where((CustomConfigModel x) => x.JSONName == potential.JSONName).Count() != 0) continue;
+                        customCounterUIItems.Add(potential, (SubMenu v) =>
                         {
-                            if (c) File.Delete(file);
-                            CountersController.settings.saveCustom(potential);
-                        };
-                        var credits = v.AddListSetting<ModeViewController>("Credits", $"Created by: {potential.ModCreator}");
-                        credits.values = creditSetting;
-                        credits.GetValue = () => creditSetting.First();
-                        credits.GetTextForValue = (value) => "Hover";
-                        credits.SetValue = c => { };
-                    });
-                    loadedCustoms.Add(potential);
+                            var delete = v.AddBool("Delete?", "Deletes the Custom Counter from the system.\nRelaunching the credited mod will regenerate the file.");
+                            delete.GetValue += delegate { return false; };
+                            delete.SetValue += delegate (bool c)
+                            {
+                                if (c) File.Delete(file);
+                                CountersController.settings.saveCustom(potential);
+                            };
+                            var credits = v.AddListSetting<ModeViewController>("Credits", $"Created by: {potential.ModCreator}");
+                            credits.values = creditSetting;
+                            credits.GetValue = () => creditSetting.First();
+                            credits.GetTextForValue = (value) => "Hover";
+                            credits.SetValue = c => { };
+                        });
+                        loadedCustoms.Add(potential);
+                    }catch{ Plugin.Log("Error loading Custom Counter. Ignoring..."); }
                 }
             }
 

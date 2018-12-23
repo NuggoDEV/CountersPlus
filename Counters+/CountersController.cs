@@ -118,13 +118,16 @@ namespace CountersPlus
             {
                 foreach (string file in Directory.EnumerateFiles(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/"))
                 {
-                    CustomConfigModel counter = JsonConvert.DeserializeObject<CustomConfigModel>(File.ReadAllText(file));
-                    if (PluginManager.Plugins.Where((IPlugin x) => x.Name == counter.ModCreator).Count() == 0)
-                        Plugin.Log("Custom Counter cannot find the plugin it originated from. Ignoring...");
-                    else if (PluginManager.Plugins.Where((IPlugin x) => x.Name == "Counters+").Count() == 0)
-                        Plugin.Log("Who thought it was a good idea to say Counters+ created a custom counter? :pepeThinking:");
-                    else
-                        LoadCounter<CustomConfigModel, CustomCounterHook>(counter.JSONName, counter);
+                    try
+                    {
+                        CustomConfigModel counter = JsonConvert.DeserializeObject<CustomConfigModel>(File.ReadAllText(file));
+                        if (PluginManager.Plugins.Where((IPlugin x) => x.Name == counter.ModCreator).Count() == 0)
+                            Plugin.Log("Custom Counter cannot find the plugin it originated from. Ignoring...");
+                        else if (PluginManager.Plugins.Where((IPlugin x) => x.Name == "Counters+").Count() == 0)
+                            Plugin.Log("Who thought it was a good idea to say Counters+ created a custom counter? :pepeThinking:");
+                        else
+                            LoadCounter<CustomConfigModel, CustomCounterHook>(counter.JSONName, counter);
+                    }catch{ Plugin.Log("Error loading Custom Counter. Ignoring..."); }
                 }
             }
             if (settings.RNG) new GameObject("Counters+ | Randomizer").AddComponent<RandomizePositions>();
