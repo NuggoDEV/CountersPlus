@@ -72,6 +72,10 @@ public class Plugin : IPlugin {
 }
 ```
 
+A few things to keep in mind:
+1. Try to keep your counters under one GameObject each (Have anything else as a child), you can only add one GameObject per custom counter!
+2. Add Counters before the Menu scene is loaded (It'll thrown an exception after), this is so it can create UI in settings without having to reload.
+
 And you're done! If it has not yet been created, Counters+ will create a configuration `.json` file in the `Custom Counters` folder of UserData, and will go off of that from now on. Your Counter can now be subject to the same base configuration settings as every counter!
 
 Custom Counters also have a Delete option (To delete custom counters), and a Credits option which will display the mod that created the counter.

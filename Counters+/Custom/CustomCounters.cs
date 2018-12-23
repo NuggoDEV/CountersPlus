@@ -16,7 +16,6 @@ namespace CountersPlus.Custom
 {
     public class CustomCounterCreator : MonoBehaviour
     {
-        static CustomCounterCreator Instance;
         /// <summary>
         /// Adds an outside MonoBehaviour into the Counters+ system. If it already exists in the system, it will be ignored.
         /// <param name="model"/>The CustomCounter object.</param>
@@ -68,7 +67,6 @@ namespace CountersPlus.Custom
                         if (CountersController.settings != null)
                         {
                             add(counter);
-                            Plugin.Log("Settings must exist now!");
                             break;
                         }
                     }
@@ -80,7 +78,8 @@ namespace CountersPlus.Custom
 
         internal static void add(CustomConfigModel counter)
         {
-            //CountersController.settings.CustomCounters.Add(counter);
+            if (!Directory.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
+                Directory.CreateDirectory(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters");
             using (StreamWriter file = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/{counter.JSONName}.json"))
             {
                 JsonSerializer serializer = new JsonSerializer();
@@ -111,10 +110,6 @@ namespace CountersPlus.Custom
         /// The name of the counter. Will be shown in the submenu title.
         /// </summary>
         public string Name { get; set; }
-        /// <summary>
-        /// Whether or not a custom settings menu will be created for this counter.
-        /// </summary>
-        public bool CreateSettingsUI { get; set; }
         /// <summary>
         /// The plugin that created this custom counter. Will be displayed in the Settings UI.
         /// </summary>

@@ -121,6 +121,8 @@ namespace CountersPlus
                     CustomConfigModel counter = JsonConvert.DeserializeObject<CustomConfigModel>(File.ReadAllText(file));
                     if (PluginManager.Plugins.Where((IPlugin x) => x.Name == counter.ModCreator).Count() == 0)
                         Plugin.Log("Custom Counter cannot find the plugin it originated from. Ignoring...");
+                    else if (PluginManager.Plugins.Where((IPlugin x) => x.Name == "Counters+").Count() == 0)
+                        Plugin.Log("Who thought it was a good idea to say Counters+ created a custom counter? :pepeThinking:");
                     else
                         LoadCounter<CustomConfigModel, CustomCounterHook>(counter.JSONName, counter);
                 }
@@ -166,7 +168,7 @@ namespace CountersPlus
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
             }
-            if (Plugin.beatSaberVersion != "0.12.0") //Handles slight position changes from Beat Saber v0.12.1
+            if (Plugin.beatSaberVersion != "0.12.0") //lmao me dumb
             {
                 if (position != ICounterPositions.AboveHighway && position != ICounterPositions.BelowEnergy)
                 {

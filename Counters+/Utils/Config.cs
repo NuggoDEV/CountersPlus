@@ -26,12 +26,6 @@ namespace CountersPlus.Config
                 {
                     string json = File.ReadAllText(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json");
                     model = JsonConvert.DeserializeObject<MainConfigModel>(json);
-                    /*if (Directory.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters")){
-                        foreach(string file in Directory.EnumerateFiles(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/"))
-                        {
-                            model.CustomCounters.Add(JsonConvert.DeserializeObject<CustomConfigModel>(File.ReadAllText(file)));
-                        }
-                    }*/
                 }
                 catch (Exception e)
                 {
@@ -115,9 +109,9 @@ namespace CountersPlus.Config
         [JsonIgnore]
         public bool isSaving = false;
 
-        public async void save()
+        public async void save() //Give Config some time to save JSON without having it be malformed.
         {
-            await Task.Run(async() => {
+            await Task.Run(() => {
                 isSaving = true;
                 using (StreamWriter file = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
                 {
