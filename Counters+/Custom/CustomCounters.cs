@@ -11,6 +11,7 @@ using CustomUI.Settings;
 using System.Threading;
 using System.IO;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace CountersPlus.Custom
 {
@@ -44,7 +45,7 @@ namespace CountersPlus.Custom
                     Index = 2,
                     Counter = model.Counter,
                     ModCreator = model.Mod.Name,
-                    RestrictedPositions = (restrictedPositions.Count() == 0 || restrictedPositions == null) ? null : restrictedPositions,
+                    RestrictedPositions = (restrictedPositions.Count() == 0 || restrictedPositions == null) ? new ICounterPositions[] { } : restrictedPositions, //Thanks Viscoci for this
                 };
                 if (string.IsNullOrEmpty(counter.JSONName) || string.IsNullOrEmpty(counter.DisplayName))
                     throw new CustomCounterException("Custom Counter properties invalid. Please make sure JSONName and DisplayName are properly assigned.");
@@ -125,6 +126,7 @@ namespace CountersPlus.Custom
         public string JSONName { get; set; }
         public string DisplayName { get; set; }
         public bool Enabled { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public ICounterPositions Position { get; set; }
         public int Index { get; set; }
         public string Counter { get; set; }

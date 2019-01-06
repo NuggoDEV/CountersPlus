@@ -136,7 +136,7 @@ namespace CountersPlus
                         if (loadedCustoms.Where((CustomConfigModel x) => x.JSONName == potential.JSONName).Count() != 0) continue;
                         customCounterUIItems.Add(potential, (SubMenu v) =>
                         {
-                            var delete = v.AddBool("Delete?", "Deletes the Custom Counter from the system.\nRelaunching the credited mod will regenerate the file.");
+                            var delete = v.AddBool("Delete?", "Deletes the Custom Counter from the system when you apply settings.\n<color=#FF0000>Relaunching the credited mod will regenerate the file.</color>\nAnother way to remove the effects of a Custom Counter is by simply disabling it.");
                             delete.GetValue += delegate { return false; };
                             delete.SetValue += delegate (bool c)
                             {
@@ -150,7 +150,7 @@ namespace CountersPlus
                             credits.SetValue = c => { };
                         });
                         loadedCustoms.Add(potential);
-                    }catch{ Plugin.Log("Error loading Custom Counter. Ignoring..."); }
+                    }catch(Exception e){ Plugin.Log("Error loading Custom Counter. Ignoring..."); Plugin.Log(e.ToString()); }
                 }
             }
 
@@ -165,7 +165,7 @@ namespace CountersPlus
 
             if (!CountersController.settings.Enabled) return;
 
-            var mainRNG = mainSub.AddBool("Random Counter Properties", "Add some RNG to the position and settings of some Counters.");
+            var mainRNG = mainSub.AddBool("Random Counter Properties", "Add some RNG to the position and settings of some Counters.\n<color=#FF0000>This will essentially have counters float around the play space every 10 seconds, and can be distracting in play.</color>");
             mainRNG.GetValue += delegate { return CountersController.settings.RNG; };
             mainRNG.SetValue += delegate (bool value) {
                 CountersController.settings.RNG = value;
@@ -189,20 +189,24 @@ namespace CountersPlus
             }
         }
 
-        internal static SubMenu createBase<T>(string name, T configItem, ICounterPositions[] restricted) where T : Config.IConfigModel
+        internal static SubMenu createBase<T>(string name, T configItem, params ICounterPositions[] restricted) where T : Config.IConfigModel
         {
             Plugin.Log("Creating base for: " + name);
             List<Tuple<ICounterPositions, string>> restrictedList = new List<Tuple<ICounterPositions, string>>();
-            foreach(ICounterPositions pos in restricted)
+            try
             {
-                restrictedList.Add(Tuple.Create(pos, positions.Where((Tuple<ICounterPositions, string> x) => x.Item1 == pos ).First().Item2));
+                foreach (ICounterPositions pos in restricted)
+                {
+                    restrictedList.Add(Tuple.Create(pos, positions.Where((Tuple<ICounterPositions, string> x) => x.Item1 == pos).First().Item2));
+                }
             }
+            catch { } //It most likely errors here. If it does, well no problem.
             var @base = SettingsUI.CreateSubMenu("Counters+ | " + name);
             var enabled = @base.AddBool("Enabled", "Toggles this counter on or off.");
             enabled.GetValue += () => configItem.Enabled;
             enabled.SetValue += v => configItem.Enabled = v;
             var position = @base.AddListSetting<PositionSettingsViewController>("Position", "The relative positions of common UI elements of which to go off of.");
-            position.values = (restricted.Count() == 0) ? positions : restrictedList;
+            position.values = (restrictedList.Count() == 0) ? positions : restrictedList;
             position.GetValue = () => positions.Where((Tuple<Config.ICounterPositions, string> x) => (x.Item1 == configItem.Position)).FirstOrDefault();
             position.GetTextForValue = (value) => value.Item2;
             position.SetValue = v => configItem.Position = v.Item1;
