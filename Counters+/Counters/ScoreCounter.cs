@@ -22,6 +22,7 @@ namespace CountersPlus.Counters
         TextMeshPro _RankText;
         int _maxPossibleScore = 0;
         float roundMultiple;
+        int _currentScore;
 
         IEnumerator WaitForLoad()
         {
@@ -110,7 +111,10 @@ namespace CountersPlus.Counters
                 _RankText.rectTransform.localPosition = new Vector3(0f, -0.4f, 0f);
             }
             if (_scoreController != null)
+            {
                 _scoreController.scoreDidChangeEvent += UpdateScore;
+                _scoreController.noteWasMissedEvent += _OnNoteWasMissed;
+            }
         }
 
         public string GetRank(int score, float prec)
@@ -146,9 +150,14 @@ namespace CountersPlus.Counters
             return "E";
         }
 
+        private void _OnNoteWasMissed(NoteData noteData, int score)
+        {
+            UpdateScore(_currentScore);
+        }
+
         public void UpdateScore(int score)
         {
-
+            _currentScore = score;
             if (_objectRatingRecorder != null)
             {
                 List<BeatmapObjectExecutionRating> _ratings = ReflectionUtil.GetPrivateField<List<BeatmapObjectExecutionRating>>(_objectRatingRecorder, "_beatmapObjectExecutionRatings");
