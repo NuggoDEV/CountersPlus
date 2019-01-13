@@ -5,17 +5,25 @@ A combination of widely-used counters, all configurable in one mod.
 **Counters+** (Also known as CountersPlus) is a mod that combines counters, both new and widely used, into one mod. Counters+ also supports a large amount of customization, going from positions and ordering, to even using the counters available in game!
 
 ## Available Counters
-***Progress*** (Since `1.0.0`) | Overwrites the in-game counter with the original we all know and love!
+|Counter|Version Added|Description|
+|-|-|-|
+|***Progress***|`1.0.0`|Overwrites the in-game counter with the original we all know and love!|
+|***Score***|`1.0.0`|Also overwrites with the original Score counter!|
+|***Missed***|`1.0.0`|Counts missed notes in a song.|
+|***Notes***|`1.0.0`, previously *Accuracy*|Notes hit over notes in total. Now in percentages!|
+|***Speed***|`1.1.0`, suggested by [Ragesaq](https://www.twitch.tv/ragesaq)|*"Speed, motherfucker, do you speak it?"* Displays how fast your arms are swinging!|
+|***Cut***|`1.1.0`|Displays the average cut score (Anywhere from 0-110), so you can see how well you are hitting those notes!|
 
-***Score*** (Since `1.0.0`) | Also overwrites with the original Score counter!
+### Custom Counters
+Counters+ also supports the addition of Custom Counters. Other mods can input their counters into the Counters+ system and it will work just like any other Counters+ counter!
 
-***Missed*** (Since `1.0.0`) | Counts missed notes in a song.
+#### Supported Custom Counters
+If you wish to add your mod to this list, please DM me on Discord: *Caeden117#0117*
 
-***Notes*** (Since `1.0.0`, previously *Accuracy*) | Notes hit over notes in total. Now in percentages!
-
-***Speed*** (Since `1.1.0`, suggested by Ragesaq) | *"Speed, motherfucker, do you speak it?"* Displays how fast your arms are swinging!
-
-***Cut*** (Since `1.1.0`) | Displays the average cut score (Anywhere from 0-110), so you can see how well you are hitting those notes!
+|Mod|Description|
+|-|-|
+|***BeFit***|Among other things, displays a calorie counter that increases while you play a song.|
+|***Notes Left Counter***|Displays the remaining notes in a song. Easy as that!|
 
 ## Configuration
 
