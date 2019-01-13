@@ -64,6 +64,8 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
 ## For Developers
 For plugin developers who plan on adding a counter of their own, Counters+ has a way to easily integrate your created counter into the Counters+ system.
 
+Adding a Custom Counter will not make your plugin dependent on Counters+ (Unless you *really* want it to be).
+
 Adding your own Counter is a simple as:
 
 ```csharp
