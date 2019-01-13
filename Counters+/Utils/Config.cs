@@ -116,17 +116,11 @@ namespace CountersPlus.Config
                 using (StreamWriter file = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
                 {
                     JsonSerializer serializer = new JsonSerializer();
-                    JsonConvert.DefaultSettings = new Func<JsonSerializerSettings>(() => {
-                        JsonSerializerSettings settings = new JsonSerializerSettings();
-                        settings.Formatting = Formatting.Indented;
-                        return settings;
-                    });
                     serializer.Serialize(file, this);
                 }
                 if (!Directory.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
                     Directory.CreateDirectory(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters");
                 Plugin.Log("Settings saved!");
-                
             });
 
             await Task.Run(() =>
@@ -136,16 +130,11 @@ namespace CountersPlus.Config
             });
         }
 
-        public async void saveCustom(CustomConfigModel model)
+        public void saveCustom(CustomConfigModel model)
         {
             using (StreamWriter file = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/{model.JSONName}.json"))
             {
                 JsonSerializer serializer = new JsonSerializer();
-                JsonConvert.DefaultSettings = new Func<JsonSerializerSettings>(() => {
-                    JsonSerializerSettings settings = new JsonSerializerSettings();
-                    settings.Formatting = Formatting.Indented;
-                    return settings;
-                });
                 serializer.Serialize(file, model);
             }
         }

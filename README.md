@@ -20,31 +20,38 @@ A combination of widely-used counters, all configurable in one mod.
 ## Configuration
 
 ### Plugin-wide settings
-***Enabled*** | Toggles the plugin on and off, and hides all other submenus if disabled!
-
-***RNG*** | Adds some RNG flair to your counters. Change different settings over time!
-
-***Disable Menus*** | Hides other submenus while keeping Counters+ enabled.
+|Setting|Description|
+|-|-|
+|***Enabled***|Toggles the plugin on and off, and hides all other submenus if disabled!|
+|***RNG***|Adds some RNG flair to your counters. Change different settings over time!|
+|***Disable Menus***|Hides other submenus while keeping Counters+ enabled.|
 
 ### Every Counter has these 3 options
-***Enabled*** | Toggles the counter on or off.
-
-***Position*** | Sets the position relative to commonly used UI elements (Above/Below Counter, Above/Below Multiplier, Above the Highway, or Below Energy.)
-
-***Index*** | Otherwise known as the order. A higher Index would set the Counter farther away from the position.
+|Setting|Description|
+|-|-|
+|***Enabled***|Toggles the counter on or off.|
+|***Position***|Sets the position relative to commonly used UI elements (Combo, Multiplier, etc.)|
+|***Index***|Otherwise known as the order. A higher Index would set the Counter farther away from the position.|
 
 ### Advanced Options
-***Decimal Precision*** (*Notes*, *Score*, and *Speed*) | How precise do the decimals go?
+|Setting|Counters|Description
+|-|-|-|
+|***Decimal Precision***|*Notes*, *Score*, and *Speed*|How precise do the decimals go?|
+|***Override Base Game Counter***|*Score*|Whether or not to use the base game counter instead of replacing it with our own. **Some features will not be reflected when using the base game counters!**|
+|***Show Precentage***|*Notes*|Displays the percentage of notes hit over notes in total.|
+|***Display Rank***|*Score*|Displays the Rank you get during a song (SS, S, A, B, C, D, E)|
+|***Progress Time Left***|*Progress*|The counter starts at full, and decreases as you progress though a song.|
+|***Mode***|*Speed*, *Progress*|Changes the display mode for the Counter (See Hint Text in-game for more detail|
 
-***Override Base Game Counter*** (*Score*) | Whether or not to use the base game counter instead of replacing it with our own. **Some features will not be reflected when using the base game counters!**
+### Some Notes
 
-***Show Precentage*** (*Notes*) | Shows the precentage
-
-***Display Rank*** (*Score*) | Displays the Rank you get during a song (SS, S, A, B, C, D, E)
-
-***Progress Time Left*** (*Progress*) | The counter starts at full, and decreases as you progress though a song.
-
-***Mode*** (*Speed*, *Progress*) | Changes the display mode for the Counter (See Hint Text in-game for more detail)
+- If ***Advanced HUD*** is Disabled:
+  - If ***Progress Counter***'s *Mode* is set to **Base**:
+    - Nothing will appear.
+  - If ***Score Counter***'s *Override* option is set to **True**:
+    - Only the score will appear. No rank.
+  - If ***Score Counter***'s *Override* option is set to **False**:
+    - No score will appear.
 
 ## For Developers
 For plugin developers who plan on adding a counter of their own, Counters+ has a way to easily integrate your created counter into the Counters+ system.

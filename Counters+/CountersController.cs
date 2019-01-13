@@ -110,10 +110,6 @@ namespace CountersPlus
             LoadCounter<ProgressConfigModel, ProgressCounter>("Progress", settings.progressConfig);
             LoadCounter<SpeedConfigModel, SpeedCounter>("Speed", settings.speedConfig);
             LoadCounter<CutConfigModel, CutCounter>("Cut", settings.cutConfig);
-            /*foreach(CustomConfigModel counter in settings.CustomCounters)
-            {
-                LoadCounter<CustomConfigModel, CustomCounterHook>(counter.DisplayName, counter);
-            }*/
             if (Directory.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
             {
                 foreach (string file in Directory.EnumerateFiles(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/"))
@@ -142,7 +138,7 @@ namespace CountersPlus
             switch (position)
             {
                 case Config.ICounterPositions.BelowCombo:
-                    pos = new Vector3(-3f, -0.25f, 7);
+                    pos = new Vector3(-3f, 0f, 7);
                     break;
                 case Config.ICounterPositions.AboveCombo:
                     pos = new Vector3(-3f, 1.5f, 7);
