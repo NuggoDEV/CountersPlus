@@ -24,17 +24,8 @@ namespace CountersPlus.Counters
 
         IEnumerator WaitForLoad()
         {
-            bool loaded = false;
-            while (!loaded)
-            {
-                _audioTimeSync = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().FirstOrDefault();
-
-                if (_audioTimeSync == null)
-                    yield return new WaitForSeconds(0.01f);
-                else
-                    loaded = true;
-            }
-
+            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().Any());
+            _audioTimeSync = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().FirstOrDefault();
             Init();
         }
 
@@ -50,14 +41,8 @@ namespace CountersPlus.Counters
 
         IEnumerator YeetToBaseCounter()
         {
-            GameObject baseCounter;
-            while (true)
-            {
-                baseCounter = GameObject.Find("SongProgressPanel");
-                if (baseCounter != null) break;
-                yield return new WaitForSeconds(0.1f);
-            }
-            baseCounter.AddComponent<ProgressCounter>();
+            yield return new WaitUntil(() => GameObject.Find("SongProgressPanel") != null);
+            GameObject.Find("SongProgressPanel").AddComponent<ProgressCounter>();
             Plugin.Log("Progress Counter has been moved to the base game counter!");
             Destroy(gameObject);
         }
