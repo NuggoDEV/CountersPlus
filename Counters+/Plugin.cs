@@ -44,7 +44,7 @@ namespace CountersPlus
 
         private async void SceneManager_sceneLoaded(Scene arg0, Scene arg1)
         {
-            if (CountersController.settings.Enabled) CountersController.OnLoad();
+            //if (CountersController.settings.Enabled) CountersController.OnLoad();
             if (arg1.name == "GameCore" &&
                 CountersController.settings.Enabled &&
                 (!Resources.FindObjectsOfTypeAll<PlayerDataModelSO>()

@@ -138,7 +138,7 @@ namespace CountersPlus
             switch (position)
             {
                 case Config.ICounterPositions.BelowCombo:
-                    pos = new Vector3(-3f, 0f, 7);
+                    pos = new Vector3(-3f, 0.25f, 7);
                     break;
                 case Config.ICounterPositions.AboveCombo:
                     pos = new Vector3(-3f, 1.5f, 7);

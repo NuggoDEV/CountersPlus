@@ -39,7 +39,7 @@ namespace CountersPlus.Config
 
         internal static MainConfigModel createDefaultJSON()
         {
-            MainConfigModel def = new MainConfigModel { Enabled = true, RNG = false, DisableMenus = false,
+            MainConfigModel def = new MainConfigModel { Enabled = true, RNG = false, DisableMenus = false, //ComboOffset = 0.25f, MultiplierOffset = 0.25f, 
                 missedConfig = new MissedConfigModel()
                 {
                     Enabled = true, Position = ICounterPositions.BelowCombo, Index = 0,
@@ -81,13 +81,7 @@ namespace CountersPlus.Config
             };
             using (StreamWriter file = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
             {
-                JsonSerializer serializer = new JsonSerializer();
-                JsonConvert.DefaultSettings = new Func<JsonSerializerSettings>(() => {
-                    JsonSerializerSettings settings = new JsonSerializerSettings();
-                    settings.Formatting = Formatting.Indented;
-                    return settings;
-                });
-                serializer.Serialize(file, def);
+                file.WriteLineAsync(JsonConvert.SerializeObject(def));
             }
             return def;
         }
@@ -97,6 +91,8 @@ namespace CountersPlus.Config
         public bool Enabled;
         public bool RNG;
         public bool DisableMenus;
+        //public float ComboOffset;
+        //public float MultiplierOffset;
         public MissedConfigModel missedConfig;
         public AccuracyConfigModel accuracyConfig;
         public ProgressConfigModel progressConfig;
@@ -115,8 +111,7 @@ namespace CountersPlus.Config
                 isSaving = true;
                 using (StreamWriter file = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
                 {
-                    JsonSerializer serializer = new JsonSerializer();
-                    serializer.Serialize(file, this);
+                    file.WriteLineAsync(JsonConvert.SerializeObject(this));
                 }
                 if (!Directory.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
                     Directory.CreateDirectory(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters");
@@ -134,8 +129,7 @@ namespace CountersPlus.Config
         {
             using (StreamWriter file = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/{model.JSONName}.json"))
             {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, model);
+                file.WriteLineAsync(JsonConvert.SerializeObject(model));
             }
         }
     }
