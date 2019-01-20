@@ -8,6 +8,7 @@ using CountersPlus.Config;
 using System.IO;
 using CountersPlus.Custom;
 using Newtonsoft.Json;
+using System.Collections;
 
 namespace CountersPlus
 {
@@ -52,17 +53,17 @@ namespace CountersPlus
         internal static Dictionary<IConfigModel, Action<SubMenu>> counterUIItems = new Dictionary<IConfigModel, Action<SubMenu>>()
         {
             { CountersController.settings.missedConfig, v => { } },
-            { CountersController.settings.accuracyConfig,
+            { CountersController.settings.noteConfig,
                 v => {
                         var accuracyPercentage = v.AddBool("Show Percentage", "Toggles the percentage of notes hit over total notes.");
-                    accuracyPercentage.GetValue += delegate { return CountersController.settings.accuracyConfig.ShowPercentage; };
+                    accuracyPercentage.GetValue += delegate { return CountersController.settings.noteConfig.ShowPercentage; };
                     accuracyPercentage.SetValue += delegate (bool value) {
-                        CountersController.settings.accuracyConfig.ShowPercentage = value;
+                        CountersController.settings.noteConfig.ShowPercentage = value;
                     };
                     var accuracyPrecision = v.AddInt("Percentage Decimal Precision", "How precise should the percentage be?", 0, 5, 1);
-                    accuracyPrecision.GetValue += delegate { return CountersController.settings.accuracyConfig.DecimalPrecision; };
+                    accuracyPrecision.GetValue += delegate { return CountersController.settings.noteConfig.DecimalPrecision; };
                     accuracyPrecision.SetValue += delegate (int c) {
-                        CountersController.settings.accuracyConfig.DecimalPrecision = c;
+                        CountersController.settings.noteConfig.DecimalPrecision = c;
                     };
                 } },
             { CountersController.settings.scoreConfig,
@@ -160,7 +161,6 @@ namespace CountersPlus
             mainEnabled.GetValue += delegate { return CountersController.settings.Enabled; };
             mainEnabled.SetValue += delegate (bool value) {
                 CountersController.settings.Enabled = value;
-                Plugin.FlagConfigForReload(true);
             };
 
             if (!CountersController.settings.Enabled) return;
@@ -181,11 +181,19 @@ namespace CountersPlus
             
             foreach(var kvp in counterUIItems)
             {
-                kvp.Value(createBase(kvp.Key.DisplayName, kvp.Key));
+                try
+                {
+                    kvp.Value(createBase(kvp.Key.DisplayName, kvp.Key));
+                }
+                catch { }
             }
             foreach (var kvp in customCounterUIItems)
             {
-                kvp.Value(createBase(kvp.Key.DisplayName, kvp.Key, kvp.Key.RestrictedPositions));
+                try
+                {
+                    kvp.Value(createBase(kvp.Key.DisplayName, kvp.Key, kvp.Key.RestrictedPositions));
+                }
+                catch { }
             }
         }
 

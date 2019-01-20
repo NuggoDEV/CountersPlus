@@ -124,7 +124,7 @@ namespace CountersPlus.Custom
     public class CustomConfigModel : IConfigModel
     {
         public string JSONName { get; set; }
-        public string DisplayName { get; set; }
+        public override string DisplayName { get; set; }
         public bool Enabled { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public ICounterPositions Position { get; set; }

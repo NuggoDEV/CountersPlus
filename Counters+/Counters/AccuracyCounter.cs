@@ -14,14 +14,14 @@ namespace CountersPlus.Counters
     {
 
         private ScoreController scoreController;
-        private AccuracyConfigModel settings;
+        private NoteConfigModel settings;
         private TextMeshPro counterText;
         private int counter;
         private int total;
 
         void Awake()
         {
-            settings = CountersController.settings.accuracyConfig;
+            settings = CountersController.settings.noteConfig;
             transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             if (transform.parent == null)
                 StartCoroutine(GetRequired());
@@ -31,13 +31,8 @@ namespace CountersPlus.Counters
 
         IEnumerator GetRequired()
         {
-            while (true)
-            {
-                scoreController = Resources.FindObjectsOfTypeAll<ScoreController>().FirstOrDefault();
-                if (scoreController != null) break;
-                yield return new WaitForSeconds(0.1f);
-            }
-
+            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<ScoreController>().Any());
+            scoreController = Resources.FindObjectsOfTypeAll<ScoreController>().FirstOrDefault();
             Init();
         }
 

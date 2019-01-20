@@ -17,9 +17,6 @@ namespace CountersPlus
         public static string beatSaberVersion { get; private set; }
         public enum LogInfo { Info, Warning, Error, Fatal };
 
-        public static bool reloadConfig { get; private set; } = false;
-        private static bool saveOnReload = false;
-
         public void OnApplicationStart()
         {
             if (File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/BeatSaberVersion.txt"))
@@ -35,14 +32,7 @@ namespace CountersPlus
             CountersController.OnLoad();
         }
 
-        internal static void FlagConfigForReload(bool SaveOnReload = false)
-        {
-            reloadConfig = true;
-            saveOnReload = SaveOnReload;
-            Plugin.Log("Config flagged for reload!");
-        }
-
-        private async void SceneManager_sceneLoaded(Scene arg0, Scene arg1)
+        private void SceneManager_sceneLoaded(Scene arg0, Scene arg1)
         {
             //if (CountersController.settings.Enabled) CountersController.OnLoad();
             if (arg1.name == "GameCore" &&
@@ -54,36 +44,11 @@ namespace CountersPlus
             {
                 CountersController.LoadCounters();
             }
-            if (reloadConfig)
-            {
-                await EnsureConfigSaves();
-                if (saveOnReload)
-                {
-                    CountersController.settings.isSaving = true;
-                    CountersController.settings.save();
-                    await EnsureConfigSaves();
-                }
-                CountersController.settings = Config.Config.loadSettings();
-                if (CountersController.Instance == null) CountersController.OnLoad();
-                reloadConfig = false;
-                saveOnReload = false;
-            }
-        }
-
-        private Task EnsureConfigSaves()
-        {
-            return Task.Run(() =>
-            {
-                while (true)
-                {
-                    if (CountersController.settings.isSaving == false) break;
-                    Thread.Sleep(10);
-                }
-            });
         }
 
         private void addUI(Scene arg, LoadSceneMode hiBrian)
         {
+            Log(CountersController.settings != null ? "YAY" : "NAY");
             try
             {
                 if (arg.name == "Menu") CountersSettingsUI.CreateSettingsUI();

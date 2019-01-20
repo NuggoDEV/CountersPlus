@@ -31,14 +31,8 @@ namespace CountersPlus.Counters
 
         IEnumerator GetRequired()
         {
-            while (true)
-            {
-                scoreController = Resources.FindObjectsOfTypeAll<ScoreController>().FirstOrDefault();
-                //sceneSetup = Resources.FindObjectsOfTypeAll<StandardLevelSceneSetup>().FirstOrDefault();
-                if (scoreController != null) break;
-                yield return new WaitForSeconds(0.1f);
-            }
-
+            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<ScoreController>().Any());
+            scoreController = Resources.FindObjectsOfTypeAll<ScoreController>().FirstOrDefault();
             Init();
         }
 

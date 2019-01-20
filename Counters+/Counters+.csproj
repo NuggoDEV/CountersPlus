@@ -40,6 +40,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\Plugins\BeatSaberCustomUI.dll</HintPath>
     </Reference>
+    <Reference Include="BS_Utils">
+      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Plugins\BS_Utils.dll</HintPath>
+    </Reference>
     <Reference Include="IllusionInjector, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files\Steam\steamapps\common\Beat Saber\Beat Saber_Data\Managed\IllusionInjector.dll</HintPath>
@@ -113,8 +116,6 @@
     <Compile Include="Counters\CustomCounter.cs" />
     <Compile Include="Counters\CutCounter.cs" />
     <Compile Include="Custom\CustomCounters.cs" />
-    <Compile Include="UI\CountersPlusSettingsFlowCoordinator.cs" />
-    <Compile Include="UI\CountersPlusSettingsViewController.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="CountersController.cs" />
     <Compile Include="CountersSettingsUI.cs" />
@@ -130,6 +131,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "D:\Program Files\Steam\steamapps\common\Beat Saber\Plugins\CountersPlus.dll"</PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(TargetPath)" "D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Plugins\CountersPlus.dll"</PostBuildEvent>
   </PropertyGroup>
 </Project>

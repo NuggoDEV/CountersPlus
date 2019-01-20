@@ -105,7 +105,7 @@ namespace CountersPlus
         {
             Plugin.Log("Loading Counters...");
             LoadCounter<MissedConfigModel, MissedCounter>("Missed", settings.missedConfig);
-            LoadCounter<AccuracyConfigModel, AccuracyCounter>("Notes", settings.accuracyConfig);
+            LoadCounter<NoteConfigModel, AccuracyCounter>("Notes", settings.noteConfig);
             LoadCounter<ScoreConfigModel, ScoreCounter>("Score", settings.scoreConfig);
             LoadCounter<ProgressConfigModel, ProgressCounter>("Progress", settings.progressConfig);
             LoadCounter<SpeedConfigModel, SpeedCounter>("Speed", settings.speedConfig);
@@ -138,21 +138,21 @@ namespace CountersPlus
             switch (position)
             {
                 case Config.ICounterPositions.BelowCombo:
-                    pos = new Vector3(-3f, 0.25f, 7);
+                    pos = new Vector3(-3f, 0.2f - settings.ComboOffset, 7);
                     break;
                 case Config.ICounterPositions.AboveCombo:
-                    pos = new Vector3(-3f, 1.5f, 7);
+                    pos = new Vector3(-3f, 1.3f + settings.ComboOffset, 7);
                     if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.Mode == ICounterMode.BaseGame)
                         offset += new Vector3(0, -0.75f, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
                 case Config.ICounterPositions.BelowMultiplier:
-                    pos = new Vector3(3f, 0, 7);
+                    pos = new Vector3(3f, 0.4f - settings.MultiplierOffset, 7);
                     if (GameObject.Find("FCDisplay")) offset += new Vector3(0, -0.25f, 0);
                     break;
                 case Config.ICounterPositions.AboveMultiplier:
-                    pos = new Vector3(3f, 1.5f, 7);
-                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.Mode == ICounterMode.BaseGame)
+                    pos = new Vector3(3f, 1.1f + settings.MultiplierOffset, 7);
+                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.Mode == ICounterMode.Original)
                         offset += new Vector3(0, -0.75f, 0);
                     if (GameObject.Find("FCDisplay")) offset += new Vector3(0, -0.25f, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
@@ -162,7 +162,7 @@ namespace CountersPlus
                     break;
                 case Config.ICounterPositions.AboveHighway:
                     pos = new Vector3(0, 2.25f, 7);
-                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.Mode == ICounterMode.BaseGame)
+                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.Mode == ICounterMode.Original)
                         offset += new Vector3(0, -0.75f, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;

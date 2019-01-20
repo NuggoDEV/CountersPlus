@@ -4,6 +4,7 @@ using System.IO;
 using Newtonsoft.Json;
 using CountersPlus.Custom;
 using Newtonsoft.Json.Converters;
+using BS_Utils.Utilities;
 using System.Threading.Tasks;
 using System.Threading;
 
@@ -17,7 +18,6 @@ namespace CountersPlus.Config
             MainConfigModel model = new MainConfigModel();
             if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
             {
-                model = createDefaultJSON();
                 Plugin.Log("Config JSON can not be found! Creating default JSON...", Plugin.LogInfo.Error);
             }
             else
@@ -29,194 +29,234 @@ namespace CountersPlus.Config
                 }
                 catch (Exception e)
                 {
-                    Plugin.Log("Error loading JSON! Overwriting with default JSON...", Plugin.LogInfo.Error);
-                    Plugin.Log(e.Message, Plugin.LogInfo.Error);
-                    model = createDefaultJSON();
+                    Plugin.Log("Error loading JSON!", Plugin.LogInfo.Error);
                 }
             }
+            Plugin.Log("Config loaded.");
             return model;
-        }
-
-        internal static MainConfigModel createDefaultJSON()
-        {
-            MainConfigModel def = new MainConfigModel { Enabled = true, RNG = false, DisableMenus = false, //ComboOffset = 0.25f, MultiplierOffset = 0.25f, 
-                missedConfig = new MissedConfigModel()
-                {
-                    Enabled = true, Position = ICounterPositions.BelowCombo, Index = 0,
-                },
-                accuracyConfig = new AccuracyConfigModel
-                {
-                    Enabled = true, Position = ICounterPositions.BelowCombo, Index = 1,
-                    ShowPercentage = true,
-                    DecimalPrecision = 2,
-                },
-                progressConfig = new ProgressConfigModel
-                {
-                    Enabled = true, Position = ICounterPositions.BelowEnergy, Index = 0,
-                    Mode = ICounterMode.Original,
-                    ProgressTimeLeft = false,
-                },
-                scoreConfig = new ScoreConfigModel
-                {
-                    Enabled = true, Position = ICounterPositions.BelowMultiplier, Index = 0,
-                    UseOld = false,
-                    DecimalPrecision = 2,
-                    DisplayRank = true,
-                },
-                /*pBConfig = new PBConfigModel
-                {
-                    Enabled = false, Position = ICounterPositions.BelowMultiplier, Index = 1,
-                    DecimalPrecision = 2,
-                },*/
-                speedConfig = new SpeedConfigModel
-                {
-                    Enabled = false, Position = ICounterPositions.AboveHighway, Index = 0,
-                    DecimalPrecision = 2,
-                    Mode = ICounterMode.Average,
-                },
-                cutConfig = new CutConfigModel
-                {
-                    Enabled = false, Position = ICounterPositions.AboveCombo, Index = 0,
-                },
-            };
-            using (StreamWriter file = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
-            {
-                file.WriteLineAsync(JsonConvert.SerializeObject(def));
-            }
-            return def;
         }
     }
     
     public class MainConfigModel {
-        public bool Enabled;
-        public bool RNG;
-        public bool DisableMenus;
-        //public float ComboOffset;
-        //public float MultiplierOffset;
+        public bool Enabled { get {
+                return new BS_Utils.Utilities.Config("CountersPlus").GetBool("Main", "Enabled", true, true);
+            } set {
+                new BS_Utils.Utilities.Config("CountersPlus").SetBool("Main", "Enabled", value);
+            } }
+        public bool RNG
+        {
+            get
+            {
+                return new BS_Utils.Utilities.Config("CountersPlus").GetBool("Main", "RNG", true, true);
+            }
+            set
+            {
+                new BS_Utils.Utilities.Config("CountersPlus").SetBool("Main", "RNG", value);
+            }
+        }
+        public bool DisableMenus
+        {
+            get
+            {
+                return new BS_Utils.Utilities.Config("CountersPlus").GetBool("Main", "DisableMenus", true, true);
+            }
+            set
+            {
+                new BS_Utils.Utilities.Config("CountersPlus").SetBool("Main", "DisableMenus", value);
+            }
+        }
+        public float ComboOffset {
+            get
+            {
+                return new BS_Utils.Utilities.Config("CountersPus").GetFloat("Main", "ComboOffset", 0.2f, true);
+            }
+            set
+            {
+                new BS_Utils.Utilities.Config("CountersPus").SetFloat("Main", "ComboOffset", value);
+            }
+        }
+        public float MultiplierOffset {
+            get
+            {
+                return new BS_Utils.Utilities.Config("CountersPus").GetFloat("Main", "MultiplierOffset", 0.2f, true);
+            }
+            set
+            {
+                new BS_Utils.Utilities.Config("CountersPus").SetFloat("Main", "MultiplierOffset", value);
+            }
+        }
         public MissedConfigModel missedConfig;
-        public AccuracyConfigModel accuracyConfig;
+        public NoteConfigModel noteConfig;
         public ProgressConfigModel progressConfig;
         public ScoreConfigModel scoreConfig;
         //public PBConfigModel pBConfig;
         public SpeedConfigModel speedConfig;
         public CutConfigModel cutConfig;
-        [JsonIgnore]
-        public List<CustomConfigModel> CustomCounters = new List<CustomConfigModel>();
-        [JsonIgnore]
-        public bool isSaving = false;
 
-        public async void save() //Give Config some time to save JSON without having it be malformed.
-        {
-            await Task.Run(() => {
-                isSaving = true;
-                using (StreamWriter file = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
-                {
-                    file.WriteLineAsync(JsonConvert.SerializeObject(this));
-                }
-                if (!Directory.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
-                    Directory.CreateDirectory(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters");
-                Plugin.Log("Settings saved!");
-            });
-
-            await Task.Run(() =>
-            {
-                Thread.Sleep(100);
-                isSaving = false;
-            });
-        }
-
-        public void saveCustom(CustomConfigModel model)
+        public async void saveCustom(CustomConfigModel model)
         {
             using (StreamWriter file = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/{model.JSONName}.json"))
             {
-                file.WriteLineAsync(JsonConvert.SerializeObject(model));
+                await file.WriteLineAsync(JsonConvert.SerializeObject(model));
             }
         }
     }
 
-    public interface IConfigModel {
-        /// <summary>
-        /// The name that will show in the Settings UI.
-        /// </summary>
-        string DisplayName { get; set; }
-        /// <summary>
-        /// Whether or not this counter will be enabled.
-        /// </summary>
-        bool Enabled { get; set; }
-        /// <summary>
-        /// The relative position of the counter.
-        /// </summary>
+    public abstract class IConfigModel {
+        abstract public string DisplayName { get; set; }
+        public virtual bool Enabled { get {
+                return new BS_Utils.Utilities.Config("CountersPlus").GetBool(DisplayName, "Enabled", true, true);
+            }set{  new BS_Utils.Utilities.Config("CountersPlus").SetBool(DisplayName, "Enabled", value); } }
         [JsonConverter(typeof(StringEnumConverter))]
-        ICounterPositions Position { get; set; }
-        /// <summary>
-        /// A multiplier variable. The higher this is, the farther away it'll be.
-        /// </summary>
-        int Index { get; set; }
+        public virtual ICounterPositions Position { get {
+                return (ICounterPositions)Enum.Parse(typeof(ICounterPositions), new BS_Utils.Utilities.Config("CountersPlus").GetString(DisplayName, "Position", "BelowCombo", true));
+            } set {
+                new BS_Utils.Utilities.Config("CountersPlus").SetString(DisplayName, "Position", value.ToString());
+            } }
+        public virtual int Index { get{
+                return new BS_Utils.Utilities.Config("CountersPlus").GetInt(DisplayName, "Index", 0, true);
+            }
+            set { new BS_Utils.Utilities.Config("CountersPlus").SetInt(DisplayName, "Index", value); }
+        }
     }
 
     public class MissedConfigModel : IConfigModel
     {
-        public string DisplayName { get; set; } = "Missed";
-        public bool Enabled { get; set; }
-        public ICounterPositions Position { get; set; }
-        public int Index { get; set; }
+        public override string DisplayName { get; set; } = "Missed";
+        public override bool Enabled { get; set; } = true;
+        public override ICounterPositions Position { get; set; } = ICounterPositions.BelowCombo;
+        public override int Index { get; set; } = 0;
     }
 
-    public class AccuracyConfigModel : IConfigModel {
-        public string DisplayName { get; set; } = "Notes";
-        public bool Enabled { get; set; }
-        public ICounterPositions Position { get; set; }
-        public int Index { get; set; }
-        public bool ShowPercentage;
-        public int DecimalPrecision;
+    public class NoteConfigModel : IConfigModel {
+        public override string DisplayName { get; set; } = "Notes";
+        public override bool Enabled { get; set; } = true;
+        public override ICounterPositions Position { get; set; } = ICounterPositions.BelowCombo;
+        public override int Index { get; set; } = 1;
+        public bool ShowPercentage
+        {
+            get
+            {
+                return new BS_Utils.Utilities.Config("CountersPlus").GetBool(DisplayName, "ShowPercentage", true, true);
+            }
+            set { new BS_Utils.Utilities.Config("CountersPlus").SetBool(DisplayName, "ShowPercentage", value); }
+        }
+        public int DecimalPrecision
+        {
+            get
+            {
+                return new BS_Utils.Utilities.Config("CountersPlus").GetInt(DisplayName, "DecimalPrecision", 0, true);
+            }
+            set { new BS_Utils.Utilities.Config("CountersPlus").SetInt(DisplayName, "DecimalPrecision", value); }
+        }
     }
 
     public class ProgressConfigModel : IConfigModel {
-        public string DisplayName { get; set; } = "Progress";
-        public bool Enabled { get; set; }
-        public ICounterPositions Position { get; set; }
-        public int Index { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ICounterMode Mode;
-        public bool ProgressTimeLeft;
+        public override string DisplayName { get; set; } = "Progress";
+        public override bool Enabled { get; set; } = true;
+        public override ICounterPositions Position { get; set; } = ICounterPositions.BelowEnergy;
+        public override int Index { get; set; } = 0;
+        public ICounterMode Mode
+        {
+            get
+            {
+                return (ICounterMode)Enum.Parse(typeof(ICounterMode), new BS_Utils.Utilities.Config("CountersPlus").GetString(DisplayName, "Mode", "BelowCombo", true));
+            }
+            set
+            {
+                new BS_Utils.Utilities.Config("CountersPlus").SetString(DisplayName, "Position", value.ToString());
+            }
+        }
+        public bool ProgressTimeLeft
+        {
+            get
+            {
+                return new BS_Utils.Utilities.Config("CountersPlus").GetBool(DisplayName, "ProgressTimeLeft", true, true);
+            }
+            set { new BS_Utils.Utilities.Config("CountersPlus").SetBool(DisplayName, "ProgressTimeLeft", value); }
+        }
     }
 
     public class ScoreConfigModel : IConfigModel
     {
-        public string DisplayName { get; set; } = "Score";
-        public bool Enabled { get; set; }
-        public ICounterPositions Position { get; set; }
-        public int Index { get; set; }
-        public bool UseOld;
-        public int DecimalPrecision;
-        public bool DisplayRank;
+        public override string DisplayName { get; set; } = "Score";
+        public override bool Enabled { get; set; } = true;
+        public override ICounterPositions Position { get; set; } = ICounterPositions.BelowMultiplier;
+        public override int Index { get; set; } = 0;
+        public bool UseOld
+        {
+            get
+            {
+                return new BS_Utils.Utilities.Config("CountersPlus").GetBool(DisplayName, "UseOld", true, true);
+            }
+            set { new BS_Utils.Utilities.Config("CountersPlus").SetBool(DisplayName, "UseOld", value); }
+        }
+        public int DecimalPrecision
+        {
+            get
+            {
+                return new BS_Utils.Utilities.Config("CountersPlus").GetInt(DisplayName, "DecimalPrecision", 0, true);
+            }
+            set { new BS_Utils.Utilities.Config("CountersPlus").SetInt(DisplayName, "DecimalPrecision", value); }
+        }
+        public bool DisplayRank
+        {
+            get
+            {
+                return new BS_Utils.Utilities.Config("CountersPlus").GetBool(DisplayName, "DisplayRank", true, true);
+            }
+            set { new BS_Utils.Utilities.Config("CountersPlus").SetBool(DisplayName, "DisplayRank", value); }
+        }
     }
 
     public class PBConfigModel : IConfigModel{
-        public string DisplayName { get; set; } = "PB";
-        public bool Enabled { get; set; }
-        public ICounterPositions Position { get; set; }
-        public int Index { get; set; }
-        public int DecimalPrecision;
+        public override string DisplayName { get; set; } = "PB";
+        public override bool Enabled { get; set; } = false;
+        public override ICounterPositions Position { get; set; } = ICounterPositions.BelowMultiplier;
+        public override int Index { get; set; } = 1;
+        public int DecimalPrecision
+        {
+            get
+            {
+                return new BS_Utils.Utilities.Config("CountersPlus").GetInt(DisplayName, "DecimalPrecision", 0, true);
+            }
+            set { new BS_Utils.Utilities.Config("CountersPlus").SetInt(DisplayName, "DecimalPrecision", value); }
+        }
     }
 
     public class SpeedConfigModel : IConfigModel
     {
-        public string DisplayName { get; set; } = "Speed";
-        public bool Enabled { get; set; }
-        public ICounterPositions Position { get; set; }
-        public int Index { get; set; }
-        public int DecimalPrecision;
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ICounterMode Mode;
+        public override string DisplayName { get; set; } = "Speed";
+        public override bool Enabled { get; set; } = false;
+        public override ICounterPositions Position { get; set; } = ICounterPositions.AboveCombo;
+        public override int Index { get; set; } = 0;
+        public int DecimalPrecision
+        {
+            get
+            {
+                return new BS_Utils.Utilities.Config("CountersPlus").GetInt(DisplayName, "DecimalPrecision", 0, true);
+            }
+            set { new BS_Utils.Utilities.Config("CountersPlus").SetInt(DisplayName, "DecimalPrecision", value); }
+        }
+        public ICounterMode Mode
+        {
+            get
+            {
+                return (ICounterMode)Enum.Parse(typeof(ICounterMode), new BS_Utils.Utilities.Config("CountersPlus").GetString(DisplayName, "Mode", "BelowCombo", true));
+            }
+            set
+            {
+                new BS_Utils.Utilities.Config("CountersPlus").SetString(DisplayName, "Position", value.ToString());
+            }
+        }
     }
 
     public class CutConfigModel : IConfigModel
     {
-        public string DisplayName { get; set; } = "Cut";
-        public bool Enabled { get; set; }
-        public ICounterPositions Position { get; set; }
-        public int Index { get; set; }
+        public override string DisplayName { get; set; } = "Cut";
+        public override bool Enabled { get; set; } = false;
+        public override ICounterPositions Position { get; set; } = ICounterPositions.AboveHighway;
+        public override int Index { get; set; } = 0;
     }
     
     public enum ICounterPositions { BelowCombo, AboveCombo, BelowMultiplier, AboveMultiplier, BelowEnergy, AboveHighway }

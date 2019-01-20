@@ -37,12 +37,8 @@ namespace CountersPlus.Counters
 
         IEnumerator GetRequired()
         {
-            while (true)
-            {
-                playerController = Resources.FindObjectsOfTypeAll<PlayerController>().FirstOrDefault();
-                if (playerController != null) break;
-                yield return new WaitForSeconds(0.1f);
-            }
+            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<PlayerController>().Any());
+            playerController = Resources.FindObjectsOfTypeAll<PlayerController>().FirstOrDefault();
             Init();
         }
 
