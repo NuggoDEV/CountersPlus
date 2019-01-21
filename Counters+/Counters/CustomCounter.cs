@@ -10,6 +10,8 @@ using CountersPlus.Config;
 using CountersPlus.Custom;
 using System.IO;
 using Newtonsoft.Json;
+using IniParser;
+using IniParser.Model;
 
 namespace CountersPlus.Counters
 {
@@ -23,20 +25,16 @@ namespace CountersPlus.Counters
         void Awake()
         {
             Name = name.Split('|').Last().Substring(1).Split(' ').First();
-            if (!Directory.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
+            FileIniDataParser parser = new FileIniDataParser();
+            IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
+            foreach (SectionData section in data.Sections)
             {
-                Plugin.Log($"Custom Counter ({Name}) could not find its attached config model. Destroying...");
-                Destroy(this);
-            }
-            else
-            {
-                foreach(string file in Directory.EnumerateFiles(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
+                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
                 {
-                    CustomConfigModel potential = JsonConvert.DeserializeObject<CustomConfigModel>(File.ReadAllText(file));
-                    if (potential.JSONName == Name) settings = potential;
+                    CustomConfigModel potential = new CustomConfigModel(section.SectionName);
+                    if (potential.SectionName == Name) settings = potential;
                 }
             }
-
             if (settings == null)
             {
                 Plugin.Log($"Custom Counter ({Name}) could not find its attached config model. Destroying...");
@@ -68,28 +66,16 @@ namespace CountersPlus.Counters
         {
             counter.transform.parent = transform;
             counter.transform.localPosition = Vector3.zero;
+            StartCoroutine(UpdatePosition());
         }
 
-        void Update()
+        IEnumerator UpdatePosition()
         {
-            if (CountersController.rng)
+            while (true)
             {
-                settings.Index = UnityEngine.Random.Range(0, 5);
-                settings.Position = (ICounterPositions)UnityEngine.Random.Range(0, 4);
+                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+                yield return new WaitForSeconds(10);
             }
-            else
-            {
-                if (CountersController.settings.RNG)
-                {
-                    transform.position = Vector3.Lerp(
-                    transform.position,
-                    CountersController.determinePosition(gameObject, settings.Position, settings.Index),
-                    Time.deltaTime);
-                }
-                else
-                    transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-            }
-
         }
     }
 }

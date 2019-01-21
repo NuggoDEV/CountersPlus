@@ -63,28 +63,6 @@ namespace CountersPlus.Counters
             Plugin.Log("Score Counter has been moved to the base game counter!");
         }
 
-        void Update()
-        {
-            if (CountersController.rng)
-            {
-                settings.Index = UnityEngine.Random.Range(0, 5);
-                settings.Position = (ICounterPositions)UnityEngine.Random.Range(0, 4);
-                settings.DecimalPrecision = UnityEngine.Random.Range(0, 5);
-            }
-            else
-            {
-                if (CountersController.settings.RNG)
-                {
-                    transform.position = Vector3.Lerp(
-                    transform.position,
-                    CountersController.determinePosition(gameObject, settings.Position, settings.Index),
-                    Time.deltaTime);
-                }
-                else
-                    transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-            }
-        }
-
         private void Init()
         {
             if (GameObject.Find("RelativeScoreText") != null && !settings.UseOld) GameObject.Find("RelativeScoreText").transform.parent = transform;
@@ -114,6 +92,16 @@ namespace CountersPlus.Counters
             {
                 _scoreController.scoreDidChangeEvent += UpdateScore;
                 _scoreController.noteWasMissedEvent += _OnNoteWasMissed;
+            }
+            StartCoroutine(UpdatePosition());
+        }
+
+        IEnumerator UpdatePosition()
+        {
+            while (true)
+            {
+                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+                yield return new WaitForSeconds(10);
             }
         }
 

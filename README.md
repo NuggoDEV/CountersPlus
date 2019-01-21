@@ -82,7 +82,7 @@ public class Plugin : IPlugin {
 	
 	void AddCustomCounter(){
 		CustomCounter counter = new CustomCounter {
-			JSONName = "testCounter", //Name in config system. Also used as an identifier. Don't plan on changing this.
+			SectionName = "testCounter", //Used as an identifier. Don't plan on changing this.
 			Name = "Test", //Display name that will appear in the SettingsUI.
 			Mod = this, //IPA Plugin. Will show up in Credits in the SettingsUI.
 			Counter = "testCounterGameObject", //Name of the GameObject that holds your Counter component. Used to hook into the Counters+ system.

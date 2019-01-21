@@ -32,6 +32,7 @@ namespace CountersPlus.Counters
         void Awake()
         {
             settings = CountersController.settings.progressConfig;
+            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             useTimeLeft = settings.ProgressTimeLeft;
             if (settings.Mode == ICounterMode.BaseGame && gameObject.name != "SongProgressPanel")
                 StartCoroutine(YeetToBaseCounter());
@@ -108,29 +109,21 @@ namespace CountersPlus.Counters
                 _timeMesh.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
                 _timeMesh.alignment = TextAlignmentOptions.Center;
             }
+            StartCoroutine(UpdatePosition());
+        }
+
+        IEnumerator UpdatePosition()
+        {
+            while (true)
+            {
+                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+                yield return new WaitForSeconds(10);
+            }
         }
 
         void Update()
         {
             if (GameObject.Find("SongProgressPanel") != null && settings.Mode != ICounterMode.BaseGame) Destroy(GameObject.Find("SongProgressPanel"));
-            if (CountersController.rng)
-            {
-                settings.Index = UnityEngine.Random.Range(0, 5);
-                settings.Position = (ICounterPositions)UnityEngine.Random.Range(0, 4);
-            }
-            else
-            {
-                if (CountersController.settings.RNG)
-                {
-                    transform.position = Vector3.Lerp(
-                    transform.position,
-                    CountersController.determinePosition(gameObject, settings.Position, settings.Index),
-                    Time.deltaTime);
-                }
-                else
-                    transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-            }
-
             if (_audioTimeSync == false)
             {
                 _audioTimeSync = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().FirstOrDefault();

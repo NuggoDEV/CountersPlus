@@ -7,30 +7,21 @@ using System.Linq;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Threading;
+using BS_Utils.Utilities;
 
 namespace CountersPlus
 {
     public class Plugin : IPlugin
     {
         public string Name => "Counters+";
-        public string Version => "1.2.1";
-        public static string beatSaberVersion { get; private set; }
+        public string Version => "1.3.0";
         public enum LogInfo { Info, Warning, Error, Fatal };
+        internal static BS_Utils.Utilities.Config config = new BS_Utils.Utilities.Config("CountersPlus"); //Conflicts with CountersPlus.Config POG
 
         public void OnApplicationStart()
         {
-            if (File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/BeatSaberVersion.txt"))
-            {   //I wont be specific (0.12.0p1 VS 0.12.0b1) unless those updates cause issues
-                string version = File.ReadAllText(Environment.CurrentDirectory.Replace('\\', '/') + "/BeatSaberVersion.txt");
-                if (version.Contains("0.12.0")) beatSaberVersion = "0.12.0";
-                if (version.Contains("0.12.1")) beatSaberVersion = "0.12.1";
-                if (version.Contains("0.12.2")) beatSaberVersion = "0.12.2";
-                Log("Found general Beat Saber version. Running: " + beatSaberVersion);
-            }
             if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini"))
-            {
                 File.Create(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
-            }
             SceneManager.activeSceneChanged += SceneManager_sceneLoaded;
             SceneManager.sceneLoaded += addUI;
             CountersController.OnLoad();
@@ -52,7 +43,6 @@ namespace CountersPlus
 
         private void addUI(Scene arg, LoadSceneMode hiBrian)
         {
-            Log(CountersController.settings != null ? "YAY" : "NAY");
             try
             {
                 if (arg.name == "Menu") CountersSettingsUI.CreateSettingsUI();
@@ -83,7 +73,7 @@ namespace CountersPlus
             Console.WriteLine("Counters+ [" + l.ToString() + "] | " + m);
             if (l == LogInfo.Fatal)
             {
-                Console.WriteLine("Counters+ [IMPORTANT] | Please go to #support in the Beat Saber Modding Group with this issue!");
+                Console.WriteLine("Counters+ [IMPORTANT] | Contact Caeden117#0117 on Discord with this issue!");
             }
         }
     }

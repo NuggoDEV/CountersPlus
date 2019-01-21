@@ -9,6 +9,9 @@ using System.IO;
 using CountersPlus.Custom;
 using Newtonsoft.Json;
 using System.Collections;
+using IniParser;
+using IniParser.Model;
+using IllusionInjector;
 
 namespace CountersPlus
 {
@@ -127,6 +130,33 @@ namespace CountersPlus
 
         internal static void CreateSettingsUI()
         {
+            FileIniDataParser parser = new FileIniDataParser();
+            IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
+            foreach(SectionData section in data.Sections)
+            {
+                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
+                {
+                    Plugin.Log(section.SectionName);
+                    CustomConfigModel potential = new CustomConfigModel(section.SectionName);
+                    if (!PluginManager.Plugins.Any((IPlugin x) => x.Name == section.Keys["ModCreator"])) continue;
+                    customCounterUIItems.Add(potential, (SubMenu v) =>
+                    {
+                        var delete = v.AddBool("Delete?", "Deletes the Custom Counter from the system when you apply settings.\n<color=#FF0000>Relaunching the credited mod will regenerate the file.</color>\nAnother way to remove the effects of a Custom Counter is by simply disabling it.");
+                        delete.GetValue += delegate { return false; };
+                        delete.SetValue += delegate (bool c)
+                        {
+                            if (c) data.Sections.RemoveSection(section.SectionName);
+                        };
+                        var credits = v.AddListSetting<ModeViewController>("Credits", $"Created by: {potential.ModCreator}");
+                        credits.values = creditSetting;
+                        credits.GetValue = () => creditSetting.First();
+                        credits.GetTextForValue = (value) => "Hover";
+                        credits.SetValue = c => { };
+                    });
+                    loadedCustoms.Add(potential);
+                }
+            }
+
             //Main
             var mainSub = SettingsUI.CreateSubMenu("Counters+ | Main");
             var mainEnabled = mainSub.AddBool("Enabled", "Toggles the plugin on or off.");
@@ -137,48 +167,25 @@ namespace CountersPlus
 
             if (!CountersController.settings.Enabled) return;
 
-            var mainRNG = mainSub.AddBool("Random Counter Properties", "Add some RNG to the position and settings of some Counters.\n<color=#FF0000>This will essentially have counters float around the play space every 10 seconds, and can be distracting in play.</color>");
-            mainRNG.GetValue += delegate { return CountersController.settings.RNG; };
-            mainRNG.SetValue += delegate (bool value) {
-                CountersController.settings.RNG = value;
-            };
-
             var mainMenus = mainSub.AddBool("Disable Menus", "Removes clutter by removing all other Counters+ submenus while keeping Counters+ enabled.");
             mainMenus.GetValue += delegate { return CountersController.settings.DisableMenus; };
             mainMenus.SetValue += delegate (bool value) {
                 CountersController.settings.DisableMenus = value;
             };
 
-            if (CountersController.settings.DisableMenus) return;
 
-            if (Directory.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
-            {
-                foreach (string file in Directory.EnumerateFiles(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
-                {
-                    try
-                    {
-                        CustomConfigModel potential = JsonConvert.DeserializeObject<CustomConfigModel>(File.ReadAllText(file));
-                        if (loadedCustoms.Where((CustomConfigModel x) => x.JSONName == potential.JSONName).Count() != 0) continue;
-                        customCounterUIItems.Add(potential, (SubMenu v) =>
-                        {
-                            var delete = v.AddBool("Delete?", "Deletes the Custom Counter from the system when you apply settings.\n<color=#FF0000>Relaunching the credited mod will regenerate the file.</color>\nAnother way to remove the effects of a Custom Counter is by simply disabling it.");
-                            delete.GetValue += delegate { return false; };
-                            delete.SetValue += delegate (bool c)
-                            {
-                                if (c) File.Delete(file);
-                                CountersController.settings.saveCustom(potential);
-                            };
-                            var credits = v.AddListSetting<ModeViewController>("Credits", $"Created by: {potential.ModCreator}");
-                            credits.values = creditSetting;
-                            credits.GetValue = () => creditSetting.First();
-                            credits.GetTextForValue = (value) => "Hover";
-                            credits.SetValue = c => { };
-                        });
-                        loadedCustoms.Add(potential);
-                    }
-                    catch (Exception e) { Plugin.Log("Error loading Custom Counter. Ignoring..."); Plugin.Log(e.ToString()); }
-                }
-            }
+            float[] offsetValues = new float[] { 0, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1};
+            var comboOffset = mainSub.AddList("Combo Offset", offsetValues, "Before Index is taken into account, how far should counters be from the Combo counter.");
+            comboOffset.GetValue += delegate { return CountersController.settings.ComboOffset; };
+            comboOffset.SetValue += delegate (float f) { CountersController.settings.ComboOffset = f; };
+            comboOffset.GetTextForValue += delegate (float f) { return f.ToString(); };
+
+            var multiplierOffset = mainSub.AddList("Multiplier Offset", offsetValues, "Before Index is taken into account, how far should counters be from the Multiplier counter.");
+            multiplierOffset.GetValue += delegate { return CountersController.settings.MultiplierOffset; };
+            multiplierOffset.SetValue += delegate (float f) { CountersController.settings.MultiplierOffset = f; };
+            multiplierOffset.GetTextForValue += delegate (float f) { return f.ToString(); };
+
+            if (CountersController.settings.DisableMenus) return;
 
             foreach (var kvp in counterUIItems)
             {
@@ -194,7 +201,7 @@ namespace CountersPlus
                 {
                     kvp.Value(createBase(kvp.Key.DisplayName, kvp.Key, kvp.Key.RestrictedPositions));
                 }
-                catch { }
+                catch(Exception e) { Plugin.Log(e.ToString()); }
             }
         }
 

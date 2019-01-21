@@ -58,6 +58,16 @@ namespace CountersPlus.Counters
                 scoreController.noteWasCutEvent += onNoteCut;
                 scoreController.noteWasMissedEvent += onNoteMiss;
             }
+            StartCoroutine(UpdatePosition());
+        }
+
+        IEnumerator UpdatePosition()
+        {
+            while (true)
+            {
+                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+                yield return new WaitForSeconds(10);
+            }
         }
 
         void OnDestroy()
@@ -65,29 +75,6 @@ namespace CountersPlus.Counters
             scoreController.noteWasCutEvent -= onNoteCut;
             scoreController.noteWasMissedEvent -= onNoteMiss;
         }
-
-        void Update()
-        {
-            if (CountersController.rng)
-            {
-                settings.Index = UnityEngine.Random.Range(0, 5);
-                settings.Position = (ICounterPositions)UnityEngine.Random.Range(0, 4);
-            }
-            else
-            {
-                if (CountersController.settings.RNG)
-                {
-                    transform.position = Vector3.Lerp(
-                    transform.position,
-                    CountersController.determinePosition(gameObject, settings.Position, settings.Index),
-                    Time.deltaTime);
-                }
-                else
-                    transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-            }
-
-        }
-
         private void onNoteCut(NoteData data, NoteCutInfo info, int c)
         {
             if (data.noteType == NoteType.Bomb || !info.allIsOK) incrementCounter();

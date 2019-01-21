@@ -10,12 +10,19 @@ using System.Threading;
 
 namespace CountersPlus.Config
 {
-    public class Config
+    public class ConfigLoader
     {
-
         public static MainConfigModel loadSettings()
         {
             MainConfigModel model = new MainConfigModel();
+            try
+            {
+                Plugin.Log(model.missedConfig.Enabled.ToString());
+            }
+            catch
+            {
+                ResetSettings(model, out model);
+            }
             if (File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
             {
                 try
@@ -33,54 +40,78 @@ namespace CountersPlus.Config
             Plugin.Log("Config loaded.");
             return model;
         }
+
+        internal static void ResetSettings(MainConfigModel inSettings, out MainConfigModel settings)
+        {
+            settings = inSettings;
+            settings.Enabled = true;
+            settings.DisableMenus = false;
+            settings.ComboOffset = 0.2f;
+            settings.MultiplierOffset = 0.4f;
+            try
+            {
+                ResetSetting(settings.missedConfig, true, ICounterPositions.BelowCombo, 0);
+            }
+            catch
+            {
+                settings.missedConfig = new MissedConfigModel();
+                settings.noteConfig = new NoteConfigModel();
+                settings.progressConfig = new ProgressConfigModel();
+                settings.scoreConfig = new ScoreConfigModel();
+                settings.speedConfig = new SpeedConfigModel();
+                settings.cutConfig = new CutConfigModel();
+                ResetSetting(settings.missedConfig, true, ICounterPositions.BelowCombo, 0);
+            }
+            ResetSetting(settings.noteConfig, true, ICounterPositions.BelowCombo, 1);
+            ResetSetting(settings.progressConfig, true, ICounterPositions.BelowEnergy, 0);
+            ResetSetting(settings.scoreConfig, true, ICounterPositions.BelowMultiplier, 0);
+            ResetSetting(settings.speedConfig, false, ICounterPositions.AboveMultiplier, 0);
+            ResetSetting(settings.cutConfig, false, ICounterPositions.AboveHighway, 0);
+        }
+
+        private static void ResetSetting<T>(T model, bool en, ICounterPositions pos, int index) where T : IConfigModel
+        {
+            model.Enabled = en;
+            model.Position = pos;
+            model.Index = index;
+        }
     }
     
     public class MainConfigModel {
         public bool Enabled { get {
-                return new BS_Utils.Utilities.Config("CountersPlus").GetBool("Main", "Enabled", true, true);
+                return Plugin.config.GetBool("Main", "Enabled", true, true);
             } set {
-                new BS_Utils.Utilities.Config("CountersPlus").SetBool("Main", "Enabled", value);
+                Plugin.config.SetBool("Main", "Enabled", value);
             } }
-        public bool RNG
-        {
-            get
-            {
-                return new BS_Utils.Utilities.Config("CountersPlus").GetBool("Main", "RNG", true, true);
-            }
-            set
-            {
-                new BS_Utils.Utilities.Config("CountersPlus").SetBool("Main", "RNG", value);
-            }
-        }
         public bool DisableMenus
         {
             get
             {
-                return new BS_Utils.Utilities.Config("CountersPlus").GetBool("Main", "DisableMenus", true, true);
+                return Plugin.config.GetBool("Main", "DisableMenus", true, true);
             }
             set
             {
-                new BS_Utils.Utilities.Config("CountersPlus").SetBool("Main", "DisableMenus", value);
+                Plugin.config.SetBool("Main", "DisableMenus", value);
             }
         }
         public float ComboOffset {
             get
             {
-                return new BS_Utils.Utilities.Config("CountersPlus").GetFloat("Main", "ComboOffset", 0.2f, true);
+                return Plugin.config.GetFloat("Main", "ComboOffset", 0.2f, true);
             }
             set
             {
-                new BS_Utils.Utilities.Config("CountersPlus").SetFloat("Main", "ComboOffset", value);
+                Plugin.config.SetFloat("Main", "ComboOffset", value);
             }
         }
         public float MultiplierOffset {
             get
             {
-                return new BS_Utils.Utilities.Config("CountersPlus").GetFloat("Main", "MultiplierOffset", 0.2f, true);
+                return Plugin.config.GetFloat("Main", "MultiplierOffset", 0.2f, true);
             }
             set
             {
-                new BS_Utils.Utilities.Config("CountersPlus").SetFloat("Main", "MultiplierOffset", value);
+                Plugin.config.SetFloat("Main", "MultiplierOffset", value);
             }
         }
         public MissedConfigModel missedConfig;
@@ -90,31 +121,23 @@ namespace CountersPlus.Config
         //public PBConfigModel pBConfig;
         public SpeedConfigModel speedConfig;
         public CutConfigModel cutConfig;
-
-        public async void saveCustom(CustomConfigModel model)
-        {
-            using (StreamWriter file = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/{model.JSONName}.json"))
-            {
-                await file.WriteLineAsync(JsonConvert.SerializeObject(model));
-            }
-        }
     }
 
     public abstract class IConfigModel {
-        public string DisplayName { get; protected set; }
+        public string DisplayName { get; internal set; }
         public virtual bool Enabled { get {
-                return new BS_Utils.Utilities.Config("CountersPlus").GetBool(DisplayName, "Enabled", true, true);
-            }set{  new BS_Utils.Utilities.Config("CountersPlus").SetBool(DisplayName, "Enabled", value); } }
+                return Plugin.config.GetBool(DisplayName, "Enabled", true, true);
+            }set{  Plugin.config.SetBool(DisplayName, "Enabled", value); } }
         [JsonConverter(typeof(StringEnumConverter))]
         public virtual ICounterPositions Position { get {
-                return (ICounterPositions)Enum.Parse(typeof(ICounterPositions), new BS_Utils.Utilities.Config("CountersPlus").GetString(DisplayName, "Position", "BelowCombo", true));
+                return (ICounterPositions)Enum.Parse(typeof(ICounterPositions), Plugin.config.GetString(DisplayName, "Position", "BelowCombo", true));
             } set {
-                new BS_Utils.Utilities.Config("CountersPlus").SetString(DisplayName, "Position", value.ToString());
+                Plugin.config.SetString(DisplayName, "Position", value.ToString());
             } }
         public virtual int Index { get{
-                return new BS_Utils.Utilities.Config("CountersPlus").GetInt(DisplayName, "Index", 0, true);
+                return Plugin.config.GetInt(DisplayName, "Index", 0, true);
             }
-            set { new BS_Utils.Utilities.Config("CountersPlus").SetInt(DisplayName, "Index", value); }
+            set { Plugin.config.SetInt(DisplayName, "Index", value); }
         }
     }
 
@@ -128,17 +151,17 @@ namespace CountersPlus.Config
         {
             get
             {
-                return new BS_Utils.Utilities.Config("CountersPlus").GetBool(DisplayName, "ShowPercentage", true, true);
+                return Plugin.config.GetBool(DisplayName, "ShowPercentage", true, true);
             }
-            set { new BS_Utils.Utilities.Config("CountersPlus").SetBool(DisplayName, "ShowPercentage", value); }
+            set { Plugin.config.SetBool(DisplayName, "ShowPercentage", value); }
         }
         public int DecimalPrecision
         {
             get
             {
-                return new BS_Utils.Utilities.Config("CountersPlus").GetInt(DisplayName, "DecimalPrecision", 0, true);
+                return Plugin.config.GetInt(DisplayName, "DecimalPrecision", 2, true);
             }
-            set { new BS_Utils.Utilities.Config("CountersPlus").SetInt(DisplayName, "DecimalPrecision", value); }
+            set { Plugin.config.SetInt(DisplayName, "DecimalPrecision", value); }
         }
     }
 
@@ -148,20 +171,20 @@ namespace CountersPlus.Config
         {
             get
             {
-                return (ICounterMode)Enum.Parse(typeof(ICounterMode), new BS_Utils.Utilities.Config("CountersPlus").GetString(DisplayName, "Mode", "BelowCombo", true));
+                return (ICounterMode)Enum.Parse(typeof(ICounterMode), Plugin.config.GetString(DisplayName, "Mode", "Original", true));
             }
             set
             {
-                new BS_Utils.Utilities.Config("CountersPlus").SetString(DisplayName, "Position", value.ToString());
+                Plugin.config.SetString(DisplayName, "Mode", value.ToString());
             }
         }
         public bool ProgressTimeLeft
         {
             get
             {
-                return new BS_Utils.Utilities.Config("CountersPlus").GetBool(DisplayName, "ProgressTimeLeft", true, true);
+                return Plugin.config.GetBool(DisplayName, "ProgressTimeLeft", false, true);
             }
-            set { new BS_Utils.Utilities.Config("CountersPlus").SetBool(DisplayName, "ProgressTimeLeft", value); }
+            set { Plugin.config.SetBool(DisplayName, "ProgressTimeLeft", value); }
         }
     }
 
@@ -172,25 +195,25 @@ namespace CountersPlus.Config
         {
             get
             {
-                return new BS_Utils.Utilities.Config("CountersPlus").GetBool(DisplayName, "UseOld", true, true);
+                return Plugin.config.GetBool(DisplayName, "UseOld", false, true);
             }
-            set { new BS_Utils.Utilities.Config("CountersPlus").SetBool(DisplayName, "UseOld", value); }
+            set { Plugin.config.SetBool(DisplayName, "UseOld", value); }
         }
         public int DecimalPrecision
         {
             get
             {
-                return new BS_Utils.Utilities.Config("CountersPlus").GetInt(DisplayName, "DecimalPrecision", 0, true);
+                return Plugin.config.GetInt(DisplayName, "DecimalPrecision", 2, true);
             }
-            set { new BS_Utils.Utilities.Config("CountersPlus").SetInt(DisplayName, "DecimalPrecision", value); }
+            set { Plugin.config.SetInt(DisplayName, "DecimalPrecision", value); }
         }
         public bool DisplayRank
         {
             get
             {
-                return new BS_Utils.Utilities.Config("CountersPlus").GetBool(DisplayName, "DisplayRank", true, true);
+                return Plugin.config.GetBool(DisplayName, "DisplayRank", true, true);
             }
-            set { new BS_Utils.Utilities.Config("CountersPlus").SetBool(DisplayName, "DisplayRank", value); }
+            set { Plugin.config.SetBool(DisplayName, "DisplayRank", value); }
         }
     }
 
@@ -200,9 +223,9 @@ namespace CountersPlus.Config
         {
             get
             {
-                return new BS_Utils.Utilities.Config("CountersPlus").GetInt(DisplayName, "DecimalPrecision", 0, true);
+                return Plugin.config.GetInt(DisplayName, "DecimalPrecision", 0, true);
             }
-            set { new BS_Utils.Utilities.Config("CountersPlus").SetInt(DisplayName, "DecimalPrecision", value); }
+            set { Plugin.config.SetInt(DisplayName, "DecimalPrecision", value); }
         }
     }
 
@@ -213,19 +236,19 @@ namespace CountersPlus.Config
         {
             get
             {
-                return new BS_Utils.Utilities.Config("CountersPlus").GetInt(DisplayName, "DecimalPrecision", 0, true);
+                return Plugin.config.GetInt(DisplayName, "DecimalPrecision", 2, true);
             }
-            set { new BS_Utils.Utilities.Config("CountersPlus").SetInt(DisplayName, "DecimalPrecision", value); }
+            set { Plugin.config.SetInt(DisplayName, "DecimalPrecision", value); }
         }
         public ICounterMode Mode
         {
             get
             {
-                return (ICounterMode)Enum.Parse(typeof(ICounterMode), new BS_Utils.Utilities.Config("CountersPlus").GetString(DisplayName, "Mode", "BelowCombo", true));
+                return (ICounterMode)Enum.Parse(typeof(ICounterMode), Plugin.config.GetString(DisplayName, "Mode", "Average", true));
             }
             set
             {
-                new BS_Utils.Utilities.Config("CountersPlus").SetString(DisplayName, "Position", value.ToString());
+                Plugin.config.SetString(DisplayName, "Mode", value.ToString());
             }
         }
     }

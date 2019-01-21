@@ -13,6 +13,8 @@ using System.IO;
 using Newtonsoft.Json;
 using IllusionInjector;
 using IllusionPlugin;
+using IniParser;
+using IniParser.Model;
 
 namespace CountersPlus
 {
@@ -29,13 +31,14 @@ namespace CountersPlus
 
         public static void OnLoad()
         {
-            settings = Config.Config.loadSettings();
+            settings = Config.ConfigLoader.loadSettings();
             if (Instance == null && settings.Enabled)
             {
                 GameObject controller = new GameObject("Counters+ Controller");
                 DontDestroyOnLoad(controller);
                 Instance = controller.AddComponent<CountersController>();
                 Plugin.Log("Counters+ Controller created.");
+                
             }
         }
 
@@ -47,49 +50,9 @@ namespace CountersPlus
         void activeSceneChanged(Scene arg, Scene arg1)
         {
             if (arg1.name == "Menu") {
-                //StartCoroutine(GetStandardLevelDetailViewController());
                 loadedCounters.Clear();
             }
         }
-
-        /*IEnumerator GetStandardLevelDetailViewController()
-        {
-            while (true)
-            {
-                sldvc = Resources.FindObjectsOfTypeAll<StandardLevelDetailViewController>().FirstOrDefault();
-                if (sldvc != null)
-                {
-                    StartCoroutine(HandleSLDVC());
-                    break;
-                }
-                yield return new WaitForSeconds(0.1f);
-            }
-        }
-
-        IEnumerator HandleSLDVC()
-        {
-            while (true)
-            {
-                PlayerDataModelSO player = null;
-                try
-                {
-                    player = Resources.FindObjectsOfTypeAll<PlayerDataModelSO>().FirstOrDefault();
-                    IDifficultyBeatmap beatmap = sldvc.GetPrivateField<IDifficultyBeatmap>("_difficultyBeatmap");
-                    
-                    PlayerLevelStatsData data = player.currentLocalPlayer.GetPlayerLevelStatsData(beatmap.level.levelID, beatmap.difficulty);
-                    if (data.validScore)
-                    {
-                        int songMaxScore = ScoreController.MaxScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
-                        float roundMultiple = 100 * (float)Math.Pow(10, settings.pBConfig.DecimalPrecision);
-                        pbPercent = (float)Math.Floor(data.highScore / (float)songMaxScore * roundMultiple) / roundMultiple; 
-                    }
-                    else
-                        pbPercent = 0;
-                }
-                catch { }
-                yield return new WaitForSeconds(0.1f);
-            }
-        }*/
         
         static void LoadCounter<T, R>(string name, T settings) where T : IConfigModel
         {
@@ -110,27 +73,18 @@ namespace CountersPlus
             LoadCounter<ProgressConfigModel, ProgressCounter>("Progress", settings.progressConfig);
             LoadCounter<SpeedConfigModel, SpeedCounter>("Speed", settings.speedConfig);
             LoadCounter<CutConfigModel, CutCounter>("Cut", settings.cutConfig);
-            if (Directory.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
+            FileIniDataParser parser = new FileIniDataParser();
+            IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
+            foreach (SectionData section in data.Sections)
             {
-                foreach (string file in Directory.EnumerateFiles(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/"))
+                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
                 {
-                    try
-                    {
-                        CustomConfigModel counter = JsonConvert.DeserializeObject<CustomConfigModel>(File.ReadAllText(file));
-                        if (PluginManager.Plugins.Where((IPlugin x) => x.Name == counter.ModCreator).Count() == 0)
-                            Plugin.Log("Custom Counter cannot find the plugin it originated from. Ignoring...");
-                        //else if (PluginManager.Plugins.Where((IPlugin x) => x.Name == "Counters+").Count() == 0)
-                            //Plugin.Log("Who thought it was a good idea to say Counters+ created a custom counter? :pepeThinking:");
-                        else
-                            LoadCounter<CustomConfigModel, CustomCounterHook>(counter.JSONName, counter);
-                    }catch{ Plugin.Log("Error loading Custom Counter. Ignoring..."); }
+                    if (!PluginManager.Plugins.Any((IPlugin x) => x.Name == section.Keys["ModCreator"])) return;
+                    CustomConfigModel potential = new CustomConfigModel(section.SectionName);
+                    LoadCounter<CustomConfigModel, CustomCounterHook>(section.Keys["SectionName"], potential);
                 }
             }
-            if (settings.RNG) new GameObject("Counters+ | Randomizer").AddComponent<RandomizePositions>();
         }
-
-        public static bool rng;
-
         public static Vector3 determinePosition(GameObject counter, Config.ICounterPositions position, int index)
         {
             Vector3 pos = new Vector3(); //Base position
@@ -167,15 +121,12 @@ namespace CountersPlus
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
             }
-            if (Plugin.beatSaberVersion != "0.12.0") //lmao me dumb
+            if (position != ICounterPositions.AboveHighway && position != ICounterPositions.BelowEnergy)
             {
-                if (position != ICounterPositions.AboveHighway && position != ICounterPositions.BelowEnergy)
-                {
-                    if ((pos.x / Math.Abs(pos.x)) == -1) //If Counter would be on the Combo side
-                        pos -= new Vector3(0.2f, -0.3f, 0);
-                    else                                 //If Counter would be on Multiplier side
-                        pos += new Vector3(0.2f, 0.3f, 0);
-                }
+                if ((pos.x / Math.Abs(pos.x)) == -1) //If Counter would be on the Combo side
+                    pos -= new Vector3(0.2f, -0.3f, 0);
+                else                                 //If Counter would be on Multiplier side
+                    pos += new Vector3(0.2f, 0.3f, 0);
             }
             if (counter.GetComponent<ProgressCounter>() != null)
             {

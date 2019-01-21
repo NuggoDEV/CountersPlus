@@ -12,6 +12,8 @@ using System.Threading;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using IniParser.Model;
+using IniParser;
 
 namespace CountersPlus.Custom
 {
@@ -24,21 +26,22 @@ namespace CountersPlus.Custom
         /// </summary>
         public static void CreateCustomCounter<T>(T model, params ICounterPositions[] restrictedPositions) where T : CustomCounter
         {
-            try
+            FileIniDataParser parser = new FileIniDataParser();
+            IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
+            Scene scene = SceneManager.GetActiveScene();
+            foreach (SectionData section in data.Sections)
             {
-                if (File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/{model.JSONName}.json"))
+                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
                 {
-                    Plugin.Log("Attempted custom counter already exists in the system. Ignoring...", Plugin.LogInfo.Warning);
-                    return;
+                    if (section.SectionName == model.Name) return;
                 }
             }
-            catch { }
-            Scene scene = SceneManager.GetActiveScene();
             if (scene.name == "" || scene.name == "Init" || scene.name == "EmptyTransition" || scene.name == "HealthWarning")
             {
                 CustomConfigModel counter = new CustomConfigModel(model.Name)
                 {
-                    JSONName = model.JSONName,
+                    DisplayName = model.Name,
+                    SectionName = model.JSONName,
                     Enabled = true,
                     Position = ICounterPositions.BelowCombo,
                     Index = 2,
@@ -46,51 +49,14 @@ namespace CountersPlus.Custom
                     ModCreator = model.Mod.Name,
                     RestrictedPositions = (restrictedPositions.Count() == 0 || restrictedPositions == null) ? new ICounterPositions[] { } : restrictedPositions, //Thanks Viscoci for this
                 };
-                if (string.IsNullOrEmpty(counter.JSONName) || string.IsNullOrEmpty(counter.DisplayName))
+                if (string.IsNullOrEmpty(counter.SectionName) || string.IsNullOrEmpty(counter.DisplayName))
                     throw new CustomCounterException("Custom Counter properties invalid. Please make sure JSONName and DisplayName are properly assigned.");
-                EnsureSettingsExist(counter);
+                Plugin.Log("Custom Counter added!");
             }
             else
             {
                 throw new CustomCounterException("It is too late to add Custom Counters. Please add Custom Counters at launch.");
             }
-        }
-
-        internal static Task EnsureSettingsExist(CustomConfigModel counter)
-        {
-            return Task.Run(() =>
-            {
-                while (true)
-                {
-                    try
-                    {
-                        if (CountersController.settings != null)
-                        {
-                            add(counter);
-                            break;
-                        }
-                    }
-                    catch(Exception e) { Plugin.Log(e.ToString()); }
-                    Thread.Sleep(10);
-                }
-            });
-        }
-
-        internal static void add(CustomConfigModel counter)
-        {
-            if (!Directory.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
-                Directory.CreateDirectory(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters");
-            using (StreamWriter file = File.CreateText(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters/{counter.JSONName}.json"))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                JsonConvert.DefaultSettings = new Func<JsonSerializerSettings>(() => {
-                    JsonSerializerSettings settings = new JsonSerializerSettings();
-                    settings.Formatting = Formatting.Indented;
-                    return settings;
-                });
-                serializer.Serialize(file, counter);
-            }
-            Plugin.Log("Custom Counter successfully added!");
         }
     }
 
@@ -126,9 +92,59 @@ namespace CountersPlus.Custom
         {
             DisplayName = name;
         }
-        public string JSONName { get; set; }
-        public string Counter { get; set; }
-        public string ModCreator { get; set; }
-        public ICounterPositions[] RestrictedPositions { get; set; }
+        [Obsolete("Custom Counters is no longer stored using JSON. Consider using \"SectionName\" instead.")]
+        public string JSONName { get {
+                return SectionName;
+            } set {
+                SectionName = value;
+            } }
+        public string SectionName { get {
+                return Plugin.config.GetString(DisplayName, "SectionName", "unknown", false);
+            } set {
+                Plugin.config.SetString(DisplayName, "SectionName", value);
+            }
+        }
+        public string Counter
+        {
+            get
+            {
+                return Plugin.config.GetString(DisplayName, "Counter", "unknown", false);
+            }
+            set
+            {
+                Plugin.config.SetString(DisplayName, "Counter", value);
+            }
+        }
+        public string ModCreator {
+            get
+            {
+                return Plugin.config.GetString(DisplayName, "ModCreator", "unknown", false);
+            }
+            set
+            {
+                Plugin.config.SetString(DisplayName, "ModCreator", value);
+            }
+        }
+        public ICounterPositions[] RestrictedPositions { get {
+                string doodads = Plugin.config.GetString(DisplayName, "RestrictedPositions", "All", true);
+                if (doodads == "All") return new ICounterPositions[] { };
+                string[] split = doodads.Split(',');
+                List<ICounterPositions> restricted = new List<ICounterPositions>();
+                foreach(string position in split)
+                {
+                    restricted.Add((ICounterPositions)Enum.Parse(typeof(ICounterPositions), position));
+                }
+                return restricted.ToArray();
+            } set {
+                try
+                {
+                    string combined = string.Join(",", value);
+                    if (combined.Length == 0) combined = "All";
+                    Plugin.config.SetString(DisplayName, "RestrictedPositions", combined);
+                }
+                catch {
+                    Plugin.config.SetString(DisplayName, "RestrictedPositions", "All");
+                }
+            } }
     }
 }
