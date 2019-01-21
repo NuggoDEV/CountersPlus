@@ -76,7 +76,7 @@ namespace CountersPlus
                     scoreRank.SetValue += delegate (bool value) {
                         CountersController.settings.scoreConfig.DisplayRank = value;
                     };
-                    var scoreOverride = v.AddBool("Override Base Game Counter", "Uses the base game counter. Some settings will not apply in this mode.");
+                    var scoreOverride = v.AddBool("Use Base Game Counter", "Uses the base game counter instead of a custom one.\n<color=#ff0000>Some settings will not apply in this mode.</color>");
                     scoreOverride.GetValue += delegate { return CountersController.settings.scoreConfig.UseOld; };
                     scoreOverride.SetValue += delegate (bool value) {
                         CountersController.settings.scoreConfig.UseOld = value;
@@ -247,7 +247,7 @@ namespace CountersPlus
                     mode = "Top: Fastest saber speed in the last 5 seconds.";
                     break;
                 case ICounterMode.Both:
-                    mode = "Both: A secondary Counter will be added so both Average and Top will be displayed.";
+                    mode = "Both: A secondary Counter will be added so both Average and Top Speed will be displayed.";
                     break;
                 case ICounterMode.SplitAverage:
                     mode = "Split Mean: Displays averages for each saber, separately.";
@@ -256,13 +256,13 @@ namespace CountersPlus
                     mode = "Split Both: Displays both metrics, except the Average is split between two sabers.";
                     break;
                 case ICounterMode.BaseGame:
-                    mode = "Base Game: Uses the base game counter. Some settings will not apply in this mode.";
+                    mode = "Base Game: Uses the base game counter.\n<color=#FF0000>Some settings will not apply in this mode.</color>";
                     break;
                 case ICounterMode.Original:
                     mode = "Original: Uses the original display mode, with a white circle bordering a time.";
                     break;
                 case ICounterMode.Percent:
-                    mode = "Percent : Displays a simple percent of the completed song. Some settings will not apply in this mode.";
+                    mode = "Percent: Displays a simple percent of the completed song.\n<color=#FF0000>Some settings will not apply in this mode.</color>";
                     break;
             }
             return "How should this Counter display data?\n" + mode;
