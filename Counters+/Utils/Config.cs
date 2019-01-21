@@ -16,16 +16,14 @@ namespace CountersPlus.Config
         public static MainConfigModel loadSettings()
         {
             MainConfigModel model = new MainConfigModel();
-            if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
-            {
-                Plugin.Log("Config JSON can not be found! Creating default JSON...", Plugin.LogInfo.Error);
-            }
-            else
+            if (File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
             {
                 try
                 {
                     string json = File.ReadAllText(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json");
                     model = JsonConvert.DeserializeObject<MainConfigModel>(json);
+                    File.Delete(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json");
+                    Plugin.Log("Loaded JSON for the last time. Goodbye, JSON!");
                 }
                 catch (Exception e)
                 {
@@ -68,21 +66,21 @@ namespace CountersPlus.Config
         public float ComboOffset {
             get
             {
-                return new BS_Utils.Utilities.Config("CountersPus").GetFloat("Main", "ComboOffset", 0.2f, true);
+                return new BS_Utils.Utilities.Config("CountersPlus").GetFloat("Main", "ComboOffset", 0.2f, true);
             }
             set
             {
-                new BS_Utils.Utilities.Config("CountersPus").SetFloat("Main", "ComboOffset", value);
+                new BS_Utils.Utilities.Config("CountersPlus").SetFloat("Main", "ComboOffset", value);
             }
         }
         public float MultiplierOffset {
             get
             {
-                return new BS_Utils.Utilities.Config("CountersPus").GetFloat("Main", "MultiplierOffset", 0.2f, true);
+                return new BS_Utils.Utilities.Config("CountersPlus").GetFloat("Main", "MultiplierOffset", 0.2f, true);
             }
             set
             {
-                new BS_Utils.Utilities.Config("CountersPus").SetFloat("Main", "MultiplierOffset", value);
+                new BS_Utils.Utilities.Config("CountersPlus").SetFloat("Main", "MultiplierOffset", value);
             }
         }
         public MissedConfigModel missedConfig;
@@ -103,7 +101,7 @@ namespace CountersPlus.Config
     }
 
     public abstract class IConfigModel {
-        abstract public string DisplayName { get; set; }
+        public string DisplayName { get; protected set; }
         public virtual bool Enabled { get {
                 return new BS_Utils.Utilities.Config("CountersPlus").GetBool(DisplayName, "Enabled", true, true);
             }set{  new BS_Utils.Utilities.Config("CountersPlus").SetBool(DisplayName, "Enabled", value); } }
@@ -120,19 +118,12 @@ namespace CountersPlus.Config
         }
     }
 
-    public class MissedConfigModel : IConfigModel
-    {
-        public override string DisplayName { get; set; } = "Missed";
-        public override bool Enabled { get; set; } = true;
-        public override ICounterPositions Position { get; set; } = ICounterPositions.BelowCombo;
-        public override int Index { get; set; } = 0;
+    public sealed class MissedConfigModel : IConfigModel {
+        public MissedConfigModel() { DisplayName = "Missed"; }
     }
 
-    public class NoteConfigModel : IConfigModel {
-        public override string DisplayName { get; set; } = "Notes";
-        public override bool Enabled { get; set; } = true;
-        public override ICounterPositions Position { get; set; } = ICounterPositions.BelowCombo;
-        public override int Index { get; set; } = 1;
+    public sealed class NoteConfigModel : IConfigModel {
+        public NoteConfigModel() { DisplayName = "Notes"; }
         public bool ShowPercentage
         {
             get
@@ -151,11 +142,8 @@ namespace CountersPlus.Config
         }
     }
 
-    public class ProgressConfigModel : IConfigModel {
-        public override string DisplayName { get; set; } = "Progress";
-        public override bool Enabled { get; set; } = true;
-        public override ICounterPositions Position { get; set; } = ICounterPositions.BelowEnergy;
-        public override int Index { get; set; } = 0;
+    public sealed class ProgressConfigModel : IConfigModel {
+        public ProgressConfigModel() { DisplayName = "Progress"; }
         public ICounterMode Mode
         {
             get
@@ -177,12 +165,9 @@ namespace CountersPlus.Config
         }
     }
 
-    public class ScoreConfigModel : IConfigModel
+    public sealed class ScoreConfigModel : IConfigModel
     {
-        public override string DisplayName { get; set; } = "Score";
-        public override bool Enabled { get; set; } = true;
-        public override ICounterPositions Position { get; set; } = ICounterPositions.BelowMultiplier;
-        public override int Index { get; set; } = 0;
+        public ScoreConfigModel() { DisplayName = "Score"; }
         public bool UseOld
         {
             get
@@ -209,11 +194,8 @@ namespace CountersPlus.Config
         }
     }
 
-    public class PBConfigModel : IConfigModel{
-        public override string DisplayName { get; set; } = "PB";
-        public override bool Enabled { get; set; } = false;
-        public override ICounterPositions Position { get; set; } = ICounterPositions.BelowMultiplier;
-        public override int Index { get; set; } = 1;
+    public sealed class PBConfigModel : IConfigModel{
+        public PBConfigModel() { DisplayName = "PB"; }
         public int DecimalPrecision
         {
             get
@@ -224,12 +206,9 @@ namespace CountersPlus.Config
         }
     }
 
-    public class SpeedConfigModel : IConfigModel
+    public sealed class SpeedConfigModel : IConfigModel
     {
-        public override string DisplayName { get; set; } = "Speed";
-        public override bool Enabled { get; set; } = false;
-        public override ICounterPositions Position { get; set; } = ICounterPositions.AboveCombo;
-        public override int Index { get; set; } = 0;
+        public SpeedConfigModel() { DisplayName = "Speed"; }
         public int DecimalPrecision
         {
             get
@@ -251,12 +230,8 @@ namespace CountersPlus.Config
         }
     }
 
-    public class CutConfigModel : IConfigModel
-    {
-        public override string DisplayName { get; set; } = "Cut";
-        public override bool Enabled { get; set; } = false;
-        public override ICounterPositions Position { get; set; } = ICounterPositions.AboveHighway;
-        public override int Index { get; set; } = 0;
+    public class CutConfigModel : IConfigModel {
+        public CutConfigModel() { DisplayName = "Cut"; }
     }
     
     public enum ICounterPositions { BelowCombo, AboveCombo, BelowMultiplier, AboveMultiplier, BelowEnergy, AboveHighway }

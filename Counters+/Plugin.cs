@@ -27,6 +27,10 @@ namespace CountersPlus
                 if (version.Contains("0.12.2")) beatSaberVersion = "0.12.2";
                 Log("Found general Beat Saber version. Running: " + beatSaberVersion);
             }
+            if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini"))
+            {
+                File.Create(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
+            }
             SceneManager.activeSceneChanged += SceneManager_sceneLoaded;
             SceneManager.sceneLoaded += addUI;
             CountersController.OnLoad();

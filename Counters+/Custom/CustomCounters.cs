@@ -36,10 +36,9 @@ namespace CountersPlus.Custom
             Scene scene = SceneManager.GetActiveScene();
             if (scene.name == "" || scene.name == "Init" || scene.name == "EmptyTransition" || scene.name == "HealthWarning")
             {
-                CustomConfigModel counter = new CustomConfigModel
+                CustomConfigModel counter = new CustomConfigModel(model.Name)
                 {
                     JSONName = model.JSONName,
-                    DisplayName = model.Name,
                     Enabled = true,
                     Position = ICounterPositions.BelowCombo,
                     Index = 2,
@@ -123,12 +122,11 @@ namespace CountersPlus.Custom
 
     public class CustomConfigModel : IConfigModel
     {
+        public CustomConfigModel(string name)
+        {
+            DisplayName = name;
+        }
         public string JSONName { get; set; }
-        public override string DisplayName { get; set; }
-        public bool Enabled { get; set; }
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ICounterPositions Position { get; set; }
-        public int Index { get; set; }
         public string Counter { get; set; }
         public string ModCreator { get; set; }
         public ICounterPositions[] RestrictedPositions { get; set; }

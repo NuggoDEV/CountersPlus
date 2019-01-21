@@ -127,6 +127,30 @@ namespace CountersPlus
 
         internal static void CreateSettingsUI()
         {
+            //Main
+            var mainSub = SettingsUI.CreateSubMenu("Counters+ | Main");
+            var mainEnabled = mainSub.AddBool("Enabled", "Toggles the plugin on or off.");
+            mainEnabled.GetValue += delegate { return CountersController.settings.Enabled; };
+            mainEnabled.SetValue += delegate (bool value) {
+                CountersController.settings.Enabled = value;
+            };
+
+            if (!CountersController.settings.Enabled) return;
+
+            var mainRNG = mainSub.AddBool("Random Counter Properties", "Add some RNG to the position and settings of some Counters.\n<color=#FF0000>This will essentially have counters float around the play space every 10 seconds, and can be distracting in play.</color>");
+            mainRNG.GetValue += delegate { return CountersController.settings.RNG; };
+            mainRNG.SetValue += delegate (bool value) {
+                CountersController.settings.RNG = value;
+            };
+
+            var mainMenus = mainSub.AddBool("Disable Menus", "Removes clutter by removing all other Counters+ submenus while keeping Counters+ enabled.");
+            mainMenus.GetValue += delegate { return CountersController.settings.DisableMenus; };
+            mainMenus.SetValue += delegate (bool value) {
+                CountersController.settings.DisableMenus = value;
+            };
+
+            if (CountersController.settings.DisableMenus) return;
+
             if (Directory.Exists(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
             {
                 foreach (string file in Directory.EnumerateFiles(Environment.CurrentDirectory.Replace('\\', '/') + $"/UserData/Custom Counters"))
@@ -151,35 +175,12 @@ namespace CountersPlus
                             credits.SetValue = c => { };
                         });
                         loadedCustoms.Add(potential);
-                    }catch(Exception e){ Plugin.Log("Error loading Custom Counter. Ignoring..."); Plugin.Log(e.ToString()); }
+                    }
+                    catch (Exception e) { Plugin.Log("Error loading Custom Counter. Ignoring..."); Plugin.Log(e.ToString()); }
                 }
             }
 
-            //Main
-            var mainSub = SettingsUI.CreateSubMenu("Counters+ | Main");
-            var mainEnabled = mainSub.AddBool("Enabled", "Toggles the plugin on or off.");
-            mainEnabled.GetValue += delegate { return CountersController.settings.Enabled; };
-            mainEnabled.SetValue += delegate (bool value) {
-                CountersController.settings.Enabled = value;
-            };
-
-            if (!CountersController.settings.Enabled) return;
-
-            var mainRNG = mainSub.AddBool("Random Counter Properties", "Add some RNG to the position and settings of some Counters.\n<color=#FF0000>This will essentially have counters float around the play space every 10 seconds, and can be distracting in play.</color>");
-            mainRNG.GetValue += delegate { return CountersController.settings.RNG; };
-            mainRNG.SetValue += delegate (bool value) {
-                CountersController.settings.RNG = value;
-            };
-
-            var mainMenus = mainSub.AddBool("Disable Menus", "Removes clutter by removing all other Counters+ submenus while keeping Counters+ enabled.");
-            mainMenus.GetValue += delegate { return CountersController.settings.DisableMenus; };
-            mainMenus.SetValue += delegate (bool value) {
-                CountersController.settings.DisableMenus = value;
-            };
-
-            if (CountersController.settings.DisableMenus) return;
-            
-            foreach(var kvp in counterUIItems)
+            foreach (var kvp in counterUIItems)
             {
                 try
                 {
