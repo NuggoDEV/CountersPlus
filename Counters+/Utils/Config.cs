@@ -19,9 +19,13 @@ namespace CountersPlus.Config
             {
                 Plugin.Log(model.missedConfig.Enabled.ToString());
             }
-            catch
+            catch(Exception e)
             {
-                ResetSettings(model, out model);
+                if (e.GetType() != typeof(NullReferenceException))
+                {
+                    Plugin.Log(e.ToString());
+                    ResetSettings(model, out model);
+                }
             }
             if (File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
             {

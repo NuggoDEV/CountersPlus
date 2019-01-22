@@ -48,6 +48,8 @@ namespace CountersPlus.Counters
                 StartCoroutine(YeetToBaseCounter());
             else if (!settings.UseOld)
                 StartCoroutine(WaitForLoad());
+            else if (settings.UseOld && gameObject.name == "ScorePanel")
+                StartCoroutine(UpdatePosition());
         }
 
         IEnumerator YeetToBaseCounter()
