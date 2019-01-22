@@ -19,10 +19,10 @@ namespace CountersPlus.Config
             {   //Pings all the settings options so they are both:
                 //A) assigned in CountersController.settings
                 //B) created if they do not exist in CountersPlus.ini
-                model.Enabled = true;
-                model.DisableMenus = false;
-                model.ComboOffset = 0.2f;
-                model.MultiplierOffset = 0.4f;
+                model.Enabled = model.Enabled;
+                model.DisableMenus = model.DisableMenus;
+                model.ComboOffset = model.ComboOffset;
+                model.MultiplierOffset = model.MultiplierOffset;
                 model.missedConfig = new MissedConfigModel();
                 model.noteConfig = new NoteConfigModel();
                 model.progressConfig = new ProgressConfigModel();

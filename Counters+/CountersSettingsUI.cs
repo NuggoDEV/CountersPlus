@@ -132,7 +132,9 @@ namespace CountersPlus
         {
             FileIniDataParser parser = new FileIniDataParser();
             IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
-            foreach(SectionData section in data.Sections)
+            customCounterUIItems.Clear();
+            loadedCustoms.Clear();
+            foreach (SectionData section in data.Sections)
             {
                 if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
                 {
