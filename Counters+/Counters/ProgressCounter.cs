@@ -38,6 +38,8 @@ namespace CountersPlus.Counters
                 StartCoroutine(YeetToBaseCounter());
             else if (settings.Mode != ICounterMode.BaseGame)
                 StartCoroutine(WaitForLoad());
+            else if (settings.Mode == ICounterMode.BaseGame && gameObject.name == "SongProgressPanel")
+                StartCoroutine(UpdatePosition());
         }
 
         IEnumerator YeetToBaseCounter()

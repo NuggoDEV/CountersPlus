@@ -16,10 +16,21 @@ namespace CountersPlus.Config
         {
             MainConfigModel model = new MainConfigModel();
             try
-            {
-                Plugin.Log(model.missedConfig.Enabled.ToString());
+            {   //Pings all the settings options so they are both:
+                //A) assigned in CountersController.settings
+                //B) created if they do not exist in CountersPlus.ini
+                model.Enabled = true;
+                model.DisableMenus = false;
+                model.ComboOffset = 0.2f;
+                model.MultiplierOffset = 0.4f;
+                model.missedConfig = new MissedConfigModel();
+                model.noteConfig = new NoteConfigModel();
+                model.progressConfig = new ProgressConfigModel();
+                model.scoreConfig = new ScoreConfigModel();
+                model.speedConfig = new SpeedConfigModel();
+                model.cutConfig = new CutConfigModel();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 if (e.GetType() != typeof(NullReferenceException))
                 {
