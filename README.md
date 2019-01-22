@@ -45,20 +45,20 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
 |Setting|Counters|Description
 |-|-|-|
 |***Decimal Precision***|*Notes*, *Score*, and *Speed*|How precise do the decimals go?|
-|***Override Base Game Counter***|*Score*|Whether or not to use the base game counter instead of replacing it with our own. **Some features will not be reflected when using the base game counters!**|
+|***Use Base Game Counter***|*Score*|Whether or not to use the base game counter instead of replacing it with our own. **Some features will not be reflected when using the base game counters!**|
 |***Show Precentage***|*Notes*|Displays the percentage of notes hit over notes in total.|
 |***Display Rank***|*Score*|Displays the Rank you get during a song (SS, S, A, B, C, D, E)|
 |***Progress Time Left***|*Progress*|The counter starts at full, and decreases as you progress though a song.|
-|***Mode***|*Speed*, *Progress*|Changes the display mode for the Counter (See Hint Text in-game for more detail|
+|***Mode***|*Speed*, *Progress*|Changes the display mode for the Counter (See Hint Text in-game for more detail)|
 
 ### Some Notes
 
 - If ***Advanced HUD*** is Disabled:
   - If ***Progress Counter***'s *Mode* is set to **Base**:
     - Nothing will appear.
-  - If ***Score Counter***'s *Override* option is set to **True**:
+  - If ***Score Counter***'s *Base Game* option is set to **True**:
     - Only the score will appear. No rank.
-  - If ***Score Counter***'s *Override* option is set to **False**:
+  - If ***Score Counter***'s *Base Game* option is set to **False**:
     - No score will appear.
 
 ## For Developers
