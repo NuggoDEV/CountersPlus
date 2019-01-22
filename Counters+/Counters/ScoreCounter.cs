@@ -67,7 +67,7 @@ namespace CountersPlus.Counters
         {
             if (GameObject.Find("RelativeScoreText") != null && !settings.UseOld) GameObject.Find("RelativeScoreText").transform.parent = transform;
             if (GameObject.Find("ScorePanel") != null && !settings.UseOld) Destroy(GameObject.Find("ScorePanel"));
-            roundMultiple = (float)Math.Pow(100, settings.DecimalPrecision);
+            roundMultiple = (float)Math.Pow(10, settings.DecimalPrecision + 2);
 
             _scoreMesh = this.gameObject.AddComponent<TextMeshPro>();
             _scoreMesh.text = "100.0%";
