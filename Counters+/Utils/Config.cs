@@ -56,6 +56,7 @@ namespace CountersPlus.Config
             return model;
         }
 
+        //im not sure if I need this function anymore.
         internal static void ResetSettings(MainConfigModel inSettings, out MainConfigModel settings)
         {
             settings = inSettings;
@@ -140,16 +141,15 @@ namespace CountersPlus.Config
 
     public abstract class IConfigModel {
         public string DisplayName { get; internal set; }
-        public virtual bool Enabled { get {
+        public bool Enabled { get {
                 return Plugin.config.GetBool(DisplayName, "Enabled", true, true);
             }set{  Plugin.config.SetBool(DisplayName, "Enabled", value); } }
-        [JsonConverter(typeof(StringEnumConverter))]
-        public virtual ICounterPositions Position { get {
+        public ICounterPositions Position { get {
                 return (ICounterPositions)Enum.Parse(typeof(ICounterPositions), Plugin.config.GetString(DisplayName, "Position", "BelowCombo", true));
             } set {
                 Plugin.config.SetString(DisplayName, "Position", value.ToString());
             } }
-        public virtual int Index { get{
+        public int Index { get{
                 return Plugin.config.GetInt(DisplayName, "Index", 0, true);
             }
             set { Plugin.config.SetInt(DisplayName, "Index", value); }

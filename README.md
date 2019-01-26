@@ -22,7 +22,7 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
 
 |Mod|Description|
 |-|-|
-|***BeFit***|Among other things, displays a calorie counter that increases while you play a song.|
+|***YURFit***, previously *BeFit)*|Among other things, displays a calorie counter that increases while you play a song.|
 |***Notes Left Counter***|Displays the remaining notes in a song. Easy as that!|
 
 ## Configuration
@@ -31,8 +31,9 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
 |Setting|Description|
 |-|-|
 |***Enabled***|Toggles the plugin on and off, and hides all other submenus if disabled!|
-|***RNG***|Adds some RNG flair to your counters. Change different settings over time!|
 |***Disable Menus***|Hides other submenus while keeping Counters+ enabled.|
+|***Combo Offset***|Before Index is taken into account, how far away should counters be from Combo.|
+|***Multiplier Offset***|Before Index is taken into account, how far away should counters be from the Multiplier.|
 
 ### Every Counter has these 3 options
 |Setting|Description|
