@@ -22,7 +22,7 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
 
 |Mod|Description|
 |-|-|
-|***YURFit***, previously *BeFit)*|Among other things, displays a calorie counter that increases while you play a song.|
+|***YURFit***, previously *BeFit*|Among other things, displays a calorie counter that increases while you play a song.|
 |***Notes Left Counter***|Displays the remaining notes in a song. Easy as that!|
 
 ## Configuration
