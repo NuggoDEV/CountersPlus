@@ -47,7 +47,7 @@ namespace CountersPlus.Config
                     File.Delete(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json");
                     Plugin.Log("Loaded JSON for the last time. Goodbye, JSON!");
                 }
-                catch (Exception e)
+                catch
                 {
                     Plugin.Log("Error loading JSON!", Plugin.LogInfo.Error);
                 }
