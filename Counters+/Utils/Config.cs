@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
-using CountersPlus.Custom;
-using Newtonsoft.Json.Converters;
-using BS_Utils.Utilities;
-using System.Threading.Tasks;
-using System.Threading;
+using System.Linq;
 
 namespace CountersPlus.Config
 {
@@ -29,13 +25,26 @@ namespace CountersPlus.Config
                 model.scoreConfig = new ScoreConfigModel();
                 model.speedConfig = new SpeedConfigModel();
                 model.cutConfig = new CutConfigModel();
+                if (new[] {
+                    model.missedConfig.Index, model.noteConfig.Index, model.progressConfig.Index, model.scoreConfig.Index,
+                    model.speedConfig.Index, model.cutConfig.Index
+                }.All(x => x == 0))
+                {
+                    if (new[] {
+                        model.missedConfig.Position, model.noteConfig.Position, model.progressConfig.Position, model.scoreConfig.Position,
+                        model.speedConfig.Position, model.cutConfig.Position
+                    }.All(x => x == ICounterPositions.BelowCombo))
+                    {
+                        ResetSettings(model);
+                    }
+                }
             }
             catch (Exception e)
             {
                 if (e.GetType() != typeof(NullReferenceException))
                 {
                     Plugin.Log(e.ToString());
-                    ResetSettings(model, out model);
+                    ResetSettings(model);
                 }
             }
             if (File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
@@ -57,27 +66,9 @@ namespace CountersPlus.Config
         }
 
         //im not sure if I need this function anymore.
-        internal static void ResetSettings(MainConfigModel inSettings, out MainConfigModel settings)
+        internal static void ResetSettings(MainConfigModel settings)
         {
-            settings = inSettings;
-            settings.Enabled = true;
-            settings.DisableMenus = false;
-            settings.ComboOffset = 0.2f;
-            settings.MultiplierOffset = 0.4f;
-            try
-            {
-                ResetSetting(settings.missedConfig, true, ICounterPositions.BelowCombo, 0);
-            }
-            catch
-            {
-                settings.missedConfig = new MissedConfigModel();
-                settings.noteConfig = new NoteConfigModel();
-                settings.progressConfig = new ProgressConfigModel();
-                settings.scoreConfig = new ScoreConfigModel();
-                settings.speedConfig = new SpeedConfigModel();
-                settings.cutConfig = new CutConfigModel();
-                ResetSetting(settings.missedConfig, true, ICounterPositions.BelowCombo, 0);
-            }
+            ResetSetting(settings.missedConfig, true, ICounterPositions.BelowCombo, 0);
             ResetSetting(settings.noteConfig, true, ICounterPositions.BelowCombo, 1);
             ResetSetting(settings.progressConfig, true, ICounterPositions.BelowEnergy, 0);
             ResetSetting(settings.scoreConfig, true, ICounterPositions.BelowMultiplier, 0);
