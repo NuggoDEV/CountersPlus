@@ -16,7 +16,8 @@ namespace CountersPlus.Config
         {
             MainConfigModel model = new MainConfigModel();
             try
-            {   //Pings all the settings options so they are both:
+            {
+                //Pings all the settings options so they are both:
                 //A) assigned in CountersController.settings
                 //B) created if they do not exist in CountersPlus.ini
                 model.Enabled = model.Enabled;
@@ -35,7 +36,7 @@ namespace CountersPlus.Config
                 if (e.GetType() != typeof(NullReferenceException))
                 {
                     Plugin.Log(e.ToString());
-                    ResetSettings(model, out model);
+                    ResetSettings(model);
                 }
             }
             if (File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
@@ -57,27 +58,9 @@ namespace CountersPlus.Config
         }
 
         //im not sure if I need this function anymore.
-        internal static void ResetSettings(MainConfigModel inSettings, out MainConfigModel settings)
+        internal static void ResetSettings(MainConfigModel settings)
         {
-            settings = inSettings;
-            settings.Enabled = true;
-            settings.DisableMenus = false;
-            settings.ComboOffset = 0.2f;
-            settings.MultiplierOffset = 0.4f;
-            try
-            {
-                ResetSetting(settings.missedConfig, true, ICounterPositions.BelowCombo, 0);
-            }
-            catch
-            {
-                settings.missedConfig = new MissedConfigModel();
-                settings.noteConfig = new NoteConfigModel();
-                settings.progressConfig = new ProgressConfigModel();
-                settings.scoreConfig = new ScoreConfigModel();
-                settings.speedConfig = new SpeedConfigModel();
-                settings.cutConfig = new CutConfigModel();
-                ResetSetting(settings.missedConfig, true, ICounterPositions.BelowCombo, 0);
-            }
+            ResetSetting(settings.missedConfig, true, ICounterPositions.BelowCombo, 0);
             ResetSetting(settings.noteConfig, true, ICounterPositions.BelowCombo, 1);
             ResetSetting(settings.progressConfig, true, ICounterPositions.BelowEnergy, 0);
             ResetSetting(settings.scoreConfig, true, ICounterPositions.BelowMultiplier, 0);
