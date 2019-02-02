@@ -13,7 +13,8 @@ namespace CountersPlus.UI
     class CountersPlusSettingsFlowCoordinator : FlowCoordinator
     {
         private BackButton navigationController;
-        private BackButton filler;
+        private BackButton placeholder;
+        private CountersPlusEditViewController editSettings;
         private CountersPlusSettingsListViewController settingsList;
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
@@ -24,8 +25,8 @@ namespace CountersPlus.UI
                 navigationController = BeatSaberUI.CreateViewController<BackButton>();
                 navigationController.didFinishEvent += backButton_DidFinish;
 
-                filler = BeatSaberUI.CreateViewController<BackButton>();
-
+                editSettings = BeatSaberUI.CreateViewController<CountersPlusEditViewController>();
+                placeholder = BeatSaberUI.CreateViewController<BackButton>();
                 settingsList = BeatSaberUI.CreateViewController<CountersPlusSettingsListViewController>();
             }
 
@@ -33,12 +34,13 @@ namespace CountersPlus.UI
             {
                 settingsList
             });
-            ProvideInitialViewControllers(filler, navigationController, null);
+            ProvideInitialViewControllers(editSettings, navigationController, null);
             GameObject.Find("MainScreen").GetComponent<Canvas>().enabled = false;
         }
 
         protected override void DidDeactivate(DeactivationType deactivationType)
         {
+            GameObject.Find("MainScreen").GetComponent<Canvas>().enabled = true;
             if (deactivationType == DeactivationType.RemovedFromHierarchy)
             {
                 PopViewControllerFromNavigationController(navigationController);

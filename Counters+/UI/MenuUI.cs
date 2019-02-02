@@ -14,9 +14,7 @@ namespace CountersPlus.UI
 {
     public class MenuUI
     {
-        static CustomMenu settings;
         static CountersPlusSettingsFlowCoordinator settingsFC;
-        static CountersPlusSettingsListViewController list;
         public static void CreateUI()
         {
             MenuButtonUI.AddButton("Counters+", onClick);
