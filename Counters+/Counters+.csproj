@@ -119,6 +119,9 @@
     <Compile Include="Counters\CustomCounter.cs" />
     <Compile Include="Counters\CutCounter.cs" />
     <Compile Include="Custom\CustomCounters.cs" />
+    <Compile Include="UI\BackButton.cs" />
+    <Compile Include="UI\CountersPlusSettingsFlowCoordinator.cs" />
+    <Compile Include="UI\CountersPlusSettingsListViewController.cs" />
     <Compile Include="UI\MenuUI.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="CountersController.cs" />

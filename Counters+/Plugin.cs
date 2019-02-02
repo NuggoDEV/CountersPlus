@@ -4,10 +4,7 @@ using System.IO;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using System.Linq;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Threading;
-using BS_Utils.Utilities;
+using CountersPlus.UI;
 
 namespace CountersPlus
 {
@@ -45,7 +42,7 @@ namespace CountersPlus
         {
             try
             {
-                if (arg.name == "Menu") CountersSettingsUI.CreateSettingsUI();
+                if (arg.name == "Menu") MenuUI.CreateUI();
             }catch(Exception e)
             {
                 Log(e.ToString(), LogInfo.Fatal);
