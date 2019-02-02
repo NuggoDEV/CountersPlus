@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
-using CountersPlus.Custom;
-using Newtonsoft.Json.Converters;
-using BS_Utils.Utilities;
-using System.Threading.Tasks;
-using System.Threading;
+using System.Linq;
 
 namespace CountersPlus.Config
 {
@@ -30,6 +26,19 @@ namespace CountersPlus.Config
                 model.scoreConfig = new ScoreConfigModel();
                 model.speedConfig = new SpeedConfigModel();
                 model.cutConfig = new CutConfigModel();
+                if (new[] {
+                    model.missedConfig.Index, model.noteConfig.Index, model.progressConfig.Index, model.scoreConfig.Index,
+                    model.speedConfig.Index, model.cutConfig.Index
+                }.All(x => x == 0))
+                {
+                    if (new[] {
+                        model.missedConfig.Position, model.noteConfig.Position, model.progressConfig.Position, model.scoreConfig.Position,
+                        model.speedConfig.Position, model.cutConfig.Position
+                    }.All(x => x == ICounterPositions.BelowCombo))
+                    {
+                        ResetSettings(model);
+                    }
+                }
             }
             catch (Exception e)
             {
