@@ -12,35 +12,39 @@ namespace CountersPlus.UI
 {
     class CountersPlusSettingsFlowCoordinator : FlowCoordinator
     {
+        private Vector3 MainScreenPosition;
+        private GameObject MainScreen;
         private BackButton navigationController;
-        private BackButton placeholder;
+        private CountersPlusFillerForMainViewController placeholder;
         private CountersPlusEditViewController editSettings;
         private CountersPlusSettingsListViewController settingsList;
+        internal static CountersPlusSettingsFlowCoordinator Instance;
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
+            MainScreen = GameObject.Find("MainScreen");
+            MainScreenPosition = MainScreen.transform.position;
             if (firstActivation && activationType == ActivationType.AddedToHierarchy)
             {
+                Instance = this;
                 title = "Counters+";
 
                 navigationController = BeatSaberUI.CreateViewController<BackButton>();
                 navigationController.didFinishEvent += backButton_DidFinish;
 
                 editSettings = BeatSaberUI.CreateViewController<CountersPlusEditViewController>();
-                placeholder = BeatSaberUI.CreateViewController<BackButton>();
+                placeholder = BeatSaberUI.CreateViewController<CountersPlusFillerForMainViewController>();
                 settingsList = BeatSaberUI.CreateViewController<CountersPlusSettingsListViewController>();
             }
-
             SetViewControllersToNavigationConctroller(navigationController, new VRUIViewController[]
             {
                 settingsList
             });
-            ProvideInitialViewControllers(editSettings, navigationController, null);
-            GameObject.Find("MainScreen").GetComponent<Canvas>().enabled = false;
+            ProvideInitialViewControllers(placeholder, navigationController, editSettings);
+            MainScreen.transform.position = new Vector3(0, -100, 0);
         }
 
         protected override void DidDeactivate(DeactivationType deactivationType)
         {
-            GameObject.Find("MainScreen").GetComponent<Canvas>().enabled = true;
             if (deactivationType == DeactivationType.RemovedFromHierarchy)
             {
                 PopViewControllerFromNavigationController(navigationController);
@@ -49,8 +53,8 @@ namespace CountersPlus.UI
 
         private void backButton_DidFinish()
         {
+            MainScreen.transform.position = MainScreenPosition;
             MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
-            GameObject.Find("MainScreen").GetComponent<Canvas>().enabled = true;
             mainFlow.InvokeMethod("DismissFlowCoordinator", this, null, false);
         }
     }

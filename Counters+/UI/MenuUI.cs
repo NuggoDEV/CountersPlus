@@ -15,6 +15,9 @@ namespace CountersPlus.UI
     public class MenuUI
     {
         static CountersPlusSettingsFlowCoordinator settingsFC;
+        public static VRUIViewController left;
+        public static VRUIViewController right;
+        static bool secondClick = false;
         public static void CreateUI()
         {
             MenuButtonUI.AddButton("Counters+", onClick);
@@ -25,6 +28,8 @@ namespace CountersPlus.UI
             if (settingsFC == null)
                 settingsFC = new GameObject("Counters+ | Settings Flow Coordinator").AddComponent<CountersPlusSettingsFlowCoordinator>();
             MainFlowCoordinator main = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
+            left = main.leftScreenViewController;
+            right = main.rightScreenViewController;
             main.InvokeMethod("PresentFlowCoordinator", settingsFC, null, false, false);
         }
     }

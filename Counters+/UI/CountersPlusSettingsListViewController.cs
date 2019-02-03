@@ -33,6 +33,7 @@ namespace CountersPlus.UI
             {
                 if (firstActivation)
                 {
+                    
                     cellInstance = Resources.FindObjectsOfTypeAll<LevelListTableCell>().First((LevelListTableCell x) => x.name == "LevelListTableCell");
                     base.DidActivate(firstActivation, type);
 
