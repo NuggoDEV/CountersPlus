@@ -11,12 +11,14 @@ namespace CountersPlus
     public class Plugin : IPlugin
     {
         public string Name => "Counters+";
-        public string Version => "1.3.3";
+        public string Version => "1.4.0-ui_rework";
+        internal static Plugin Instance;
         public enum LogInfo { Info, Warning, Error, Fatal };
         internal static BS_Utils.Utilities.Config config = new BS_Utils.Utilities.Config("CountersPlus"); //Conflicts with CountersPlus.Config POG
 
         public void OnApplicationStart()
         {
+            Instance = this;
             if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini"))
                 File.Create(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
             SceneManager.activeSceneChanged += SceneManager_sceneLoaded;

@@ -15,7 +15,7 @@ namespace CountersPlus.UI
         private Vector3 MainScreenPosition;
         private GameObject MainScreen;
         private BackButton navigationController;
-        private CountersPlusFillerForMainViewController placeholder;
+        private BackButton placeholder;
         private CountersPlusEditViewController editSettings;
         private CountersPlusSettingsListViewController settingsList;
         internal static CountersPlusSettingsFlowCoordinator Instance;
@@ -32,7 +32,7 @@ namespace CountersPlus.UI
                 navigationController.didFinishEvent += backButton_DidFinish;
 
                 editSettings = BeatSaberUI.CreateViewController<CountersPlusEditViewController>();
-                placeholder = BeatSaberUI.CreateViewController<CountersPlusFillerForMainViewController>();
+                placeholder = BeatSaberUI.CreateViewController<BackButton>();
                 settingsList = BeatSaberUI.CreateViewController<CountersPlusSettingsListViewController>();
             }
             SetViewControllersToNavigationConctroller(navigationController, new VRUIViewController[]

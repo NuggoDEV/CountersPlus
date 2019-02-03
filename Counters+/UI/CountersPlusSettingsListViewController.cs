@@ -54,6 +54,7 @@ namespace CountersPlus.UI
                             {
                                 Name = potential.DisplayName,
                                 Description = $"A custom counter added by {potential.ModCreator}!",
+                                Model = potential,
                             });
                         }
                     }
@@ -80,6 +81,7 @@ namespace CountersPlus.UI
             {
                 Name = settings.DisplayName,
                 Description = DescriptionForModel(settings),
+                Model = settings,
             };
             return info;
         }
@@ -136,6 +138,15 @@ namespace CountersPlus.UI
 
         private void onCellSelect(TableView view, int row)
         {
+            if (row != 0)
+            {
+                SettingsInfo info = counterInfos[row - 1];
+                CountersPlusEditViewController.UpdateSettings(info.Model);
+            }
+            else
+            {
+                CountersPlusEditViewController.UpdateSettings(CountersController.settings.missedConfig, true);
+            }
             Plugin.Log("Lets obtain some settings!");
         }
 
@@ -148,5 +159,6 @@ namespace CountersPlus.UI
     class SettingsInfo{
         public string Name;
         public string Description;
+        public IConfigModel Model;
     }
 }
