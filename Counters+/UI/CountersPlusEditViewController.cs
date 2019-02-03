@@ -22,6 +22,7 @@ namespace CountersPlus.UI
         private static TextMeshProUGUI settingsTitle;
         private static SubMenu container;
         private static List<GameObject> loadedElements = new List<GameObject>();
+        private static List<ListSettingsController> loadedSettings = new List<ListSettingsController>();
 
         private static int settingsCount = 0;
 
@@ -74,6 +75,7 @@ namespace CountersPlus.UI
 
         private static void CreateCredits()
         {
+            ClearScreen();
             TextMeshProUGUI name, version, creator, contributorLabel;
             Dictionary<string, string> contributors = new Dictionary<string, string>()
             {
@@ -123,18 +125,13 @@ namespace CountersPlus.UI
 
         public static void UpdateSettings<T>(T settings, SettingsInfo info, bool isMain = false, bool isCredits = false) where T : IConfigModel
         {
-            foreach (GameObject element in loadedElements)
-            {
-                Destroy(element);
-            }
-            loadedElements.Clear();
-            settingsCount = 0;
+            ClearScreen();
             if (info.IsCustom)
             {
                 container = CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
             }
             else {
-                //container = CreateBase(settings);
+                container = CreateBase(settings);
             }
             if (!isCredits)
             {
@@ -155,36 +152,74 @@ namespace CountersPlus.UI
 
         private static SubMenu CreateBase<T>(T settings, params ICounterPositions[] restricted) where T : IConfigModel
         {
-            Plugin.Log(settings.Enabled.ToString());
-            Plugin.Log(settings.Position.ToString());
-            Plugin.Log(settings.Index.ToString());
             SubMenu sub = new SubMenu(rect);
-            Plugin.Log("Creating base for: " + settings.DisplayName);
+            Plugin.Log("Creating UI for: " + settings.DisplayName);
             List<Tuple<ICounterPositions, string>> restrictedList = new List<Tuple<ICounterPositions, string>>();
             try
             {
                 foreach (ICounterPositions pos in restricted)
                 {
-                    Plugin.Log("Adding " + pos.ToString());
                     restrictedList.Add(Tuple.Create(pos, positions.Where((Tuple<ICounterPositions, string> x) => x.Item1 == pos).First().Item2));
                 }
             }
             catch { } //It most likely errors here. If it does, well no problem.
-            BoolViewController enabled = sub.AddBool("Enabled", "Toggles this counter on or off.");
-            enabled.GetValue += () => settings.Enabled;
-            enabled.SetValue += (v) => settings.Enabled = v;
-            PositionElement(enabled.gameObject);
-            PositionSettingsViewController position = sub.AddListSetting<PositionSettingsViewController>("Position", "The relative position of common UI elements.");
-            position.values = (restrictedList.Count() == 0) ? positions : restrictedList;
-            position.GetValue = () => positions.Where((Tuple<ICounterPositions, string> x) => (x.Item1 == settings.Position)).FirstOrDefault();
-            position.GetTextForValue = (value) => value.Item2;
-            position.SetValue = v => settings.Position = v.Item1;
-            PositionElement(position.gameObject);
-            IntViewController index = sub.AddInt("Index", "How far from the position the counter will be. A higher number means farther away.", 0, 5, 1);
-            index.GetValue += () => settings.Index;
-            index.SetValue += v => settings.Index = v;
-            PositionElement(index.gameObject);
+
+            var enabled = AddList(ref sub, "Enabled", "Toggles this counter on or off.", 2);
+            enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+            enabled.GetValue = () => settings.Enabled ? 1f : 0f;
+            enabled.SetValue = (v) => settings.Enabled = v != 0f;
+
+            var position = AddList(ref sub, "Position", "The relative position of common UI elements", (restrictedList.Count() == 0) ? positions.Count() : restrictedList.Count());
+            position.GetTextForValue = (v) => {
+                if (restrictedList.Count() == 0)
+                    return positions[Mathf.RoundToInt(v)].Item2;
+                else
+                    return restrictedList[Mathf.RoundToInt(v)].Item2;
+            };
+            position.GetValue = () => {
+                return positions.ToList().IndexOf(positions.Where((Tuple<ICounterPositions, string> x) => (x.Item1 == settings.Position)).First());
+            };
+            position.SetValue = (v) => {
+                if (restrictedList.Count() == 0)
+                    settings.Position = positions[Mathf.RoundToInt(v)].Item1;
+                else
+                    settings.Position = restrictedList[Mathf.RoundToInt(v)].Item1;
+            };
+
+            var index = AddList(ref sub, "Index", "How far from the position the counter will be. A higher number means farther way.", 6);
+            index.GetTextForValue = (v) => Mathf.RoundToInt(v).ToString();
+            index.GetValue = () => settings.Index;
+            index.SetValue = (v) => settings.Index = Mathf.RoundToInt(v);
+
+            foreach(ListViewController list in loadedSettings)
+            {
+                list.Init();
+            }
             return sub;
+        }
+
+        private static ListViewController AddList(ref SubMenu sub, string Label, string HintText, int sizeCount)
+        {
+            List<float> values = new List<float>() { };
+            for (var i = 0; i < sizeCount; i++)
+            {
+                values.Add(i);
+            }
+            var list = sub.AddList(Label, values.ToArray(), HintText);
+            list.applyImmediately = true;
+            PositionElement(list.gameObject);
+            loadedSettings.Add(list);
+            return list;
+        }
+
+        private static void ClearScreen()
+        {
+            foreach (GameObject element in loadedElements)
+            {
+                Destroy(element);
+            }
+            loadedElements.Clear();
+            settingsCount = 0;
         }
 
         private static void PositionElement(GameObject element)
