@@ -55,6 +55,7 @@ namespace CountersPlus.UI
                                 Name = potential.DisplayName,
                                 Description = $"A custom counter added by {potential.ModCreator}!",
                                 Model = potential,
+                                IsCustom = true,
                             });
                         }
                     }
@@ -114,7 +115,7 @@ namespace CountersPlus.UI
 
         public override int NumberOfRows()
         {
-            return counterInfos.Count + 1;
+            return counterInfos.Count + 2;
         }
 
         public override TableCell CellForRow(int row)
@@ -125,7 +126,11 @@ namespace CountersPlus.UI
                 cell.songName = "Main Settings";
                 cell.author = "Configure basic Counters+ settings.";
             }
-            else
+            else if (row == NumberOfRows() - 1)
+            {
+                cell.songName = "Credits";
+                cell.author = "View credits for Counters+.";
+            }else
             {
                 SettingsInfo info = counterInfos[row - 1];
                 cell.songName = info.Name;
@@ -138,14 +143,15 @@ namespace CountersPlus.UI
 
         private void onCellSelect(TableView view, int row)
         {
-            if (row != 0)
+            if (row != 0 && row != NumberOfRows() - 1)
             {
                 SettingsInfo info = counterInfos[row - 1];
-                CountersPlusEditViewController.UpdateSettings(info.Model);
+                CountersPlusEditViewController.UpdateSettings(info.Model, info);
             }
             else
             {
-                CountersPlusEditViewController.UpdateSettings(CountersController.settings.missedConfig, true);
+                Plugin.Log((row == NumberOfRows() - 1).ToString());
+                CountersPlusEditViewController.UpdateSettings(CountersController.settings.missedConfig, counterInfos.First(), true, (row == NumberOfRows() - 1));
             }
             Plugin.Log("Lets obtain some settings!");
         }
@@ -160,5 +166,6 @@ namespace CountersPlus.UI
         public string Name;
         public string Description;
         public IConfigModel Model;
+        public bool IsCustom = false;
     }
 }

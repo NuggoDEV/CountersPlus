@@ -10,6 +10,7 @@ using CountersPlus.Config;
 using UnityEngine;
 using TMPro;
 using CustomUI.Settings;
+using CountersPlus.Custom;
 
 namespace CountersPlus.UI
 {
@@ -20,11 +21,34 @@ namespace CountersPlus.UI
         private static RectTransform rect;
         private static TextMeshProUGUI settingsTitle;
         private static SubMenu container;
-        private static IConfigModel model;
         private static List<GameObject> loadedElements = new List<GameObject>();
+
+        private static int settingsCount = 0;
 
         private Button _backButton;
 
+        internal class PositionSettingsViewController : TupleViewController<Tuple<ICounterPositions, string>> { }
+        static List<Tuple<ICounterPositions, string>> positions = new List<Tuple<ICounterPositions, string>> {
+            {ICounterPositions.BelowCombo, "Below Combo" },
+            {ICounterPositions.AboveCombo, "Above Combo" },
+            {ICounterPositions.BelowMultiplier, "Below Multi." },
+            {ICounterPositions.AboveMultiplier, "Above Multi." },
+            {ICounterPositions.BelowEnergy, "Below Energy" },
+            {ICounterPositions.AboveHighway, "Over Highway" }
+        };
+        internal class ModeViewController : TupleViewController<Tuple<ICounterMode, string>> { }
+        static List<Tuple<ICounterMode, string>> speedSettings = new List<Tuple<ICounterMode, string>> {
+            {ICounterMode.Average, "Mean Speed" },
+            {ICounterMode.Top5Sec, "Top (5 Sec.)" },
+            {ICounterMode.Both, "Both" },
+            {ICounterMode.SplitAverage, "Split Mean" },
+            {ICounterMode.SplitBoth, "Both w/Split" }
+        };
+        static List<Tuple<ICounterMode, string>> progressSettings = new List<Tuple<ICounterMode, string>> {
+            {ICounterMode.BaseGame, "Base Game" },
+            {ICounterMode.Original, "Original" },
+            {ICounterMode.Percent, "Percentage" }
+        };
 
         static Action<RectTransform, float, float, float, float, float> setStuff = delegate (RectTransform r, float x, float y, float w, float h, float pivotX)
         {
@@ -97,21 +121,82 @@ namespace CountersPlus.UI
             loadedElements.AddRange(new GameObject[] { name.gameObject, version.gameObject, creator.gameObject, contributorLabel.gameObject});
         }
 
-        public static void UpdateSettings<T>(T settings, bool isMain = false) where T : IConfigModel
+        public static void UpdateSettings<T>(T settings, SettingsInfo info, bool isMain = false, bool isCredits = false) where T : IConfigModel
         {
             foreach (GameObject element in loadedElements)
             {
                 Destroy(element);
             }
             loadedElements.Clear();
-            model = settings;
-            container = new SubMenu(rect);
-            settingsTitle = BeatSaberUI.CreateText(rect, $"{(isMain ? "Main" : settings.DisplayName)} Settings", Vector2.zero);
-            settingsTitle.fontSize = 6;
-            settingsTitle.alignment = TextAlignmentOptions.Center;
-            setStuff(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
+            settingsCount = 0;
+            if (info.IsCustom)
+            {
+                container = CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
+            }
+            else {
+                //container = CreateBase(settings);
+            }
+            if (!isCredits)
+            {
+                settingsTitle = BeatSaberUI.CreateText(rect, $"{(isMain ? "Main" : settings.DisplayName)} Settings", Vector2.zero);
+                settingsTitle.fontSize = 6;
+                settingsTitle.alignment = TextAlignmentOptions.Center;
+                setStuff(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
+                loadedElements.Add(settingsTitle.gameObject);
+                if (isMain)
+                {
+                }
+            }
+            else
+            {
+                CreateCredits();
+            }
+        }
 
-            loadedElements.Add(settingsTitle.gameObject);
+        private static SubMenu CreateBase<T>(T settings, params ICounterPositions[] restricted) where T : IConfigModel
+        {
+            Plugin.Log(settings.Enabled.ToString());
+            Plugin.Log(settings.Position.ToString());
+            Plugin.Log(settings.Index.ToString());
+            SubMenu sub = new SubMenu(rect);
+            Plugin.Log("Creating base for: " + settings.DisplayName);
+            List<Tuple<ICounterPositions, string>> restrictedList = new List<Tuple<ICounterPositions, string>>();
+            try
+            {
+                foreach (ICounterPositions pos in restricted)
+                {
+                    Plugin.Log("Adding " + pos.ToString());
+                    restrictedList.Add(Tuple.Create(pos, positions.Where((Tuple<ICounterPositions, string> x) => x.Item1 == pos).First().Item2));
+                }
+            }
+            catch { } //It most likely errors here. If it does, well no problem.
+            BoolViewController enabled = sub.AddBool("Enabled", "Toggles this counter on or off.");
+            enabled.GetValue += () => settings.Enabled;
+            enabled.SetValue += (v) => settings.Enabled = v;
+            PositionElement(enabled.gameObject);
+            PositionSettingsViewController position = sub.AddListSetting<PositionSettingsViewController>("Position", "The relative position of common UI elements.");
+            position.values = (restrictedList.Count() == 0) ? positions : restrictedList;
+            position.GetValue = () => positions.Where((Tuple<ICounterPositions, string> x) => (x.Item1 == settings.Position)).FirstOrDefault();
+            position.GetTextForValue = (value) => value.Item2;
+            position.SetValue = v => settings.Position = v.Item1;
+            PositionElement(position.gameObject);
+            IntViewController index = sub.AddInt("Index", "How far from the position the counter will be. A higher number means farther away.", 0, 5, 1);
+            index.GetValue += () => settings.Index;
+            index.SetValue += v => settings.Index = v;
+            PositionElement(index.gameObject);
+            return sub;
+        }
+
+        private static void PositionElement(GameObject element)
+        {
+            loadedElements.Add(element);
+            setStuff(element.transform as RectTransform, 0.05f, 0.75f - (settingsCount * 0.1f), 0.9f, 0.166f, 0f);
+            settingsCount++;
+        }
+
+        static bool TestGet(ref bool variable)
+        {
+            return variable;
         }
     }
 }
