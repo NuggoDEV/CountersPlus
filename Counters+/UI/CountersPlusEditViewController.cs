@@ -11,6 +11,7 @@ using UnityEngine;
 using TMPro;
 using CustomUI.Settings;
 using CountersPlus.Custom;
+using System.Threading;
 
 namespace CountersPlus.UI
 {
@@ -83,10 +84,10 @@ namespace CountersPlus.UI
                 { "Shoko84", "Bug fixing" },
                 { "xhuytox", "Big helper in bug hunting - thanks man!" },
                 { "Brian", "Saving Beat Saber Modding with CustomUI" },
+                { "Assistant", "Stole some Custom Avatars code to help with editing settings" },
                 { "Kyle1413", "Beat Saber Utils and for Progress/Score Counter code" },
                 { "Ragesaq", "Speed Counter idea <i>(and some bug fixing on stream)</i>" },
                 { "Stackeror", "Creator of the original Progress Counter mod" },
-                { "BSMG", "Getting me into Modding" },
                 { "You", "For enjoying this mod!"},
             }; 
             name = BeatSaberUI.CreateText(rect, "Counters+", Vector2.zero);
@@ -105,7 +106,7 @@ namespace CountersPlus.UI
             creator.alignment = TextAlignmentOptions.Center;
             setStuff(creator.rectTransform, 0, 0.585f, 1, 0.166f, 0.5f);
 
-            contributorLabel = BeatSaberUI.CreateText(rect, "Thanks to these contributors for helping make Counters+ what it is!", Vector2.zero);
+            contributorLabel = BeatSaberUI.CreateText(rect, "Thanks to these contributors for, directly or indirectly, helping make Counters+ what it is!", Vector2.zero);
             contributorLabel.fontSize = 3;
             contributorLabel.alignment = TextAlignmentOptions.Center;
             setStuff(contributorLabel.rectTransform, 0, 0.45f, 1, 0.166f, 0.5f);
@@ -130,8 +131,11 @@ namespace CountersPlus.UI
             {
                 container = CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
             }
-            else {
-                container = CreateBase(settings);
+            else if (!isMain) {
+                SubMenu sub = CreateBase(settings);
+                AdvancedCounterSettings.counterUIItems.Where(
+                    (KeyValuePair<IConfigModel, Action<SubMenu>> x) => (x.Key.DisplayName == settings.DisplayName)
+                    ).First().Value(sub);
             }
             if (!isCredits)
             {
@@ -142,6 +146,26 @@ namespace CountersPlus.UI
                 loadedElements.Add(settingsTitle.gameObject);
                 if (isMain)
                 {
+                    SubMenu sub = new SubMenu(rect);
+                    var enabled = AddList(ref sub, "Enabled", "Toggles Counters+ on or off.", 2);
+                    enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+                    enabled.GetValue = () => CountersController.settings.Enabled ? 1f : 0f;
+                    enabled.SetValue = (v) => CountersController.settings.Enabled = v != 0f;
+
+                    var comboOffset = AddList(ref sub, "Combo Offset", "How far from the Combo counters should be before Index is taken into account.", 10);
+                    comboOffset.GetTextForValue = (v) => (v / 10).ToString();
+                    comboOffset.GetValue = () => CountersController.settings.ComboOffset * 10;
+                    comboOffset.SetValue = (v) => CountersController.settings.ComboOffset = (v / 10);
+
+                    var multiOffset = AddList(ref sub, "Multiplier Offset", "How far from the Multiplier counters should be before Index is taken into account.", 10);
+                    multiOffset.GetTextForValue = (v) => (v / 10).ToString();
+                    multiOffset.GetValue = () => CountersController.settings.MultiplierOffset * 10;
+                    multiOffset.SetValue = (v) => CountersController.settings.MultiplierOffset = (v / 10);
+
+                    foreach (ListViewController list in loadedSettings)
+                    {
+                        list.Init();
+                    }
                 }
             }
             else
@@ -191,14 +215,17 @@ namespace CountersPlus.UI
             index.GetValue = () => settings.Index;
             index.SetValue = (v) => settings.Index = Mathf.RoundToInt(v);
 
-            foreach(ListViewController list in loadedSettings)
-            {
-                list.Init();
-            }
+            Task.Run(() => { //Give AdvancedCountersSettings time to queue up other settings before init
+                Thread.Sleep(25);
+                foreach (ListViewController list in loadedSettings)
+                {
+                    list.Init();
+                }
+            });
             return sub;
         }
 
-        private static ListViewController AddList(ref SubMenu sub, string Label, string HintText, int sizeCount)
+        internal static ListViewController AddList(ref SubMenu sub, string Label, string HintText, int sizeCount)
         {
             List<float> values = new List<float>() { };
             for (var i = 0; i < sizeCount; i++)
@@ -219,6 +246,7 @@ namespace CountersPlus.UI
                 Destroy(element);
             }
             loadedElements.Clear();
+            loadedSettings.Clear();
             settingsCount = 0;
         }
 

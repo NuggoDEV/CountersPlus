@@ -61,19 +61,11 @@ namespace CountersPlus.UI
                     }
                     _customListTableView.didSelectRowEvent += onCellSelect;
                     _customListTableView.ReloadData();
-                    StartCoroutine(ApplyEditViewControllerSettings());
                 }
             }
             catch (Exception e) {
                 Plugin.Log(e.ToString(), Plugin.LogInfo.Fatal);
             }
-        }
-
-        IEnumerator ApplyEditViewControllerSettings()
-        {
-            yield return new WaitUntil(() => CountersPlusEditViewController.Instance != null);
-            CountersPlusEditViewController.Instance.didFinishEvent += applySettings;
-            Plugin.Log("We should be good to go!");
         }
 
         private SettingsInfo CreateFromModel<T>(T settings) where T : IConfigModel
@@ -153,12 +145,6 @@ namespace CountersPlus.UI
                 Plugin.Log((row == NumberOfRows() - 1).ToString());
                 CountersPlusEditViewController.UpdateSettings(CountersController.settings.missedConfig, counterInfos.First(), true, (row == NumberOfRows() - 1));
             }
-            Plugin.Log("Lets obtain some settings!");
-        }
-
-        private void applySettings()
-        {
-            Plugin.Log("Settings would apply here!");
         }
     }
 
