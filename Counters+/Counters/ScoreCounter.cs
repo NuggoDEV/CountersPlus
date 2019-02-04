@@ -44,12 +44,10 @@ namespace CountersPlus.Counters
         void Awake()
         {
             settings = CountersController.settings.scoreConfig;
-            if (settings.UseOld && gameObject.name != "ScorePanel")
+            if (gameObject.name == "ScorePanel")
+                PreInit();
+            else
                 StartCoroutine(YeetToBaseCounter());
-            else if (!settings.UseOld)
-                StartCoroutine(WaitForLoad());
-            else if (settings.UseOld && gameObject.name == "ScorePanel")
-                StartCoroutine(UpdatePosition());
         }
 
         IEnumerator YeetToBaseCounter()
@@ -58,40 +56,63 @@ namespace CountersPlus.Counters
             while (true)
             {
                 baseCounter = GameObject.Find("ScorePanel");
+                Console.WriteLine(baseCounter != null);
                 if (baseCounter != null) break;
                 yield return new WaitForSeconds(0.1f);
             }
             baseCounter.AddComponent<ScoreCounter>();
             Plugin.Log("Score Counter has been moved to the base game counter!");
+            Destroy(gameObject);
+        }
+
+        private void PreInit()
+        {
+            if (settings.Mode == ICounterMode.BaseGame || settings.Mode == ICounterMode.BaseWithOutScore)
+            {
+                StartCoroutine(UpdatePosition());
+            }
+            else
+            {
+                Destroy(GetComponent<ImmediateRankUIPanel>());
+                transform.Find("ScoreText").transform.position += new Vector3(0, 0f, 0);
+                for (var i = 0; i < transform.childCount; i++)
+                {
+                    Transform child = transform.GetChild(i);
+                    if (child.gameObject.name != "ScoreText")
+                    {
+                        if (child.GetComponent<TextMeshProUGUI>() != null) Destroy(child.GetComponent<TextMeshProUGUI>());
+                        Destroy(child);
+                    }
+                }
+                //if (settings.Mode == ICounterMode.LeaveScore) transform.Find("ScoreText").SetParent(new GameObject("Counters+ | Points Container").transform, true);
+                if (settings.Mode == ICounterMode.ScoreOnly) Destroy(GameObject.Find("ScoreText"));
+                StartCoroutine(WaitForLoad());
+            }
         }
 
         private void Init()
         {
-            if (GameObject.Find("RelativeScoreText") != null && //Filters out Score modes that do not parent Points to itself.
-                ((settings.Mode != ICounterMode.BaseGame) || (settings.Mode != ICounterMode.BaseWithOutScore) || (settings.Mode != ICounterMode.LeaveScore)
-                )) GameObject.Find("RelativeScoreText").transform.parent = transform;
-            if (GameObject.Find("RelativeScoreText") && settings.Mode == ICounterMode.ScoreOnly) Destroy(GameObject.Find("RelativeScoreText"));
-            if (GameObject.Find("ScorePanel") != null && !settings.UseOld) Destroy(GameObject.Find("ScorePanel"));
+            Plugin.Log("Creating Score Counter stuff");
             roundMultiple = (float)Math.Pow(10, settings.DecimalPrecision + 2);
 
-            _scoreMesh = this.gameObject.AddComponent<TextMeshPro>();
+            GameObject scoreMesh = new GameObject("Counters+ | Score Percent");
+            scoreMesh.transform.parent = transform;
+            _scoreMesh = scoreMesh.AddComponent<TextMeshPro>();
             _scoreMesh.text = "100.0%";
             _scoreMesh.fontSize = 3;
             _scoreMesh.color = Color.white;
-            _scoreMesh.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
             _scoreMesh.alignment = TextAlignmentOptions.Center;
+            _scoreMesh.rectTransform.localPosition = new Vector3(0f, 0f, 0f);
 
             if (settings.DisplayRank)
             {
-                _RankObject = new GameObject("Counters+ | Score Label");
+                _RankObject = new GameObject("Counters+ | Score Rank");
                 _RankObject.transform.parent = transform;
                 _RankText = _RankObject.AddComponent<TextMeshPro>();
-                _RankText.text = "SSS";
+                _RankText.text = "\nSSS";
                 _RankText.fontSize = 4;
                 _RankText.color = Color.white;
-                _RankText.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
                 _RankText.alignment = TextAlignmentOptions.Center;
-                _RankText.rectTransform.localPosition = new Vector3(0f, -0.4f, 0f);
             }
             if (_scoreController != null)
             {
@@ -99,6 +120,19 @@ namespace CountersPlus.Counters
                 _scoreController.noteWasMissedEvent += _OnNoteWasMissed;
             }
             StartCoroutine(UpdatePosition());
+        }
+
+        void Update()
+        {
+            _RankText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
+            if (GameObject.Find("ScoreText") != null && (settings.Mode == ICounterMode.LeaveScore || settings.Mode == ICounterMode.BaseWithOutScore))
+            {
+                GameObject.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = new Vector3(-3.2f, 0.9f, 7);
+            }else if (transform.Find("ScoreText") == null && (settings.Mode == ICounterMode.LeaveScore || settings.Mode == ICounterMode.BaseWithOutScore))
+            {
+                _RankText.rectTransform.localPosition = new Vector3(0, 0f, 0);
+                _scoreMesh.rectTransform.localPosition = new Vector3(0, 0.4f, 0);
+            }
         }
 
         IEnumerator UpdatePosition()
@@ -171,7 +205,7 @@ namespace CountersPlus.Counters
                 if (_maxPossibleScore == 0)
                 {
                     _scoreMesh.text = "100.0%";
-                    if (settings.DisplayRank) _RankText.text = "SSS";
+                    if (settings.DisplayRank) _RankText.text = "\nSSS";
                 }
                 else
                 {
@@ -179,7 +213,7 @@ namespace CountersPlus.Counters
                     //Force percent to round down to decimal precision
                     ratio = (float)Math.Floor(ratio * roundMultiple) / roundMultiple;
                     _scoreMesh.text = (Mathf.Clamp(ratio, 0.0f, 1.0f) * 100.0f).ToString("F" + settings.DecimalPrecision) + "%";
-                    if (settings.DisplayRank) _RankText.text = GetRank(score, ratio);
+                    if (settings.DisplayRank) _RankText.text = "\n" + GetRank(score, ratio);
                 }
             }
         }
