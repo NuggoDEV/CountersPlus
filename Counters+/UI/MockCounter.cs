@@ -16,7 +16,7 @@ namespace CountersPlus.UI
     /// </summary>
     public class MockCounter
     {
-        public static void Create<T>(T settings, string counterName, string counterData) where T : IConfigModel
+        public static void Create<T>(T settings, string counterName, string counterData, bool UseCounterPositioning = true) where T : IConfigModel
         {
             if (!settings.Enabled) return;
             GameObject counter = new GameObject($"Counters + | Mock {counterName} Counter");
@@ -36,7 +36,17 @@ namespace CountersPlus.UI
             data.color = Color.white;
             data.alignment = TextAlignmentOptions.Center;
 
-            counter.transform.position = CountersController.determinePosition(counter, settings.Position, settings.Index) - new Vector3(0, 0.4f, 0);
+            if (UseCounterPositioning)
+                counter.transform.position = CountersController.determinePosition(counter, settings.Position, settings.Index) - new Vector3(0, 0.4f, 0);
+            else
+            {
+                name.color = new Color(0.35f, 0.35f, 0.35f);
+                data.color = new Color(0.35f, 0.35f, 0.35f);
+                if (counterName == "Combo")
+                    counter.transform.position = new Vector3(-3.2f, 0.7f, 7);
+                else if (counterName == "Multiplier")
+                    counter.transform.position = new Vector3(3.2f, 0.7f, 7);
+            }
 
             CountersPlusSettingsFlowCoordinator.Instance.mockCounters.Add(counter);
         }

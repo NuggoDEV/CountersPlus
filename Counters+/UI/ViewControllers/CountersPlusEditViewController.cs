@@ -74,7 +74,7 @@ namespace CountersPlus.UI
             name = BeatSaberUI.CreateText(rect, "Counters+", Vector2.zero);
             name.fontSize = 10;
             name.alignment = TextAlignmentOptions.Center;
-            Plugin.Log(name.characterSpacing.ToString());
+            name.characterWidthAdjustment = 2;
             setStuff(name.rectTransform, 0, 0.8f, 1, 0.166f, 0.5f);
 
             version = BeatSaberUI.CreateText(rect, $"Version {Plugin.Instance.Version}", Vector2.zero);

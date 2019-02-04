@@ -23,6 +23,7 @@ namespace CountersPlus.UI
         //For mock counters
         public List<GameObject> mockCounters = new List<GameObject>();
         private MockCounterInfo info = new MockCounterInfo();
+        private bool createMocks = true;
 
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
@@ -48,6 +49,8 @@ namespace CountersPlus.UI
             MainScreen.transform.position = new Vector3(0, -100, 0); //"If it works it's not stupid"
 
             //For mock counters
+            createMocks = true;
+            new GameObject("Counters+ | Counters Warning").AddComponent<CounterWarning>();
             StartCoroutine(UpdateMockCounters());
         }
 
@@ -61,12 +64,14 @@ namespace CountersPlus.UI
 
         private IEnumerator UpdateMockCounters()
         {
-            while (true)
+            while (createMocks)
             {
                 foreach (GameObject counter in mockCounters)
                 {
                     Destroy(counter);
                 }
+                MockCounter.Create(CountersController.settings.missedConfig, "Combo", "0", false);
+                MockCounter.Create(CountersController.settings.missedConfig, "Multiplier", "x8", false);
                 MockCounter.Create(CountersController.settings.missedConfig, "Misses", info.notesMissed.ToString());
                 MockCounter.Create(CountersController.settings.noteConfig, "Notes", //Sorry for this mess of a line
                     $"{info.notesCut - info.notesMissed} / {info.notesCut} {((CountersController.settings.noteConfig.ShowPercentage) ? $"- ({Math.Round((((double)(info.notesCut - info.notesMissed) / info.notesCut) * 100), CountersController.settings.noteConfig.DecimalPrecision)}%)" : "")}");
@@ -98,6 +103,7 @@ namespace CountersPlus.UI
 
         private void backButton_DidFinish()
         {
+            createMocks = false;
             StopCoroutine(UpdateMockCounters());
             foreach(GameObject counter in mockCounters)
             {
@@ -107,7 +113,5 @@ namespace CountersPlus.UI
             MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
             mainFlow.InvokeMethod("DismissFlowCoordinator", this, null, false);
         }
-
-        
     }
 }

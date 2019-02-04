@@ -120,6 +120,7 @@
     <Compile Include="Counters\CutCounter.cs" />
     <Compile Include="Custom\CustomCounters.cs" />
     <Compile Include="UI\AdvancedCounterSettings.cs" />
+    <Compile Include="UI\CounterWarning.cs" />
     <Compile Include="UI\ViewControllers\BackButton.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusEditViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusFillerForMainViewController.cs" />
@@ -139,7 +140,6 @@
     <Compile Include="Counters\ScoreCounter.cs" />
     <Compile Include="Counters\SpeedCounter.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /Y "$(TargetPath)" "D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Plugins\CountersPlus.dll"</PostBuildEvent>

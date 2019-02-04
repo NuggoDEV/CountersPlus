@@ -15,6 +15,7 @@ using CountersPlus.Custom;
 using IllusionInjector;
 using IllusionPlugin;
 using System.Collections;
+using CustomUI.Utilities;
 
 namespace CountersPlus.UI
 {
