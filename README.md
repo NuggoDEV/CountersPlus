@@ -1,3 +1,20 @@
+# Hey You!
+Yes, you! Do you want to help Counters+ become bug free before the next major update?
+
+I have been hard at work over at the [UI Rework branch](https://github.com/Caeden117/CountersPlus/tree/ui-rework), and I believe I am at a spot where I can release a beta build for people to mess around and report back any bugs.
+
+*I may put your name in the contributors list if you help out,* so that's something for you!
+
+## Interested in testing?
+
+[Download the beta build right here.](https://drive.google.com/file/d/1o1QCQ4z4UXaCRVq_0OCAgf7YfBGZdF_a/view?usp=sharing) Check it out, and mess around with the brand spanking new Counters+ menu!
+
+Report any bugs and issues over [here.](https://github.com/Caeden117/CountersPlus/issues) If you believe you may have a solution to these problems, fork the UI rework branch, and send me a pull request.
+
+Good luck testing!
+
+---
+
 # CountersPlus
 A combination of widely-used counters, all configurable in one mod.
 
