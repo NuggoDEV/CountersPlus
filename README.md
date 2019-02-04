@@ -1,4 +1,6 @@
 # Hey You!
+![Brand new Counters+ UI!](https://i.imgur.com/gDzdybO.png "Brand new Counters+ UI!")
+
 Yes, you! Do you want to help Counters+ become bug free before the next major update?
 
 I have been hard at work over at the [UI Rework branch](https://github.com/Caeden117/CountersPlus/tree/ui-rework), and I believe I am at a spot where I can release a beta build for people to mess around and report back any bugs.
@@ -12,6 +14,8 @@ I have been hard at work over at the [UI Rework branch](https://github.com/Caede
 Report any bugs and issues over [here.](https://github.com/Caeden117/CountersPlus/issues) If you believe you may have a solution to these problems, fork the UI rework branch, and send me a pull request.
 
 Good luck testing!
+
+*Update 1:* I just got Score Counter working again, that took fucking forever.
 
 ---
 
