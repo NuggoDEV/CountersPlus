@@ -43,9 +43,11 @@ namespace CountersPlus.UI
                 name.color = new Color(0.35f, 0.35f, 0.35f);
                 data.color = new Color(0.35f, 0.35f, 0.35f);
                 if (counterName == "Combo")
-                    counter.transform.position = new Vector3(-3.2f, 0.8f, 7);
+                    counter.transform.position = new Vector3(-3.2f, 0.85f, 7);
                 else if (counterName == "Multiplier")
-                    counter.transform.position = new Vector3(3.2f, 0.8f, 7);
+                    counter.transform.position = new Vector3(3.2f, 0.85f, 7);
+                else if (counterName == "123456")
+                    counter.transform.position = new Vector3(-3.2f, 0f, 7);
             }
 
             CountersPlusSettingsFlowCoordinator.Instance.mockCounters.Add(counter);

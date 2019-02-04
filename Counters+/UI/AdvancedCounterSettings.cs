@@ -25,9 +25,18 @@ namespace CountersPlus.UI
             {ICounterMode.Original, "Original" },
             {ICounterMode.Percent, "Percentage" }
         };
+        static List<Tuple<ICounterMode, string>> scoreSettings = new List<Tuple<ICounterMode, string>>
+        {
+            {ICounterMode.Both, "Original" }, //Counters+ Counter w/ Points
+            {ICounterMode.BaseGame, "Base Game" }, //Base Game w/ Points
+            {ICounterMode.BaseWithOutScore, "Base No Points" }, //Base Game w/ Points Under Combo
+            {ICounterMode.LeaveScore, "No Points" }, //Counters+ Counter w/ Points Under Combo
+            {ICounterMode.ScoreOnly, "Score Only" }, //Counters+ Counter w/ Points Removed Entirely
+        };
 
         private static HoverHint progressHover;
         private static HoverHint speedHover;
+        private static HoverHint scoreHover;
 
         internal static Dictionary<IConfigModel, Action<SubMenu>> counterUIItems = new Dictionary<IConfigModel, Action<SubMenu>>()
         {
@@ -51,11 +60,20 @@ namespace CountersPlus.UI
                     scoreRank.GetValue = () => CountersController.settings.scoreConfig.DisplayRank ? 1f : 0f;
                     scoreRank.SetValue = (v) => CountersController.settings.scoreConfig.DisplayRank = v != 0f;
 
-                    var scoreOverride = CountersPlusEditViewController.AddList(ref sub, "Use Base Game Counter", "Uses the base game counter instead of a custom one.\n<color=#ff0000>Some settings will not apply in this mode.</color>", 2);
-                    scoreOverride.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
-                    scoreOverride.GetValue = () => CountersController.settings.scoreConfig.UseOld ? 1f : 0f;
-                    scoreOverride.SetValue = (v) => CountersController.settings.scoreConfig.UseOld = v != 0f;
-                    
+                    var scoreMode = CountersPlusEditViewController.AddList(ref sub, "Mode", "", scoreSettings.Count());
+                    scoreMode.GetTextForValue = (v) => {
+                        return scoreSettings[Mathf.RoundToInt(v)].Item2;
+                    };
+                    scoreMode.GetValue = () => {
+                        if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, determineModeText(CountersController.settings.scoreConfig.Mode));
+                        return scoreSettings.ToList().IndexOf(scoreSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CountersController.settings.scoreConfig.Mode)).First());
+                    };
+                    scoreMode.SetValue = (v) => {
+                        if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, determineModeText(CountersController.settings.scoreConfig.Mode));
+                        CountersController.settings.scoreConfig.Mode = scoreSettings[Mathf.RoundToInt(v)].Item1;
+                        scoreHover.text = determineModeText(CountersController.settings.scoreConfig.Mode, true);
+                    };
+
                     var scorePrecision = CountersPlusEditViewController.AddList(ref sub, "Percentage Precision", "How precise should the precentage be?", 6);
                     scorePrecision.GetTextForValue = (v) => Mathf.RoundToInt(v).ToString();
                     scorePrecision.GetValue = () => CountersController.settings.scoreConfig.DecimalPrecision;
@@ -106,7 +124,7 @@ namespace CountersPlus.UI
             { CountersController.settings.cutConfig, v => { } },
         };
 
-        private static string determineModeText(ICounterMode Mode)
+        private static string determineModeText(ICounterMode Mode, bool alternateText = false)
         {
             string mode = "Unavilable mode!";
             switch (Mode)
@@ -118,7 +136,10 @@ namespace CountersPlus.UI
                     mode = "Top: Fastest saber speed in the last 5 seconds.";
                     break;
                 case ICounterMode.Both:
-                    mode = "Both: A secondary Counter will be added so both Average and Top Speed will be displayed.";
+                    if (alternateText)
+                        mode = "Both: Have Counters+ counter with the Points above the percentage.";
+                    else
+                        mode = "Both: A secondary Counter will be added so both Average and Top Speed will be displayed.";
                     break;
                 case ICounterMode.SplitAverage:
                     mode = "Split Mean: Displays averages for each saber, separately.";
@@ -134,6 +155,15 @@ namespace CountersPlus.UI
                     break;
                 case ICounterMode.Percent:
                     mode = "Percent: Displays a simple percent of the completed song.\n<color=#FF0000>Some settings will not apply in this mode.</color>";
+                    break;
+                case ICounterMode.BaseWithOutScore:
+                    mode = "Base No Points: Uses the base game counter, except the Points will be under the combo.\n<color=#FF0000>This might conflict with counters positioned below the combo.</color>";
+                    break;
+                case ICounterMode.LeaveScore:
+                    mode = "No Points: Uses Counters+ counter, except the Points will be under the combo.\n<color=#FF0000>This might conflict with counters positioned below the combo.</color>";
+                    break;
+                case ICounterMode.ScoreOnly:
+                    mode = "Score Only: Uses Counters+ counter, and completely removes the Points.";
                     break;
             }
             return "How should this Counter display data?\n" + mode;

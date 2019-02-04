@@ -204,13 +204,23 @@ namespace CountersPlus.Config
     public sealed class ScoreConfigModel : IConfigModel
     {
         public ScoreConfigModel() { DisplayName = "Score"; }
+        public ICounterMode Mode
+        {
+            get
+            {
+                return (ICounterMode)Enum.Parse(typeof(ICounterMode), Plugin.config.GetString(DisplayName, "Mode", "Both", true));
+            }
+            set
+            {
+                Plugin.config.SetString(DisplayName, "Mode", value.ToString());
+            }
+        }
         public bool UseOld
         {
             get
             {
-                return Plugin.config.GetBool(DisplayName, "UseOld", false, true);
+                return (Mode == ICounterMode.BaseGame) || (Mode == ICounterMode.BaseWithOutScore);
             }
-            set { Plugin.config.SetBool(DisplayName, "UseOld", value); }
         }
         public int DecimalPrecision
         {
@@ -273,6 +283,7 @@ namespace CountersPlus.Config
     public enum ICounterPositions { BelowCombo, AboveCombo, BelowMultiplier, AboveMultiplier, BelowEnergy, AboveHighway }
 
     public enum ICounterMode { Average, Top5Sec, Both, SplitAverage, SplitBoth, //Speed
-                              BaseGame, Original, Percent //Progress
+                              BaseGame, Original, Percent, //Progress
+                              ScoreOnly, LeaveScore, BaseWithOutScore //Score (As well as BaseGame and Both)
     };
 }

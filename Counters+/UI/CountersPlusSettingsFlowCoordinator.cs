@@ -75,7 +75,9 @@ namespace CountersPlus.UI
                 MockCounter.Create(CountersController.settings.missedConfig, "Misses", info.notesMissed.ToString());
                 MockCounter.Create(CountersController.settings.noteConfig, "Notes", //Sorry for this mess of a line
                     $"{info.notesCut - info.notesMissed} / {info.notesCut} {((CountersController.settings.noteConfig.ShowPercentage) ? $"- ({Math.Round((((double)(info.notesCut - info.notesMissed) / info.notesCut) * 100), CountersController.settings.noteConfig.DecimalPrecision)}%)" : "")}");
-                MockCounter.Create(CountersController.settings.scoreConfig, $"{Math.Round(info.score, CountersController.settings.scoreConfig.DecimalPrecision).ToString()}%", info.GetRank());
+                MockCounter.Create(CountersController.settings.scoreConfig, $"{Math.Round(info.score, CountersController.settings.scoreConfig.DecimalPrecision).ToString()}%", CountersController.settings.scoreConfig.DisplayRank ? info.GetRank() : "");
+                if (CountersController.settings.scoreConfig.Mode == ICounterMode.BaseWithOutScore || CountersController.settings.scoreConfig.Mode == ICounterMode.LeaveScore)
+                    MockCounter.Create(CountersController.settings.scoreConfig, "123456", "", false);
                 if (CountersController.settings.speedConfig.Mode == ICounterMode.Average || CountersController.settings.speedConfig.Mode == ICounterMode.Both)
                 {
                     MockCounter.Create(CountersController.settings.speedConfig,

@@ -65,7 +65,7 @@ namespace CountersPlus.UI
                 { "Shoko84", "Bug fixing" },
                 { "xhuytox", "Big helper in bug hunting - thanks man!" },
                 { "Brian", "Saving Beat Saber Modding with CustomUI" },
-                { "Assistant", "Stole some Custom Avatars code to help with editing settings" },
+                { "Assistant", "Stole some Custom Avatars code to help with settings" },
                 { "Kyle1413", "Beat Saber Utils and for Progress/Score Counter code" },
                 { "Ragesaq", "Speed Counter idea <i>(and some bug fixing on stream)</i>" },
                 { "Stackeror", "Creator of the original Progress Counter mod" },

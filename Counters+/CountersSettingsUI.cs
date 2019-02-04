@@ -76,11 +76,11 @@ namespace CountersPlus
                     scoreRank.SetValue += delegate (bool value) {
                         CountersController.settings.scoreConfig.DisplayRank = value;
                     };
-                    var scoreOverride = v.AddBool("Use Base Game Counter", "Uses the base game counter instead of a custom one.\n<color=#ff0000>Some settings will not apply in this mode.</color>");
+                    /*var scoreOverride = v.AddBool("Use Base Game Counter", "Uses the base game counter instead of a custom one.\n<color=#ff0000>Some settings will not apply in this mode.</color>");
                     scoreOverride.GetValue += delegate { return CountersController.settings.scoreConfig.UseOld; };
                     scoreOverride.SetValue += delegate (bool value) {
                         CountersController.settings.scoreConfig.UseOld = value;
-                    };
+                    };*/
                     float[] scorePrec = new float[6] { 0, 1, 2, 3, 4, 5 };
                     var scorePrecision = v.AddList("Percentage Decimal Precision", scorePrec, "How precise should the percentage be?");
                     scorePrecision.GetValue += delegate { return CountersController.settings.scoreConfig.DecimalPrecision; };

@@ -67,7 +67,10 @@ namespace CountersPlus.Counters
 
         private void Init()
         {
-            if (GameObject.Find("RelativeScoreText") != null && !settings.UseOld) GameObject.Find("RelativeScoreText").transform.parent = transform;
+            if (GameObject.Find("RelativeScoreText") != null && //Filters out Score modes that do not parent Points to itself.
+                ((settings.Mode != ICounterMode.BaseGame) || (settings.Mode != ICounterMode.BaseWithOutScore) || (settings.Mode != ICounterMode.LeaveScore)
+                )) GameObject.Find("RelativeScoreText").transform.parent = transform;
+            if (GameObject.Find("RelativeScoreText") && settings.Mode == ICounterMode.ScoreOnly) Destroy(GameObject.Find("RelativeScoreText"));
             if (GameObject.Find("ScorePanel") != null && !settings.UseOld) Destroy(GameObject.Find("ScorePanel"));
             roundMultiple = (float)Math.Pow(10, settings.DecimalPrecision + 2);
 
