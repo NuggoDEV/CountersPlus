@@ -78,16 +78,19 @@ namespace CountersPlus.UI
                 MockCounter.Create(CountersController.settings.scoreConfig, $"{Math.Round(info.score, CountersController.settings.scoreConfig.DecimalPrecision).ToString()}%", info.GetRank());
                 if (CountersController.settings.speedConfig.Mode == ICounterMode.Average || CountersController.settings.speedConfig.Mode == ICounterMode.Both)
                 {
-                    MockCounter.Create(CountersController.settings.speedConfig, "Average Speed", $"{Math.Round((info.leftSpeedAverage + info.rightSpeedAverage) / 2, CountersController.settings.speedConfig.DecimalPrecision)}");
+                    MockCounter.Create(CountersController.settings.speedConfig,
+                        $"{(CountersController.settings.speedConfig.Mode == ICounterMode.Both ? "Average (Both)" : "Average Speed")}", $"{Math.Round((info.leftSpeedAverage + info.rightSpeedAverage) / 2, CountersController.settings.speedConfig.DecimalPrecision)}");
                 }else if (CountersController.settings.speedConfig.Mode == ICounterMode.SplitAverage || CountersController.settings.speedConfig.Mode == ICounterMode.SplitBoth)
                 {
-                    MockCounter.Create(CountersController.settings.speedConfig, "Average Speed", $"{Math.Round(info.leftSpeedAverage, CountersController.settings.speedConfig.DecimalPrecision)} | {Math.Round(info.rightSpeedAverage, CountersController.settings.speedConfig.DecimalPrecision)}");
+                    MockCounter.Create(CountersController.settings.speedConfig,
+                        $"{(CountersController.settings.speedConfig.Mode == ICounterMode.SplitBoth ? "Split Average (Both)" : "Split Average")}", $"{Math.Round(info.leftSpeedAverage, CountersController.settings.speedConfig.DecimalPrecision)} | {Math.Round(info.rightSpeedAverage, CountersController.settings.speedConfig.DecimalPrecision)}");
                 }else if (CountersController.settings.speedConfig.Mode == ICounterMode.Top5Sec)
                 {
                     MockCounter.Create(CountersController.settings.speedConfig, "Top Speed (5 Sec.)", $"{Math.Round(info.leftSpeedAverage + 10, CountersController.settings.speedConfig.DecimalPrecision)}");
                 }
                 MockCounter.Create(CountersController.settings.cutConfig, "Average Cut", $"{Mathf.RoundToInt(info.averageCutScore)}");
-                MockCounter.Create(CountersController.settings.progressConfig, "Progress",
+                MockCounter.Create(CountersController.settings.progressConfig,
+                    $"{CountersController.settings.progressConfig.Mode.ToString()} Progress",
                         $"{((((CountersController.settings.progressConfig.ProgressTimeLeft ? 1f : 0f) - ((float)info.timeElapsed / info.totalTime)) * 100f) * (CountersController.settings.progressConfig.ProgressTimeLeft ? 1f : -1f)).ToString("00")}%");
                 try
                 {
