@@ -81,7 +81,7 @@ namespace CountersPlus.UI
                             $"{info.notesCut - info.notesMissed} / {info.notesCut} {((CountersController.settings.noteConfig.ShowPercentage) ? $"- ({Math.Round((((double)(info.notesCut - info.notesMissed) / info.notesCut) * 100), CountersController.settings.noteConfig.DecimalPrecision)}%)" : "")}");
                         MockCounter.Create(CountersController.settings.scoreConfig, $"{Math.Round(info.score, CountersController.settings.scoreConfig.DecimalPrecision).ToString()}%", CountersController.settings.scoreConfig.DisplayRank ? info.GetRank() : "");
                         if (CountersController.settings.scoreConfig.Mode == ICounterMode.BaseWithOutScore || CountersController.settings.scoreConfig.Mode == ICounterMode.LeaveScore || !CountersController.settings.scoreConfig.Enabled)
-                            MockCounter.CreateStatic("123456", "");
+                            MockCounter.CreateStatic("123 456", "");
                         if (CountersController.settings.speedConfig.Mode == ICounterMode.Average || CountersController.settings.speedConfig.Mode == ICounterMode.Both)
                         {
                             MockCounter.Create(CountersController.settings.speedConfig,
@@ -101,7 +101,7 @@ namespace CountersPlus.UI
                             $"{CountersController.settings.progressConfig.Mode.ToString()} Progress",
                                 $"{((((CountersController.settings.progressConfig.ProgressTimeLeft ? 1f : 0f) - ((float)info.timeElapsed / info.totalTime)) * 100f) * (CountersController.settings.progressConfig.ProgressTimeLeft ? 1f : -1f)).ToString("00")}%");
                     }
-                    else
+                    else //Reduces amount of calls to Config
                     {
                         MockCounter.Create(CountersController.settings.missedConfig, "Misses", "0");
                         MockCounter.Create(CountersController.settings.noteConfig, "Notes", "0 - 0");
@@ -110,7 +110,7 @@ namespace CountersPlus.UI
                         MockCounter.Create(CountersController.settings.cutConfig, "Average Cut", "0");
                         MockCounter.Create(CountersController.settings.progressConfig, "Progress", "0%");
                         if (!CountersController.settings.scoreConfig.Enabled)
-                            MockCounter.CreateStatic("123456", "");
+                            MockCounter.CreateStatic("123 456", "");
                     }
                     try
                     {

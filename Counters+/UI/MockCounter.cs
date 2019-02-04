@@ -46,7 +46,7 @@ namespace CountersPlus.UI
                     counter.transform.position = new Vector3(-3.2f, 1.15f, 7);
                 else if (counterName == "Multiplier")
                     counter.transform.position = new Vector3(3.2f, 1.15f, 7);
-                else if (counterName == "123456")
+                else if (counterName == "123 456")
                     counter.transform.position = new Vector3(-3.2f, 0.9f, 7);
             }
 
