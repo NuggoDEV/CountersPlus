@@ -21,10 +21,7 @@ namespace CountersPlus.UI
     class CountersPlusSettingsListViewController : CustomListViewController
     {
         private LevelListTableCell cellInstance;
-        public List<string> test = new List<string>() { "wat" };
-
-        //public Dictionary<IConfigModel, SettingsInfo> counterInfos = new Dictionary<IConfigModel, SettingsInfo>() { };
-
+        internal static CountersPlusSettingsListViewController Instance;
         public List<SettingsInfo> counterInfos = new List<SettingsInfo>();
 
         protected override void DidActivate(bool firstActivation, ActivationType type)
@@ -33,7 +30,7 @@ namespace CountersPlus.UI
             {
                 if (firstActivation)
                 {
-                    
+                    Instance = this;
                     cellInstance = Resources.FindObjectsOfTypeAll<LevelListTableCell>().First((LevelListTableCell x) => x.name == "LevelListTableCell");
                     base.DidActivate(firstActivation, type);
 

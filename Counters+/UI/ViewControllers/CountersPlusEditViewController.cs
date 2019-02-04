@@ -18,16 +18,13 @@ namespace CountersPlus.UI
     class CountersPlusEditViewController : VRUIViewController
     {
         public static CountersPlusEditViewController Instance;
-        public event Action didFinishEvent;
         private static RectTransform rect;
         private static TextMeshProUGUI settingsTitle;
         private static SubMenu container;
-        private static List<GameObject> loadedElements = new List<GameObject>();
-        private static List<ListSettingsController> loadedSettings = new List<ListSettingsController>();
-
-        private static int settingsCount = 0;
-
-        private Button _backButton;
+        
+        private static List<GameObject> loadedElements = new List<GameObject>(); //Mass clearing
+        private static List<ListSettingsController> loadedSettings = new List<ListSettingsController>(); //Mass initialization
+        private static int settingsCount = 0; //Spacing
 
         internal class PositionSettingsViewController : TupleViewController<Tuple<ICounterPositions, string>> { }
         static List<Tuple<ICounterPositions, string>> positions = new List<Tuple<ICounterPositions, string>> {
@@ -37,19 +34,6 @@ namespace CountersPlus.UI
             {ICounterPositions.AboveMultiplier, "Above Multi." },
             {ICounterPositions.BelowEnergy, "Below Energy" },
             {ICounterPositions.AboveHighway, "Over Highway" }
-        };
-        internal class ModeViewController : TupleViewController<Tuple<ICounterMode, string>> { }
-        static List<Tuple<ICounterMode, string>> speedSettings = new List<Tuple<ICounterMode, string>> {
-            {ICounterMode.Average, "Mean Speed" },
-            {ICounterMode.Top5Sec, "Top (5 Sec.)" },
-            {ICounterMode.Both, "Both" },
-            {ICounterMode.SplitAverage, "Split Mean" },
-            {ICounterMode.SplitBoth, "Both w/Split" }
-        };
-        static List<Tuple<ICounterMode, string>> progressSettings = new List<Tuple<ICounterMode, string>> {
-            {ICounterMode.BaseGame, "Base Game" },
-            {ICounterMode.Original, "Original" },
-            {ICounterMode.Percent, "Percentage" }
         };
 
         static Action<RectTransform, float, float, float, float, float> setStuff = delegate (RectTransform r, float x, float y, float w, float h, float pivotX)
@@ -68,9 +52,6 @@ namespace CountersPlus.UI
             {
                 Instance = this;
                 CreateCredits();
-
-
-                _backButton = BeatSaberUI.CreateBackButton(rect, didFinishEvent.Invoke);
             }
         }
 
