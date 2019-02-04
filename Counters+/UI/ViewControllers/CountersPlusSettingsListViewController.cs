@@ -136,13 +136,20 @@ namespace CountersPlus.UI
             if (row != 0 && row != NumberOfRows() - 1)
             {
                 SettingsInfo info = counterInfos[row - 1];
-                CountersPlusEditViewController.UpdateSettings(info.Model, info);
+                StartCoroutine(WaitForSettings(info));
             }
             else
             {
-                Plugin.Log((row == NumberOfRows() - 1).ToString());
                 CountersPlusEditViewController.UpdateSettings(CountersController.settings.missedConfig, counterInfos.First(), true, (row == NumberOfRows() - 1));
             }
+        }
+
+        IEnumerator WaitForSettings(SettingsInfo info)
+        {
+            yield return new WaitUntil(() => !String.IsNullOrWhiteSpace(info.Model.DisplayName));
+            yield return new WaitUntil(() => info.Name != null);
+            CountersPlusEditViewController.UpdateSettings(info.Model, info);
+            Plugin.Log("Loading settings for: " + info.Name);
         }
     }
 

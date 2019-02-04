@@ -12,6 +12,7 @@ using TMPro;
 using CustomUI.Settings;
 using CountersPlus.Custom;
 using System.Threading;
+using System.Collections;
 
 namespace CountersPlus.UI
 {
@@ -107,58 +108,62 @@ namespace CountersPlus.UI
 
         public static void UpdateSettings<T>(T settings, SettingsInfo info, bool isMain = false, bool isCredits = false) where T : IConfigModel
         {
-            ClearScreen();
-            if (info.IsCustom)
+            try
             {
-                container = CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
-            }
-            else if (!isMain) {
-                SubMenu sub = CreateBase(settings);
-                AdvancedCounterSettings.counterUIItems.Where(
-                    (KeyValuePair<IConfigModel, Action<SubMenu>> x) => (x.Key.DisplayName == settings.DisplayName)
-                    ).First().Value(sub);
-            }
-            if (!isCredits)
-            {
-                settingsTitle = BeatSaberUI.CreateText(rect, $"{(isMain ? "Main" : settings.DisplayName)} Settings", Vector2.zero);
-                settingsTitle.fontSize = 6;
-                settingsTitle.alignment = TextAlignmentOptions.Center;
-                setStuff(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
-                loadedElements.Add(settingsTitle.gameObject);
-                if (isMain)
+                ClearScreen();
+                if (info.IsCustom)
                 {
-                    SubMenu sub = new SubMenu(rect);
-                    var enabled = AddList(ref sub, "Enabled", "Toggles Counters+ on or off.", 2);
-                    enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
-                    enabled.GetValue = () => CountersController.settings.Enabled ? 1f : 0f;
-                    enabled.SetValue = (v) => CountersController.settings.Enabled = v != 0f;
-
-                    var comboOffset = AddList(ref sub, "Combo Offset", "How far from the Combo counters should be before Index is taken into account.", 10);
-                    comboOffset.GetTextForValue = (v) => (v / 10).ToString();
-                    comboOffset.GetValue = () => CountersController.settings.ComboOffset * 10;
-                    comboOffset.SetValue = (v) => CountersController.settings.ComboOffset = (v / 10);
-
-                    var multiOffset = AddList(ref sub, "Multiplier Offset", "How far from the Multiplier counters should be before Index is taken into account.", 10);
-                    multiOffset.GetTextForValue = (v) => (v / 10).ToString();
-                    multiOffset.GetValue = () => CountersController.settings.MultiplierOffset * 10;
-                    multiOffset.SetValue = (v) => CountersController.settings.MultiplierOffset = (v / 10);
-
-                    foreach (ListViewController list in loadedSettings)
+                    container = CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
+                }
+                else if (!isMain)
+                {
+                    SubMenu sub = CreateBase(settings);
+                    AdvancedCounterSettings.counterUIItems.Where(
+                        (KeyValuePair<IConfigModel, Action<SubMenu>> x) => (x.Key.DisplayName == settings.DisplayName)
+                        ).First().Value(sub);
+                }
+                if (!isCredits)
+                {
+                    settingsTitle = BeatSaberUI.CreateText(rect, $"{(isMain ? "Main" : settings.DisplayName)} Settings", Vector2.zero);
+                    settingsTitle.fontSize = 6;
+                    settingsTitle.alignment = TextAlignmentOptions.Center;
+                    setStuff(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
+                    loadedElements.Add(settingsTitle.gameObject);
+                    if (isMain)
                     {
-                        list.Init();
+                        SubMenu sub = new SubMenu(rect);
+                        var enabled = AddList(ref sub, "Enabled", "Toggles Counters+ on or off.", 2);
+                        enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+                        enabled.GetValue = () => CountersController.settings.Enabled ? 1f : 0f;
+                        enabled.SetValue = (v) => CountersController.settings.Enabled = v != 0f;
+
+                        var comboOffset = AddList(ref sub, "Combo Offset", "How far from the Combo counters should be before Index is taken into account.", 10);
+                        comboOffset.GetTextForValue = (v) => (v / 10).ToString();
+                        comboOffset.GetValue = () => CountersController.settings.ComboOffset * 10;
+                        comboOffset.SetValue = (v) => CountersController.settings.ComboOffset = (v / 10);
+
+                        var multiOffset = AddList(ref sub, "Multiplier Offset", "How far from the Multiplier counters should be before Index is taken into account.", 10);
+                        multiOffset.GetTextForValue = (v) => (v / 10).ToString();
+                        multiOffset.GetValue = () => CountersController.settings.MultiplierOffset * 10;
+                        multiOffset.SetValue = (v) => CountersController.settings.MultiplierOffset = (v / 10);
+
+                        foreach (ListViewController list in loadedSettings)
+                        {
+                            list.Init();
+                        }
                     }
                 }
+                else
+                {
+                    CreateCredits();
+                }
             }
-            else
-            {
-                CreateCredits();
-            }
+            catch { }
         }
 
         private static SubMenu CreateBase<T>(T settings, params ICounterPositions[] restricted) where T : IConfigModel
         {
             SubMenu sub = new SubMenu(rect);
-            Plugin.Log("Creating UI for: " + settings.DisplayName);
             List<Tuple<ICounterPositions, string>> restrictedList = new List<Tuple<ICounterPositions, string>>();
             try
             {

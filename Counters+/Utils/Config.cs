@@ -17,7 +17,6 @@ namespace CountersPlus.Config
                 //A) assigned in CountersController.settings
                 //B) created if they do not exist in CountersPlus.ini
                 model.Enabled = model.Enabled;
-                model.DisableMenus = model.DisableMenus;
                 model.ComboOffset = model.ComboOffset;
                 model.MultiplierOffset = model.MultiplierOffset;
                 model.missedConfig = new MissedConfigModel();
@@ -91,17 +90,6 @@ namespace CountersPlus.Config
             } set {
                 Plugin.config.SetBool("Main", "Enabled", value);
             } }
-        public bool DisableMenus
-        {
-            get
-            {
-                return Plugin.config.GetBool("Main", "DisableMenus", true, true);
-            }
-            set
-            {
-                Plugin.config.SetBool("Main", "DisableMenus", value);
-            }
-        }
         public float ComboOffset {
             get
             {
