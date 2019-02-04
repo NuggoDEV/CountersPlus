@@ -134,17 +134,23 @@ namespace CountersPlus.Config
     public abstract class IConfigModel {
         public string DisplayName { get; internal set; }
         public bool Enabled { get {
-                return Plugin.config.GetBool(DisplayName, "Enabled", true, true);
-            }set{  Plugin.config.SetBool(DisplayName, "Enabled", value); } }
+                if (DisplayName != "")
+                    return Plugin.config.GetBool(DisplayName, "Enabled", true, true);
+                else return true;
+            }set{ if (DisplayName != "") Plugin.config.SetBool(DisplayName, "Enabled", value); } }
         public ICounterPositions Position { get {
-                return (ICounterPositions)Enum.Parse(typeof(ICounterPositions), Plugin.config.GetString(DisplayName, "Position", "BelowCombo", true));
+                if (DisplayName != "")
+                    return (ICounterPositions)Enum.Parse(typeof(ICounterPositions), Plugin.config.GetString(DisplayName, "Position", "BelowCombo", true));
+                else return ICounterPositions.BelowCombo;
             } set {
-                Plugin.config.SetString(DisplayName, "Position", value.ToString());
+                if (DisplayName != "") Plugin.config.SetString(DisplayName, "Position", value.ToString());
             } }
         public int Index { get{
-                return Plugin.config.GetInt(DisplayName, "Index", 0, true);
+                if (DisplayName != "")
+                    return Plugin.config.GetInt(DisplayName, "Index", 0, true);
+                else return 0;
             }
-            set { Plugin.config.SetInt(DisplayName, "Index", value); }
+            set { if (DisplayName != "") Plugin.config.SetInt(DisplayName, "Index", value); }
         }
     }
 
