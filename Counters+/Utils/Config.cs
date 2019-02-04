@@ -90,6 +90,17 @@ namespace CountersPlus.Config
             } set {
                 Plugin.config.SetBool("Main", "Enabled", value);
             } }
+        public bool RefreshCounterInfo
+        {
+            get
+            {
+                return Plugin.config.GetBool("Main", "RefreshCounterInfo", true, true);
+            }
+            set
+            {
+                Plugin.config.SetBool("Main", "RefreshCounterInfo", value);
+            }
+        }
         public float ComboOffset {
             get
             {

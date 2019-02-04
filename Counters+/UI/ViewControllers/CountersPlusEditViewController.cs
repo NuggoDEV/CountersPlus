@@ -137,6 +137,11 @@ namespace CountersPlus.UI
                         enabled.GetValue = () => CountersController.settings.Enabled ? 1f : 0f;
                         enabled.SetValue = (v) => CountersController.settings.Enabled = v != 0f;
 
+                        var toggleCounters = AddList(ref sub, "Advanced Mock Counters", "Allows the mock counters to display more settings. To increase preformance, and reduce chances of bugs, disable this option.", 2);
+                        toggleCounters.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+                        toggleCounters.GetValue = () => CountersController.settings.RefreshCounterInfo ? 1f : 0f;
+                        toggleCounters.SetValue = (v) => CountersController.settings.RefreshCounterInfo = v != 0f;
+
                         var comboOffset = AddList(ref sub, "Combo Offset", "How far from the Combo counters should be before Index is taken into account.", 10);
                         comboOffset.GetTextForValue = (v) => (v / 10).ToString();
                         comboOffset.GetValue = () => CountersController.settings.ComboOffset * 10;

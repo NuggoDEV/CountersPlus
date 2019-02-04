@@ -52,6 +52,37 @@ namespace CountersPlus.UI
 
             CountersPlusSettingsFlowCoordinator.Instance.mockCounters.Add(counter);
         }
+
+        public static void CreateStatic(string counterName, string counterData)
+        {
+            GameObject counter = new GameObject($"Counters + | Mock {counterName} Counter");
+
+            GameObject nameGO = new GameObject($"Counters+ | Mock {counterName} Label");
+            nameGO.transform.parent = counter.transform;
+            TextMeshPro name = nameGO.AddComponent<TextMeshPro>();
+            name.text = counterName;
+            name.fontSize = 3;
+            name.color = Color.white;
+            name.alignment = TextAlignmentOptions.Center;
+            name.rectTransform.localPosition = new Vector3(0, 0.4f, 0);
+
+            TextMeshPro data = counter.AddComponent<TextMeshPro>();
+            data.text = counterData;
+            data.fontSize = 4;
+            data.color = Color.white;
+            data.alignment = TextAlignmentOptions.Center;
+
+            name.color = new Color(0.35f, 0.35f, 0.35f);
+            data.color = new Color(0.35f, 0.35f, 0.35f);
+            if (counterName == "Combo")
+                counter.transform.position = new Vector3(-3.2f, 0.9f, 7);
+            else if (counterName == "Multiplier")
+                counter.transform.position = new Vector3(3.2f, 0.9f, 7);
+            else if (counterName == "123456")
+                counter.transform.position = new Vector3(-3.2f, 0f, 7);
+
+            CountersPlusSettingsFlowCoordinator.Instance.mockCounters.Add(counter);
+        }
     }
 
     /// <summary>
