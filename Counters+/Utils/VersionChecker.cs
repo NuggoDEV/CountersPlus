@@ -32,43 +32,24 @@ namespace CountersPlus
         private static IEnumerator GetOnlineVersionRoutine()
         {
             Plugin.Log("Obtaining latest version information...");
-            string url = "https://modsaber.org/api/v1.1/mods/versions/countersplus";
-            using (UnityWebRequest www = UnityWebRequest.Get(url))
+            using (UnityWebRequest www = UnityWebRequest.Get("https://modsaber.org/api/v1.1/mods/versions/countersplus"))
             {
                 yield return (www.SendWebRequest());
-                if (www.isHttpError || www.isNetworkError)
-                {
-                    Plugin.Log("Failed to download version info.", Plugin.LogInfo.Warning);
-                }
+                if (www.isHttpError || www.isNetworkError) Plugin.Log("Failed to download version info.", Plugin.LogInfo.Warning);
                 else
                 {
                     Plugin.Log("Obtained latest version info!");
                     JSONNode node = JSON.Parse(www.downloadHandler.text);
-                    IEnumerable<JSONNode> nodes = node.Children;
-                    using (IEnumerator<JSONNode> enumerator = nodes.GetEnumerator())
+                    foreach(JSONNode child in node.Children)
                     {
-                        while (enumerator.MoveNext())
+                        if (child["approval"]["status"] != "approved") continue;
+                        try
                         {
-                            if (enumerator.Current["approval"]["status"] == "approved")
-                            {
-                                try
-                                {
-                                    string version = enumerator.Current["version"].Value;
-                                    Plugin.upToDate = isLatestVersion(version);
-                                    Plugin.webVersion = version;
-                                    if (isLatestVersion(version))
-                                        Plugin.Log("We're running on the latest version!");
-                                    else
-                                        Plugin.Log("We're on an outdated build!");
-                                    break;
-                                }
-                                catch
-                                {
-                                    Plugin.Log("Could not parse version info!", Plugin.LogInfo.Error);
-                                    Plugin.webVersion = "BAD VERSION";
-                                }
-                            }
-                        }
+                            string version = child["version"].Value;
+                            Plugin.upToDate = isLatestVersion(version);
+                            Plugin.webVersion = version;
+                            break;
+                        } catch { }
                     }
                 }
             }
