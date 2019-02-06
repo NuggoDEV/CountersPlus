@@ -29,7 +29,7 @@ namespace CountersPlus.UI
         {
             {ICounterMode.Both, "Original" }, //Counters+ Counter w/ Points
             {ICounterMode.BaseGame, "Base Game" }, //Base Game w/ Points
-            {ICounterMode.BaseWithOutPoints, "Base No Points" }, //Base Game w/ Points Under Combo
+            //{ICounterMode.BaseWithOutPoints, "Base No Points" }, //Base Game w/ Points Under Combo
             {ICounterMode.LeavePoints, "No Points" }, //Counters+ Counter w/ Points Under Combo
             {ICounterMode.ScoreOnly, "Score Only" }, //Counters+ Counter w/ Points Removed Entirely
         };

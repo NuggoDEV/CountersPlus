@@ -1,24 +1,3 @@
-# Hey You!
-![Brand new Counters+ UI!](https://i.imgur.com/gDzdybO.png "Brand new Counters+ UI!")
-
-Yes, you! Do you want to help Counters+ become bug free before the next major update?
-
-I have been hard at work over at the [UI Rework branch](https://github.com/Caeden117/CountersPlus/tree/ui-rework), and I believe I am at a spot where I can release a beta build for people to mess around and report back any bugs.
-
-*I may put your name in the contributors list if you help out,* so that's something for you!
-
-## Interested in testing?
-
-[Download the beta build right here.](https://drive.google.com/file/d/1o1QCQ4z4UXaCRVq_0OCAgf7YfBGZdF_a/view?usp=sharing) Check it out, and mess around with the brand spanking new Counters+ menu!
-
-Report any bugs and issues over [here.](https://github.com/Caeden117/CountersPlus/issues) If you believe you may have a solution to these problems, fork the UI rework branch, and send me a pull request.
-
-Good luck testing!
-
-*Update 1:* I just got Score Counter working again, that took fucking forever.
-
----
-
 # CountersPlus
 A combination of widely-used counters, all configurable in one mod.
 
@@ -52,26 +31,25 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
 |Setting|Description|
 |-|-|
 |***Enabled***|Toggles the plugin on and off, and hides all other submenus if disabled!|
-|***Disable Menus***|Hides other submenus while keeping Counters+ enabled.|
-|***Combo Offset***|Before Index is taken into account, how far away should counters be from Combo.|
-|***Multiplier Offset***|Before Index is taken into account, how far away should counters be from the Multiplier.|
+|***Advanced Counter Properties***|Displays more information about the counters in the new menu.|
+|***Combo Offset***|Before Distance is taken into account, how far away should counters be from Combo.|
+|***Multiplier Offset***|Before Distance is taken into account, how far away should counters be from the Multiplier.|
 
 ### Every Counter has these 3 options
 |Setting|Description|
 |-|-|
 |***Enabled***|Toggles the counter on or off.|
 |***Position***|Sets the position relative to commonly used UI elements (Combo, Multiplier, etc.)|
-|***Index***|Otherwise known as the order. A higher Index would set the Counter farther away from the position.|
+|***Distance***|Otherwise known as the order. A higher Distance would set the Counter farther away from the position.|
 
 ### Advanced Options
 |Setting|Counters|Description
 |-|-|-|
-|***Decimal Precision***|*Notes*, *Score*, and *Speed*|How precise do the decimals go?|
-|***Use Base Game Counter***|*Score*|Whether or not to use the base game counter instead of replacing it with our own. **Some features will not be reflected when using the base game counters!**|
+|***Percentage Precision***|*Notes*, *Score*, and *Speed*|How precise do the decimals go?|
 |***Show Precentage***|*Notes*|Displays the percentage of notes hit over notes in total.|
 |***Display Rank***|*Score*|Displays the Rank you get during a song (SS, S, A, B, C, D, E)|
 |***Progress Time Left***|*Progress*|The counter starts at full, and decreases as you progress though a song.|
-|***Mode***|*Speed*, *Progress*|Changes the display mode for the Counter (See Hint Text in-game for more detail)|
+|***Mode***|*Speed*, *Progress*, and *Score*|Changes the display mode for the Counter (See Hint Text in-game for more detail)|
 
 ### Some Notes
 
