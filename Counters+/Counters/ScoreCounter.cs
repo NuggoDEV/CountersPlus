@@ -125,10 +125,13 @@ namespace CountersPlus.Counters
         void Update()
         {
             _RankText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
-            if (GameObject.Find("ScoreText") != null && (settings.Mode == ICounterMode.LeaveScore || settings.Mode == ICounterMode.BaseWithOutScore))
+            if (settings.Mode == ICounterMode.LeaveScore || settings.Mode == ICounterMode.BaseWithOutScore)
             {
                 GameObject.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = new Vector3(-3.2f, 0.9f, 7);
-            }else if (transform.Find("ScoreText") == null && (settings.Mode == ICounterMode.LeaveScore || settings.Mode == ICounterMode.BaseWithOutScore))
+                _RankText.rectTransform.localPosition = new Vector3(0, 0f, 0);
+                _scoreMesh.rectTransform.localPosition = new Vector3(0, 0.4f, 0);
+            }
+            else if (settings.Mode == ICounterMode.ScoreOnly)
             {
                 _RankText.rectTransform.localPosition = new Vector3(0, 0f, 0);
                 _scoreMesh.rectTransform.localPosition = new Vector3(0, 0.4f, 0);

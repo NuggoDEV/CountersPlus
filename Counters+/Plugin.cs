@@ -15,9 +15,12 @@ namespace CountersPlus
         internal static Plugin Instance;
         public enum LogInfo { Info, Warning, Error, Fatal };
         internal static BS_Utils.Utilities.Config config = new BS_Utils.Utilities.Config("CountersPlus"); //Conflicts with CountersPlus.Config POG
+        internal static bool upToDate = true;
+        internal static string webVersion;
 
         public void OnApplicationStart()
         {
+            VersionChecker.GetOnlineVersion();   
             Instance = this;
             if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini"))
                 File.Create(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");

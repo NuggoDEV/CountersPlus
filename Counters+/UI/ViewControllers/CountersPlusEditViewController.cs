@@ -78,10 +78,20 @@ namespace CountersPlus.UI
             name.characterWidthAdjustment = 2;
             setStuff(name.rectTransform, 0, 0.8f, 1, 0.166f, 0.5f);
 
-            version = BeatSaberUI.CreateText(rect, $"Version {Plugin.Instance.Version}", Vector2.zero);
+            version = BeatSaberUI.CreateText(rect,
+                $"Version <color={(Plugin.upToDate ? "#00FF00" : "#FF0000")}>{Plugin.Instance.Version}</color>", Vector2.zero);
             version.fontSize = 3;
             version.alignment = TextAlignmentOptions.Center;
             setStuff(version.rectTransform, 0, 0.73f, 1, 0.166f, 0.5f);
+
+            if (!Plugin.upToDate)
+            {
+                TextMeshProUGUI warning = BeatSaberUI.CreateText(rect,
+                $"<color=#FF0000>Version {Plugin.webVersion} available for download!</color>", Vector2.zero);
+                warning.fontSize = 3;
+                warning.alignment = TextAlignmentOptions.Center;
+                setStuff(warning.rectTransform, 0, 0.7f, 1, 0.166f, 0.5f);
+            }
 
             creator = BeatSaberUI.CreateText(rect, "Developed by: <color=#00c0ff>Caeden117</color>", Vector2.zero);
             creator.fontSize = 5;
