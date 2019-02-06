@@ -4,22 +4,24 @@ using System.IO;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using System.Linq;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Threading;
-using BS_Utils.Utilities;
+using CountersPlus.UI;
 
 namespace CountersPlus
 {
     public class Plugin : IPlugin
     {
         public string Name => "Counters+";
-        public string Version => "1.3.3";
+        public string Version => "1.4.0";
+        internal static Plugin Instance;
         public enum LogInfo { Info, Warning, Error, Fatal };
         internal static BS_Utils.Utilities.Config config = new BS_Utils.Utilities.Config("CountersPlus"); //Conflicts with CountersPlus.Config POG
+        internal static bool upToDate = true;
+        internal static string webVersion;
 
         public void OnApplicationStart()
         {
+            VersionChecker.GetOnlineVersion();   
+            Instance = this;
             if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini"))
                 File.Create(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
             SceneManager.activeSceneChanged += SceneManager_sceneLoaded;
@@ -45,7 +47,7 @@ namespace CountersPlus
         {
             try
             {
-                if (arg.name == "Menu") CountersSettingsUI.CreateSettingsUI();
+                if (arg.name == "Menu") MenuUI.CreateUI();
             }catch(Exception e)
             {
                 Log(e.ToString(), LogInfo.Fatal);

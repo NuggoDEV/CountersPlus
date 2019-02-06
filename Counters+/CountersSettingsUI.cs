@@ -76,11 +76,11 @@ namespace CountersPlus
                     scoreRank.SetValue += delegate (bool value) {
                         CountersController.settings.scoreConfig.DisplayRank = value;
                     };
-                    var scoreOverride = v.AddBool("Use Base Game Counter", "Uses the base game counter instead of a custom one.\n<color=#ff0000>Some settings will not apply in this mode.</color>");
+                    /*var scoreOverride = v.AddBool("Use Base Game Counter", "Uses the base game counter instead of a custom one.\n<color=#ff0000>Some settings will not apply in this mode.</color>");
                     scoreOverride.GetValue += delegate { return CountersController.settings.scoreConfig.UseOld; };
                     scoreOverride.SetValue += delegate (bool value) {
                         CountersController.settings.scoreConfig.UseOld = value;
-                    };
+                    };*/
                     float[] scorePrec = new float[6] { 0, 1, 2, 3, 4, 5 };
                     var scorePrecision = v.AddList("Percentage Decimal Precision", scorePrec, "How precise should the percentage be?");
                     scorePrecision.GetValue += delegate { return CountersController.settings.scoreConfig.DecimalPrecision; };
@@ -168,14 +168,6 @@ namespace CountersPlus
             };
 
             if (!CountersController.settings.Enabled) return;
-
-            var mainMenus = mainSub.AddBool("Disable Menus", "Removes clutter by removing all other Counters+ submenus while keeping Counters+ enabled.");
-            mainMenus.GetValue += delegate { return CountersController.settings.DisableMenus; };
-            mainMenus.SetValue += delegate (bool value) {
-                CountersController.settings.DisableMenus = value;
-            };
-
-
             float[] offsetValues = new float[] { 0, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1};
             var comboOffset = mainSub.AddList("Combo Offset", offsetValues, "Before Index is taken into account, how far should counters be from the Combo counter.");
             comboOffset.GetValue += delegate { return CountersController.settings.ComboOffset; };
@@ -186,8 +178,6 @@ namespace CountersPlus
             multiplierOffset.GetValue += delegate { return CountersController.settings.MultiplierOffset; };
             multiplierOffset.SetValue += delegate (float f) { CountersController.settings.MultiplierOffset = f; };
             multiplierOffset.GetTextForValue += delegate (float f) { return f.ToString(); };
-
-            if (CountersController.settings.DisableMenus) return;
 
             foreach (var kvp in counterUIItems)
             {

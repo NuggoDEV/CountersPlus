@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using CountersPlus.Config;
 using CountersPlus.Counters;
 using CountersPlus.Custom;
 using UnityEngine.SceneManagement;
-using System.IO;
-using Newtonsoft.Json;
 using IllusionInjector;
 using IllusionPlugin;
 using IniParser;

@@ -119,6 +119,15 @@
     <Compile Include="Counters\CustomCounter.cs" />
     <Compile Include="Counters\CutCounter.cs" />
     <Compile Include="Custom\CustomCounters.cs" />
+    <Compile Include="UI\AdvancedCounterSettings.cs" />
+    <Compile Include="UI\CounterWarning.cs" />
+    <Compile Include="UI\ViewControllers\BackButton.cs" />
+    <Compile Include="UI\ViewControllers\CountersPlusEditViewController.cs" />
+    <Compile Include="UI\ViewControllers\CountersPlusFillerForMainViewController.cs" />
+    <Compile Include="UI\CountersPlusSettingsFlowCoordinator.cs" />
+    <Compile Include="UI\ViewControllers\CountersPlusSettingsListViewController.cs" />
+    <Compile Include="UI\MenuUI.cs" />
+    <Compile Include="UI\MockCounter.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="CountersController.cs" />
     <Compile Include="CountersSettingsUI.cs" />
@@ -130,6 +139,8 @@
     <Compile Include="Utils\ReflectionUtil.cs" />
     <Compile Include="Counters\ScoreCounter.cs" />
     <Compile Include="Counters\SpeedCounter.cs" />
+    <Compile Include="Utils\SimpleJSON.cs" />
+    <Compile Include="Utils\VersionChecker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
