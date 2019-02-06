@@ -137,13 +137,16 @@ namespace CountersPlus.UI
         {
             createMocks = false;
             StopCoroutine(UpdateMockCounters());
-            foreach(GameObject counter in mockCounters)
-            {
-                Destroy(counter);
+            foreach (GameObject counter in mockCounters) {
+                DestroyImmediate(counter);
             }
             MainScreen.transform.position = MainScreenPosition;
             MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
             mainFlow.InvokeMethod("DismissFlowCoordinator", this, null, false);
+            foreach (CounterWarning warning in CounterWarning.existing)
+            {
+                DestroyImmediate(warning.gameObject);
+            }
         }
     }
 }

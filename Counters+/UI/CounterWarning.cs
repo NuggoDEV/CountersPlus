@@ -12,7 +12,7 @@ namespace CountersPlus.UI
     class CounterWarning : MonoBehaviour
     {
         private static int warnings = 0;
-        private static List<CounterWarning> existing = new List<CounterWarning>();
+        internal static List<CounterWarning> existing = new List<CounterWarning>();
         private string warningText = "";
         private int warningOrder = 0;
         private float persistTime;
@@ -57,16 +57,9 @@ namespace CountersPlus.UI
         IEnumerator KillThyself()
         {
             yield return new WaitForSeconds(persistTime);
-            UpdateWarnings();
+            existing.Remove(this);
             Destroy(gameObject);
             warnings--;
-        }
-
-        void UpdateWarnings()
-        {
-            int lowest = 0;
-            foreach (CounterWarning warning in existing) if (lowest < warning.warningOrder) lowest = warning.warningOrder;
-            foreach (CounterWarning warning in existing) if (warning.warningOrder > lowest) warning.warningOrder--;
         }
     }
 }
