@@ -12,7 +12,7 @@ using TMPro;
 using CustomUI.Settings;
 using CountersPlus.Custom;
 using System.Threading;
-using System.Collections;
+using BS_Utils.Gameplay;
 
 namespace CountersPlus.UI
 {
@@ -66,11 +66,12 @@ namespace CountersPlus.UI
                 { "Shoko84", "Bug fixing" },
                 { "xhuytox", "Big helper in bug hunting - thanks man!" },
                 { "Brian", "Saving Beat Saber Modding with CustomUI" },
-                { "Assistant", "Stole some Custom Avatars code to help with settings" },
+                { "Assistant", "Stole some Custom Avatars UI code to help with settings" },
                 { "Kyle1413", "Beat Saber Utils and for Progress/Score Counter code" },
                 { "Ragesaq", "Speed Counter idea <i>(and some bug fixing on stream)</i>" },
+                { "SkyKiwiTV", "Original version checking code"},
                 { "Stackeror", "Creator of the original Progress Counter mod" },
-                { "You", "For enjoying this mod!"},
+                { GetUserInfo.GetUserName(), "For enjoying this mod!"}, //Teehee :)
             }; 
             name = BeatSaberUI.CreateText(rect, "Counters+", Vector2.zero);
             name.fontSize = 10;
@@ -96,12 +97,12 @@ namespace CountersPlus.UI
             creator = BeatSaberUI.CreateText(rect, "Developed by: <color=#00c0ff>Caeden117</color>", Vector2.zero);
             creator.fontSize = 5;
             creator.alignment = TextAlignmentOptions.Center;
-            setStuff(creator.rectTransform, 0, 0.585f, 1, 0.166f, 0.5f);
+            setStuff(creator.rectTransform, 0, 0.64f, 1, 0.166f, 0.5f);
 
             contributorLabel = BeatSaberUI.CreateText(rect, "Thanks to these contributors for, directly or indirectly, helping make Counters+ what it is!", Vector2.zero);
             contributorLabel.fontSize = 3;
             contributorLabel.alignment = TextAlignmentOptions.Center;
-            setStuff(contributorLabel.rectTransform, 0, 0.45f, 1, 0.166f, 0.5f);
+            setStuff(contributorLabel.rectTransform, 0, 0.55f, 1, 0.166f, 0.5f);
 
             foreach(var kvp in contributors)
             {
@@ -109,7 +110,7 @@ namespace CountersPlus.UI
                 contributor.fontSize = 3;
                 contributor.alignment = TextAlignmentOptions.Left;
                 setStuff(contributor.rectTransform, 0.15f,
-                    0.4f - (contributors.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
+                    0.5f - (contributors.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
                 loadedElements.Add(contributor.gameObject);
             }
 
