@@ -29,8 +29,8 @@ namespace CountersPlus.UI
         {
             {ICounterMode.Both, "Original" }, //Counters+ Counter w/ Points
             {ICounterMode.BaseGame, "Base Game" }, //Base Game w/ Points
-            {ICounterMode.BaseWithOutScore, "Base No Points" }, //Base Game w/ Points Under Combo
-            {ICounterMode.LeaveScore, "No Points" }, //Counters+ Counter w/ Points Under Combo
+            {ICounterMode.BaseWithOutPoints, "Base No Points" }, //Base Game w/ Points Under Combo
+            {ICounterMode.LeavePoints, "No Points" }, //Counters+ Counter w/ Points Under Combo
             {ICounterMode.ScoreOnly, "Score Only" }, //Counters+ Counter w/ Points Removed Entirely
         };
 
@@ -156,10 +156,10 @@ namespace CountersPlus.UI
                 case ICounterMode.Percent:
                     mode = "Percent: Displays a simple percent of the completed song.\n<color=#FF0000>Some settings will not apply in this mode.</color>";
                     break;
-                case ICounterMode.BaseWithOutScore:
+                case ICounterMode.BaseWithOutPoints:
                     mode = "Base No Points: Uses the base game counter, except the Points will be under the combo.\n<color=#FF0000>This might conflict with counters positioned below the combo.</color>";
                     break;
-                case ICounterMode.LeaveScore:
+                case ICounterMode.LeavePoints:
                     mode = "No Points: Uses Counters+ counter, except the Points will be under the combo.\n<color=#FF0000>This might conflict with counters positioned below the combo.</color>";
                     break;
                 case ICounterMode.ScoreOnly:

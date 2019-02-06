@@ -19,6 +19,8 @@ namespace CountersPlus.Config
                 model.Enabled = model.Enabled;
                 model.ComboOffset = model.ComboOffset;
                 model.MultiplierOffset = model.MultiplierOffset;
+                model.AdvancedCounterInfo = model.AdvancedCounterInfo;
+                model.FirstStart = model.FirstStart;
                 model.missedConfig = new MissedConfigModel();
                 model.noteConfig = new NoteConfigModel();
                 model.progressConfig = new ProgressConfigModel();
@@ -90,15 +92,26 @@ namespace CountersPlus.Config
             } set {
                 Plugin.config.SetBool("Main", "Enabled", value);
             } }
-        public bool RefreshCounterInfo
+        public bool AdvancedCounterInfo
         {
             get
             {
-                return Plugin.config.GetBool("Main", "RefreshCounterInfo", true, true);
+                return Plugin.config.GetBool("Main", "AdvancedCounterInfo", true, true);
             }
             set
             {
-                Plugin.config.SetBool("Main", "RefreshCounterInfo", value);
+                Plugin.config.SetBool("Main", "AdvancedCounterInfo", value);
+            }
+        }
+        public bool FirstStart
+        {
+            get
+            {
+                return Plugin.config.GetBool("Main", "FirstStart", false, true);
+            }
+            set
+            {
+                Plugin.config.SetBool("Main", "FirstStart", value);
             }
         }
         public float ComboOffset {
@@ -167,7 +180,7 @@ namespace CountersPlus.Config
                     return Plugin.config.GetBool(DisplayName, "ShowPercentage", true, true);
                 else return true;
             }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetBool(DisplayName, "ShowPercentage", value); }
+            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetBool("Notes", "ShowPercentage", value); }
         }
         public int DecimalPrecision
         {
@@ -177,7 +190,7 @@ namespace CountersPlus.Config
                     return Plugin.config.GetInt(DisplayName, "DecimalPrecision", 2, true);
                 else return 2;
             }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetInt(DisplayName, "DecimalPrecision", value); }
+            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetInt("Notes", "DecimalPrecision", value); }
         }
     }
 
@@ -187,14 +200,22 @@ namespace CountersPlus.Config
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return (ICounterMode)Enum.Parse(typeof(ICounterMode), Plugin.config.GetString(DisplayName, "Mode", "Original", true));
-                else return ICounterMode.Original;
+                try
+                {
+                    if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
+                        return (ICounterMode)Enum.Parse(typeof(ICounterMode), Plugin.config.GetString("Progress", "Mode", "Original", true));
+                    else return ICounterMode.Original;
+                }
+                catch
+                {
+                    Plugin.config.SetString(DisplayName, "Mode", ICounterMode.Original.ToString());
+                    return ICounterMode.Original;
+                }
             }
             set
             {
                 if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    Plugin.config.SetString(DisplayName, "Mode", value.ToString());
+                    Plugin.config.SetString("Progress", "Mode", value.ToString());
             }
         }
         public bool ProgressTimeLeft
@@ -202,10 +223,10 @@ namespace CountersPlus.Config
             get
             {
                 if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return Plugin.config.GetBool(DisplayName, "ProgressTimeLeft", false, true);
+                    return Plugin.config.GetBool("Progress", "ProgressTimeLeft", false, true);
                 else return false;
             }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetBool(DisplayName, "ProgressTimeLeft", value); }
+            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetBool("Progress", "ProgressTimeLeft", value); }
         }
     }
 
@@ -216,21 +237,29 @@ namespace CountersPlus.Config
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return (ICounterMode)Enum.Parse(typeof(ICounterMode), Plugin.config.GetString(DisplayName, "Mode", "Both", true));
-                else return ICounterMode.Both;
+                try
+                {
+                    if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
+                        return (ICounterMode)Enum.Parse(typeof(ICounterMode), Plugin.config.GetString("Score", "Mode", "Both", true));
+                    else return ICounterMode.Both;
+                }
+                catch
+                {
+                    Plugin.config.SetString(DisplayName, "Mode", ICounterMode.Both.ToString());
+                    return ICounterMode.Both;
+                }
             }
             set
             {
                 if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    Plugin.config.SetString(DisplayName, "Mode", value.ToString());
+                    Plugin.config.SetString("Score", "Mode", value.ToString());
             }
         }
         public bool UseOld
         {
             get
             {
-                return (Mode == ICounterMode.BaseGame) || (Mode == ICounterMode.BaseWithOutScore);
+                return (Mode == ICounterMode.BaseGame) || (Mode == ICounterMode.BaseWithOutPoints);
             }
         }
         public int DecimalPrecision
@@ -238,20 +267,20 @@ namespace CountersPlus.Config
             get
             {
                 if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return Plugin.config.GetInt(DisplayName, "DecimalPrecision", 2, true);
+                    return Plugin.config.GetInt("Score", "DecimalPrecision", 2, true);
                 else return 2;
             }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetInt(DisplayName, "DecimalPrecision", value); }
+            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetInt("Score", "DecimalPrecision", value); }
         }
         public bool DisplayRank
         {
             get
             {
                 if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return Plugin.config.GetBool(DisplayName, "DisplayRank", true, true);
+                    return Plugin.config.GetBool("Score", "DisplayRank", true, true);
                 else return true;
             }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetBool(DisplayName, "DisplayRank", value); }
+            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetBool("Score", "DisplayRank", value); }
         }
     }
 
@@ -277,23 +306,31 @@ namespace CountersPlus.Config
             get
             {
                 if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return Plugin.config.GetInt(DisplayName, "DecimalPrecision", 2, true);
+                    return Plugin.config.GetInt("Speed", "DecimalPrecision", 2, true);
                 else return 2;
             }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetInt(DisplayName, "DecimalPrecision", value); }
+            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetInt("Speed", "DecimalPrecision", value); }
         }
         public ICounterMode Mode
         {
             get
             {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return (ICounterMode)Enum.Parse(typeof(ICounterMode), Plugin.config.GetString(DisplayName, "Mode", "Average", true));
-                else return ICounterMode.Average;
+                try
+                {
+                    if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
+                        return (ICounterMode)Enum.Parse(typeof(ICounterMode), Plugin.config.GetString("Speed", "Mode", "Average", true));
+                    else return ICounterMode.Average;
+                }
+                catch
+                {
+                    Plugin.config.SetString(DisplayName, "Mode", ICounterMode.Average.ToString());
+                    return ICounterMode.Average;
+                }
             }
             set
             {
                 if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    Plugin.config.SetString(DisplayName, "Mode", value.ToString());
+                    Plugin.config.SetString("Speed", "Mode", value.ToString());
             }
         }
     }
@@ -306,6 +343,6 @@ namespace CountersPlus.Config
 
     public enum ICounterMode { Average, Top5Sec, Both, SplitAverage, SplitBoth, //Speed
                               BaseGame, Original, Percent, //Progress
-                              ScoreOnly, LeaveScore, BaseWithOutScore //Score (As well as BaseGame and Both)
+                              ScoreOnly, LeavePoints, BaseWithOutPoints //Score (As well as BaseGame and Original)
     };
 }

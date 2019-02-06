@@ -50,7 +50,14 @@ namespace CountersPlus.UI
 
             //For mock counters
             createMocks = true;
-            new GameObject("Counters+ | Counters Warning").AddComponent<CounterWarning>();
+            CounterWarning.CreateWarning("Due to limitations, some counters may not reflect their true appearance in-game.", 7.5f);
+            if (!CountersController.settings.FirstStart)
+            {
+                CountersController.settings.FirstStart = true;
+                CounterWarning.CreateWarning("If you see anything weird, try restarting your game, or re-enter the Counters+ menu!", 15);
+            }
+            if (!Plugin.upToDate)
+                CounterWarning.CreateWarning("A new Counters+ update is available to download!", 5);
             StartCoroutine(UpdateMockCounters());
         }
 
@@ -74,13 +81,13 @@ namespace CountersPlus.UI
                     }
                     MockCounter.CreateStatic("Combo", "0");
                     MockCounter.CreateStatic("Multiplier", "x8");
-                    if (CountersController.settings.RefreshCounterInfo)
+                    if (CountersController.settings.AdvancedCounterInfo)
                     {
                         MockCounter.Create(CountersController.settings.missedConfig, "Misses", info.notesMissed.ToString());
                         MockCounter.Create(CountersController.settings.noteConfig, "Notes",
                             $"{info.notesCut - info.notesMissed} / {info.notesCut} {((CountersController.settings.noteConfig.ShowPercentage) ? $"- ({Math.Round((((double)(info.notesCut - info.notesMissed) / info.notesCut) * 100), CountersController.settings.noteConfig.DecimalPrecision)}%)" : "")}");
-                        MockCounter.Create(CountersController.settings.scoreConfig, $"{Math.Round(info.score, CountersController.settings.scoreConfig.DecimalPrecision).ToString()}%", CountersController.settings.scoreConfig.DisplayRank ? info.GetRank() : "");
-                        if (CountersController.settings.scoreConfig.Mode == ICounterMode.BaseWithOutScore || CountersController.settings.scoreConfig.Mode == ICounterMode.LeaveScore || !CountersController.settings.scoreConfig.Enabled)
+                        MockCounter.Create(CountersController.settings.scoreConfig, $"(<size=50%>{CountersController.settings.scoreConfig.Mode}</size>) {Math.Round(info.score, CountersController.settings.scoreConfig.DecimalPrecision).ToString()}%", CountersController.settings.scoreConfig.DisplayRank ? info.GetRank() : "");
+                        if (CountersController.settings.scoreConfig.Mode == ICounterMode.BaseWithOutPoints || CountersController.settings.scoreConfig.Mode == ICounterMode.LeavePoints || !CountersController.settings.scoreConfig.Enabled)
                             MockCounter.CreateStatic("123 456", "");
                         if (CountersController.settings.speedConfig.Mode == ICounterMode.Average || CountersController.settings.speedConfig.Mode == ICounterMode.Both)
                         {
@@ -122,7 +129,7 @@ namespace CountersPlus.UI
                     catch { }
                 }
                 catch { }
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(CountersController.settings.AdvancedCounterInfo ? 1 : 2);
             }
         }
 

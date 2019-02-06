@@ -36,19 +36,7 @@ namespace CountersPlus.UI
             data.color = Color.white;
             data.alignment = TextAlignmentOptions.Center;
 
-            if (UseCounterPositioning)
-                counter.transform.position = CountersController.determinePosition(counter, settings.Position, settings.Index) - new Vector3(0, 0.4f, 0);
-            else
-            {
-                name.color = new Color(0.35f, 0.35f, 0.35f);
-                data.color = new Color(0.35f, 0.35f, 0.35f);
-                if (counterName == "Combo")
-                    counter.transform.position = new Vector3(-3.2f, 1.15f, 7);
-                else if (counterName == "Multiplier")
-                    counter.transform.position = new Vector3(3.2f, 1.15f, 7);
-                else if (counterName == "123 456")
-                    counter.transform.position = new Vector3(-3.2f, 0.9f, 7);
-            }
+            counter.transform.position = CountersController.determinePosition(counter, settings.Position, settings.Index) - new Vector3(0, 0.4f, 0);
 
             CountersPlusSettingsFlowCoordinator.Instance.mockCounters.Add(counter);
         }
@@ -78,7 +66,7 @@ namespace CountersPlus.UI
                 counter.transform.position = new Vector3(-3.2f, 0.9f, 7);
             else if (counterName == "Multiplier")
                 counter.transform.position = new Vector3(3.2f, 0.9f, 7);
-            else if (counterName == "123456")
+            else if (counterName == "123 456")
                 counter.transform.position = new Vector3(-3.2f, 0f, 7);
 
             CountersPlusSettingsFlowCoordinator.Instance.mockCounters.Add(counter);

@@ -69,7 +69,8 @@ namespace CountersPlus.UI
                 { "Assistant", "Stole some Custom Avatars UI code to help with settings" },
                 { "Kyle1413", "Beat Saber Utils and for Progress/Score Counter code" },
                 { "Ragesaq", "Speed Counter idea <i>(and some bug fixing on stream)</i>" },
-                { "SkyKiwiTV", "Original version checking code"},
+                { "SkyKiwiTV", "Original version checking code" },
+                { "Dracrius", "Bug fixing and beta testing" },
                 { "Stackeror", "Creator of the original Progress Counter mod" },
                 { GetUserInfo.GetUserName(), "For enjoying this mod!"}, //Teehee :)
             }; 
@@ -92,6 +93,7 @@ namespace CountersPlus.UI
                 warning.fontSize = 3;
                 warning.alignment = TextAlignmentOptions.Center;
                 setStuff(warning.rectTransform, 0, 0.7f, 1, 0.166f, 0.5f);
+                loadedElements.Add(warning.gameObject);
             }
 
             creator = BeatSaberUI.CreateText(rect, "Developed by: <color=#00c0ff>Caeden117</color>", Vector2.zero);
@@ -150,18 +152,18 @@ namespace CountersPlus.UI
 
                         var toggleCounters = AddList(ref sub, "Advanced Mock Counters", "Allows the mock counters to display more settings. To increase preformance, and reduce chances of bugs, disable this option.", 2);
                         toggleCounters.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
-                        toggleCounters.GetValue = () => CountersController.settings.RefreshCounterInfo ? 1f : 0f;
-                        toggleCounters.SetValue = (v) => CountersController.settings.RefreshCounterInfo = v != 0f;
+                        toggleCounters.GetValue = () => CountersController.settings.AdvancedCounterInfo ? 1f : 0f;
+                        toggleCounters.SetValue = (v) => CountersController.settings.AdvancedCounterInfo = v != 0f;
 
-                        var comboOffset = AddList(ref sub, "Combo Offset", "How far from the Combo counters should be before Index is taken into account.", 10);
-                        comboOffset.GetTextForValue = (v) => (v / 10).ToString();
-                        comboOffset.GetValue = () => CountersController.settings.ComboOffset * 10;
-                        comboOffset.SetValue = (v) => CountersController.settings.ComboOffset = (v / 10);
+                        var comboOffset = AddList(ref sub, "Combo Offset", "How far from the Combo counters should be before Index is taken into account.", 20);
+                        comboOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
+                        comboOffset.GetValue = () => (CountersController.settings.ComboOffset * 10) + 10;
+                        comboOffset.SetValue = (v) => CountersController.settings.ComboOffset = ((v - 10) / 10);
 
-                        var multiOffset = AddList(ref sub, "Multiplier Offset", "How far from the Multiplier counters should be before Index is taken into account.", 10);
-                        multiOffset.GetTextForValue = (v) => (v / 10).ToString();
-                        multiOffset.GetValue = () => CountersController.settings.MultiplierOffset * 10;
-                        multiOffset.SetValue = (v) => CountersController.settings.MultiplierOffset = (v / 10);
+                        var multiOffset = AddList(ref sub, "Multiplier Offset", "How far from the Multiplier counters should be before Index is taken into account.", 20);
+                        multiOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
+                        multiOffset.GetValue = () => (CountersController.settings.MultiplierOffset * 10) + 10;
+                        multiOffset.SetValue = (v) => CountersController.settings.MultiplierOffset = ((v - 10) / 10);
 
                         foreach (ListViewController list in loadedSettings)
                         {

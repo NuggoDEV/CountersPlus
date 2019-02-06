@@ -67,7 +67,7 @@ namespace CountersPlus.Counters
 
         private void PreInit()
         {
-            if (settings.Mode == ICounterMode.BaseGame || settings.Mode == ICounterMode.BaseWithOutScore)
+            if (settings.Mode == ICounterMode.BaseGame || settings.Mode == ICounterMode.BaseWithOutPoints)
             {
                 StartCoroutine(UpdatePosition());
             }
@@ -125,9 +125,9 @@ namespace CountersPlus.Counters
         void Update()
         {
             _RankText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
-            if (settings.Mode == ICounterMode.LeaveScore || settings.Mode == ICounterMode.BaseWithOutScore)
+            if (settings.Mode == ICounterMode.LeavePoints || settings.Mode == ICounterMode.BaseWithOutPoints)
             {
-                GameObject.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = new Vector3(-3.2f, 0.9f, 7);
+                transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = new Vector3(-3.2f, 0.9f, 7);
                 _RankText.rectTransform.localPosition = new Vector3(0, 0f, 0);
                 _scoreMesh.rectTransform.localPosition = new Vector3(0, 0.4f, 0);
             }
