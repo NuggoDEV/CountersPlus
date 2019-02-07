@@ -143,8 +143,12 @@ namespace CountersPlus.Counters
             if (settings.Mode == ICounterMode.Original)
             {
                 _timeMesh.text = $"{Math.Floor(time / 60):N0}:{Math.Floor(time % 60):00}";
-                _image.fillAmount = (useTimeLeft ? 1 : 0) - _audioTimeSync.songTime / _audioTimeSync.songLength * (useTimeLeft ? 1 : -1);
-            }else if (settings.Mode == ICounterMode.Percent)
+                if (settings.IncludeRing)
+                    _image.fillAmount = (useTimeLeft ? 1 : 0) - _audioTimeSync.songTime / _audioTimeSync.songLength * (useTimeLeft ? 1 : -1);
+                else
+                    _image.fillAmount = _audioTimeSync.songTime / _audioTimeSync.songLength;
+            }
+            else if (settings.Mode == ICounterMode.Percent)
             {
                 _timeMesh.text = $"{((useTimeLeft ? 1 : 0) - ((_audioTimeSync.songTime / _audioTimeSync.songLength) * 100) * (useTimeLeft ? 1 : -1)).ToString("00")}%";
             }

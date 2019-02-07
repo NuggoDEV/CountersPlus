@@ -228,6 +228,16 @@ namespace CountersPlus.Config
             }
             set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetBool("Progress", "ProgressTimeLeft", value); }
         }
+        public bool IncludeRing
+        {
+            get
+            {
+                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
+                    return Plugin.config.GetBool("Progress", "IncludeRing", true, true);
+                else return false;
+            }
+            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetBool("Progress", "IncludeRing", value); }
+        }
     }
 
     public sealed class ScoreConfigModel : IConfigModel

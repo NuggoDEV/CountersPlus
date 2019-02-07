@@ -25,7 +25,7 @@ namespace CountersPlus.UI
         
         private static List<GameObject> loadedElements = new List<GameObject>(); //Mass clearing
         private static List<ListSettingsController> loadedSettings = new List<ListSettingsController>(); //Mass initialization
-        private static int settingsCount = 0; //Spacing
+        internal static int settingsCount = 0; //Spacing
 
         internal class PositionSettingsViewController : TupleViewController<Tuple<ICounterPositions, string>> { }
         static List<Tuple<ICounterPositions, string>> positions = new List<Tuple<ICounterPositions, string>> {

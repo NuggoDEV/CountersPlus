@@ -38,6 +38,8 @@ namespace CountersPlus.UI
         private static HoverHint speedHover;
         private static HoverHint scoreHover;
 
+        private static ListViewController IncludeRingSetting;
+
         internal static Dictionary<IConfigModel, Action<SubMenu>> counterUIItems = new Dictionary<IConfigModel, Action<SubMenu>>()
         {
             { CountersController.settings.missedConfig, v => { } },
@@ -81,10 +83,21 @@ namespace CountersPlus.UI
                 } },
             { CountersController.settings.progressConfig,
                 sub => {
-                    var progressRank = CountersPlusEditViewController.AddList(ref sub, "Show Time Left", "Starts the counter from the end of the song and decreases while the song is played.", 2);
+                    var progressRank = CountersPlusEditViewController.AddList(ref sub, "Progress From End", "Starts the counter from the end of the song and decreases while the song is played.", 2);
                     progressRank.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
-                    progressRank.GetValue = () => CountersController.settings.progressConfig.ProgressTimeLeft ? 1f : 0f;
-                    progressRank.SetValue = (v) => CountersController.settings.progressConfig.ProgressTimeLeft = v != 0f;
+                    progressRank.GetValue = () => {
+                        if(CountersController.settings.progressConfig.ProgressTimeLeft) return 1f;
+                        else return 0f;
+                    };
+                    progressRank.SetValue = (v) => {
+                        CountersController.settings.progressConfig.ProgressTimeLeft = v != 0f;
+                        if (CountersController.settings.progressConfig.ProgressTimeLeft && CountersController.settings.progressConfig.Mode == ICounterMode.Original)
+                            CreateIncludeRingSetting(ref sub);
+                        else if (IncludeRingSetting != null){
+                                UnityEngine.Object.Destroy(IncludeRingSetting.gameObject);
+                                CountersPlusEditViewController.settingsCount--;
+                            }
+                        };
 
                     var progressMode = CountersPlusEditViewController.AddList(ref sub, "Mode", "", progressSettings.Count());
                     progressMode.GetTextForValue = (v) => {
@@ -98,7 +111,15 @@ namespace CountersPlus.UI
                         if (progressHover == null) progressHover = BeatSaberUI.AddHintText(progressMode.transform as RectTransform, determineModeText(CountersController.settings.progressConfig.Mode));
                         CountersController.settings.progressConfig.Mode = progressSettings[Mathf.RoundToInt(v)].Item1;
                         progressHover.text = determineModeText(CountersController.settings.progressConfig.Mode);
+                        if (CountersController.settings.progressConfig.ProgressTimeLeft && CountersController.settings.progressConfig.Mode == ICounterMode.Original)
+                            CreateIncludeRingSetting(ref sub);
+                        else if (IncludeRingSetting != null){
+                                UnityEngine.Object.Destroy(IncludeRingSetting.gameObject);
+                                CountersPlusEditViewController.settingsCount--;
+                            }
                     };
+                    if (CountersController.settings.progressConfig.ProgressTimeLeft && CountersController.settings.progressConfig.Mode == ICounterMode.Original)
+                        CreateIncludeRingSetting(ref sub);
                 } },
             { CountersController.settings.speedConfig,
                 sub => {
@@ -123,6 +144,16 @@ namespace CountersPlus.UI
                 } },
             { CountersController.settings.cutConfig, v => { } },
         };
+
+        private static void CreateIncludeRingSetting(ref SubMenu sub)
+        {
+            var includeRing = CountersPlusEditViewController.AddList(ref sub, "Include Progress Ring", "Whether or not the Progress Ring will also be effected by the \"Progress From End\" setting.", 2);
+            includeRing.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+            includeRing.GetValue = () => CountersController.settings.progressConfig.IncludeRing ? 1f : 0f;
+            includeRing.SetValue = (v) => CountersController.settings.progressConfig.IncludeRing = v != 0f;
+            IncludeRingSetting = includeRing;
+            includeRing.Init();
+        }
 
         private static string determineModeText(ICounterMode Mode, bool alternateText = false)
         {
