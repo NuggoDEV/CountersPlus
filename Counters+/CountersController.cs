@@ -80,40 +80,49 @@ namespace CountersPlus
                 }
             }
         }
-        public static Vector3 determinePosition(GameObject counter, Config.ICounterPositions position, int index)
+        public static Vector3 determinePosition(GameObject counter, ICounterPositions position, int index)
         {
             Vector3 pos = new Vector3(); //Base position
             Vector3 offset = new Vector3(0, -0.75f * (index), 0); //Offset for any overlapping, indexes, etc.
+            bool nextToProgress = settings.progressConfig.Position == position && settings.progressConfig.Index < index && settings.progressConfig.Mode == ICounterMode.Original;
+            bool nextToScore = settings.scoreConfig.Position == position && settings.scoreConfig.Index < index;
+            bool baseScore = settings.scoreConfig.Mode == ICounterMode.BaseGame;
             switch (position)
             {
                 case Config.ICounterPositions.BelowCombo:
                     pos = new Vector3(-3f, 0.2f - settings.ComboOffset, 7);
+                    if (nextToProgress) offset += new Vector3(0, -0.25f, 0);
+                    if (nextToScore) offset += new Vector3(0, -0.25f, 0);
+                    if (nextToScore && baseScore) offset += new Vector3(0, -0.15f, 0);
                     break;
                 case Config.ICounterPositions.AboveCombo:
                     pos = new Vector3(-3f, 1.3f + settings.ComboOffset, 7);
-                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.Mode == ICounterMode.BaseGame)
-                        offset += new Vector3(0, -0.75f, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
+                    if (nextToProgress) offset -= new Vector3(0, -0.5f, 0);
                     break;
                 case Config.ICounterPositions.BelowMultiplier:
                     pos = new Vector3(3f, 0.4f - settings.MultiplierOffset, 7);
                     if (GameObject.Find("FCDisplay")) offset += new Vector3(0, -0.25f, 0);
+                    if (nextToProgress) offset += new Vector3(0, -0.25f, 0);
+                    if (nextToScore) offset += new Vector3(0, -0.25f, 0);
+                    if (nextToScore && baseScore) offset += new Vector3(0, -0.15f, 0);
                     break;
                 case Config.ICounterPositions.AboveMultiplier:
                     pos = new Vector3(3f, 1.1f + settings.MultiplierOffset, 7);
-                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.Mode == ICounterMode.Original)
-                        offset += new Vector3(0, -0.75f, 0);
-                    if (GameObject.Find("FCDisplay")) offset += new Vector3(0, -0.25f, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
+                    if (GameObject.Find("FCDisplay")) offset += new Vector3(0, -0.25f, 0);
+                    if (nextToProgress) offset -= new Vector3(0, -0.5f, 0);
                     break;
                 case Config.ICounterPositions.BelowEnergy:
                     pos = new Vector3(0, -1.5f, 7);
+                    if (nextToProgress) offset += new Vector3(0, -0.25f, 0);
+                    if (nextToScore) offset += new Vector3(0, -0.25f, 0);
+                    if (nextToScore && baseScore) offset += new Vector3(0, -0.15f, 0);
                     break;
                 case Config.ICounterPositions.AboveHighway:
                     pos = new Vector3(0, 2.25f, 7);
-                    if (settings.progressConfig.Position == position && settings.progressConfig.Index == index - 1 && settings.progressConfig.Mode == ICounterMode.Original)
-                        offset += new Vector3(0, -0.75f, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
+                    if (nextToProgress) offset -= new Vector3(0, -0.5f, 0);
                     break;
             }
             if (position != ICounterPositions.AboveHighway && position != ICounterPositions.BelowEnergy)

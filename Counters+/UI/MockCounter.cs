@@ -67,7 +67,7 @@ namespace CountersPlus.UI
             else if (counterName == "Multiplier")
                 counter.transform.position = new Vector3(3.2f, 0.9f, 7);
             else if (counterName == "123 456")
-                counter.transform.position = new Vector3(-3.2f, 0f, 7);
+                counter.transform.position = new Vector3(-3.2f, -0.1f, 7);
 
             CountersPlusSettingsFlowCoordinator.Instance.mockCounters.Add(counter);
         }

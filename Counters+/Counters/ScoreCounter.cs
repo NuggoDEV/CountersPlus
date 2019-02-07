@@ -127,7 +127,7 @@ namespace CountersPlus.Counters
             _RankText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
             if (settings.Mode == ICounterMode.LeavePoints || settings.Mode == ICounterMode.BaseWithOutPoints)
             {
-                transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = new Vector3(-3.2f, 0.9f, 7);
+                transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = new Vector3(-3.2f, 0.85f, 7);
                 _RankText.rectTransform.localPosition = new Vector3(0, 0f, 0);
                 _scoreMesh.rectTransform.localPosition = new Vector3(0, 0.4f, 0);
             }
