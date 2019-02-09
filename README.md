@@ -48,7 +48,8 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
 |***Percentage Precision***|*Notes*, *Score*, and *Speed*|How precise do the decimals go?|
 |***Show Precentage***|*Notes*|Displays the percentage of notes hit over notes in total.|
 |***Display Rank***|*Score*|Displays the Rank you get during a song (SS, S, A, B, C, D, E)|
-|***Progress Time Left***|*Progress*|The counter starts at full, and decreases as you progress though a song.|
+|***Progress From End***|*Progress*|The counter starts at full, and decreases as you progress though a song.|
+|***Include Progress Ring***|*Progress*|Whether or not the *Progress From End* option will also effect the Progress Ring. Only available in *Original* mode.|
 |***Mode***|*Speed*, *Progress*, and *Score*|Changes the display mode for the Counter (See Hint Text in-game for more detail)|
 
 ### Some Notes
