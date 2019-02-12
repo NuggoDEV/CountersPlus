@@ -27,14 +27,15 @@ namespace CountersPlus.Config
                 model.scoreConfig = new ScoreConfigModel();
                 model.speedConfig = new SpeedConfigModel();
                 model.cutConfig = new CutConfigModel();
+                model.spinometerConfig = new SpinometerConfigModel();
                 if (new[] {
                     model.missedConfig.Index, model.noteConfig.Index, model.progressConfig.Index, model.scoreConfig.Index,
-                    model.speedConfig.Index, model.cutConfig.Index
+                    model.speedConfig.Index, model.cutConfig.Index, model.spinometerConfig.Index
                 }.All(x => x == 0))
                 {
                     if (new[] {
                         model.missedConfig.Position, model.noteConfig.Position, model.progressConfig.Position, model.scoreConfig.Position,
-                        model.speedConfig.Position, model.cutConfig.Position
+                        model.speedConfig.Position, model.cutConfig.Position, model.spinometerConfig.Position
                     }.All(x => x == ICounterPositions.BelowCombo))
                     {
                         ResetSettings(model);
@@ -76,6 +77,7 @@ namespace CountersPlus.Config
             ResetSetting(settings.scoreConfig, true, ICounterPositions.BelowMultiplier, 0);
             ResetSetting(settings.speedConfig, false, ICounterPositions.AboveMultiplier, 0);
             ResetSetting(settings.cutConfig, false, ICounterPositions.AboveHighway, 0);
+            ResetSetting(settings.spinometerConfig, false, ICounterPositions.AboveHighway, 1);
         }
 
         private static void ResetSetting<T>(T model, bool en, ICounterPositions pos, int index) where T : IConfigModel
@@ -141,6 +143,7 @@ namespace CountersPlus.Config
         //public PBConfigModel pBConfig;
         public SpeedConfigModel speedConfig;
         public CutConfigModel cutConfig;
+        public SpinometerConfigModel spinometerConfig;
     }
 
     public abstract class IConfigModel {
@@ -345,6 +348,33 @@ namespace CountersPlus.Config
         }
     }
 
+    public sealed class SpinometerConfigModel : IConfigModel
+    {
+        public SpinometerConfigModel() { DisplayName = "Spinometer"; }
+        public ICounterMode Mode
+        {
+            get
+            {
+                try
+                {
+                    if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
+                        return (ICounterMode)Enum.Parse(typeof(ICounterMode), Plugin.config.GetString("Spinometer", "Mode", "Highest", true));
+                    else return ICounterMode.Highest;
+                }
+                catch
+                {
+                    Plugin.config.SetString(DisplayName, "Mode", ICounterMode.Highest.ToString());
+                    return ICounterMode.Highest;
+                }
+            }
+            set
+            {
+                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
+                    Plugin.config.SetString("Spinometer", "Mode", value.ToString());
+            }
+        }
+    }
+
     public class CutConfigModel : IConfigModel {
         public CutConfigModel() { DisplayName = "Cut"; }
     }
@@ -353,6 +383,7 @@ namespace CountersPlus.Config
 
     public enum ICounterMode { Average, Top5Sec, Both, SplitAverage, SplitBoth, //Speed
                               BaseGame, Original, Percent, //Progress
-                              ScoreOnly, LeavePoints, BaseWithOutPoints //Score (As well as BaseGame and Original)
+                              ScoreOnly, LeavePoints, BaseWithOutPoints, //Score (As well as BaseGame and Original)
+                              Highest, //Spinometer (As well as Original and SplitAverage)
     };
 }

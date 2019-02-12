@@ -35,7 +35,7 @@ namespace CountersPlus.UI
                     cellInstance = Resources.FindObjectsOfTypeAll<LevelListTableCell>().First((LevelListTableCell x) => x.name == "LevelListTableCell");
                     base.DidActivate(firstActivation, type);
 
-                    foreach (var kvp in CountersSettingsUI.counterUIItems)
+                    foreach (var kvp in AdvancedCounterSettings.counterUIItems)
                     {
                         //counterInfos.Add(kvp.Key, CreateFromModel(kvp.Key));
                         counterInfos.Add(CreateFromModel(kvp.Key));
@@ -95,6 +95,8 @@ namespace CountersPlus.UI
                     return "<i>\"Speed, motherfucker, do you speak it?\"</i>";
                 case "Cut":
                     return "How well you hit those bloqs.";
+                case "Spinometer":
+                    return "Can you break 3600 degrees per second?";
             }
         }
 

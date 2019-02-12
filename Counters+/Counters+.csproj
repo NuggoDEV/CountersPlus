@@ -118,6 +118,7 @@
     <Compile Include="Counters\AccuracyCounter.cs" />
     <Compile Include="Counters\CustomCounter.cs" />
     <Compile Include="Counters\CutCounter.cs" />
+    <Compile Include="Counters\Spinometer.cs" />
     <Compile Include="Custom\CustomCounters.cs" />
     <Compile Include="UI\AdvancedCounterSettings.cs" />
     <Compile Include="UI\CounterWarning.cs" />

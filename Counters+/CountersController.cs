@@ -68,6 +68,7 @@ namespace CountersPlus
             LoadCounter<ProgressConfigModel, ProgressCounter>("Progress", settings.progressConfig);
             LoadCounter<SpeedConfigModel, SpeedCounter>("Speed", settings.speedConfig);
             LoadCounter<CutConfigModel, CutCounter>("Cut", settings.cutConfig);
+            LoadCounter<SpinometerConfigModel, Spinometer>("Spinometer", settings.spinometerConfig);
             FileIniDataParser parser = new FileIniDataParser();
             IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
             foreach (SectionData section in data.Sections)

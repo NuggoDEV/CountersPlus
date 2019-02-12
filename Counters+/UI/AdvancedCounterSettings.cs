@@ -33,10 +33,17 @@ namespace CountersPlus.UI
             {ICounterMode.LeavePoints, "No Points" }, //Counters+ Counter w/ Points Under Combo
             {ICounterMode.ScoreOnly, "Score Only" }, //Counters+ Counter w/ Points Removed Entirely
         };
+        static List<Tuple<ICounterMode, string>> spinometerSettings = new List<Tuple<ICounterMode, string>>
+        {
+            {ICounterMode.Original, "Original" },
+            {ICounterMode.SplitAverage, "Split" },
+            {ICounterMode.Highest, "Highest" },
+        };
 
         private static HoverHint progressHover;
         private static HoverHint speedHover;
         private static HoverHint scoreHover;
+        private static HoverHint spinometerHover;
 
         private static ListViewController IncludeRingSetting;
 
@@ -143,6 +150,21 @@ namespace CountersPlus.UI
                     };
                 } },
             { CountersController.settings.cutConfig, v => { } },
+            { CountersController.settings.spinometerConfig, sub => {
+                var spinometerMode = CountersPlusEditViewController.AddList(ref sub, "Mode", "", spinometerSettings.Count());
+                    spinometerMode.GetTextForValue = (v) => {
+                        return spinometerSettings[Mathf.RoundToInt(v)].Item2;
+                    };
+                    spinometerMode.GetValue = () => {
+                        if (spinometerHover == null) spinometerHover = BeatSaberUI.AddHintText(spinometerMode.transform as RectTransform, determineModeText(CountersController.settings.spinometerConfig.Mode));
+                        return spinometerSettings.ToList().IndexOf(spinometerSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CountersController.settings.spinometerConfig.Mode)).First());
+                    };
+                    spinometerMode.SetValue = (v) => {
+                        if (spinometerHover == null) spinometerHover = BeatSaberUI.AddHintText(spinometerMode.transform as RectTransform, determineModeText(CountersController.settings.spinometerConfig.Mode));
+                        CountersController.settings.spinometerConfig.Mode = spinometerSettings[Mathf.RoundToInt(v)].Item1;
+                        spinometerHover.text = determineModeText(CountersController.settings.spinometerConfig.Mode);
+                    };
+            } },
         };
 
         private static void CreateIncludeRingSetting(ref SubMenu sub)
@@ -173,7 +195,10 @@ namespace CountersPlus.UI
                         mode = "Both: A secondary Counter will be added so both Average and Top Speed will be displayed.";
                     break;
                 case ICounterMode.SplitAverage:
-                    mode = "Split Mean: Displays averages for each saber, separately.";
+                    if (alternateText)
+                        mode = "Split: Updates your rotation speed every second for each saber separately.";
+                    else
+                        mode = "Split Mean: Displays averages for each saber, separately.";
                     break;
                 case ICounterMode.SplitBoth:
                     mode = "Split Both: Displays both metrics, except the Average is split between two sabers.";
@@ -182,7 +207,10 @@ namespace CountersPlus.UI
                     mode = "Base Game: Uses the base game counter.\n<color=#FF0000>Some settings will not apply in this mode.</color>";
                     break;
                 case ICounterMode.Original:
-                    mode = "Original: Uses the original display mode, with a white circle bordering a time.";
+                    if (alternateText)
+                        mode = "Original: Updates your average rotation speed every second.";
+                    else
+                        mode = "Original: Uses the original display mode, with a white circle bordering a time.";
                     break;
                 case ICounterMode.Percent:
                     mode = "Percent: Displays a simple percent of the completed song.\n<color=#FF0000>Some settings will not apply in this mode.</color>";
@@ -195,6 +223,9 @@ namespace CountersPlus.UI
                     break;
                 case ICounterMode.ScoreOnly:
                     mode = "Score Only: Uses Counters+ counter, and completely removes the Points.";
+                    break;
+                case ICounterMode.Highest:
+                    mode = "Highest: Displays your highest rotation speed throughout a song.";
                     break;
             }
             return "How should this Counter display data?\n" + mode;
