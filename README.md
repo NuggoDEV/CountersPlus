@@ -13,6 +13,7 @@ A combination of widely-used counters, all configurable in one mod.
 |***Notes***|`1.0.0`, previously *Accuracy*|Notes hit over notes in total. Now in percentages!|
 |***Speed***|`1.1.0`, suggested by [Ragesaq](https://www.twitch.tv/ragesaq)|*"Speed, motherfucker, do you speak it?"* Displays how fast your arms are swinging!|
 |***Cut***|`1.1.0`|Displays the average cut score (Anywhere from 0-110), so you can see how well you are hitting those notes!|
+|***Spinometer***|`1.4.1`, suggested by [Ragesaq](https://www.twitch.tv/ragesaq) and [Steven](https://www.twitch.tv/StevenTheCat)|Displays angular velocity of your sabers. Can you beat 3600 degress per second?|
 
 ### Custom Counters
 Counters+ also supports the addition of Custom Counters. Other mods can input their counters into the Counters+ system and it will work just like any other Counters+ counter!
@@ -50,7 +51,7 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
 |***Display Rank***|*Score*|Displays the Rank you get during a song (SS, S, A, B, C, D, E)|
 |***Progress From End***|*Progress*|The counter starts at full, and decreases as you progress though a song.|
 |***Include Progress Ring***|*Progress*|Whether or not the *Progress From End* option will also effect the Progress Ring. Only available in *Original* mode.|
-|***Mode***|*Speed*, *Progress*, and *Score*|Changes the display mode for the Counter (See Hint Text in-game for more detail)|
+|***Mode***|*Speed*, *Progress*, *Spinometer*, and *Score*|Changes the display mode for the Counter (See Hint Text in-game for more detail)|
 
 ### Some Notes
 
