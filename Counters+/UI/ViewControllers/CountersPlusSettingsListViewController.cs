@@ -128,7 +128,7 @@ namespace CountersPlus.UI
                 cell.songName = info.Name;
                 cell.author = info.Description;
             }
-            cell.coverImage = Sprite.Create(Texture2D.blackTexture, default(Rect), Vector2.zero);
+            cell.coverImage = Sprite.Create(Texture2D.blackTexture, new Rect(), Vector2.zero);
             cell.reuseIdentifier = "CountersPlusSettingCell";
             return cell;
         }
@@ -142,7 +142,7 @@ namespace CountersPlus.UI
             }
             else
             {
-                CountersPlusEditViewController.UpdateSettings(CountersController.settings.missedConfig, counterInfos.First(), true, (row == NumberOfRows() - 1));
+                CountersPlusEditViewController.UpdateSettings(null as IConfigModel, counterInfos.First(), true, (row == NumberOfRows() - 1));
             }
         }
 

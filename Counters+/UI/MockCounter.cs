@@ -86,6 +86,8 @@ namespace CountersPlus.UI
         public float leftSpeedAverage;
         public float rightSpeedAverage;
         public float averageCutScore;
+        public float leftSpinAverage;
+        public float rightSpinAverage;
 
         public MockCounterInfo()
         {
@@ -97,6 +99,8 @@ namespace CountersPlus.UI
             leftSpeedAverage = UnityEngine.Random.Range(30, 85);
             rightSpeedAverage = UnityEngine.Random.Range(30, 85);
             averageCutScore = UnityEngine.Random.Range(85, 105);
+            leftSpinAverage = UnityEngine.Random.Range(1000, 2500);
+            rightSpinAverage = UnityEngine.Random.Range(1000, 2500);
         }
 
         public string GetRank()

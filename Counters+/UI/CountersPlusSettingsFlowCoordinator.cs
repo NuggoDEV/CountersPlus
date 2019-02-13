@@ -107,6 +107,8 @@ namespace CountersPlus.UI
                         MockCounter.Create(CountersController.settings.progressConfig,
                             $"{CountersController.settings.progressConfig.Mode.ToString()} Progress",
                                 $"{((((CountersController.settings.progressConfig.ProgressTimeLeft ? 1f : 0f) - ((float)info.timeElapsed / info.totalTime)) * 100f) * (CountersController.settings.progressConfig.ProgressTimeLeft ? 1f : -1f)).ToString("00")}%");
+                        MockCounter.Create(CountersController.settings.spinometerConfig, "Spinometer",
+                            $"{(CountersController.settings.spinometerConfig.Mode == ICounterMode.SplitAverage ? $"{info.leftSpinAverage} | {info.rightSpinAverage}" : $"{(info.leftSpinAverage + info.rightSpinAverage) / 2}")}");
                     }
                     else //Reduces amount of calls to Config
                     {
@@ -116,6 +118,7 @@ namespace CountersPlus.UI
                         MockCounter.Create(CountersController.settings.speedConfig, "Average Speed", "0");
                         MockCounter.Create(CountersController.settings.cutConfig, "Average Cut", "0");
                         MockCounter.Create(CountersController.settings.progressConfig, "Progress", "0%");
+                        MockCounter.Create(CountersController.settings.spinometerConfig, "Spinometer", "0");
                         if (!CountersController.settings.scoreConfig.Enabled)
                             MockCounter.CreateStatic("123 456", "");
                     }

@@ -134,6 +134,7 @@ namespace CountersPlus.UI
                     AdvancedCounterSettings.counterUIItems.Where(
                         (KeyValuePair<IConfigModel, Action<SubMenu>> x) => (x.Key.DisplayName == settings.DisplayName)
                         ).First().Value(sub);
+                    foreach (ListViewController list in loadedSettings) list.Init();
                 }
                 if (!isCredits)
                 {
@@ -218,14 +219,6 @@ namespace CountersPlus.UI
             index.GetTextForValue = (v) => Mathf.RoundToInt(v).ToString();
             index.GetValue = () => settings.Index;
             index.SetValue = (v) => settings.Index = Mathf.RoundToInt(v);
-
-            Task.Run(() => { //Give AdvancedCountersSettings time to queue up other settings before init
-                Thread.Sleep(25);
-                foreach (ListViewController list in loadedSettings)
-                {
-                    list.Init();
-                }
-            });
             return sub;
         }
 
