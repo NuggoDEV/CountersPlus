@@ -31,7 +31,7 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
 ### Plugin-wide settings
 |Setting|Description|
 |-|-|
-|***Enabled***|Toggles the plugin on and off, and hides all other submenus if disabled!|
+|***Enabled***|Toggles the plugin on and off. The Counters+ UI will still be visible.|
 |***Advanced Counter Properties***|Displays more information about the counters in the new menu.|
 |***Combo Offset***|Before Distance is taken into account, how far away should counters be from Combo.|
 |***Multiplier Offset***|Before Distance is taken into account, how far away should counters be from the Multiplier.|

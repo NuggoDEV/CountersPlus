@@ -131,7 +131,6 @@
     <Compile Include="UI\MockCounter.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="CountersController.cs" />
-    <Compile Include="CountersSettingsUI.cs" />
     <Compile Include="Counters\MissedCounter.cs" />
     <Compile Include="Counters\PBCounter.cs" />
     <Compile Include="Plugin.cs" />
