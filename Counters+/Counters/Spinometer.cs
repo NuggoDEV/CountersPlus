@@ -83,7 +83,8 @@ namespace CountersPlus.Counters
                 float leftSpeed = TotalSpeed(leftAngles);
                 float rightSpeed = TotalSpeed(rightAngles);
                 float averageSpeed = (leftSpeed + rightSpeed) / 2;
-                if (averageSpeed > highestSpin) highestSpin = averageSpeed;
+                if (leftSpeed > highestSpin) highestSpin = leftSpeed;
+                if (rightSpeed > highestSpin) highestSpin = rightSpeed;
                 if (settings.Mode == ICounterMode.Original)
                     spinometer.text = $"<color=#{DetermineColor(averageSpeed)}>{Mathf.RoundToInt(averageSpeed)}</color>";
                 else if (settings.Mode == ICounterMode.Highest)
