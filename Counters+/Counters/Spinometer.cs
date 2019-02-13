@@ -55,6 +55,7 @@ namespace CountersPlus.Counters
             label.color = Color.white;
             label.alignment = TextAlignmentOptions.Center;
             StartCoroutine(UpdatePosition());
+            StartCoroutine(SecondTick());
         }
 
         void Update()
@@ -65,8 +66,8 @@ namespace CountersPlus.Counters
                 rightQuaternions.Add(rightSaber.transform.rotation);
                 if (leftQuaternions.Count > 0 && rightQuaternions.Count > 0)
                 {
-                    leftAngles.Add(Quaternion.Angle(leftQuaternions.Last(), leftQuaternions[leftQuaternions.Count - 1]));
-                    rightAngles.Add(Quaternion.Angle(rightQuaternions.Last(), rightQuaternions[rightQuaternions.Count - 1]));
+                    leftAngles.Add(Quaternion.Angle(leftQuaternions.Last(), leftQuaternions[leftQuaternions.Count - 2]));
+                    rightAngles.Add(Quaternion.Angle(rightQuaternions.Last(), rightQuaternions[rightQuaternions.Count - 2]));
                 }
             }
             catch { }
@@ -89,6 +90,8 @@ namespace CountersPlus.Counters
                     spinometer.text = $"<color=#{DetermineColor(highestSpin)}>{Mathf.RoundToInt(highestSpin)}</color>";
                 else if (settings.Mode == ICounterMode.SplitAverage)
                     spinometer.text = $"<color=#{DetermineColor(leftSpeed)}>{Mathf.RoundToInt(leftSpeed)}</color> | <color=#{DetermineColor(rightSpeed)}>{Mathf.RoundToInt(rightSpeed)}</color>";
+                leftAngles.Clear();
+                rightAngles.Clear();
             }
         }
 
@@ -111,8 +114,9 @@ namespace CountersPlus.Counters
         private string DetermineColor(float speed)
         {
             Color color = Color.white;
+            ColorUtility.TryParseHtmlString("#FFA500", out Color orange);
+            color = Color.Lerp(Color.white, orange, speed / 3600);
             if (speed >= 3600) color = Color.red;
-            color = Color.Lerp(Color.white, Color.yellow, speed / 3600);
             return ColorUtility.ToHtmlStringRGB(color);
         }
     }
