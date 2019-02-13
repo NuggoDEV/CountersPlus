@@ -67,7 +67,7 @@ namespace CountersPlus
             {  //Also checks the number (Major or Minor) before it (So 1.2.5 doesnt get seen as newer than 1.3.3)
                 if (i > 0)
                     if (pluginVersion[i] > webVersion[i] && pluginVersion[i - 1] > webVersion[i - 1]) return true;
-                    else if (pluginVersion[i] != webVersion[i]) return false;
+                    else if (pluginVersion[i] < webVersion[i]) return false;
                 else if (pluginVersion[i] > webVersion[i]) return true;
             }
             if (Plugin.Instance.Version == downloadedVersion) return true;
