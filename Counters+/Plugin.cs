@@ -25,7 +25,7 @@ namespace CountersPlus
             if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini"))
                 File.Create(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
             SceneManager.activeSceneChanged += SceneManager_sceneLoaded;
-            SceneManager.sceneLoaded += addUI;
+            SceneManager.sceneLoaded += AddUI;
             CountersController.OnLoad();
         }
 
@@ -43,7 +43,7 @@ namespace CountersPlus
             }
         }
 
-        private void addUI(Scene arg, LoadSceneMode hiBrian)
+        private void AddUI(Scene arg, LoadSceneMode hiBrian)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace CountersPlus
         public void OnApplicationQuit()
         {
             SceneManager.activeSceneChanged -= SceneManager_sceneLoaded;
-            SceneManager.sceneLoaded -= addUI;
+            SceneManager.sceneLoaded -= AddUI;
         }
 
         public void OnLevelWasLoaded(int level) { }

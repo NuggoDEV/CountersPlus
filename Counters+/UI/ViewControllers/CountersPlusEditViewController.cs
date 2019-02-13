@@ -49,11 +49,8 @@ namespace CountersPlus.UI
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
             rect = rectTransform;
-            if (firstActivation)
-            {
-                Instance = this;
-                CreateCredits();
-            }
+            if (firstActivation) Instance = this;
+            CreateCredits();
         }
 
         private static void CreateCredits()
@@ -124,10 +121,7 @@ namespace CountersPlus.UI
             try
             {
                 ClearScreen();
-                if (info.IsCustom)
-                {
-                    container = CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
-                }
+                if (info.IsCustom) container = CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
                 else if (!isMain)
                 {
                     SubMenu sub = CreateBase(settings);
@@ -156,26 +150,20 @@ namespace CountersPlus.UI
                         toggleCounters.GetValue = () => CountersController.settings.AdvancedCounterInfo ? 1f : 0f;
                         toggleCounters.SetValue = (v) => CountersController.settings.AdvancedCounterInfo = v != 0f;
 
-                        var comboOffset = AddList(ref sub, "Combo Offset", "How far from the Combo counters should be before Index is taken into account.", 20);
+                        var comboOffset = AddList(ref sub, "Combo Offset", "How far from the Combo counters should be before Distance is taken into account.", 20);
                         comboOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
                         comboOffset.GetValue = () => (CountersController.settings.ComboOffset * 10) + 10;
                         comboOffset.SetValue = (v) => CountersController.settings.ComboOffset = ((v - 10) / 10);
 
-                        var multiOffset = AddList(ref sub, "Multiplier Offset", "How far from the Multiplier counters should be before Index is taken into account.", 20);
+                        var multiOffset = AddList(ref sub, "Multiplier Offset", "How far from the Multiplier counters should be before Distance is taken into account.", 20);
                         multiOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
                         multiOffset.GetValue = () => (CountersController.settings.MultiplierOffset * 10) + 10;
                         multiOffset.SetValue = (v) => CountersController.settings.MultiplierOffset = ((v - 10) / 10);
 
-                        foreach (ListViewController list in loadedSettings)
-                        {
-                            list.Init();
-                        }
+                        foreach (ListViewController list in loadedSettings) list.Init();
                     }
                 }
-                else
-                {
-                    CreateCredits();
-                }
+                else CreateCredits();
             }
             catch { }
         }
@@ -187,9 +175,7 @@ namespace CountersPlus.UI
             try
             {
                 foreach (ICounterPositions pos in restricted)
-                {
                     restrictedList.Add(Tuple.Create(pos, positions.Where((Tuple<ICounterPositions, string> x) => x.Item1 == pos).First().Item2));
-                }
             }
             catch { } //It most likely errors here. If it does, well no problem.
 
@@ -215,7 +201,7 @@ namespace CountersPlus.UI
                     settings.Position = restrictedList[Mathf.RoundToInt(v)].Item1;
             };
 
-            var index = AddList(ref sub, "Index", "How far from the position the counter will be. A higher number means farther way.", 7);
+            var index = AddList(ref sub, "Distance", "How far from the position the counter will be. A higher number means farther way.", 7);
             index.GetTextForValue = (v) => Mathf.RoundToInt(v - 1).ToString();
             index.GetValue = () => settings.Index + 1;
             index.SetValue = (v) => settings.Index = Mathf.RoundToInt(v - 1);
@@ -225,10 +211,7 @@ namespace CountersPlus.UI
         internal static ListViewController AddList(ref SubMenu sub, string Label, string HintText, int sizeCount)
         {
             List<float> values = new List<float>() { };
-            for (var i = 0; i < sizeCount; i++)
-            {
-                values.Add(i);
-            }
+            for (var i = 0; i < sizeCount; i++) values.Add(i);
             var list = sub.AddList(Label, values.ToArray(), HintText);
             list.applyImmediately = true;
             PositionElement(list.gameObject);
@@ -238,10 +221,7 @@ namespace CountersPlus.UI
 
         private static void ClearScreen()
         {
-            foreach (GameObject element in loadedElements)
-            {
-                Destroy(element);
-            }
+            foreach (GameObject element in loadedElements) Destroy(element);
             loadedElements.Clear();
             loadedSettings.Clear();
             settingsCount = 0;
@@ -252,11 +232,6 @@ namespace CountersPlus.UI
             loadedElements.Add(element);
             setStuff(element.transform as RectTransform, 0.05f, 0.75f - (settingsCount * 0.1f), 0.9f, 0.166f, 0f);
             settingsCount++;
-        }
-
-        static bool TestGet(ref bool variable)
-        {
-            return variable;
         }
     }
 }

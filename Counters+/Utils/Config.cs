@@ -8,7 +8,7 @@ namespace CountersPlus.Config
 {
     public class ConfigLoader
     {
-        public static MainConfigModel loadSettings()
+        public static MainConfigModel LoadSettings()
         {
             MainConfigModel model = new MainConfigModel();
             try

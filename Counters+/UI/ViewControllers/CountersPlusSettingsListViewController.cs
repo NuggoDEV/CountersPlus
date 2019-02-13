@@ -35,11 +35,7 @@ namespace CountersPlus.UI
                     cellInstance = Resources.FindObjectsOfTypeAll<LevelListTableCell>().First((LevelListTableCell x) => x.name == "LevelListTableCell");
                     base.DidActivate(firstActivation, type);
 
-                    foreach (var kvp in AdvancedCounterSettings.counterUIItems)
-                    {
-                        //counterInfos.Add(kvp.Key, CreateFromModel(kvp.Key));
-                        counterInfos.Add(CreateFromModel(kvp.Key));
-                    }
+                    foreach (var kvp in AdvancedCounterSettings.counterUIItems) counterInfos.Add(CreateFromModel(kvp.Key));
                     FileIniDataParser parser = new FileIniDataParser();
                     IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
                     foreach (SectionData section in data.Sections)
@@ -141,9 +137,7 @@ namespace CountersPlus.UI
                 StartCoroutine(WaitForSettings(info));
             }
             else
-            {
                 CountersPlusEditViewController.UpdateSettings(null as IConfigModel, counterInfos.First(), true, (row == NumberOfRows() - 1));
-            }
         }
 
         IEnumerator WaitForSettings(SettingsInfo info)

@@ -26,7 +26,7 @@ namespace CountersPlus
 
         public static void OnLoad()
         {
-            settings = Config.ConfigLoader.loadSettings();
+            settings = Config.ConfigLoader.LoadSettings();
             if (Instance == null && settings.Enabled)
             {
                 GameObject controller = new GameObject("Counters+ Controller");
