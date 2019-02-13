@@ -156,11 +156,11 @@ namespace CountersPlus.UI
                         return spinometerSettings[Mathf.RoundToInt(v)].Item2;
                     };
                     spinometerMode.GetValue = () => {
-                        if (spinometerHover == null) spinometerHover = BeatSaberUI.AddHintText(spinometerMode.transform as RectTransform, determineModeText(CountersController.settings.spinometerConfig.Mode));
+                        if (spinometerHover == null) spinometerHover = BeatSaberUI.AddHintText(spinometerMode.transform as RectTransform, determineModeText(CountersController.settings.spinometerConfig.Mode, true));
                         return spinometerSettings.ToList().IndexOf(spinometerSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CountersController.settings.spinometerConfig.Mode)).First());
                     };
                     spinometerMode.SetValue = (v) => {
-                        if (spinometerHover == null) spinometerHover = BeatSaberUI.AddHintText(spinometerMode.transform as RectTransform, determineModeText(CountersController.settings.spinometerConfig.Mode));
+                        if (spinometerHover == null) spinometerHover = BeatSaberUI.AddHintText(spinometerMode.transform as RectTransform, determineModeText(CountersController.settings.spinometerConfig.Mode, true));
                         CountersController.settings.spinometerConfig.Mode = spinometerSettings[Mathf.RoundToInt(v)].Item1;
                         spinometerHover.text = determineModeText(CountersController.settings.spinometerConfig.Mode, true);
                     };

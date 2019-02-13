@@ -134,8 +134,8 @@ namespace CountersPlus.UI
                     AdvancedCounterSettings.counterUIItems.Where(
                         (KeyValuePair<IConfigModel, Action<SubMenu>> x) => (x.Key.DisplayName == settings.DisplayName)
                         ).First().Value(sub);
-                    foreach (ListViewController list in loadedSettings) list.Init();
                 }
+                foreach (ListViewController list in loadedSettings) list.Init();
                 if (!isCredits)
                 {
                     settingsTitle = BeatSaberUI.CreateText(rect, $"{(isMain ? "Main" : settings.DisplayName)} Settings", Vector2.zero);
@@ -215,10 +215,10 @@ namespace CountersPlus.UI
                     settings.Position = restrictedList[Mathf.RoundToInt(v)].Item1;
             };
 
-            var index = AddList(ref sub, "Index", "How far from the position the counter will be. A higher number means farther way.", 6);
-            index.GetTextForValue = (v) => Mathf.RoundToInt(v).ToString();
-            index.GetValue = () => settings.Index;
-            index.SetValue = (v) => settings.Index = Mathf.RoundToInt(v);
+            var index = AddList(ref sub, "Index", "How far from the position the counter will be. A higher number means farther way.", 7);
+            index.GetTextForValue = (v) => Mathf.RoundToInt(v - 1).ToString();
+            index.GetValue = () => settings.Index + 1;
+            index.SetValue = (v) => settings.Index = Mathf.RoundToInt(v - 1);
             return sub;
         }
 
