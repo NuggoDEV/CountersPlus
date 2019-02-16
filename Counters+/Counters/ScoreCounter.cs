@@ -124,6 +124,7 @@ namespace CountersPlus.Counters
 
         void Update()
         {
+            if (_RankText == null || _scoreMesh == null) return;
             _RankText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
             if (settings.Mode == ICounterMode.LeavePoints || settings.Mode == ICounterMode.BaseWithOutPoints)
             {

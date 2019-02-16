@@ -143,7 +143,7 @@ namespace CountersPlus.UI
         IEnumerator WaitForSettings(SettingsInfo info)
         {
             yield return new WaitUntil(() => !String.IsNullOrWhiteSpace(info.Model.DisplayName));
-            yield return new WaitUntil(() => info.Name != null);
+            yield return new WaitUntil(() => !String.IsNullOrWhiteSpace(info.Name));
             CountersPlusEditViewController.UpdateSettings(info.Model, info);
             Plugin.Log("Loading settings for: " + info.Name);
         }

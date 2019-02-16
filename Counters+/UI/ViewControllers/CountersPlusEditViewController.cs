@@ -65,7 +65,7 @@ namespace CountersPlus.UI
                 { "Brian", "Saving Beat Saber Modding with CustomUI" },
                 { "Assistant", "Stole some Custom Avatars UI code to help with settings" },
                 { "Kyle1413", "Beat Saber Utils and for Progress/Score Counter code" },
-                { "Ragesaq", "Speed Counter idea <i>(and some bug fixing on stream)</i>" },
+                { "Ragesaq", "Speed Counter and Spinometer idea <i>(and some bug fixing on stream)</i>" },
                 { "SkyKiwiTV", "Original version checking code" },
                 { "Dracrius", "Bug fixing and beta testing" },
                 { "Stackeror", "Creator of the original Progress Counter mod" },
@@ -129,7 +129,6 @@ namespace CountersPlus.UI
                         (KeyValuePair<IConfigModel, Action<SubMenu>> x) => (x.Key.DisplayName == settings.DisplayName)
                         ).First().Value(sub);
                 }
-                foreach (ListViewController list in loadedSettings) list.Init();
                 if (!isCredits)
                 {
                     settingsTitle = BeatSaberUI.CreateText(rect, $"{(isMain ? "Main" : settings.DisplayName)} Settings", Vector2.zero);
@@ -159,11 +158,10 @@ namespace CountersPlus.UI
                         multiOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
                         multiOffset.GetValue = () => (CountersController.settings.MultiplierOffset * 10) + 10;
                         multiOffset.SetValue = (v) => CountersController.settings.MultiplierOffset = ((v - 10) / 10);
-
-                        foreach (ListViewController list in loadedSettings) list.Init();
                     }
                 }
                 else CreateCredits();
+                foreach (ListViewController list in loadedSettings) list.Init();
             }
             catch { }
         }
