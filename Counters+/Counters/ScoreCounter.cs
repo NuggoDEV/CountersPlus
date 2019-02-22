@@ -150,34 +150,13 @@ namespace CountersPlus.Counters
 
         public string GetRank(int score, float prec)
         {
-            if (score >= _maxPossibleScore)
-            {
-                return "SSS";
-            }
-            if (prec > 0.9f)
-            {
-                return "SS";
-            }
-            if (prec > 0.8f)
-            {
-                return "S";
-            }
-            if (prec > 0.65f)
-            {
-                return "A";
-            }
-            if (prec > 0.5f)
-            {
-                return "B";
-            }
-            if (prec > 0.35f)
-            {
-                return "C";
-            }
-            if (prec > 0.2f)
-            {
-                return "D";
-            }
+            if (score >= _maxPossibleScore) return "SSS";
+            if (prec > 0.9f) return "SS";
+            if (prec > 0.8f) return "S";
+            if (prec > 0.65f) return "A";
+            if (prec > 0.5f) return "B";
+            if (prec > 0.35f) return "C";
+            if (prec > 0.2f) return "D";
             return "E";
         }
 

@@ -137,7 +137,7 @@ namespace CountersPlus.UI
                 StartCoroutine(WaitForSettings(info));
             }
             else
-                CountersPlusEditViewController.UpdateSettings(null as IConfigModel, counterInfos.First(), true, (row == NumberOfRows() - 1));
+                CountersPlusEditViewController.UpdateSettings(null as IConfigModel, null as SettingsInfo, true, (row == NumberOfRows() - 1));
         }
 
         IEnumerator WaitForSettings(SettingsInfo info)

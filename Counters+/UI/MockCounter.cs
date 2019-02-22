@@ -106,14 +106,8 @@ namespace CountersPlus.UI
         public string GetRank()
         {
             float prec = score / 100;
-            if (prec > 0.9f)
-            {
-                return "SS";
-            }
-            if (prec > 0.8f)
-            {
-                return "S";
-            }
+            if (prec > 0.9f) return "SS";
+            if (prec > 0.8f) return "S";
             return "A";
         }
     }
