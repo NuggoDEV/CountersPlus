@@ -47,29 +47,29 @@ namespace CountersPlus.UI
 
         private static ListViewController IncludeRingSetting;
 
-        internal static Dictionary<IConfigModel, Action<SubMenu>> counterUIItems = new Dictionary<IConfigModel, Action<SubMenu>>()
+        internal static Dictionary<IConfigModel, Action<SubMenu, IConfigModel>> counterUIItems = new Dictionary<IConfigModel, Action<SubMenu, IConfigModel>>()
         {
-            { CountersController.settings.missedConfig, v => { } },
+            { CountersController.settings.missedConfig, (sub, config) => { } },
             { CountersController.settings.noteConfig,
-                sub => {
-                    var accuracyPercentage = CountersPlusEditViewController.AddList(ref sub, "Show Percentage", "Toggles the percentage of notes hit over total notes.", 2);
+                (sub, config) => {
+                    var accuracyPercentage = CountersPlusEditViewController.AddList(ref sub, config, "Show Percentage", "Toggles the percentage of notes hit over total notes.", 2);
                     accuracyPercentage.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
                     accuracyPercentage.GetValue = () => CountersController.settings.noteConfig.ShowPercentage ? 1f : 0f;
-                    accuracyPercentage.SetValue = (v) => CountersController.settings.noteConfig.ShowPercentage = v != 0f;
+                    accuracyPercentage.SetValue += (v) => CountersController.settings.noteConfig.ShowPercentage = v != 0f;
 
-                    var accuracyPrecision = CountersPlusEditViewController.AddList(ref sub, "Percentage Precision", "How precise should the precentage be?", 6);
+                    var accuracyPrecision = CountersPlusEditViewController.AddList(ref sub, config, "Percentage Precision", "How precise should the precentage be?", 6);
                     accuracyPrecision.GetTextForValue = (v) => Mathf.RoundToInt(v).ToString();
                     accuracyPrecision.GetValue = () => CountersController.settings.noteConfig.DecimalPrecision;
-                    accuracyPrecision.SetValue = (v) => CountersController.settings.noteConfig.DecimalPrecision = Mathf.RoundToInt(v);
+                    accuracyPrecision.SetValue += (v) => CountersController.settings.noteConfig.DecimalPrecision = Mathf.RoundToInt(v);
                 } },
             { CountersController.settings.scoreConfig,
-                sub => {
-                        var scoreRank = CountersPlusEditViewController.AddList(ref sub, "Display Rank", "Displays the rank as you progress in a song.", 2);
+                (sub, config) => {
+                        var scoreRank = CountersPlusEditViewController.AddList(ref sub, config, "Display Rank", "Displays the rank as you progress in a song.", 2);
                     scoreRank.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
                     scoreRank.GetValue = () => CountersController.settings.scoreConfig.DisplayRank ? 1f : 0f;
-                    scoreRank.SetValue = (v) => CountersController.settings.scoreConfig.DisplayRank = v != 0f;
+                    scoreRank.SetValue += (v) => CountersController.settings.scoreConfig.DisplayRank = v != 0f;
 
-                    var scoreMode = CountersPlusEditViewController.AddList(ref sub, "Mode", "", scoreSettings.Count());
+                    var scoreMode = CountersPlusEditViewController.AddList(ref sub, config, "Mode", "", scoreSettings.Count());
                     scoreMode.GetTextForValue = (v) => {
                         return scoreSettings[Mathf.RoundToInt(v)].Item2;
                     };
@@ -77,26 +77,26 @@ namespace CountersPlus.UI
                         if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, DetermineModeText(CountersController.settings.scoreConfig.Mode));
                         return scoreSettings.ToList().IndexOf(scoreSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CountersController.settings.scoreConfig.Mode)).First());
                     };
-                    scoreMode.SetValue = (v) => {
+                    scoreMode.SetValue += (v) => {
                         if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, DetermineModeText(CountersController.settings.scoreConfig.Mode));
                         CountersController.settings.scoreConfig.Mode = scoreSettings[Mathf.RoundToInt(v)].Item1;
                         scoreHover.text = DetermineModeText(CountersController.settings.scoreConfig.Mode, true);
                     };
 
-                    var scorePrecision = CountersPlusEditViewController.AddList(ref sub, "Percentage Precision", "How precise should the precentage be?", 6);
+                    var scorePrecision = CountersPlusEditViewController.AddList(ref sub, config, "Percentage Precision", "How precise should the precentage be?", 6);
                     scorePrecision.GetTextForValue = (v) => Mathf.RoundToInt(v).ToString();
                     scorePrecision.GetValue = () => CountersController.settings.scoreConfig.DecimalPrecision;
-                    scorePrecision.SetValue = (v) => CountersController.settings.scoreConfig.DecimalPrecision = Mathf.RoundToInt(v);
+                    scorePrecision.SetValue += (v) => CountersController.settings.scoreConfig.DecimalPrecision = Mathf.RoundToInt(v);
                 } },
             { CountersController.settings.progressConfig,
-                sub => {
-                    var progressRank = CountersPlusEditViewController.AddList(ref sub, "Progress From End", "Starts the counter from the end of the song and decreases while the song is played.", 2);
+                (sub, config) => {
+                    var progressRank = CountersPlusEditViewController.AddList(ref sub, config, "Progress From End", "Starts the counter from the end of the song and decreases while the song is played.", 2);
                     progressRank.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
                     progressRank.GetValue = () => {
                         if(CountersController.settings.progressConfig.ProgressTimeLeft) return 1f;
                         else return 0f;
                     };
-                    progressRank.SetValue = (v) => {
+                    progressRank.SetValue += (v) => {
                         CountersController.settings.progressConfig.ProgressTimeLeft = v != 0f;
                         if (CountersController.settings.progressConfig.ProgressTimeLeft && CountersController.settings.progressConfig.Mode == ICounterMode.Original)
                             CreateIncludeRingSetting(ref sub);
@@ -106,7 +106,7 @@ namespace CountersPlus.UI
                             }
                         };
 
-                    var progressMode = CountersPlusEditViewController.AddList(ref sub, "Mode", "", progressSettings.Count());
+                    var progressMode = CountersPlusEditViewController.AddList(ref sub, config, "Mode", "", progressSettings.Count());
                     progressMode.GetTextForValue = (v) => {
                         return progressSettings[Mathf.RoundToInt(v)].Item2;
                     };
@@ -114,7 +114,7 @@ namespace CountersPlus.UI
                         if (progressHover == null) progressHover = BeatSaberUI.AddHintText(progressMode.transform as RectTransform, DetermineModeText(CountersController.settings.progressConfig.Mode));
                         return progressSettings.ToList().IndexOf(progressSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CountersController.settings.progressConfig.Mode)).First());
                     };
-                    progressMode.SetValue = (v) => {
+                    progressMode.SetValue += (v) => {
                         if (progressHover == null) progressHover = BeatSaberUI.AddHintText(progressMode.transform as RectTransform, DetermineModeText(CountersController.settings.progressConfig.Mode));
                         CountersController.settings.progressConfig.Mode = progressSettings[Mathf.RoundToInt(v)].Item1;
                         progressHover.text = DetermineModeText(CountersController.settings.progressConfig.Mode);
@@ -129,13 +129,13 @@ namespace CountersPlus.UI
                         CreateIncludeRingSetting(ref sub);
                 } },
             { CountersController.settings.speedConfig,
-                sub => {
-                    var speedPrecision = CountersPlusEditViewController.AddList(ref sub, "Percentage Precision", "How precise should the precentage be?", 6);
+                (sub, config) => {
+                    var speedPrecision = CountersPlusEditViewController.AddList(ref sub, config, "Percentage Precision", "How precise should the precentage be?", 6);
                     speedPrecision.GetTextForValue = (v) => Mathf.RoundToInt(v).ToString();
                     speedPrecision.GetValue = () => CountersController.settings.speedConfig.DecimalPrecision;
-                    speedPrecision.SetValue = (v) => CountersController.settings.speedConfig.DecimalPrecision = Mathf.RoundToInt(v);
+                    speedPrecision.SetValue += (v) => CountersController.settings.speedConfig.DecimalPrecision = Mathf.RoundToInt(v);
 
-                    var speedMode = CountersPlusEditViewController.AddList(ref sub, "Mode", "", speedSettings.Count());
+                    var speedMode = CountersPlusEditViewController.AddList(ref sub, config, "Mode", "", speedSettings.Count());
                     speedMode.GetTextForValue = (v) => {
                         return speedSettings[Mathf.RoundToInt(v)].Item2;
                     };
@@ -143,15 +143,15 @@ namespace CountersPlus.UI
                         if (speedHover == null) speedHover = BeatSaberUI.AddHintText(speedMode.transform as RectTransform, DetermineModeText(CountersController.settings.speedConfig.Mode));
                         return speedSettings.ToList().IndexOf(speedSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CountersController.settings.speedConfig.Mode)).First());
                     };
-                    speedMode.SetValue = (v) => {
+                    speedMode.SetValue += (v) => {
                         if (speedHover == null) speedHover = BeatSaberUI.AddHintText(speedMode.transform as RectTransform, DetermineModeText(CountersController.settings.speedConfig.Mode));
                         CountersController.settings.speedConfig.Mode = speedSettings[Mathf.RoundToInt(v)].Item1;
                         speedHover.text = DetermineModeText(CountersController.settings.speedConfig.Mode);
                     };
                 } },
-            { CountersController.settings.cutConfig, v => { } },
-            { CountersController.settings.spinometerConfig, sub => {
-                var spinometerMode = CountersPlusEditViewController.AddList(ref sub, "Mode", "", spinometerSettings.Count());
+            { CountersController.settings.cutConfig, (sub, config) => { } },
+            { CountersController.settings.spinometerConfig, (sub, config) => {
+                var spinometerMode = CountersPlusEditViewController.AddList(ref sub, config, "Mode", "", spinometerSettings.Count());
                     spinometerMode.GetTextForValue = (v) => {
                         return spinometerSettings[Mathf.RoundToInt(v)].Item2;
                     };
@@ -159,7 +159,7 @@ namespace CountersPlus.UI
                         if (spinometerHover == null) spinometerHover = BeatSaberUI.AddHintText(spinometerMode.transform as RectTransform, DetermineModeText(CountersController.settings.spinometerConfig.Mode, true));
                         return spinometerSettings.ToList().IndexOf(spinometerSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CountersController.settings.spinometerConfig.Mode)).First());
                     };
-                    spinometerMode.SetValue = (v) => {
+                    spinometerMode.SetValue += (v) => {
                         if (spinometerHover == null) spinometerHover = BeatSaberUI.AddHintText(spinometerMode.transform as RectTransform, DetermineModeText(CountersController.settings.spinometerConfig.Mode, true));
                         CountersController.settings.spinometerConfig.Mode = spinometerSettings[Mathf.RoundToInt(v)].Item1;
                         spinometerHover.text = DetermineModeText(CountersController.settings.spinometerConfig.Mode, true);
@@ -169,10 +169,10 @@ namespace CountersPlus.UI
 
         private static void CreateIncludeRingSetting(ref SubMenu sub)
         {
-            var includeRing = CountersPlusEditViewController.AddList(ref sub, "Include Progress Ring", "Whether or not the Progress Ring will also be effected by the \"Progress From End\" setting.", 2);
+            var includeRing = CountersPlusEditViewController.AddList(ref sub, CountersController.settings.progressConfig, "Include Progress Ring", "Whether or not the Progress Ring will also be effected by the \"Progress From End\" setting.", 2);
             includeRing.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
             includeRing.GetValue = () => CountersController.settings.progressConfig.IncludeRing ? 1f : 0f;
-            includeRing.SetValue = (v) => CountersController.settings.progressConfig.IncludeRing = v != 0f;
+            includeRing.SetValue += (v) => CountersController.settings.progressConfig.IncludeRing = v != 0f;
             IncludeRingSetting = includeRing;
             includeRing.Init();
         }

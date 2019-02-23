@@ -23,7 +23,7 @@ namespace CountersPlus.UI
         private static TextMeshProUGUI settingsTitle;
         private static SubMenu container;
         
-        private static List<GameObject> loadedElements = new List<GameObject>(); //Mass clearing
+        internal static List<GameObject> loadedElements = new List<GameObject>(); //Mass clearing
         private static List<ListSettingsController> loadedSettings = new List<ListSettingsController>(); //Mass initialization
         internal static int settingsCount = 0; //Spacing
 
@@ -37,7 +37,7 @@ namespace CountersPlus.UI
             {ICounterPositions.AboveHighway, "Over Highway" }
         };
 
-        static Action<RectTransform, float, float, float, float, float> setStuff = delegate (RectTransform r, float x, float y, float w, float h, float pivotX)
+        static Action<RectTransform, float, float, float, float, float> setPositioning = delegate (RectTransform r, float x, float y, float w, float h, float pivotX)
         {
             r.anchorMin = new Vector2(x, y);
             r.anchorMax = new Vector2(x + w, y + h);
@@ -50,7 +50,6 @@ namespace CountersPlus.UI
         {
             rect = rectTransform;
             if (firstActivation) Instance = this;
-            CreateCredits();
         }
 
         private static void CreateCredits()
@@ -75,13 +74,13 @@ namespace CountersPlus.UI
             name.fontSize = 10;
             name.alignment = TextAlignmentOptions.Center;
             name.characterWidthAdjustment = 2;
-            setStuff(name.rectTransform, 0, 0.8f, 1, 0.166f, 0.5f);
+            setPositioning(name.rectTransform, 0, 0.8f, 1, 0.166f, 0.5f);
 
             version = BeatSaberUI.CreateText(rect,
                 $"Version <color={(Plugin.upToDate ? "#00FF00" : "#FF0000")}>{Plugin.Instance.Version}</color>", Vector2.zero);
             version.fontSize = 3;
             version.alignment = TextAlignmentOptions.Center;
-            setStuff(version.rectTransform, 0, 0.73f, 1, 0.166f, 0.5f);
+            setPositioning(version.rectTransform, 0, 0.73f, 1, 0.166f, 0.5f);
 
             if (!Plugin.upToDate)
             {
@@ -89,26 +88,26 @@ namespace CountersPlus.UI
                 $"<color=#FF0000>Version {Plugin.webVersion} available for download!</color>", Vector2.zero);
                 warning.fontSize = 3;
                 warning.alignment = TextAlignmentOptions.Center;
-                setStuff(warning.rectTransform, 0, 0.7f, 1, 0.166f, 0.5f);
+                setPositioning(warning.rectTransform, 0, 0.7f, 1, 0.166f, 0.5f);
                 loadedElements.Add(warning.gameObject);
             }
 
             creator = BeatSaberUI.CreateText(rect, "Developed by: <color=#00c0ff>Caeden117</color>", Vector2.zero);
             creator.fontSize = 5;
             creator.alignment = TextAlignmentOptions.Center;
-            setStuff(creator.rectTransform, 0, 0.64f, 1, 0.166f, 0.5f);
+            setPositioning(creator.rectTransform, 0, 0.64f, 1, 0.166f, 0.5f);
 
             contributorLabel = BeatSaberUI.CreateText(rect, "Thanks to these contributors for, directly or indirectly, helping make Counters+ what it is!", Vector2.zero);
             contributorLabel.fontSize = 3;
             contributorLabel.alignment = TextAlignmentOptions.Center;
-            setStuff(contributorLabel.rectTransform, 0, 0.55f, 1, 0.166f, 0.5f);
+            setPositioning(contributorLabel.rectTransform, 0, 0.55f, 1, 0.166f, 0.5f);
 
             foreach(var kvp in contributors)
             {
                 TextMeshProUGUI contributor = BeatSaberUI.CreateText(rect, $"<color=#00c0ff>{kvp.Key}</color> | {kvp.Value}", Vector2.zero);
                 contributor.fontSize = 3;
                 contributor.alignment = TextAlignmentOptions.Left;
-                setStuff(contributor.rectTransform, 0.15f,
+                setPositioning(contributor.rectTransform, 0.15f,
                     0.5f - (contributors.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
                 loadedElements.Add(contributor.gameObject);
             }
@@ -126,38 +125,38 @@ namespace CountersPlus.UI
                 {
                     SubMenu sub = CreateBase(settings);
                     AdvancedCounterSettings.counterUIItems.Where(
-                        (KeyValuePair<IConfigModel, Action<SubMenu>> x) => (x.Key.DisplayName == settings.DisplayName)
-                        ).First().Value(sub);
+                        (KeyValuePair<IConfigModel, Action<SubMenu, IConfigModel>> x) => (x.Key.DisplayName == settings.DisplayName)
+                        ).First().Value(sub, settings);
                 }
                 if (!isCredits)
                 {
                     settingsTitle = BeatSaberUI.CreateText(rect, $"{(isMain ? "Main" : settings.DisplayName)} Settings", Vector2.zero);
                     settingsTitle.fontSize = 6;
                     settingsTitle.alignment = TextAlignmentOptions.Center;
-                    setStuff(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
+                    setPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
                     loadedElements.Add(settingsTitle.gameObject);
                     if (isMain)
                     {
                         SubMenu sub = new SubMenu(rect);
-                        var enabled = AddList(ref sub, "Enabled", "Toggles Counters+ on or off.", 2);
+                        var enabled = AddList(ref sub, settings, "Enabled", "Toggles Counters+ on or off.", 2);
                         enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
                         enabled.GetValue = () => CountersController.settings.Enabled ? 1f : 0f;
-                        enabled.SetValue = (v) => CountersController.settings.Enabled = v != 0f;
+                        enabled.SetValue += (v) => CountersController.settings.Enabled = v != 0f;
 
-                        var toggleCounters = AddList(ref sub, "Advanced Mock Counters", "Allows the mock counters to display more settings. To increase preformance, and reduce chances of bugs, disable this option.", 2);
+                        var toggleCounters = AddList(ref sub, settings, "Advanced Mock Counters", "Allows the mock counters to display more settings. To increase preformance, and reduce chances of bugs, disable this option.", 2);
                         toggleCounters.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
                         toggleCounters.GetValue = () => CountersController.settings.AdvancedCounterInfo ? 1f : 0f;
-                        toggleCounters.SetValue = (v) => CountersController.settings.AdvancedCounterInfo = v != 0f;
+                        toggleCounters.SetValue += (v) => CountersController.settings.AdvancedCounterInfo = v != 0f;
 
-                        var comboOffset = AddList(ref sub, "Combo Offset", "How far from the Combo counters should be before Distance is taken into account.", 20);
+                        var comboOffset = AddList(ref sub, settings, "Combo Offset", "How far from the Combo counters should be before Distance is taken into account.", 20);
                         comboOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
                         comboOffset.GetValue = () => (CountersController.settings.ComboOffset * 10) + 10;
-                        comboOffset.SetValue = (v) => CountersController.settings.ComboOffset = ((v - 10) / 10);
+                        comboOffset.SetValue += (v) => CountersController.settings.ComboOffset = ((v - 10) / 10);
 
-                        var multiOffset = AddList(ref sub, "Multiplier Offset", "How far from the Multiplier counters should be before Distance is taken into account.", 20);
+                        var multiOffset = AddList(ref sub, settings, "Multiplier Offset", "How far from the Multiplier counters should be before Distance is taken into account.", 20);
                         multiOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
                         multiOffset.GetValue = () => (CountersController.settings.MultiplierOffset * 10) + 10;
-                        multiOffset.SetValue = (v) => CountersController.settings.MultiplierOffset = ((v - 10) / 10);
+                        multiOffset.SetValue += (v) => CountersController.settings.MultiplierOffset = ((v - 10) / 10);
                     }
                 }
                 else CreateCredits();
@@ -177,12 +176,12 @@ namespace CountersPlus.UI
             }
             catch { } //It most likely errors here. If it does, well no problem.
 
-            var enabled = AddList(ref sub, "Enabled", "Toggles this counter on or off.", 2);
+            var enabled = AddList(ref sub, settings, "Enabled", "Toggles this counter on or off.", 2);
             enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
             enabled.GetValue = () => settings.Enabled ? 1f : 0f;
-            enabled.SetValue = (v) => settings.Enabled = v != 0f;
+            enabled.SetValue += (v) => settings.Enabled = v != 0f;
 
-            var position = AddList(ref sub, "Position", "The relative position of common UI elements", (restrictedList.Count() == 0) ? positions.Count() : restrictedList.Count());
+            var position = AddList(ref sub, settings, "Position", "The relative position of common UI elements", (restrictedList.Count() == 0) ? positions.Count() : restrictedList.Count());
             position.GetTextForValue = (v) => {
                 if (restrictedList.Count() == 0)
                     return positions[Mathf.RoundToInt(v)].Item2;
@@ -192,21 +191,21 @@ namespace CountersPlus.UI
             position.GetValue = () => {
                 return positions.ToList().IndexOf(positions.Where((Tuple<ICounterPositions, string> x) => (x.Item1 == settings.Position)).First());
             };
-            position.SetValue = (v) => {
+            position.SetValue += (v) => {
                 if (restrictedList.Count() == 0)
                     settings.Position = positions[Mathf.RoundToInt(v)].Item1;
                 else
                     settings.Position = restrictedList[Mathf.RoundToInt(v)].Item1;
             };
 
-            var index = AddList(ref sub, "Distance", "How far from the position the counter will be. A higher number means farther way.", 7);
+            var index = AddList(ref sub, settings, "Distance", "How far from the position the counter will be. A higher number means farther way.", 7);
             index.GetTextForValue = (v) => Mathf.RoundToInt(v - 1).ToString();
             index.GetValue = () => settings.Index + 1;
-            index.SetValue = (v) => settings.Index = Mathf.RoundToInt(v - 1);
+            index.SetValue += (v) => settings.Index = Mathf.RoundToInt(v - 1);
             return sub;
         }
 
-        internal static ListViewController AddList(ref SubMenu sub, string Label, string HintText, int sizeCount)
+        internal static ListViewController AddList<T>(ref SubMenu sub, T settings, string Label, string HintText, int sizeCount) where T : IConfigModel
         {
             List<float> values = new List<float>() { };
             for (var i = 0; i < sizeCount; i++) values.Add(i);
@@ -214,6 +213,10 @@ namespace CountersPlus.UI
             list.applyImmediately = true;
             PositionElement(list.gameObject);
             loadedSettings.Add(list);
+            list.SetValue = (v) =>
+            {
+                Plugin.Log($"Option for {settings.DisplayName} updated!");
+            };
             return list;
         }
 
@@ -228,7 +231,7 @@ namespace CountersPlus.UI
         private static void PositionElement(GameObject element)
         {
             loadedElements.Add(element);
-            setStuff(element.transform as RectTransform, 0.05f, 0.75f - (settingsCount * 0.1f), 0.9f, 0.166f, 0f);
+            setPositioning(element.transform as RectTransform, 0.05f, 0.75f - (settingsCount * 0.1f), 0.9f, 0.166f, 0f);
             settingsCount++;
         }
     }

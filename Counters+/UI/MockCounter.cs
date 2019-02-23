@@ -16,6 +16,8 @@ namespace CountersPlus.UI
     /// </summary>
     public class MockCounter
     {
+        public static Dictionary<IConfigModel, GameObject> loadedMockCounters = new Dictionary<IConfigModel, GameObject>();
+
         public static void Create<T>(T settings, string counterName, string counterData, bool UseCounterPositioning = true) where T : IConfigModel
         {
             if (!settings.Enabled) return;
@@ -37,7 +39,8 @@ namespace CountersPlus.UI
             data.alignment = TextAlignmentOptions.Center;
 
             counter.transform.position = CountersController.determinePosition(counter, settings.Position, settings.Index) - new Vector3(0, 0.4f, 0);
-
+            if (!loadedMockCounters.Where((KeyValuePair < IConfigModel, GameObject > x) => x.Key == settings).Any())
+                loadedMockCounters.Add(settings, counter);
             CountersPlusSettingsFlowCoordinator.Instance.mockCounters.Add(counter);
         }
 

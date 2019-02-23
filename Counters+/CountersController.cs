@@ -20,10 +20,6 @@ namespace CountersPlus
         internal static MainConfigModel settings;
         internal static List<CustomCounter> customCounters { get; private set; } = new List<CustomCounter>();
 
-        public float pbPercent { get; private set; }
-
-        
-
         public static void OnLoad()
         {
             settings = Config.ConfigLoader.LoadSettings();
