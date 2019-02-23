@@ -20,11 +20,6 @@ namespace CountersPlus.UI
         private CountersPlusSettingsListViewController settingsList;
         internal static CountersPlusSettingsFlowCoordinator Instance;
 
-        //For mock counters
-        public List<GameObject> mockCounters = new List<GameObject>();
-        private MockCounterInfo info = new MockCounterInfo();
-        private bool createMocks = true;
-
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
             MainScreen = GameObject.Find("MainScreen");
@@ -47,9 +42,7 @@ namespace CountersPlus.UI
             });
             ProvideInitialViewControllers(placeholder, navigationController, editSettings);
             MainScreen.transform.position = new Vector3(0, -100, 0); //"If it works it's not stupid"
-
-            //For mock counters
-            createMocks = true;
+            
             CounterWarning.CreateWarning("Due to limitations, some counters may not reflect their true appearance in-game.", 7.5f);
             if (!CountersController.settings.FirstStart)
             {
@@ -58,7 +51,7 @@ namespace CountersPlus.UI
             }
             if (!Plugin.upToDate)
                 CounterWarning.CreateWarning("A new Counters+ update is available to download!", 5);
-            StartCoroutine(UpdateMockCounters());
+           StartCoroutine(InitMockCounters());
         }
 
         protected override void DidDeactivate(DeactivationType deactivationType)
@@ -69,66 +62,54 @@ namespace CountersPlus.UI
             }
         }
 
-        private IEnumerator UpdateMockCounters()
+        private IEnumerator InitMockCounters()
         {
-            while (createMocks)
+            yield return new WaitForEndOfFrame();
+            MockCounterInfo info = new MockCounterInfo();
+            MockCounter.CreateStatic("Combo", $"{info.notesCut}");
+            MockCounter.CreateStatic("Multiplier", "x8");
+            StartCoroutine(UpdateMockCountersRoutine());
+        }
+
+        public static void UpdateMockCounters()
+        {
+            Instance.StartCoroutine(UpdateMockCountersRoutine());
+        }
+
+        private static IEnumerator UpdateMockCountersRoutine()
+        {
+            bool allCountersActive = false;
+            while (!allCountersActive)
             {
                 try
                 {
-                    foreach (GameObject counter in mockCounters) Destroy(counter);
-                    MockCounter.CreateStatic("Combo", "0");
-                    MockCounter.CreateStatic("Multiplier", "x8");
-                    if (CountersController.settings.AdvancedCounterInfo)
+                    int loaded = 0;
+                    foreach (SettingsInfo counter in CountersPlusSettingsListViewController.Instance.counterInfos)
                     {
-                        MockCounter.Create(CountersController.settings.missedConfig, "Misses", info.notesMissed.ToString());
-                        MockCounter.Create(CountersController.settings.noteConfig, "Notes",
-                            $"{info.notesCut - info.notesMissed} / {info.notesCut} {((CountersController.settings.noteConfig.ShowPercentage) ? $"- ({Math.Round((((double)(info.notesCut - info.notesMissed) / info.notesCut) * 100), CountersController.settings.noteConfig.DecimalPrecision)}%)" : "")}");
-                        MockCounter.Create(CountersController.settings.scoreConfig, $"(<size=50%>{CountersController.settings.scoreConfig.Mode}</size>) {Math.Round(info.score, CountersController.settings.scoreConfig.DecimalPrecision).ToString()}%", CountersController.settings.scoreConfig.DisplayRank ? info.GetRank() : "");
-                        if (CountersController.settings.scoreConfig.Mode == ICounterMode.BaseWithOutPoints || CountersController.settings.scoreConfig.Mode == ICounterMode.LeavePoints || !CountersController.settings.scoreConfig.Enabled)
-                            MockCounter.CreateStatic("123 456", "");
-                        if (CountersController.settings.speedConfig.Mode == ICounterMode.Average || CountersController.settings.speedConfig.Mode == ICounterMode.Both)
-                            MockCounter.Create(CountersController.settings.speedConfig,
-                                    $"{(CountersController.settings.speedConfig.Mode == ICounterMode.Both ? "Average (Both)" : "Average Speed")}", $"{Math.Round((info.leftSpeedAverage + info.rightSpeedAverage) / 2, CountersController.settings.speedConfig.DecimalPrecision)}");
-                        else if (CountersController.settings.speedConfig.Mode == ICounterMode.SplitAverage || CountersController.settings.speedConfig.Mode == ICounterMode.SplitBoth)
-                            MockCounter.Create(CountersController.settings.speedConfig,
-                                    $"{(CountersController.settings.speedConfig.Mode == ICounterMode.SplitBoth ? "Split Average (Both)" : "Split Average")}", $"{Math.Round(info.leftSpeedAverage, CountersController.settings.speedConfig.DecimalPrecision)} | {Math.Round(info.rightSpeedAverage, CountersController.settings.speedConfig.DecimalPrecision)}");
-                        else if (CountersController.settings.speedConfig.Mode == ICounterMode.Top5Sec)
-                            MockCounter.Create(CountersController.settings.speedConfig, "Top Speed (5 Sec.)", $"{Math.Round(info.leftSpeedAverage + 10, CountersController.settings.speedConfig.DecimalPrecision)}");
-                        MockCounter.Create(CountersController.settings.cutConfig, "Average Cut", $"{Mathf.RoundToInt(info.averageCutScore)}");
-                        MockCounter.Create(CountersController.settings.progressConfig,
-                            $"{CountersController.settings.progressConfig.Mode.ToString()} Progress",
-                                $"{((((CountersController.settings.progressConfig.ProgressTimeLeft ? 1f : 0f) - ((float)info.timeElapsed / info.totalTime)) * 100f) * (CountersController.settings.progressConfig.ProgressTimeLeft ? 1f : -1f)).ToString("00")}%");
-                        MockCounter.Create(CountersController.settings.spinometerConfig, "Spinometer",
-                            $"{(CountersController.settings.spinometerConfig.Mode == ICounterMode.SplitAverage ? $"{info.leftSpinAverage} | {info.rightSpinAverage}" : $"{(info.leftSpinAverage + info.rightSpinAverage) / 2}")}");
+                        try
+                        {
+                            MockCounter.Update(counter.Model);
+                            loaded++;
+                        }
+                        catch (Exception e)
+                        {
+                            Plugin.Log(e.ToString());
+                            continue;
+                        }
                     }
-                    else //Reduces amount of calls to Config
-                    {
-                        MockCounter.Create(CountersController.settings.missedConfig, "Misses", "0");
-                        MockCounter.Create(CountersController.settings.noteConfig, "Notes", "0 - 0");
-                        MockCounter.Create(CountersController.settings.scoreConfig, "100%", "SSS");
-                        MockCounter.Create(CountersController.settings.speedConfig, "Average Speed", "0");
-                        MockCounter.Create(CountersController.settings.cutConfig, "Average Cut", "0");
-                        MockCounter.Create(CountersController.settings.progressConfig, "Progress", "0%");
-                        MockCounter.Create(CountersController.settings.spinometerConfig, "Spinometer", "0");
-                        if (!CountersController.settings.scoreConfig.Enabled) MockCounter.CreateStatic("123 456", "");
-                    }
-                    try
-                    {
-                        foreach (SettingsInfo info in CountersPlusSettingsListViewController.Instance.counterInfos)
-                            if (info.IsCustom) MockCounter.Create(info.Model, "", info.Name);
-                    }
-                    catch { }
+                    if (loaded == CountersPlusSettingsListViewController.Instance.counterInfos.Count) allCountersActive = true;
                 }
-                catch { }
-                yield return new WaitForSeconds(CountersController.settings.AdvancedCounterInfo ? 1 : 2);
+                catch (Exception e)
+                {
+                    Plugin.Log(e.ToString());
+                }
+                if (!allCountersActive) yield return new WaitForEndOfFrame();
             }
         }
 
         private void backButton_DidFinish()
         {
-            createMocks = false;
-            StopCoroutine(UpdateMockCounters());
-            foreach (GameObject counter in mockCounters) DestroyImmediate(counter);
+            foreach (KeyValuePair<GameObject, IConfigModel> kvp in MockCounter.loadedMockCounters) Destroy(kvp.Key);
             MainScreen.transform.position = MainScreenPosition;
             MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
             mainFlow.InvokeMethod("DismissFlowCoordinator", this, null, false);

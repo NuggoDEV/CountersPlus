@@ -13,6 +13,7 @@ using CustomUI.Settings;
 using CountersPlus.Custom;
 using System.Threading;
 using BS_Utils.Gameplay;
+using System.Collections;
 
 namespace CountersPlus.UI
 {
@@ -120,13 +121,16 @@ namespace CountersPlus.UI
             try
             {
                 ClearScreen();
-                if (info.IsCustom) container = CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
-                else if (!isMain)
+                if (!(info is null))
                 {
-                    SubMenu sub = CreateBase(settings);
-                    AdvancedCounterSettings.counterUIItems.Where(
-                        (KeyValuePair<IConfigModel, Action<SubMenu, IConfigModel>> x) => (x.Key.DisplayName == settings.DisplayName)
-                        ).First().Value(sub, settings);
+                    if (info.IsCustom) container = CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
+                    else if (!isMain)
+                    {
+                        SubMenu sub = CreateBase(settings);
+                        AdvancedCounterSettings.counterUIItems.Where(
+                            (KeyValuePair<IConfigModel, Action<SubMenu, IConfigModel>> x) => (x.Key.DisplayName == settings.DisplayName)
+                            ).First().Value(sub, settings);
+                    }
                 }
                 if (!isCredits)
                 {
@@ -141,28 +145,32 @@ namespace CountersPlus.UI
                         var enabled = AddList(ref sub, settings, "Enabled", "Toggles Counters+ on or off.", 2);
                         enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
                         enabled.GetValue = () => CountersController.settings.Enabled ? 1f : 0f;
-                        enabled.SetValue += (v) => CountersController.settings.Enabled = v != 0f;
+                        enabled.SetValue = (v) => CountersController.settings.Enabled = v != 0f;
 
                         var toggleCounters = AddList(ref sub, settings, "Advanced Mock Counters", "Allows the mock counters to display more settings. To increase preformance, and reduce chances of bugs, disable this option.", 2);
                         toggleCounters.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
                         toggleCounters.GetValue = () => CountersController.settings.AdvancedCounterInfo ? 1f : 0f;
-                        toggleCounters.SetValue += (v) => CountersController.settings.AdvancedCounterInfo = v != 0f;
+                        toggleCounters.SetValue = (v) => CountersController.settings.AdvancedCounterInfo = v != 0f;
 
                         var comboOffset = AddList(ref sub, settings, "Combo Offset", "How far from the Combo counters should be before Distance is taken into account.", 20);
                         comboOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
                         comboOffset.GetValue = () => (CountersController.settings.ComboOffset * 10) + 10;
-                        comboOffset.SetValue += (v) => CountersController.settings.ComboOffset = ((v - 10) / 10);
+                        comboOffset.SetValue = (v) => CountersController.settings.ComboOffset = ((v - 10) / 10);
 
                         var multiOffset = AddList(ref sub, settings, "Multiplier Offset", "How far from the Multiplier counters should be before Distance is taken into account.", 20);
                         multiOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
                         multiOffset.GetValue = () => (CountersController.settings.MultiplierOffset * 10) + 10;
-                        multiOffset.SetValue += (v) => CountersController.settings.MultiplierOffset = ((v - 10) / 10);
+                        multiOffset.SetValue = (v) => CountersController.settings.MultiplierOffset = ((v - 10) / 10);
+                        
+                        toggleCounters.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
+                        comboOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
+                        multiOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
                     }
                 }
                 else CreateCredits();
                 foreach (ListViewController list in loadedSettings) list.Init();
             }
-            catch { }
+            catch(Exception e) { Plugin.Log(e.ToString(), Plugin.LogInfo.Fatal); }
         }
 
         private static SubMenu CreateBase<T>(T settings, params ICounterPositions[] restricted) where T : IConfigModel
@@ -213,11 +221,14 @@ namespace CountersPlus.UI
             list.applyImmediately = true;
             PositionElement(list.gameObject);
             loadedSettings.Add(list);
-            list.SetValue = (v) =>
-            {
-                Plugin.Log($"Option for {settings.DisplayName} updated!");
-            };
+            if (!(settings is null)) list.SetValue = (v) => Instance.StartCoroutine(DelayedMockCounterUpdate(settings));
             return list;
+        }
+
+        private static IEnumerator DelayedMockCounterUpdate<T>(T settings) where T : IConfigModel
+        {
+            yield return new WaitForEndOfFrame();
+            MockCounter.Update(settings);
         }
 
         private static void ClearScreen()
