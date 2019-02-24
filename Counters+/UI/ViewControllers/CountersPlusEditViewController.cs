@@ -120,6 +120,7 @@ namespace CountersPlus.UI
         {
             try
             {
+                MockCounter.Highlight(settings);
                 ClearScreen();
                 if (!(info is null))
                 {

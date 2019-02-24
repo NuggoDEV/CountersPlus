@@ -36,10 +36,7 @@ namespace CountersPlus.UI
                 placeholder = BeatSaberUI.CreateViewController<CountersPlusFillerForMainViewController>();
                 settingsList = BeatSaberUI.CreateViewController<CountersPlusSettingsListViewController>();
             }
-            SetViewControllersToNavigationConctroller(navigationController, new VRUIViewController[]
-            {
-                settingsList
-            });
+            SetViewControllersToNavigationConctroller(navigationController, new VRUIViewController[] { settingsList });
             ProvideInitialViewControllers(placeholder, navigationController, editSettings);
             MainScreen.transform.position = new Vector3(0, -100, 0); //"If it works it's not stupid"
             
@@ -49,17 +46,14 @@ namespace CountersPlus.UI
                 CountersController.settings.FirstStart = true;
                 CounterWarning.CreateWarning("If you see anything weird, try restarting your game, or re-enter the Counters+ menu!", 15);
             }
-            if (!Plugin.upToDate)
-                CounterWarning.CreateWarning("A new Counters+ update is available to download!", 5);
-           StartCoroutine(InitMockCounters());
+            if (!Plugin.upToDate) CounterWarning.CreateWarning("A new Counters+ update is available to download!", 5);
+            StartCoroutine(InitMockCounters());
         }
 
         protected override void DidDeactivate(DeactivationType deactivationType)
         {
             if (deactivationType == DeactivationType.RemovedFromHierarchy)
-            {
                 PopViewControllerFromNavigationController(navigationController);
-            }
         }
 
         private IEnumerator InitMockCounters()
@@ -68,6 +62,7 @@ namespace CountersPlus.UI
             MockCounterInfo info = new MockCounterInfo();
             MockCounter.CreateStatic("Combo", $"{info.notesCut}");
             MockCounter.CreateStatic("Multiplier", "x8");
+            if (MockCounter.highlightedObject != null) MockCounter.RestoreHighlightedObject();
             StartCoroutine(UpdateMockCountersRoutine());
         }
 
@@ -81,35 +76,25 @@ namespace CountersPlus.UI
             bool allCountersActive = false;
             while (!allCountersActive)
             {
-                try
+                int loaded = 0;
+                foreach (SettingsInfo counter in CountersPlusSettingsListViewController.Instance.counterInfos)
                 {
-                    int loaded = 0;
-                    foreach (SettingsInfo counter in CountersPlusSettingsListViewController.Instance.counterInfos)
+                    try
                     {
-                        try
-                        {
-                            MockCounter.Update(counter.Model);
-                            loaded++;
-                        }
-                        catch (Exception e)
-                        {
-                            Plugin.Log(e.ToString());
-                            continue;
-                        }
+                        MockCounter.Update(counter.Model);
+                        loaded++;
                     }
-                    if (loaded == CountersPlusSettingsListViewController.Instance.counterInfos.Count) allCountersActive = true;
+                    catch { } //Mainly from custom counters, no biggie.
                 }
-                catch (Exception e)
-                {
-                    Plugin.Log(e.ToString());
-                }
-                if (!allCountersActive) yield return new WaitForEndOfFrame();
+                if (loaded == CountersPlusSettingsListViewController.Instance.counterInfos.Count) allCountersActive = true;
+                yield return new WaitForEndOfFrame();
             }
         }
 
         private void backButton_DidFinish()
         {
             foreach (KeyValuePair<GameObject, IConfigModel> kvp in MockCounter.loadedMockCounters) Destroy(kvp.Key);
+            MockCounter.loadedMockCounters.Clear();
             MainScreen.transform.position = MainScreenPosition;
             MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
             mainFlow.InvokeMethod("DismissFlowCoordinator", this, null, false);

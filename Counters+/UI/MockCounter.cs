@@ -19,7 +19,9 @@ namespace CountersPlus.UI
     {
         public static Dictionary<GameObject, IConfigModel> loadedMockCounters = new Dictionary<GameObject, IConfigModel>();
         private static MockCounterInfo info = new MockCounterInfo();
+        public static GameObject highlightedObject { get; private set; } = null;
 
+        #region MockCounter Creation
         public static void Create<T>(T settings, string counterName, string counterData, bool UseCounterPositioning = true) where T : IConfigModel
         {
             if (!settings.Enabled) return;
@@ -45,6 +47,38 @@ namespace CountersPlus.UI
                 loadedMockCounters.Add(counter, settings);
         }
 
+        public static void CreateStatic(string counterName, string counterData)
+        {
+            GameObject counter = new GameObject($"Counters+ | Static {counterName} Counter");
+
+            GameObject nameGO = new GameObject($"Counters+ | Static {counterName} Label");
+            nameGO.transform.parent = counter.transform;
+            TextMeshPro name = nameGO.AddComponent<TextMeshPro>();
+            name.text = counterName;
+            name.fontSize = 3;
+            name.color = Color.white;
+            name.alignment = TextAlignmentOptions.Center;
+            name.rectTransform.localPosition = new Vector3(0, 0.4f, 0);
+
+            TextMeshPro data = counter.AddComponent<TextMeshPro>();
+            data.text = counterData;
+            data.fontSize = 4;
+            data.color = Color.white;
+            data.alignment = TextAlignmentOptions.Center;
+
+            name.color = new Color(0.35f, 0.35f, 0.35f);
+            data.color = new Color(0.35f, 0.35f, 0.35f);
+            if (counterName == "Combo")
+                counter.transform.position = new Vector3(-3.2f, 0.9f, 7);
+            else if (counterName == "Multiplier")
+                counter.transform.position = new Vector3(3.2f, 0.9f, 7);
+            else if (counterName == "123 456")
+                counter.transform.position = new Vector3(-3.2f, -0.1f, 7);
+            loadedMockCounters.Add(counter, null as IConfigModel);
+        }
+        #endregion
+
+        #region MockCounter Editing
         public static void Update<T>(T settings) where T : IConfigModel
         {
             if (settings is null) return;
@@ -67,7 +101,7 @@ namespace CountersPlus.UI
                 {
                     if ((settings as ScoreConfigModel).Mode == ICounterMode.BaseWithOutPoints || (settings as ScoreConfigModel).Mode == ICounterMode.LeavePoints || !(settings as ScoreConfigModel).Enabled)
                         CreateStatic("123 456", "");
-                    else UnityEngine.Object.Destroy(GameObject.Find("Counters+ | Mock 123 456 Counter"));
+                    else UnityEngine.Object.Destroy(GameObject.Find("Counters+ | Static 123 456 Counter"));
                     Create(settings, $"<size=50%>{(settings as ScoreConfigModel).Mode}</size> {Math.Round(info.score, (settings as ScoreConfigModel).DecimalPrecision).ToString()}%", (settings as ScoreConfigModel).DisplayRank ? info.GetRank() : "");
                 }
                 else if (settings is SpeedConfigModel)
@@ -105,35 +139,24 @@ namespace CountersPlus.UI
                 Create(settings, "", settings.DisplayName);
         }
 
-        public static void CreateStatic(string counterName, string counterData)
+        public static void Highlight<T>(T settings) where T : IConfigModel
         {
-            GameObject counter = new GameObject($"Counters+ | Mock {counterName} Counter");
-
-            GameObject nameGO = new GameObject($"Counters+ | Mock {counterName} Label");
-            nameGO.transform.parent = counter.transform;
-            TextMeshPro name = nameGO.AddComponent<TextMeshPro>();
-            name.text = counterName;
-            name.fontSize = 3;
-            name.color = Color.white;
-            name.alignment = TextAlignmentOptions.Center;
-            name.rectTransform.localPosition = new Vector3(0, 0.4f, 0);
-
-            TextMeshPro data = counter.AddComponent<TextMeshPro>();
-            data.text = counterData;
-            data.fontSize = 4;
-            data.color = Color.white;
-            data.alignment = TextAlignmentOptions.Center;
-
-            name.color = new Color(0.35f, 0.35f, 0.35f);
-            data.color = new Color(0.35f, 0.35f, 0.35f);
-            if (counterName == "Combo")
-                counter.transform.position = new Vector3(-3.2f, 0.9f, 7);
-            else if (counterName == "Multiplier")
-                counter.transform.position = new Vector3(3.2f, 0.9f, 7);
-            else if (counterName == "123 456")
-                counter.transform.position = new Vector3(-3.2f, -0.1f, 7);
-            loadedMockCounters.Add(counter, null as IConfigModel);
+            foreach (KeyValuePair<GameObject, IConfigModel> kvp in loadedMockCounters)
+                foreach (TextMeshPro tmp in kvp.Key.GetComponentsInChildren<TextMeshPro>())
+                    if (!kvp.Key.name.Contains("Static"))
+                    {
+                        if (settings == kvp.Value) highlightedObject = kvp.Key;
+                        tmp.color = (settings == kvp.Value) ? Color.yellow : Color.white;
+                    }
         }
+
+        public static void RestoreHighlightedObject()
+        {
+            if (highlightedObject != null)
+                foreach (TextMeshPro tmp in highlightedObject.GetComponentsInChildren<TextMeshPro>())
+                    tmp.color = Color.yellow;
+        }
+        #endregion
     }
 
     /// <summary>
