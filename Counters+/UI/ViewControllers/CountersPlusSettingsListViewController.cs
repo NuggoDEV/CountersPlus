@@ -58,7 +58,7 @@ namespace CountersPlus.UI
                 }
             }
             catch (Exception e) {
-                Plugin.Log(e.ToString(), Plugin.LogInfo.Fatal);
+                Plugin.Log(e.Message + e.StackTrace, Plugin.LogInfo.Fatal);
             }
         }
 
@@ -76,35 +76,21 @@ namespace CountersPlus.UI
         private string DescriptionForModel<T>(T settings) where T : IConfigModel
         {
             switch (settings.DisplayName)
-            {
-                default:
-                    return "Huh, I dont know, I cant find this!";
-                case "Missed":
-                    return "<i>MISS</i>";
-                case "Notes":
-                    return "Notes hit over total notes!";
-                case "Progress":
-                    return "The original you know and love.";
-                case "Score":
-                    return "If the in-game score counter wasn't good enough.";
-                case "Speed":
-                    return "<i>\"Speed, motherfucker, do you speak it?\"</i>";
-                case "Cut":
-                    return "How well you hit those bloqs.";
-                case "Spinometer":
-                    return "Can you break 3600 degrees per second?";
+            {   //Dont mind me just compressing some code.
+                default: return "Huh, I dont know, I cant find this!";
+                case "Missed": return "<i>MISS</i>";
+                case "Notes": return "Notes hit over total notes!";
+                case "Progress": return "The original you know and love.";
+                case "Score": return "If the in-game score counter wasn't good enough.";
+                case "Speed": return "<i>\"Speed, motherfucker, do you speak it?\"</i>";
+                case "Cut": return "How well you hit those bloqs.";
+                case "Spinometer": return "Can you break 3600 degrees per second?";
             }
         }
 
-        public override float RowHeight()
-        {
-            return 10f;
-        }
+        public override float RowHeight() { return 10f; }
 
-        public override int NumberOfRows()
-        {
-            return counterInfos.Count + 2;
-        }
+        public override int NumberOfRows() { return counterInfos.Count + 2; }
 
         public override TableCell CellForRow(int row)
         {

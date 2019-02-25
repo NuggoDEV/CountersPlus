@@ -17,7 +17,7 @@ namespace CountersPlus.UI
         static CountersPlusSettingsFlowCoordinator settingsFC;
         public static void CreateUI()
         {
-            MenuButtonUI.AddButton("Counters+", OnClick);
+            MenuButtonUI.AddButton("Counters+", "Configure Counters+ settings.", OnClick);
         }
 
         internal static void OnClick()
