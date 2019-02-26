@@ -50,7 +50,11 @@ namespace CountersPlus.UI
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
             rect = rectTransform;
-            if (firstActivation) Instance = this;
+            if (firstActivation)
+            {
+                Instance = this;
+                CreateCredits();
+            }
         }
 
         private static void CreateCredits()
