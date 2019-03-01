@@ -14,36 +14,25 @@ namespace CountersPlus.Counters
     {
         TextMeshPro _scoreMesh;
         ScoreController _scoreController;
-        BeatmapObjectExecutionRatingsRecorder _objectRatingRecorder;
 
         private CutConfigModel settings;
 
-        private List<float> cuts = new List<float>();
+        private List<int> cuts = new List<int>();
 
         GameObject _RankObject;
         TextMeshPro _RankText;
 
-        IEnumerator WaitForLoad()
+        IEnumerator GetRequired()
         {
-            bool loaded = false;
-            while (!loaded)
-            {
-                _scoreController = Resources.FindObjectsOfTypeAll<ScoreController>().FirstOrDefault();
-                _objectRatingRecorder = FindObjectOfType<BeatmapObjectExecutionRatingsRecorder>();
-
-                if (_scoreController == null || _objectRatingRecorder == null)
-                    yield return new WaitForSeconds(0.1f);
-                else
-                    loaded = true;
-            }
-
+            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<ScoreController>().Any());
+            _scoreController = Resources.FindObjectsOfTypeAll<ScoreController>().FirstOrDefault();
             Init();
         }
 
         void Awake()
         {
             settings = CountersController.settings.cutConfig;
-            StartCoroutine(WaitForLoad());
+            StartCoroutine(GetRequired());
         }
 
         private void Init()
@@ -82,21 +71,14 @@ namespace CountersPlus.Counters
 
         public void UpdateScore(NoteData data, NoteCutInfo info, int score)
         {
-
-            if (_objectRatingRecorder != null)
+            int a, b, c;
+            if (data.noteType == NoteType.Bomb || !info.allIsOK) return;
+            info.afterCutSwingRatingCounter.didFinishEvent += (v) =>
             {
-                List<BeatmapObjectExecutionRating> _ratings = ReflectionUtil.GetPrivateField<List<BeatmapObjectExecutionRating>>(_objectRatingRecorder, "_beatmapObjectExecutionRatings");
-                if (_ratings != null)
-                {
-                    float averageCut = 0;
-                    foreach (BeatmapObjectExecutionRating rating in _ratings)
-                    {
-                        if (rating.beatmapObjectRatingType == BeatmapObjectExecutionRating.BeatmapObjectExecutionRatingType.Note)
-                            averageCut += (rating as NoteExecutionRating).cutScore;
-                    }
-                    _RankText.text = Mathf.Round(averageCut / _ratings.Count).ToString();
-                }
-            }
+                ScoreController.ScoreWithoutMultiplier(info, info.afterCutSwingRatingCounter, out a, out b, out c);
+                cuts.Add(a+b);
+                _RankText.text = $"{Math.Round(cuts.Average())}";
+            };
         }
     }
 }
