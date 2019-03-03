@@ -73,8 +73,11 @@ namespace CountersPlus.UI
                 { "SkyKiwiTV", "Original version checking code" },
                 { "Dracrius", "Bug fixing and beta testing" },
                 { "Stackeror", "Creator of the original Progress Counter mod" },
-                { GetUserInfo.GetUserName(), "For enjoying this mod!"}, //Teehee :)
-            }; 
+            };
+            string user = GetUserInfo.GetUserName();
+            if (contributors.ContainsKey(user))
+                contributors.Add($"<i>\"{user}\"</i>", "For enjoying this mod!");
+            else contributors.Add(user, "For enjoying this mod!"); //Teehee :)
             name = BeatSaberUI.CreateText(rect, "Counters+", Vector2.zero);
             name.fontSize = 10;
             name.alignment = TextAlignmentOptions.Center;
