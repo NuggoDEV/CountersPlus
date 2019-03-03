@@ -84,9 +84,9 @@ public class Plugin : IPlugin {
 	
 	void AddCustomCounter(){
 		CustomCounter counter = new CustomCounter {
-			SectionName = "testCounter", //Used as an identifier. Don't plan on changing this.
-			Name = "Test", //Display name that will appear in the SettingsUI.
-			Mod = this, //IPA Plugin. Will show up in Credits in the SettingsUI.
+			SectionName = "testCounter", //Used as an identifier in the Counters+ config file. Don't plan on changing this.
+			Name = "Test", //Display name that will appear in the Counters+ settings list.
+			Mod = this, //IPA Plugin. Will show up in Credits in the Counters+ settings  list.
 			Counter = "testCounterGameObject", //Name of the GameObject that holds your Counter component. Used to hook into the Counters+ system.
 		};
 		CustomCounterCreator.CreateCustomCounter(counter);
@@ -98,7 +98,9 @@ public class Plugin : IPlugin {
 A few things to keep in mind:
 1. Try to keep your counters under one GameObject each (Have anything else as a child), you can only add one GameObject per custom counter!
 2. Add Counters before the Menu scene is loaded (It'll thrown an exception after), this is so it can create UI in settings without having to reload.
+3. Your `SectionName` is an identifier in the Counters+ config file. Make sure this identifier is unique, and will not be used by anyone else.
+4. Do not plan on changing `SectionName` after you release your first public build that uses Counters+ custom counters.
 
 And you're done! If it has not yet been created, Counters+ will append the custom counter to its `CountersPlus.ini` file, and will go off of that from now on. Your Counter can now be subject to the same base configuration settings as every counter!
 
-Custom Counters also have a Delete option (To delete custom counters), and a Credits option which will display the mod that created the counter.
+Custom Counters no longer have a `Delete` option. Instead, simply disabling the Custom Counter via the Counters+ menu will achieve the same effect. ~~to be honest though I should probably add that back~~
