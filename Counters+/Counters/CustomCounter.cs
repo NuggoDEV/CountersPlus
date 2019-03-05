@@ -66,16 +66,7 @@ namespace CountersPlus.Counters
         {
             counter.transform.parent = transform;
             counter.transform.localPosition = Vector3.zero;
-            StartCoroutine(UpdatePosition());
-        }
-
-        IEnumerator UpdatePosition()
-        {
-            while (true)
-            {
-                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-                yield return new WaitForSeconds(10);
-            }
+            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
     }
 }

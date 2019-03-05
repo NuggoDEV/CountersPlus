@@ -11,7 +11,7 @@ namespace CountersPlus
     public class Plugin : IPlugin
     {
         public string Name => "Counters+";
-        public string Version => "1.4.1";
+        public string Version => "1.4.1-hotfix1";
         internal static Plugin Instance;
         public enum LogInfo { Info, Warning, Error, Fatal };
         internal static BS_Utils.Utilities.Config config = new BS_Utils.Utilities.Config("CountersPlus"); //Conflicts with CountersPlus.Config POG

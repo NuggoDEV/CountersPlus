@@ -38,8 +38,6 @@ namespace CountersPlus.Counters
                 StartCoroutine(YeetToBaseCounter());
             else if (settings.Mode != ICounterMode.BaseGame)
                 StartCoroutine(WaitForLoad());
-            else if (settings.Mode == ICounterMode.BaseGame && gameObject.name == "SongProgressPanel")
-                StartCoroutine(UpdatePosition());
         }
 
         IEnumerator YeetToBaseCounter()
@@ -111,16 +109,7 @@ namespace CountersPlus.Counters
                 _timeMesh.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
                 _timeMesh.alignment = TextAlignmentOptions.Center;
             }
-            StartCoroutine(UpdatePosition());
-        }
-
-        IEnumerator UpdatePosition()
-        {
-            while (true)
-            {
-                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-                yield return new WaitForSeconds(10);
-            }
+            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
 
         void Update()

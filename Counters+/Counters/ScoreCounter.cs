@@ -67,11 +67,7 @@ namespace CountersPlus.Counters
 
         private void PreInit()
         {
-            if (settings.Mode == ICounterMode.BaseGame || settings.Mode == ICounterMode.BaseWithOutPoints)
-            {
-                StartCoroutine(UpdatePosition());
-            }
-            else
+            if (!(settings.Mode == ICounterMode.BaseGame || settings.Mode == ICounterMode.BaseWithOutPoints))
             {
                 Destroy(GetComponent<ImmediateRankUIPanel>());
                 transform.Find("ScoreText").transform.position += new Vector3(0, 0f, 0);
@@ -88,6 +84,7 @@ namespace CountersPlus.Counters
                 if (settings.Mode == ICounterMode.ScoreOnly) Destroy(GameObject.Find("ScoreText"));
                 StartCoroutine(WaitForLoad());
             }
+            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
 
         private void Init()
@@ -119,7 +116,7 @@ namespace CountersPlus.Counters
                 _scoreController.scoreDidChangeEvent += UpdateScore;
                 _scoreController.noteWasMissedEvent += _OnNoteWasMissed;
             }
-            StartCoroutine(UpdatePosition());
+            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
 
         void Update()
@@ -138,16 +135,7 @@ namespace CountersPlus.Counters
                 _scoreMesh.rectTransform.localPosition = new Vector3(0, 0.4f, 0);
             }
         }
-
-        IEnumerator UpdatePosition()
-        {
-            while (true)
-            {
-                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-                yield return new WaitForSeconds(10);
-            }
-        }
-
+        
         public string GetRank(int score, float prec)
         {
             if (score >= _maxPossibleScore) return "SSS";

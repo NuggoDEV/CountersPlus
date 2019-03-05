@@ -27,7 +27,6 @@ namespace CountersPlus.Counters
         void Awake()
         {
             settings = CountersController.settings.speedConfig;
-            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             StartCoroutine(GetRequired());
             for (var i = 0; i < settings.DecimalPrecision; i++)
             {
@@ -123,16 +122,7 @@ namespace CountersPlus.Counters
                 }
                 StartCoroutine(FastestSpeed());
             }
-            StartCoroutine(UpdatePosition());
-        }
-
-        IEnumerator UpdatePosition()
-        {
-            while (true)
-            {
-                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-                yield return new WaitForSeconds(10);
-            }
+            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
 
         IEnumerator FastestSpeed()

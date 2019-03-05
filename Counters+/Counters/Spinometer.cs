@@ -25,7 +25,6 @@ namespace CountersPlus.Counters
         void Awake()
         {
             settings = CountersController.settings.spinometerConfig;
-            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             StartCoroutine(GetRequired());
         }
 
@@ -54,8 +53,8 @@ namespace CountersPlus.Counters
             label.fontSize = 3;
             label.color = Color.white;
             label.alignment = TextAlignmentOptions.Center;
-            StartCoroutine(UpdatePosition());
             StartCoroutine(SecondTick());
+            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
 
         void Update()
@@ -101,15 +100,6 @@ namespace CountersPlus.Counters
             float speed = 0;
             foreach (float f in speeds) speed += f;
             return speed;
-        }
-
-        IEnumerator UpdatePosition()
-        {
-            while (true)
-            {
-                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-                yield return new WaitForSeconds(10);
-            }
         }
 
         private string DetermineColor(float speed)

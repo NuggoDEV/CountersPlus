@@ -22,7 +22,6 @@ namespace CountersPlus.Counters
         void Awake()
         {
             settings = CountersController.settings.missedConfig;
-            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             if (transform.parent == null)
                 StartCoroutine(GetRequired());
             else
@@ -58,16 +57,7 @@ namespace CountersPlus.Counters
                 scoreController.noteWasCutEvent += onNoteCut;
                 scoreController.noteWasMissedEvent += onNoteMiss;
             }
-            StartCoroutine(UpdatePosition());
-        }
-
-        IEnumerator UpdatePosition()
-        {
-            while (true)
-            {
-                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-                yield return new WaitForSeconds(10);
-            }
+            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
 
         void OnDestroy()

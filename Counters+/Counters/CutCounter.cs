@@ -55,18 +55,9 @@ namespace CountersPlus.Counters
             _RankText.alignment = TextAlignmentOptions.Center;
             _RankText.rectTransform.localPosition = new Vector3(0f, -0.4f, 0f);
 
+            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             if (_scoreController != null)
                 _scoreController.noteWasCutEvent += UpdateScore;
-            StartCoroutine(UpdatePosition());
-        }
-
-        IEnumerator UpdatePosition()
-        {
-            while (true)
-            {
-                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-                yield return new WaitForSeconds(10);
-            }
         }
 
         public void UpdateScore(NoteData data, NoteCutInfo info, int score)
