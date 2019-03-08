@@ -21,6 +21,8 @@ namespace CountersPlus.Counters
         private ProgressConfigModel settings;
 
         bool useTimeLeft = false;
+        float t = 0;
+        float length = 0;
 
         IEnumerator WaitForLoad()
         {
@@ -50,10 +52,11 @@ namespace CountersPlus.Counters
 
         void Init()
         {
+            length = _audioTimeSync.songLength;
             if (settings.Mode == ICounterMode.Original)
             {
                 _timeMesh = this.gameObject.AddComponent<TextMeshPro>();
-                _timeMesh.text = "0:00";
+                _timeMesh.text = settings.ProgressTimeLeft ? $"{Math.Floor(length / 60):N0}:{Math.Floor(length % 60):00}" : "0:00";
                 _timeMesh.fontSize = 4;
                 _timeMesh.color = Color.white;
                 _timeMesh.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
@@ -100,46 +103,41 @@ namespace CountersPlus.Counters
                 g.GetComponent<RectTransform>().SetParent(this.transform, false);
                 g.transform.localPosition = new Vector3(-0.25f, .25f, 0f);
                 transform.position += new Vector3(0.5f, 0, 0);
+                _image.fillAmount = (settings.ProgressTimeLeft && settings.IncludeRing) ? 1 : 0;
             }else if (settings.Mode == ICounterMode.Percent)
             {
                 _timeMesh = this.gameObject.AddComponent<TextMeshPro>();
-                _timeMesh.text = "0.00%";
+                _timeMesh.text = settings.ProgressTimeLeft ? "100%" : "0.00%";
                 _timeMesh.fontSize = 4;
                 _timeMesh.color = Color.white;
                 _timeMesh.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
                 _timeMesh.alignment = TextAlignmentOptions.Center;
             }
-            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index); if (GameObject.Find("SongProgressPanel") != null && settings.Mode != ICounterMode.BaseGame) Destroy(GameObject.Find("SongProgressPanel"));
+            StartCoroutine(SecondTick());
         }
 
-        void Update()
+        IEnumerator SecondTick()
         {
-            if (GameObject.Find("SongProgressPanel") != null && settings.Mode != ICounterMode.BaseGame) Destroy(GameObject.Find("SongProgressPanel"));
-            if (_audioTimeSync == false)
+            while (true)
             {
-                _audioTimeSync = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().FirstOrDefault();
-                return;
-            }
-
-            var time = 0f;
-            if (useTimeLeft)
-                time = _audioTimeSync.songLength - _audioTimeSync.songTime;
-            else
-                time = _audioTimeSync.songTime;
-
-            if (time <= 0f)
-                return;
-            if (settings.Mode == ICounterMode.Original)
-            {
-                _timeMesh.text = $"{Math.Floor(time / 60):N0}:{Math.Floor(time % 60):00}";
-                if (settings.IncludeRing)
-                    _image.fillAmount = (useTimeLeft ? 1 : 0) - _audioTimeSync.songTime / _audioTimeSync.songLength * (useTimeLeft ? 1 : -1);
-                else
-                    _image.fillAmount = _audioTimeSync.songTime / _audioTimeSync.songLength;
-            }
-            else if (settings.Mode == ICounterMode.Percent)
-            {
-                _timeMesh.text = $"{((useTimeLeft ? 1 : 0) - ((_audioTimeSync.songTime / _audioTimeSync.songLength) * 100) * (useTimeLeft ? 1 : -1)).ToString("00")}%";
+                yield return new WaitForSecondsRealtime(1);
+                t++;
+                var time = t;
+                if (useTimeLeft) time = length - t;
+                if (time <= 0f) yield return null;
+                if (settings.Mode == ICounterMode.Original)
+                {
+                    _timeMesh.text = $"{Math.Floor(time / 60):N0}:{Math.Floor(time % 60):00}";
+                    if (settings.IncludeRing)
+                        _image.fillAmount = (useTimeLeft ? 1 : 0) - _audioTimeSync.songTime / length * (useTimeLeft ? 1 : -1);
+                    else
+                        _image.fillAmount = _audioTimeSync.songTime / length;
+                }
+                else if (settings.Mode == ICounterMode.Percent)
+                {
+                    _timeMesh.text = $"{((time / length) * 100).ToString("00")}%";
+                }
             }
         }
     }

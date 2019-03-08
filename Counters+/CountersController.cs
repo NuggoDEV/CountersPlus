@@ -22,7 +22,7 @@ namespace CountersPlus
 
         public static void OnLoad()
         {
-            settings = Config.ConfigLoader.LoadSettings();
+            settings = ConfigLoader.LoadSettings();
             if (Instance == null && settings.Enabled)
             {
                 GameObject controller = new GameObject("Counters+ Controller");
@@ -40,9 +40,7 @@ namespace CountersPlus
 
         void activeSceneChanged(Scene arg, Scene arg1)
         {
-            if (arg1.name == "Menu") {
-                loadedCounters.Clear();
-            }
+            if (arg1.name == "Menu") loadedCounters.Clear();
         }
         
         static void LoadCounter<T, R>(string name, T settings) where T : IConfigModel
@@ -77,6 +75,7 @@ namespace CountersPlus
                 }
             }
         }
+
         public static Vector3 determinePosition(GameObject counter, ICounterPositions position, int index)
         {
             Vector3 pos = new Vector3(); //Base position

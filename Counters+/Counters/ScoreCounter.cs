@@ -92,19 +92,22 @@ namespace CountersPlus.Counters
             Plugin.Log("Creating Score Counter stuff");
             roundMultiple = (float)Math.Pow(10, settings.DecimalPrecision + 2);
 
+            transform.localScale = Vector3.one;
+            transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().fontSize = 0.325f;
             GameObject scoreMesh = new GameObject("Counters+ | Score Percent");
-            scoreMesh.transform.parent = transform;
+            scoreMesh.transform.SetParent(transform, false);
             _scoreMesh = scoreMesh.AddComponent<TextMeshPro>();
             _scoreMesh.text = "100.0%";
             _scoreMesh.fontSize = 3;
             _scoreMesh.color = Color.white;
             _scoreMesh.alignment = TextAlignmentOptions.Center;
-            _scoreMesh.rectTransform.localPosition = new Vector3(0f, 0f, 0f);
 
+            transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = _scoreMesh.rectTransform.position + new Vector3(0,
+                7.8f, 0);
             if (settings.DisplayRank)
             {
                 _RankObject = new GameObject("Counters+ | Score Rank");
-                _RankObject.transform.parent = transform;
+                _RankObject.transform.SetParent(transform, false);
                 _RankText = _RankObject.AddComponent<TextMeshPro>();
                 _RankText.text = "\nSSS";
                 _RankText.fontSize = 4;
@@ -117,23 +120,13 @@ namespace CountersPlus.Counters
                 _scoreController.noteWasMissedEvent += _OnNoteWasMissed;
             }
             transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            if (settings.Mode == ICounterMode.LeavePoints || settings.Mode == ICounterMode.BaseWithOutPoints)
+                transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = new Vector3(-3.2f,
+                    0.85f + (settings.Mode == ICounterMode.LeavePoints ? 7.8f : 0), 7);
         }
 
         void Update()
         {
-            if (_RankText == null || _scoreMesh == null) return;
-            _RankText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
-            if (settings.Mode == ICounterMode.LeavePoints || settings.Mode == ICounterMode.BaseWithOutPoints)
-            {
-                transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = new Vector3(-3.2f, 0.85f, 7);
-                _RankText.rectTransform.localPosition = new Vector3(0, 0f, 0);
-                _scoreMesh.rectTransform.localPosition = new Vector3(0, 0.4f, 0);
-            }
-            else if (settings.Mode == ICounterMode.ScoreOnly)
-            {
-                _RankText.rectTransform.localPosition = new Vector3(0, 0f, 0);
-                _scoreMesh.rectTransform.localPosition = new Vector3(0, 0.4f, 0);
-            }
         }
         
         public string GetRank(int score, float prec)

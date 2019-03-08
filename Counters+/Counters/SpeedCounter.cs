@@ -148,67 +148,31 @@ namespace CountersPlus.Counters
         {
             if (settings.Mode == ICounterMode.Average)
             {
-                rSpeedList.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
-                float average = 0;
-                foreach (float speed in rSpeedList)
-                {
-                    average += speed;
-                }
-                average /= rSpeedList.Count;
-                counterText.text = average.ToString(precision);
+                rSpeedList.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
+                counterText.text = rSpeedList.Average().ToString(precision);
             }
             else if (settings.Mode == ICounterMode.SplitAverage)
             {
                 rSpeedList.Add(right.bladeSpeed);
-                float rAverage = 0;
-                foreach (float speed in rSpeedList)
-                {
-                    rAverage += speed;
-                }
-                rAverage /= rSpeedList.Count;
                 lSpeedList.Add(left.bladeSpeed);
-                float lAverage = 0;
-                foreach (float speed in lSpeedList)
-                {
-                    lAverage += speed;
-                }
-                lAverage /= lSpeedList.Count;
-                counterText.text = string.Format("{0} | {1}", lAverage.ToString(precision), rAverage.ToString(precision));
+                counterText.text = string.Format("{0} | {1}", lSpeedList.Average().ToString(precision), rSpeedList.Average().ToString(precision));
             }else if (settings.Mode == ICounterMode.Top5Sec)
             {
-                fastest.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
+                fastest.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
             }
             else
             {
-                fastest.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
+                fastest.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
                 if (settings.Mode == ICounterMode.Both)
                 {
-                    rSpeedList.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
-                    float average = 0;
-                    foreach (float speed in rSpeedList)
-                    {
-                        average += speed;
-                    }
-                    average /= rSpeedList.Count;
-                    counterText.text = average.ToString(precision);
+                    rSpeedList.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
+                    counterText.text = rSpeedList.Average().ToString(precision);
                 }
                 else if (settings.Mode == ICounterMode.SplitBoth)
                 {
                     rSpeedList.Add(right.bladeSpeed);
-                    float rAverage = 0;
-                    foreach (float speed in rSpeedList)
-                    {
-                        rAverage += speed;
-                    }
-                    rAverage /= rSpeedList.Count;
                     lSpeedList.Add(left.bladeSpeed);
-                    float lAverage = 0;
-                    foreach (float speed in lSpeedList)
-                    {
-                        lAverage += speed;
-                    }
-                    lAverage /= lSpeedList.Count;
-                    counterText.text = string.Format("{0} | {1}", lAverage.ToString(precision), rAverage.ToString(precision));
+                    counterText.text = string.Format("{0} | {1}", lSpeedList.Average().ToString(precision), rSpeedList.Average().ToString(precision));
                 }
             }
         }
