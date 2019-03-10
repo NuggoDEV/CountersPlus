@@ -74,9 +74,7 @@ namespace CountersPlus
         {
             Console.WriteLine("Counters+ [" + l.ToString() + "] | " + m);
             if (l == LogInfo.Fatal)
-            {
                 Console.WriteLine("Counters+ [IMPORTANT] | Contact Caeden117#0117 on Discord with this issue!");
-            }
         }
     }
 }
