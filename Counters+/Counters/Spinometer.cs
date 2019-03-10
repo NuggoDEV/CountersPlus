@@ -21,10 +21,12 @@ namespace CountersPlus.Counters
         private float highestSpin;
         private TextMeshPro spinometer;
         private SpinometerConfigModel settings;
+        private int settingsMode; //Prevents calls to config
 
         void Awake()
         {
             settings = CountersController.settings.spinometerConfig;
+            settingsMode = (int)settings.Mode;
             StartCoroutine(GetRequired());
         }
 
@@ -84,11 +86,11 @@ namespace CountersPlus.Counters
                 float averageSpeed = (leftSpeed + rightSpeed) / 2;
                 if (leftSpeed > highestSpin) highestSpin = leftSpeed;
                 if (rightSpeed > highestSpin) highestSpin = rightSpeed;
-                if (settings.Mode == ICounterMode.Original)
+                if (settingsMode == (int)ICounterMode.Original)
                     spinometer.text = $"<color=#{DetermineColor(averageSpeed)}>{Mathf.RoundToInt(averageSpeed)}</color>";
-                else if (settings.Mode == ICounterMode.Highest)
+                else if (settingsMode == (int)ICounterMode.Highest)
                     spinometer.text = $"<color=#{DetermineColor(highestSpin)}>{Mathf.RoundToInt(highestSpin)}</color>";
-                else if (settings.Mode == ICounterMode.SplitAverage)
+                else if (settingsMode == (int)ICounterMode.SplitAverage)
                     spinometer.text = $"<color=#{DetermineColor(leftSpeed)}>{Mathf.RoundToInt(leftSpeed)}</color> | <color=#{DetermineColor(rightSpeed)}>{Mathf.RoundToInt(rightSpeed)}</color>";
                 leftAngles.Clear();
                 rightAngles.Clear();
