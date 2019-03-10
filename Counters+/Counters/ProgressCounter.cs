@@ -113,7 +113,8 @@ namespace CountersPlus.Counters
                 _timeMesh.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
                 _timeMesh.alignment = TextAlignmentOptions.Center;
             }
-            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index); if (GameObject.Find("SongProgressPanel") != null && settings.Mode != ICounterMode.BaseGame) Destroy(GameObject.Find("SongProgressPanel"));
+            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            if (GameObject.Find("SongProgressPanel") != null && settings.Mode != ICounterMode.BaseGame) Destroy(GameObject.Find("SongProgressPanel"));
             StartCoroutine(SecondTick());
         }
 
@@ -122,7 +123,7 @@ namespace CountersPlus.Counters
             while (true)
             {
                 yield return new WaitForSecondsRealtime(1);
-                t++;
+                t = _audioTimeSync.songTime;
                 var time = t;
                 if (useTimeLeft) time = length - t;
                 if (time <= 0f) yield return null;
@@ -135,9 +136,7 @@ namespace CountersPlus.Counters
                         _image.fillAmount = _audioTimeSync.songTime / length;
                 }
                 else if (settings.Mode == ICounterMode.Percent)
-                {
                     _timeMesh.text = $"{((time / length) * 100).ToString("00")}%";
-                }
             }
         }
     }

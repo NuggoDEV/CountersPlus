@@ -124,10 +124,6 @@ namespace CountersPlus.Counters
                 transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = new Vector3(-3.2f,
                     0.85f + (settings.Mode == ICounterMode.LeavePoints ? 7.8f : 0), 7);
         }
-
-        void Update()
-        {
-        }
         
         public string GetRank(int score, float prec)
         {

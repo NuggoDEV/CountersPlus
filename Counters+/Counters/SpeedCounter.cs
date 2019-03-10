@@ -24,9 +24,12 @@ namespace CountersPlus.Counters
         private List<float> fastest = new List<float>();
         private string precision = "00.";
 
+        private int settingsMode;
+
         void Awake()
         {
             settings = CountersController.settings.speedConfig;
+            settingsMode = (int)settings.Mode;
             StartCoroutine(GetRequired());
             for (var i = 0; i < settings.DecimalPrecision; i++)
             {
@@ -113,13 +116,9 @@ namespace CountersPlus.Counters
                 altLabel.alignment = TextAlignmentOptions.Center;
 
                 if (settings.Position == ICounterPositions.AboveCombo || settings.Position == ICounterPositions.AboveHighway || settings.Position == ICounterPositions.AboveMultiplier)
-                {
                     altGO.transform.position += new Vector3(0, 1f, 0);
-                }
                 else
-                {
                     altGO.transform.position += new Vector3(0, -0.75f, 0);
-                }
                 StartCoroutine(FastestSpeed());
             }
             transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
@@ -132,10 +131,7 @@ namespace CountersPlus.Counters
                 yield return new WaitForSeconds(5);
                 fastest.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
                 float top = 0;
-                foreach (float speed in fastest)
-                {
-                    if (speed > top) top = speed;
-                }
+                foreach (float speed in fastest) if (speed > top) top = speed;
                 fastest.Clear();
                 if (settings.Mode == ICounterMode.Both || settings.Mode == ICounterMode.SplitBoth)
                     altCounterText.text = top.ToString(precision);
@@ -146,34 +142,31 @@ namespace CountersPlus.Counters
 
         void Update()
         {
-            if (settings.Mode == ICounterMode.Average)
+            switch (settingsMode)
             {
-                rSpeedList.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
-                counterText.text = rSpeedList.Average().ToString(precision);
-            }
-            else if (settings.Mode == ICounterMode.SplitAverage)
-            {
-                rSpeedList.Add(right.bladeSpeed);
-                lSpeedList.Add(left.bladeSpeed);
-                counterText.text = string.Format("{0} | {1}", lSpeedList.Average().ToString(precision), rSpeedList.Average().ToString(precision));
-            }else if (settings.Mode == ICounterMode.Top5Sec)
-            {
-                fastest.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
-            }
-            else
-            {
-                fastest.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
-                if (settings.Mode == ICounterMode.Both)
-                {
+                case (int)ICounterMode.Average:
                     rSpeedList.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
                     counterText.text = rSpeedList.Average().ToString(precision);
-                }
-                else if (settings.Mode == ICounterMode.SplitBoth)
-                {
+                    break;
+                case (int)ICounterMode.Top5Sec:
+                    fastest.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
+                    break;
+                case (int)ICounterMode.Both:
+                    fastest.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
+                    rSpeedList.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
+                    counterText.text = rSpeedList.Average().ToString(precision);
+                    break;
+                case (int)ICounterMode.SplitAverage:
                     rSpeedList.Add(right.bladeSpeed);
                     lSpeedList.Add(left.bladeSpeed);
                     counterText.text = string.Format("{0} | {1}", lSpeedList.Average().ToString(precision), rSpeedList.Average().ToString(precision));
-                }
+                    break;
+                case (int)ICounterMode.SplitBoth:
+                    fastest.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
+                    rSpeedList.Add(right.bladeSpeed);
+                    lSpeedList.Add(left.bladeSpeed);
+                    counterText.text = string.Format("{0} | {1}", lSpeedList.Average().ToString(precision), rSpeedList.Average().ToString(precision));
+                    break;
             }
         }
     }
