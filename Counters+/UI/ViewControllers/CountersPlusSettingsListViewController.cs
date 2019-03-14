@@ -16,6 +16,7 @@ using IllusionInjector;
 using IllusionPlugin;
 using System.Collections;
 using CustomUI.Utilities;
+using TMPro;
 
 namespace CountersPlus.UI
 {
@@ -53,7 +54,7 @@ namespace CountersPlus.UI
                             });
                         }
                     }
-                    _customListTableView.didSelectRowEvent += onCellSelect;
+                    _customListTableView.didSelectCellWithIdxEvent += onCellSelect;
                     _customListTableView.ReloadData();
                 }
             }
@@ -88,42 +89,44 @@ namespace CountersPlus.UI
             }
         }
 
-        public override float RowHeight() { return 10f; }
+        public override float CellSize() { return 10f; }
 
-        public override int NumberOfRows() { return counterInfos.Count + 2; }
+        public override int NumberOfCells() { return counterInfos.Count + 2; }
 
-        public override TableCell CellForRow(int row)
+        public override TableCell CellForIdx(int row)
         {
             LevelListTableCell cell = Instantiate(cellInstance);
+            TextMeshProUGUI songName = cell.GetPrivateField<TextMeshProUGUI>("_songNameText");
+            TextMeshProUGUI author = cell.GetPrivateField<TextMeshProUGUI>("_authorText");
             if (row == 0)
             {
-                cell.songName = "Main Settings";
-                cell.author = "Configure basic Counters+ settings.";
+                songName.text = "Main Settings";
+                author.text = "Configure basic Counters+ settings.";
             }
-            else if (row == NumberOfRows() - 1)
+            else if (row == NumberOfCells() - 1)
             {
-                cell.songName = "Credits";
-                cell.author = "View credits for Counters+.";
+                songName.text = "Credits";
+                author.text = "View credits for Counters+.";
             }else
             {
                 SettingsInfo info = counterInfos[row - 1];
-                cell.songName = info.Name;
-                cell.author = info.Description;
+                songName.text = info.Name;
+                author.text = info.Description;
             }
-            cell.coverImage = Sprite.Create(Texture2D.blackTexture, new Rect(), Vector2.zero);
+            //cell.coverImage = Sprite.Create(Texture2D.blackTexture, new Rect(), Vector2.zero);
             cell.reuseIdentifier = "CountersPlusSettingCell";
             return cell;
         }
 
         private void onCellSelect(TableView view, int row)
         {
-            if (row != 0 && row != NumberOfRows() - 1)
+            if (row != 0 && row != NumberOfCells() - 1)
             {
                 SettingsInfo info = counterInfos[row - 1];
                 StartCoroutine(WaitForSettings(info));
             }
             else
-                CountersPlusEditViewController.UpdateSettings(null as IConfigModel, null as SettingsInfo, true, (row == NumberOfRows() - 1));
+                CountersPlusEditViewController.UpdateSettings(null as IConfigModel, null as SettingsInfo, true, (row == NumberOfCells() - 1));
         }
 
         IEnumerator WaitForSettings(SettingsInfo info)
