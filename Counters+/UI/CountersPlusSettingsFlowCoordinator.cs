@@ -31,7 +31,7 @@ namespace CountersPlus.UI
 
                 navigationController = BeatSaberUI.CreateViewController<BackButton>();
                 navigationController.didFinishEvent += backButton_DidFinish;
-
+                
                 editSettings = BeatSaberUI.CreateViewController<CountersPlusEditViewController>();
                 placeholder = BeatSaberUI.CreateViewController<CountersPlusFillerForMainViewController>();
                 settingsList = BeatSaberUI.CreateViewController<CountersPlusSettingsListViewController>();

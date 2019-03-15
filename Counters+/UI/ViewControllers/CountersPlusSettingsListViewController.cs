@@ -34,7 +34,6 @@ namespace CountersPlus.UI
                 {
                     Instance = this;
                     cellInstance = Resources.FindObjectsOfTypeAll<LevelListTableCell>().First((LevelListTableCell x) => x.name == "LevelListTableCell");
-                    Plugin.Log($"{cellInstance == null}");
                     base.DidActivate(firstActivation, type);
 
                     foreach (var kvp in AdvancedCounterSettings.counterUIItems) counterInfos.Add(CreateFromModel(kvp.Key));

@@ -79,10 +79,11 @@ namespace CountersPlus.UI
             if (contributors.ContainsKey(user))
                 contributors.Add($"<i>\"{user}\"</i>", "For enjoying this mod!");
             else contributors.Add(user, "For enjoying this mod!"); //Teehee :)
+
             name = BeatSaberUI.CreateText(rect, "Counters+", Vector2.zero);
             name.fontSize = 10;
             name.alignment = TextAlignmentOptions.Center;
-            name.characterWidthAdjustment = 2;
+            name.characterSpacing = 2;
             setPositioning(name.rectTransform, 0, 0.8f, 1, 0.166f, 0.5f);
 
             version = BeatSaberUI.CreateText(rect,
@@ -128,7 +129,7 @@ namespace CountersPlus.UI
         {
             try
             {
-                MockCounter.Highlight(settings);
+                if (!(settings is null)) MockCounter.Highlight(settings);
                 ClearScreen();
                 if (!(info is null))
                 {

@@ -25,9 +25,9 @@ namespace CountersPlus.UI
         public static void Create<T>(T settings, string counterName, string counterData, bool UseCounterPositioning = true) where T : IConfigModel
         {
             if (!settings.Enabled) return;
-            GameObject counter = new GameObject($"Counters + | Mock {counterName} Counter");
-
+            GameObject counter = new GameObject($"Counters+ | Mock {counterName} Counter");
             GameObject nameGO = new GameObject($"Counters+ | Mock {counterName} Label");
+            TMPRefresher.RefreshTMPsInGameObject(counter);
             nameGO.transform.parent = counter.transform;
             TextMeshPro name = nameGO.AddComponent<TextMeshPro>();
             name.text = counterName;
@@ -50,8 +50,8 @@ namespace CountersPlus.UI
         public static void CreateStatic(string counterName, string counterData)
         {
             GameObject counter = new GameObject($"Counters+ | Static {counterName} Counter");
-
             GameObject nameGO = new GameObject($"Counters+ | Static {counterName} Label");
+            TMPRefresher.RefreshTMPsInGameObject(counter);
             nameGO.transform.parent = counter.transform;
             TextMeshPro name = nameGO.AddComponent<TextMeshPro>();
             name.text = counterName;
@@ -136,20 +136,6 @@ namespace CountersPlus.UI
                 else if (settings is SpinometerConfigModel) Create(settings, "Spinometer", "0");
             }
             if (settings is CustomConfigModel) Create(settings, "", settings.DisplayName);
-            RestoreVisuals();
-        }
-
-        internal static void RestoreVisuals()
-        {
-            foreach(GameObject go in loadedMockCounters.Keys)
-            {
-                foreach(TextMeshPro tmp in go.GetComponentsInChildren<TextMeshPro>())
-                {
-                    tmp.enabled = false;
-                    tmp.font = CountersController.Font;
-                    tmp.enabled = true;
-                }
-            }
         }
 
         public static void Highlight<T>(T settings) where T : IConfigModel

@@ -21,18 +21,17 @@ namespace CountersPlus
         public static List<GameObject> loadedCounters { get; private set; } = new List<GameObject>();
         internal static MainConfigModel settings;
         internal static List<CustomCounter> customCounters { get; private set; } = new List<CustomCounter>();
-        internal static TMP_FontAsset Font = null;
 
         public static void OnLoad()
         {
             settings = ConfigLoader.LoadSettings();
             if (Instance == null && settings.Enabled)
             {
-                GameObject controller = new GameObject("Counters+ Controller");
+                GameObject controller = new GameObject("Counters+ | Controller");
                 DontDestroyOnLoad(controller);
                 Instance = controller.AddComponent<CountersController>();
+                controller.AddComponent<TMPRefresher>();
                 Plugin.Log("Controller | Counters Controller created.");
-                
             }
         }
 
@@ -43,19 +42,7 @@ namespace CountersPlus
 
         void activeSceneChanged(Scene arg, Scene arg1)
         {
-            if (arg1.name == "Menu")
-            {
-                loadedCounters.Clear();
-                if (Font == null) StartCoroutine(LoadFont());
-            }
-        }
-        
-        private IEnumerator LoadFont()
-        {
-            Plugin.Log("Controller | Loading font asset...");
-            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Any(t => t.name == "Teko-Medium SDF No Glow"));
-            Font = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().First(t => t.name == "Teko-Medium SDF No Glow");
-            Plugin.Log("Controller | Found font asset!");
+            if (arg1.name == "Menu") loadedCounters.Clear();
         }
 
         static void LoadCounter<T, R>(string name, T settings) where T : IConfigModel
