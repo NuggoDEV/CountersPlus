@@ -47,7 +47,7 @@ namespace CountersPlus
         {
             try
             {
-                if (arg.name == "Menu") MenuUI.CreateUI();
+                if (arg.name == "MenuCore") MenuUI.CreateUI();
             }catch(Exception e)
             {
                 Log(e.ToString(), LogInfo.Fatal);

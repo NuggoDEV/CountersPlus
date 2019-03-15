@@ -135,8 +135,21 @@ namespace CountersPlus.UI
                 else if (settings is ProgressConfigModel) Create(settings, "Progress", "0%");
                 else if (settings is SpinometerConfigModel) Create(settings, "Spinometer", "0");
             }
-            if (settings is CustomConfigModel)
-                Create(settings, "", settings.DisplayName);
+            if (settings is CustomConfigModel) Create(settings, "", settings.DisplayName);
+            RestoreVisuals();
+        }
+
+        internal static void RestoreVisuals()
+        {
+            foreach(GameObject go in loadedMockCounters.Keys)
+            {
+                foreach(TextMeshPro tmp in go.GetComponentsInChildren<TextMeshPro>())
+                {
+                    tmp.enabled = false;
+                    tmp.font = CountersController.Font;
+                    tmp.enabled = true;
+                }
+            }
         }
 
         public static void Highlight<T>(T settings) where T : IConfigModel
@@ -145,8 +158,8 @@ namespace CountersPlus.UI
                 foreach (TextMeshPro tmp in kvp.Key.GetComponentsInChildren<TextMeshPro>())
                     if (!kvp.Key.name.Contains("Static"))
                     {
-                        if (settings == kvp.Value) highlightedObject = kvp.Key;
-                        tmp.color = (settings == kvp.Value) ? Color.yellow : Color.white;
+                        if (settings.DisplayName == kvp.Value.DisplayName) highlightedObject = kvp.Key;
+                        tmp.color = (settings.DisplayName == kvp.Value.DisplayName) ? Color.yellow : Color.white;
                     }
         }
 

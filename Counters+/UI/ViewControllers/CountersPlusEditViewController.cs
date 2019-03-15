@@ -75,6 +75,7 @@ namespace CountersPlus.UI
                 { "Stackeror", "Creator of the original Progress Counter mod" },
             };
             string user = GetUserInfo.GetUserName();
+            if (user == null) user = "Channel Monitor Bot";
             if (contributors.ContainsKey(user))
                 contributors.Add($"<i>\"{user}\"</i>", "For enjoying this mod!");
             else contributors.Add(user, "For enjoying this mod!"); //Teehee :)

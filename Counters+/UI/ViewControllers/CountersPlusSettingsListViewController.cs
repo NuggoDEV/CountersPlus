@@ -34,6 +34,7 @@ namespace CountersPlus.UI
                 {
                     Instance = this;
                     cellInstance = Resources.FindObjectsOfTypeAll<LevelListTableCell>().First((LevelListTableCell x) => x.name == "LevelListTableCell");
+                    Plugin.Log($"{cellInstance == null}");
                     base.DidActivate(firstActivation, type);
 
                     foreach (var kvp in AdvancedCounterSettings.counterUIItems) counterInfos.Add(CreateFromModel(kvp.Key));
@@ -96,6 +97,10 @@ namespace CountersPlus.UI
         public override TableCell CellForIdx(int row)
         {
             LevelListTableCell cell = Instantiate(cellInstance);
+            var beatmapCharacteristicImages = cell.GetPrivateField<UnityEngine.UI.Image[]>("_beatmapCharacteristicImages");
+            foreach (UnityEngine.UI.Image i in beatmapCharacteristicImages) i.enabled = false;
+            cell.SetPrivateField("_beatmapCharacteristicAlphas", new float[0]);
+            cell.SetPrivateField("_beatmapCharacteristicImages", new UnityEngine.UI.Image[0]);
             TextMeshProUGUI songName = cell.GetPrivateField<TextMeshProUGUI>("_songNameText");
             TextMeshProUGUI author = cell.GetPrivateField<TextMeshProUGUI>("_authorText");
             if (row == 0)

@@ -10,6 +10,8 @@ using IllusionInjector;
 using IllusionPlugin;
 using IniParser;
 using IniParser.Model;
+using TMPro;
+using System.Collections;
 
 namespace CountersPlus
 {
@@ -19,6 +21,7 @@ namespace CountersPlus
         public static List<GameObject> loadedCounters { get; private set; } = new List<GameObject>();
         internal static MainConfigModel settings;
         internal static List<CustomCounter> customCounters { get; private set; } = new List<CustomCounter>();
+        internal static TMP_FontAsset Font = null;
 
         public static void OnLoad()
         {
@@ -28,7 +31,7 @@ namespace CountersPlus
                 GameObject controller = new GameObject("Counters+ Controller");
                 DontDestroyOnLoad(controller);
                 Instance = controller.AddComponent<CountersController>();
-                Plugin.Log("Counters+ Controller created.");
+                Plugin.Log("Controller | Counters Controller created.");
                 
             }
         }
@@ -40,22 +43,34 @@ namespace CountersPlus
 
         void activeSceneChanged(Scene arg, Scene arg1)
         {
-            if (arg1.name == "Menu") loadedCounters.Clear();
+            if (arg1.name == "Menu")
+            {
+                loadedCounters.Clear();
+                if (Font == null) StartCoroutine(LoadFont());
+            }
         }
         
+        private IEnumerator LoadFont()
+        {
+            Plugin.Log("Controller | Loading font asset...");
+            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<TMP_FontAsset>().Any(t => t.name == "Teko-Medium SDF No Glow"));
+            Font = Resources.FindObjectsOfTypeAll<TMP_FontAsset>().First(t => t.name == "Teko-Medium SDF No Glow");
+            Plugin.Log("Controller | Found font asset!");
+        }
+
         static void LoadCounter<T, R>(string name, T settings) where T : IConfigModel
         {
             if (!settings.Enabled || GameObject.Find("Counters+ | " + name + " Counter")) return;
             GameObject counter = new GameObject("Counters+ | " + name + " Counter");
             counter.transform.position = determinePosition(counter, settings.Position, settings.Index);
             counter.AddComponent(typeof(R));
-            Plugin.Log("Loaded Counter: " + name);
+            Plugin.Log("Controller | Loaded Counter: " + name);
             loadedCounters.Add(counter);
         }
 
         public static void LoadCounters()
         {
-            Plugin.Log("Loading Counters...");
+            Plugin.Log("Controller | Loading Counters...");
             LoadCounter<MissedConfigModel, MissedCounter>("Missed", settings.missedConfig);
             LoadCounter<NoteConfigModel, AccuracyCounter>("Notes", settings.noteConfig);
             LoadCounter<ScoreConfigModel, ScoreCounter>("Score", settings.scoreConfig);
