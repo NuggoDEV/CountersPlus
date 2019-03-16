@@ -54,17 +54,17 @@ namespace CountersPlus
         private IEnumerator DelayedGameObjectReactivation(string str)
         {
             yield return new WaitForSeconds(0.1f);
-            Plugin.Log(queuedToReactivate[str].name);
+            Plugin.Log($"Is Font Asset Null? {(Font == null ? "YES" : "NO")}");
             try
             {
-                foreach (TextMeshPro tmp in queuedToReactivate[str].GetComponentsInChildren<TextMeshPro>()) tmp.font = Font;
+                foreach (TextMeshPro tmp in queuedToReactivate[str].GetComponentsInChildren<TextMeshPro>()) tmp.font = Instantiate(Font);
                 queuedToReactivate[str].SetActive(true);
                 queuedToReactivate.Remove(str);
             }
             catch(Exception e)
             {
                 Plugin.Log(e.ToString());
-                Plugin.Log("TMP Refresher | Attempted to activate a non-existant GameObject.", Plugin.LogInfo.Error);
+                Plugin.Log($"TMP Refresher | {e.GetType().Name}? My ass!", Plugin.LogInfo.Error);
             }
         }
     }
