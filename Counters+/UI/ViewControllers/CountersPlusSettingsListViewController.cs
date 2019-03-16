@@ -124,13 +124,9 @@ namespace CountersPlus.UI
 
         private void onCellSelect(TableView view, int row)
         {
-            if (row != 0 && row != NumberOfCells() - 1)
-            {
-                SettingsInfo info = counterInfos[row - 1];
-                StartCoroutine(WaitForSettings(info));
-            }
-            else
-                CountersPlusEditViewController.UpdateSettings(null as IConfigModel, null as SettingsInfo, true, (row == NumberOfCells() - 1));
+            if (row == 0) CountersPlusEditViewController.ShowMainSettings();
+            else if (row == NumberOfCells() - 1) CountersPlusEditViewController.CreateCredits();
+            else StartCoroutine(WaitForSettings(counterInfos[row - 1]));
         }
 
         IEnumerator WaitForSettings(SettingsInfo info)

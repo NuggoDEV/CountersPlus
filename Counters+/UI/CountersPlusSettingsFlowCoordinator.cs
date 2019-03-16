@@ -62,7 +62,6 @@ namespace CountersPlus.UI
             MockCounterInfo info = new MockCounterInfo();
             MockCounter.CreateStatic("Combo", $"{info.notesCut}");
             MockCounter.CreateStatic("Multiplier", "x8");
-            if (MockCounter.highlightedObject != null) MockCounter.RestoreHighlightedObject();
             StartCoroutine(UpdateMockCountersRoutine());
         }
 
@@ -93,7 +92,11 @@ namespace CountersPlus.UI
 
         private void backButton_DidFinish()
         {
-            foreach (KeyValuePair<GameObject, IConfigModel> kvp in MockCounter.loadedMockCounters) Destroy(kvp.Key);
+            foreach (KeyValuePair<MockCounterGroup, IConfigModel> kvp in MockCounter.loadedMockCounters)
+            {
+                Destroy(kvp.Key.CounterName);
+                Destroy(kvp.Key.CounterData);
+            }
             MockCounter.loadedMockCounters.Clear();
             MainScreen.transform.position = MainScreenPosition;
             MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();

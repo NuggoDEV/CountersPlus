@@ -57,7 +57,7 @@ namespace CountersPlus.UI
             }
         }
 
-        private static void CreateCredits()
+        internal static void CreateCredits()
         {
             ClearScreen();
             TextMeshProUGUI name, version, creator, contributorLabel;
@@ -67,6 +67,7 @@ namespace CountersPlus.UI
                 { "Shoko84", "Bug fixing" },
                 { "xhuytox", "Big helper in bug hunting - thanks man!" },
                 { "Brian", "Saving Beat Saber Modding with CustomUI" },
+                { "Viscoci", "Helper code that fixed displaying text and saved my bacon" },
                 { "Assistant", "Stole some Custom Avatars UI code to help with settings" },
                 { "Kyle1413", "Beat Saber Utils and for Progress/Score Counter code" },
                 { "Ragesaq", "Speed Counter and Spinometer idea <i>(and some bug fixing on stream)</i>" },
@@ -80,8 +81,9 @@ namespace CountersPlus.UI
                 contributors.Add($"<i>\"{user}\"</i>", "For enjoying this mod!");
             else contributors.Add(user, "For enjoying this mod!"); //Teehee :)
 
+            //name = BeatSaberUI.CreateText(rect, "Temporary Name LMAO", Vector2.zero);
             name = BeatSaberUI.CreateText(rect, "Counters+", Vector2.zero);
-            name.fontSize = 10;
+            name.fontSize = 8;
             name.alignment = TextAlignmentOptions.Center;
             name.characterSpacing = 2;
             setPositioning(name.rectTransform, 0, 0.8f, 1, 0.166f, 0.5f);
@@ -125,7 +127,44 @@ namespace CountersPlus.UI
             loadedElements.AddRange(new GameObject[] { name.gameObject, version.gameObject, creator.gameObject, contributorLabel.gameObject});
         }
 
-        public static void UpdateSettings<T>(T settings, SettingsInfo info, bool isMain = false, bool isCredits = false) where T : IConfigModel
+        internal static void ShowMainSettings()
+        {
+            ClearScreen();
+            settingsTitle = BeatSaberUI.CreateText(rect, "Main Settings", Vector2.zero);
+            settingsTitle.fontSize = 6;
+            settingsTitle.alignment = TextAlignmentOptions.Center;
+            setPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
+            loadedElements.Add(settingsTitle.gameObject);
+
+            SubMenu sub = new SubMenu(rect);
+            var enabled = AddList(ref sub, null as IConfigModel, "Enabled", "Toggles Counters+ on or off.", 2);
+            enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+            enabled.GetValue = () => CountersController.settings.Enabled ? 1f : 0f;
+            enabled.SetValue = (v) => CountersController.settings.Enabled = v != 0f;
+
+            var toggleCounters = AddList(ref sub, null as IConfigModel, "Advanced Mock Counters", "Allows the mock counters to display more settings. To increase preformance, and reduce chances of bugs, disable this option.", 2);
+            toggleCounters.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+            toggleCounters.GetValue = () => CountersController.settings.AdvancedCounterInfo ? 1f : 0f;
+            toggleCounters.SetValue = (v) => CountersController.settings.AdvancedCounterInfo = v != 0f;
+
+            var comboOffset = AddList(ref sub, null as IConfigModel, "Combo Offset", "How far from the Combo counters should be before Distance is taken into account.", 20);
+            comboOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
+            comboOffset.GetValue = () => (CountersController.settings.ComboOffset * 10) + 10;
+            comboOffset.SetValue = (v) => CountersController.settings.ComboOffset = ((v - 10) / 10);
+
+            var multiOffset = AddList(ref sub, null as IConfigModel, "Multiplier Offset", "How far from the Multiplier counters should be before Distance is taken into account.", 20);
+            multiOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
+            multiOffset.GetValue = () => (CountersController.settings.MultiplierOffset * 10) + 10;
+            multiOffset.SetValue = (v) => CountersController.settings.MultiplierOffset = ((v - 10) / 10);
+
+            toggleCounters.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
+            comboOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
+            multiOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
+
+            foreach (ListViewController list in loadedSettings) list.Init();
+        }
+
+        public static void UpdateSettings<T>(T settings, SettingsInfo info) where T : IConfigModel
         {
             try
             {
@@ -134,7 +173,7 @@ namespace CountersPlus.UI
                 if (!(info is null))
                 {
                     if (info.IsCustom) container = CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
-                    else if (!isMain)
+                    else
                     {
                         SubMenu sub = CreateBase(settings);
                         AdvancedCounterSettings.counterUIItems.Where(
@@ -142,42 +181,11 @@ namespace CountersPlus.UI
                             ).First().Value(sub, settings);
                     }
                 }
-                if (!isCredits)
-                {
-                    settingsTitle = BeatSaberUI.CreateText(rect, $"{(isMain ? "Main" : settings.DisplayName)} Settings", Vector2.zero);
-                    settingsTitle.fontSize = 6;
-                    settingsTitle.alignment = TextAlignmentOptions.Center;
-                    setPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
-                    loadedElements.Add(settingsTitle.gameObject);
-                    if (isMain)
-                    {
-                        SubMenu sub = new SubMenu(rect);
-                        var enabled = AddList(ref sub, settings, "Enabled", "Toggles Counters+ on or off.", 2);
-                        enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
-                        enabled.GetValue = () => CountersController.settings.Enabled ? 1f : 0f;
-                        enabled.SetValue = (v) => CountersController.settings.Enabled = v != 0f;
-
-                        var toggleCounters = AddList(ref sub, settings, "Advanced Mock Counters", "Allows the mock counters to display more settings. To increase preformance, and reduce chances of bugs, disable this option.", 2);
-                        toggleCounters.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
-                        toggleCounters.GetValue = () => CountersController.settings.AdvancedCounterInfo ? 1f : 0f;
-                        toggleCounters.SetValue = (v) => CountersController.settings.AdvancedCounterInfo = v != 0f;
-
-                        var comboOffset = AddList(ref sub, settings, "Combo Offset", "How far from the Combo counters should be before Distance is taken into account.", 20);
-                        comboOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
-                        comboOffset.GetValue = () => (CountersController.settings.ComboOffset * 10) + 10;
-                        comboOffset.SetValue = (v) => CountersController.settings.ComboOffset = ((v - 10) / 10);
-
-                        var multiOffset = AddList(ref sub, settings, "Multiplier Offset", "How far from the Multiplier counters should be before Distance is taken into account.", 20);
-                        multiOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
-                        multiOffset.GetValue = () => (CountersController.settings.MultiplierOffset * 10) + 10;
-                        multiOffset.SetValue = (v) => CountersController.settings.MultiplierOffset = ((v - 10) / 10);
-                        
-                        toggleCounters.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
-                        comboOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
-                        multiOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
-                    }
-                }
-                else CreateCredits();
+                settingsTitle = BeatSaberUI.CreateText(rect, $"{settings.DisplayName} Settings", Vector2.zero);
+                settingsTitle.fontSize = 6;
+                settingsTitle.alignment = TextAlignmentOptions.Center;
+                setPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
+                loadedElements.Add(settingsTitle.gameObject);
                 foreach (ListViewController list in loadedSettings) list.Init();
             }
             catch(Exception e) { Plugin.Log(e.ToString(), Plugin.LogInfo.Fatal); }

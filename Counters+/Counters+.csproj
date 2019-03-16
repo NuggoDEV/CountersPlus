@@ -42,7 +42,6 @@
     <Reference Include="IllusionInjector, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="IllusionPlugin" />
     <Reference Include="INIFileParser" />
-    <Reference Include="Newtonsoft.Json" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />

@@ -10,8 +10,6 @@ using UnityEngine.SceneManagement;
 using CustomUI.Settings;
 using System.Threading;
 using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using IniParser.Model;
 using IniParser;
 

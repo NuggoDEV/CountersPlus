@@ -9,7 +9,6 @@ using TMPro;
 using CountersPlus.Config;
 using CountersPlus.Custom;
 using System.IO;
-using Newtonsoft.Json;
 using IniParser;
 using IniParser.Model;
 
