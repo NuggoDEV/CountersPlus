@@ -91,7 +91,7 @@ namespace CountersPlus.UI
 
         public override float CellSize() { return 10f; }
 
-        public override int NumberOfCells() { return counterInfos.Count + 2; }
+        public override int NumberOfCells() { return counterInfos.Count + 3; }
 
         public override TableCell CellForIdx(int row)
         {
@@ -107,11 +107,16 @@ namespace CountersPlus.UI
                 songName.text = "Main Settings";
                 author.text = "Configure basic Counters+ settings.";
             }
-            else if (row == NumberOfCells() - 1)
+            else if (row == NumberOfCells() - 2)
             {
                 songName.text = "Credits";
                 author.text = "View credits for Counters+.";
-            }else
+            }
+            else if (row == NumberOfCells() - 1) {
+                songName.text = "Contributors";
+                author.text = "See who helped with Counters+!";
+            }
+            else
             {
                 SettingsInfo info = counterInfos[row - 1];
                 songName.text = info.Name;
@@ -125,7 +130,8 @@ namespace CountersPlus.UI
         private void onCellSelect(TableView view, int row)
         {
             if (row == 0) CountersPlusEditViewController.ShowMainSettings();
-            else if (row == NumberOfCells() - 1) CountersPlusEditViewController.CreateCredits();
+            else if (row == NumberOfCells() - 2) CountersPlusEditViewController.CreateCredits();
+            else if (row == NumberOfCells() - 1) CountersPlusEditViewController.ShowContributors();
             else StartCoroutine(WaitForSettings(counterInfos[row - 1]));
         }
 

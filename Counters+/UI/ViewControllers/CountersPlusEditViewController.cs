@@ -60,7 +60,41 @@ namespace CountersPlus.UI
         internal static void CreateCredits()
         {
             ClearScreen();
-            TextMeshProUGUI name, version, creator, contributorLabel;
+            TextMeshProUGUI name, version, creator;
+
+            //name = BeatSaberUI.CreateText(rect, "Temporary Name LMAO", Vector2.zero);
+            name = BeatSaberUI.CreateText(rect, "Counters+", Vector2.zero);
+            name.fontSize = 9;
+            name.alignment = TextAlignmentOptions.Center;
+            name.characterSpacing = 2;
+            setPositioning(name.rectTransform, 0, 0.7f, 1, 0.166f, 0.5f);
+
+            version = BeatSaberUI.CreateText(rect,
+                $"Version <color={(Plugin.upToDate ? "#00FF00" : "#FF0000")}>{Plugin.Instance.Version}</color>", Vector2.zero);
+            version.fontSize = 3;
+            version.alignment = TextAlignmentOptions.Center;
+            setPositioning(version.rectTransform, 0, 0.5f, 1, 0.166f, 0.5f);
+
+            if (!Plugin.upToDate)
+            {
+                TextMeshProUGUI warning = BeatSaberUI.CreateText(rect,
+                $"<color=#FF0000>Version {Plugin.webVersion} available for download!</color>", Vector2.zero);
+                warning.fontSize = 3;
+                warning.alignment = TextAlignmentOptions.Center;
+                setPositioning(warning.rectTransform, 0, 0.47f, 1, 0.166f, 0.5f);
+                loadedElements.Add(warning.gameObject);
+            }
+
+            creator = BeatSaberUI.CreateText(rect, "Developed by: <color=#00c0ff>Caeden117</color>", Vector2.zero);
+            creator.fontSize = 5;
+            creator.alignment = TextAlignmentOptions.Center;
+            setPositioning(creator.rectTransform, 0, 0.35f, 1, 0.166f, 0.5f);
+
+            loadedElements.AddRange(new GameObject[] { name.gameObject, version.gameObject, creator.gameObject });
+        }
+
+        internal static void ShowContributors()
+        {
             Dictionary<string, string> contributors = new Dictionary<string, string>()
             {
                 { "Moon", "Bug fixing and code optimization" },
@@ -81,50 +115,23 @@ namespace CountersPlus.UI
                 contributors.Add($"<i>\"{user}\"</i>", "For enjoying this mod!");
             else contributors.Add(user, "For enjoying this mod!"); //Teehee :)
 
-            //name = BeatSaberUI.CreateText(rect, "Temporary Name LMAO", Vector2.zero);
-            name = BeatSaberUI.CreateText(rect, "Counters+", Vector2.zero);
-            name.fontSize = 8;
-            name.alignment = TextAlignmentOptions.Center;
-            name.characterSpacing = 2;
-            setPositioning(name.rectTransform, 0, 0.8f, 1, 0.166f, 0.5f);
-
-            version = BeatSaberUI.CreateText(rect,
-                $"Version <color={(Plugin.upToDate ? "#00FF00" : "#FF0000")}>{Plugin.Instance.Version}</color>", Vector2.zero);
-            version.fontSize = 3;
-            version.alignment = TextAlignmentOptions.Center;
-            setPositioning(version.rectTransform, 0, 0.73f, 1, 0.166f, 0.5f);
-
-            if (!Plugin.upToDate)
-            {
-                TextMeshProUGUI warning = BeatSaberUI.CreateText(rect,
-                $"<color=#FF0000>Version {Plugin.webVersion} available for download!</color>", Vector2.zero);
-                warning.fontSize = 3;
-                warning.alignment = TextAlignmentOptions.Center;
-                setPositioning(warning.rectTransform, 0, 0.7f, 1, 0.166f, 0.5f);
-                loadedElements.Add(warning.gameObject);
-            }
-
-            creator = BeatSaberUI.CreateText(rect, "Developed by: <color=#00c0ff>Caeden117</color>", Vector2.zero);
-            creator.fontSize = 5;
-            creator.alignment = TextAlignmentOptions.Center;
-            setPositioning(creator.rectTransform, 0, 0.64f, 1, 0.166f, 0.5f);
-
+            ClearScreen();
+            TextMeshProUGUI contributorLabel;
             contributorLabel = BeatSaberUI.CreateText(rect, "Thanks to these contributors for, directly or indirectly, helping make Counters+ what it is!", Vector2.zero);
             contributorLabel.fontSize = 3;
             contributorLabel.alignment = TextAlignmentOptions.Center;
-            setPositioning(contributorLabel.rectTransform, 0, 0.55f, 1, 0.166f, 0.5f);
+            setPositioning(contributorLabel.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
+            loadedElements.Add(contributorLabel.gameObject);
 
-            foreach(var kvp in contributors)
+            foreach (var kvp in contributors)
             {
                 TextMeshProUGUI contributor = BeatSaberUI.CreateText(rect, $"<color=#00c0ff>{kvp.Key}</color> | {kvp.Value}", Vector2.zero);
                 contributor.fontSize = 3;
                 contributor.alignment = TextAlignmentOptions.Left;
                 setPositioning(contributor.rectTransform, 0.15f,
-                    0.5f - (contributors.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
+                    0.8f - (contributors.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
                 loadedElements.Add(contributor.gameObject);
             }
-
-            loadedElements.AddRange(new GameObject[] { name.gameObject, version.gameObject, creator.gameObject, contributorLabel.gameObject});
         }
 
         internal static void ShowMainSettings()
