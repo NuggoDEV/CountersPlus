@@ -15,7 +15,7 @@ using CountersPlus.Custom;
 using IllusionInjector;
 using IllusionPlugin;
 using System.Collections;
-using CustomUI.Utilities;
+using CountersPlus.UI.Images;
 using TMPro;
 
 namespace CountersPlus.UI
@@ -102,25 +102,35 @@ namespace CountersPlus.UI
             cell.SetPrivateField("_beatmapCharacteristicImages", new UnityEngine.UI.Image[0]);
             TextMeshProUGUI songName = cell.GetPrivateField<TextMeshProUGUI>("_songNameText");
             TextMeshProUGUI author = cell.GetPrivateField<TextMeshProUGUI>("_authorText");
+            author.overflowMode = TextOverflowModes.Overflow;
+            UnityEngine.UI.Image image = cell.GetPrivateField<UnityEngine.UI.Image>("_coverImage");
             if (row == 0)
             {
                 songName.text = "Main Settings";
                 author.text = "Configure basic Counters+ settings.";
+                image.sprite = Images.Images.Load("MainSettings");
             }
             else if (row == NumberOfCells() - 2)
             {
                 songName.text = "Credits";
                 author.text = "View credits for Counters+.";
+                image.sprite = Images.Images.Load("Credits");
             }
             else if (row == NumberOfCells() - 1) {
                 songName.text = "Contributors";
                 author.text = "See who helped with Counters+!";
+                image.sprite = Images.Images.Load("Contributors");
             }
             else
             {
                 SettingsInfo info = counterInfos[row - 1];
                 songName.text = info.Name;
                 author.text = info.Description;
+                try
+                {
+                    image.sprite = Images.Images.Load(info.Name);
+                }
+                catch { image.sprite = Images.Images.Load("Custom"); }
             }
             //cell.coverImage = Sprite.Create(Texture2D.blackTexture, new Rect(), Vector2.zero);
             cell.reuseIdentifier = "CountersPlusSettingCell";
