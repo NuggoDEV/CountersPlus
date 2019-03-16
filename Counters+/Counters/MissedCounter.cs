@@ -16,7 +16,7 @@ namespace CountersPlus.Counters
         private ScoreController scoreController;
         //private StandardLevelSceneSetup sceneSetup;
         private MissedConfigModel settings;
-        private TextMeshPro missedText;
+        private TMP_Text missedText;
         private int counter;
 
         void Awake()
@@ -37,16 +37,16 @@ namespace CountersPlus.Counters
 
         private void Init()
         {
-            missedText = gameObject.AddComponent<TextMeshPro>();
+            Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            TextHelper.CreateText(out missedText, position - new Vector3(0, 0.4f, 0));
             missedText.text = "0";
             missedText.fontSize = 4;
             missedText.color = Color.white;
             missedText.alignment = TextAlignmentOptions.Center;
-            missedText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
 
             GameObject labelGO = new GameObject("Counters+ | Missed Label");
             labelGO.transform.parent = transform;
-            TextMeshPro label = labelGO.AddComponent<TextMeshPro>();
+            TextHelper.CreateText(out TMP_Text label, position);
             label.text = "Misses";
             label.fontSize = 3;
             label.color = Color.white;
@@ -57,7 +57,6 @@ namespace CountersPlus.Counters
                 scoreController.noteWasCutEvent += onNoteCut;
                 scoreController.noteWasMissedEvent += onNoteMiss;
             }
-            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
 
         void OnDestroy()

@@ -54,6 +54,17 @@ namespace CountersPlus
             loadedCounters.Add(counter);
         }
 
+        public static void DelayedLoadCounters(float delay)
+        {
+            Instance.StartCoroutine(Instance.DelayLoad(delay));
+        }
+
+        private IEnumerator DelayLoad(float d)
+        {
+            yield return new WaitForSeconds(d);
+            LoadCounters();
+        }
+
         public static void LoadCounters()
         {
             Plugin.Log("Controller | Loading Counters...");
@@ -125,7 +136,7 @@ namespace CountersPlus
             if (position != ICounterPositions.AboveHighway && position != ICounterPositions.BelowEnergy)
             {
                 if ((pos.x / Math.Abs(pos.x)) == -1) //If Counter would be on the Combo side
-                    pos -= new Vector3(0.2f, -0.3f, 0);
+                    pos -= new Vector3(0.2f, -0.7f, 0);
                 else                                 //If Counter would be on Multiplier side
                     pos += new Vector3(0.2f, 0.3f, 0);
             }

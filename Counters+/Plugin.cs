@@ -38,8 +38,8 @@ namespace CountersPlus
                     .FirstOrDefault()?
                     .currentLocalPlayer.playerSpecificSettings.noTextsAndHuds ?? true)
                 )
-            {
-                CountersController.LoadCounters();
+            {   //Some issues are probably fixed with this delay
+                CountersController.DelayedLoadCounters(0.1f);
             }
         }
 

@@ -15,7 +15,7 @@ namespace CountersPlus.Counters
     public class ProgressCounter : MonoBehaviour
     {
 
-        TextMeshPro _timeMesh;
+        TMP_Text _timeMesh;
         AudioTimeSyncController _audioTimeSync;
         Image _image;
         private ProgressConfigModel settings;
@@ -55,13 +55,13 @@ namespace CountersPlus.Counters
             length = _audioTimeSync.songLength;
             if (settings.Mode == ICounterMode.Original)
             {
-                _timeMesh = this.gameObject.AddComponent<TextMeshPro>();
+                Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+                TextHelper.CreateText(out _timeMesh, position + new Vector3(-0.2f, 0.2f, 0));
                 _timeMesh.text = settings.ProgressTimeLeft ? $"{Math.Floor(length / 60):N0}:{Math.Floor(length % 60):00}" : "0:00";
                 _timeMesh.fontSize = 4;
                 _timeMesh.color = Color.white;
-                _timeMesh.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
-                _timeMesh.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 1f);
-                _timeMesh.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 1f);
+                _timeMesh.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 0);
+                _timeMesh.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 0);
 
                 var image = ReflectionUtil.GetPrivateField<Image>(
                     Resources.FindObjectsOfTypeAll<ScoreMultiplierUIController>().First(), "_multiplierProgressImage");
@@ -106,7 +106,8 @@ namespace CountersPlus.Counters
                 _image.fillAmount = (settings.ProgressTimeLeft && settings.IncludeRing) ? 1 : 0;
             }else if (settings.Mode == ICounterMode.Percent)
             {
-                _timeMesh = this.gameObject.AddComponent<TextMeshPro>();
+                Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+                TextHelper.CreateText(out _timeMesh, position);
                 _timeMesh.text = settings.ProgressTimeLeft ? "100%" : "0.00%";
                 _timeMesh.fontSize = 4;
                 _timeMesh.color = Color.white;

@@ -12,7 +12,7 @@ namespace CountersPlus.Counters
 {
     public class CutCounter : MonoBehaviour
     {
-        TextMeshPro _scoreMesh;
+        TMP_Text cutLabel;
         ScoreController _scoreController;
 
         private CutConfigModel settings;
@@ -20,7 +20,7 @@ namespace CountersPlus.Counters
         private List<int> cuts = new List<int>();
 
         GameObject _RankObject;
-        TextMeshPro _RankText;
+        TMP_Text cutCounter;
 
         IEnumerator GetRequired()
         {
@@ -38,24 +38,23 @@ namespace CountersPlus.Counters
         private void Init()
         {
 
-            _scoreMesh = this.gameObject.AddComponent<TextMeshPro>();
-            _scoreMesh.text = "Average Cut";
-            _scoreMesh.fontSize = 3;
-            _scoreMesh.color = Color.white;
-            _scoreMesh.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
-            _scoreMesh.alignment = TextAlignmentOptions.Center;
+            Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            TextHelper.CreateText(out cutLabel, position);
+            cutLabel.text = "Average Cut";
+            cutLabel.fontSize = 3;
+            cutLabel.color = Color.white;
+            cutLabel.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
+            cutLabel.alignment = TextAlignmentOptions.Center;
 
             _RankObject = new GameObject("Counters+ | Cut Label");
             _RankObject.transform.parent = transform;
-            _RankText = _RankObject.AddComponent<TextMeshPro>();
-            _RankText.text = "0";
-            _RankText.fontSize = 4;
-            _RankText.color = Color.white;
-            _RankText.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
-            _RankText.alignment = TextAlignmentOptions.Center;
-            _RankText.rectTransform.localPosition = new Vector3(0f, -0.4f, 0f);
-
-            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            TextHelper.CreateText(out cutCounter, position - new Vector3(0, 0.4f, 0));
+            cutCounter.text = "0";
+            cutCounter.fontSize = 4;
+            cutCounter.color = Color.white;
+            cutCounter.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
+            cutCounter.alignment = TextAlignmentOptions.Center;
+            
             if (_scoreController != null)
                 _scoreController.noteWasCutEvent += UpdateScore;
         }
@@ -68,7 +67,7 @@ namespace CountersPlus.Counters
             {
                 ScoreController.ScoreWithoutMultiplier(info, info.afterCutSwingRatingCounter, out a, out b, out c);
                 cuts.Add(a+b);
-                _RankText.text = $"{Math.Round(cuts.Average())}";
+                cutCounter.text = $"{Math.Round(cuts.Average())}";
             };
         }
     }
