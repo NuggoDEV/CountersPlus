@@ -5,7 +5,7 @@ For Counters+, I am looking for a way to easily apply a fix to get text to displ
 
 I bet you Counters+ will be one of the last mods to update for 0.13. Unless a hotfix is pushed soon that addresses my issue (which I doubt), updating Counters+ will be much harder than imagined.
 
-If you want to help me out, I created the `0.13` branch where I am trying to fix and update Counters+. You can fork it, inspect, and make a pull request if you have anything noteworthy I should add in. You can also add me on Discord (`Caeden117#0117`) and we can talk Counters+.
+If you want to help me out, [I created the `0.13` branch](https://github.com/Caeden117/CountersPlus/tree/0.13) where I am trying to fix and update Counters+. You can fork it, inspect, and make a pull request if you have anything noteworthy I should add in. You can also add me on Discord (`Caeden117#0117`) and we can talk Counters+.
 
 For now, though, you'll just have to sit and be patient.
 
