@@ -1,3 +1,14 @@
+# Regarding Beat Saber 0.13
+As of right now, updating Counters+ is hard. Because of an issue with TextMeshPro, getting actual text to display is difficult, even when trying workarounds other Modders have made. As you might of guessed, displaying text is kind of a big deal with Counters+.
+
+For Counters+, I am looking for a way to easily apply a fix to get text to display, across every object I need to, so I dont have to go in and redo a fuck ton of existing code. I have not found that solution yet.
+
+I bet you Counters+ will be one of the last mods to update for 0.13. Unless a hotfix is pushed soon that addresses my issue (which I doubt), updating Counters+ will be much harder than imagined.
+
+If you want to help me out, I created the `0.13` branch where I am trying to fix and update Counters+. You can fork it, inspect, and make a pull request if you have anything noteworthy I should add in. You can also add me on Discord (`Caeden117#0117`) and we can talk Counters+.
+
+For now, though, you'll just have to sit and be patient.
+
 # CountersPlus
 A combination of widely-used counters, all configurable in one mod.
 
