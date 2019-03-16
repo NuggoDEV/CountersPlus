@@ -47,7 +47,6 @@ namespace CountersPlus.Counters
             spinometer.fontSize = 4;
             spinometer.color = Color.white;
             spinometer.alignment = TextAlignmentOptions.Center;
-            spinometer.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
 
             GameObject labelGO = new GameObject("Counters+ | Spinometer Label");
             labelGO.transform.parent = transform;

@@ -98,6 +98,8 @@ namespace CountersPlus.UI
                 Destroy(kvp.Key.CounterData);
             }
             MockCounter.loadedMockCounters.Clear();
+            Destroy(TextHelper.CounterCanvas.gameObject);
+            TextHelper.CounterCanvas = null;
             MainScreen.transform.position = MainScreenPosition;
             MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
             mainFlow.InvokeMethod("DismissFlowCoordinator", this, null, false);

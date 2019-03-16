@@ -16,7 +16,7 @@ namespace CountersPlus
          * 
          * I cannot thank him enough.
          */
-        public static Canvas CounterCanvas { get; private set; }
+        public static Canvas CounterCanvas;
         internal static float ScaleFactor = 10;
 
         public static Canvas CreateCanvas(Vector3 Position)

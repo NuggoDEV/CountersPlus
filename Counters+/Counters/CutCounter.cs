@@ -43,7 +43,6 @@ namespace CountersPlus.Counters
             cutLabel.text = "Average Cut";
             cutLabel.fontSize = 3;
             cutLabel.color = Color.white;
-            cutLabel.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
             cutLabel.alignment = TextAlignmentOptions.Center;
 
             _RankObject = new GameObject("Counters+ | Cut Label");
@@ -52,7 +51,6 @@ namespace CountersPlus.Counters
             cutCounter.text = "0";
             cutCounter.fontSize = 4;
             cutCounter.color = Color.white;
-            cutCounter.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
             cutCounter.alignment = TextAlignmentOptions.Center;
             
             if (_scoreController != null)

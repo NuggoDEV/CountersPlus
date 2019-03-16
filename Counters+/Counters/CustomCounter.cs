@@ -66,6 +66,11 @@ namespace CountersPlus.Counters
             counter.transform.parent = transform;
             counter.transform.localPosition = Vector3.zero;
             transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            if (counter.GetComponentsInChildren<TMP_Text>().Any())
+            {
+                foreach (TMP_Text tmp in counter.GetComponentsInChildren<TMP_Text>())
+                    tmp.transform.localPosition = Vector3.zero;
+            }
         }
     }
 }

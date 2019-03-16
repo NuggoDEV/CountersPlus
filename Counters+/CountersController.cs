@@ -105,7 +105,7 @@ namespace CountersPlus
                     if (nextToScore && baseScore) offset += new Vector3(0, -0.15f, 0);
                     break;
                 case Config.ICounterPositions.AboveCombo:
-                    pos = new Vector3(-X, 1f + settings.ComboOffset, 7);
+                    pos = new Vector3(-X, 1.7f + settings.ComboOffset, 7);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     if (nextToProgress) offset -= new Vector3(0, -0.5f, 0);
                     break;
@@ -117,7 +117,7 @@ namespace CountersPlus
                     if (nextToScore && baseScore) offset += new Vector3(0, -0.15f, 0);
                     break;
                 case Config.ICounterPositions.AboveMultiplier:
-                    pos = new Vector3(X, 1.1f + settings.MultiplierOffset, 7);
+                    pos = new Vector3(X, 1.7f + settings.MultiplierOffset, 7);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     if (GameObject.Find("FCDisplay")) offset += new Vector3(0, -0.25f, 0);
                     if (nextToProgress) offset -= new Vector3(0, -0.5f, 0);

@@ -66,11 +66,11 @@ namespace CountersPlus.UI
             GameObject nameGO = new GameObject($"Counters+ | Static {counterName} Label");
             Vector3 position = Vector3.zero;
             if (counterName == "Combo")
-                position = new Vector3(-3.2f, 0.9f, 7);
+                position = new Vector3(-3.2f, 1.25f, 7);
             else if (counterName == "Multiplier")
-                position = new Vector3(3.2f, 0.9f, 7);
+                position = new Vector3(3.2f, 1.25f, 7);
             else if (counterName == "123 456")
-                position = new Vector3(-3.2f, -0.1f, 7);
+                position = new Vector3(-3.2f, 0.35f, 7);
             nameGO.transform.parent = counter.transform;
             //TextMeshPro name = nameGO.AddComponent<TextMeshPro>();
             TextHelper.CreateText(out TMP_Text name, position);

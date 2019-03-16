@@ -70,7 +70,6 @@ namespace CountersPlus.Counters
             if (!(settings.Mode == ICounterMode.BaseGame || settings.Mode == ICounterMode.BaseWithOutPoints))
             {
                 Destroy(GetComponent<ImmediateRankUIPanel>());
-                transform.Find("ScoreText").transform.position += new Vector3(0, 0f, 0);
                 for (var i = 0; i < transform.childCount; i++)
                 {
                     Transform child = transform.GetChild(i);
@@ -80,11 +79,10 @@ namespace CountersPlus.Counters
                         Destroy(child.gameObject);
                     }
                 }
-                //if (settings.Mode == ICounterMode.LeaveScore) transform.Find("ScoreText").SetParent(new GameObject("Counters+ | Points Container").transform, true);
                 if (settings.Mode == ICounterMode.ScoreOnly) Destroy(GameObject.Find("ScoreText"));
                 StartCoroutine(WaitForLoad());
-            }
-            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            }else
+                transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
 
         private void Init()
@@ -108,7 +106,7 @@ namespace CountersPlus.Counters
             {
                 _RankObject = new GameObject("Counters+ | Score Rank");
                 _RankObject.transform.SetParent(transform, false);
-                TextHelper.CreateText(out _RankText, position - new Vector3(0, 0.2f, 0));
+                TextHelper.CreateText(out _RankText, position);
                 _RankText.text = "\nSSS";
                 _RankText.fontSize = 4;
                 _RankText.color = Color.white;
@@ -120,8 +118,10 @@ namespace CountersPlus.Counters
                 _scoreController.noteWasMissedEvent += _OnNoteWasMissed;
             }
             if (settings.Mode == ICounterMode.LeavePoints || settings.Mode == ICounterMode.BaseWithOutPoints)
+            {
                 transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = new Vector3(-3.2f,
-                    0.85f + (settings.Mode == ICounterMode.LeavePoints ? 7.8f : 0), 7);
+                    0.35f + (settings.Mode == ICounterMode.LeavePoints ? 7.8f : 0), 7);
+            }
         }
         
         public string GetRank(int score, float prec)

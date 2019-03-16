@@ -98,7 +98,7 @@ namespace CountersPlus.Counters
 
                 GameObject altGO = new GameObject("Counters+ | Highest Speed");
                 altGO.transform.parent = transform;
-                TextHelper.CreateText(out altCounterText, position - new Vector3(0, -0.6f, 0));
+                TextHelper.CreateText(out altCounterText, position - new Vector3(0, 1.1f, 0));
                 altCounterText.text = "00.00";
                 altCounterText.fontSize = 4;
                 altCounterText.color = Color.white;
@@ -106,7 +106,7 @@ namespace CountersPlus.Counters
 
                 GameObject altLabelGO = new GameObject("Counters+ | Highest Speed Label");
                 altLabelGO.transform.parent = altGO.transform;
-                TextHelper.CreateText(out TMP_Text altLabel, position - new Vector3(0, -0.2f, 0));
+                TextHelper.CreateText(out TMP_Text altLabel, position - new Vector3(0, 0.7f, 0));
                 altLabel.text = "Top Speed (5 Sec.)";
                 altLabel.fontSize = 3;
                 altLabel.color = Color.white;
