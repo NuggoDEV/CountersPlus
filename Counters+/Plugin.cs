@@ -45,7 +45,6 @@ namespace CountersPlus
 
         private void AddUI(Scene arg, LoadSceneMode hiBrian)
         {
-            TMPRefresher.RefreshFont();
             try
             {
                 if (arg.name == "MenuCore") MenuUI.CreateUI();

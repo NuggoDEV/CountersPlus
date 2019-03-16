@@ -96,7 +96,7 @@
     <Compile Include="Counters\ScoreCounter.cs" />
     <Compile Include="Counters\SpeedCounter.cs" />
     <Compile Include="Utils\SimpleJSON.cs" />
-    <Compile Include="Utils\TMPRefresher.cs" />
+    <Compile Include="Utils\TextHelper.cs" />
     <Compile Include="Utils\VersionChecker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

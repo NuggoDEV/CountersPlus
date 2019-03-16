@@ -27,22 +27,23 @@ namespace CountersPlus.UI
             if (!settings.Enabled) return;
             GameObject counter = new GameObject($"Counters+ | Mock {counterName} Counter");
             GameObject nameGO = new GameObject($"Counters+ | Mock {counterName} Label");
-            TMPRefresher.RefreshTMPsInGameObject(counter);
+            Vector3 position = (CountersController.determinePosition(counter, settings.Position, settings.Index) - new Vector3(0, 0.4f, 0));
             nameGO.transform.parent = counter.transform;
-            TextMeshPro name = nameGO.AddComponent<TextMeshPro>();
+            //TextMeshPro name = nameGO.AddComponent<TextMeshPro>();
+            TextHelper.CreateText(out TMP_Text name, position);
             name.text = counterName;
             name.fontSize = 3;
             name.color = Color.white;
             name.alignment = TextAlignmentOptions.Center;
-            name.rectTransform.localPosition = new Vector3(0, 0.4f, 0);
+            //name.rectTransform.localPosition = new Vector3(0, 0.4f, 0);
 
-            TextMeshPro data = counter.AddComponent<TextMeshPro>();
+            //TextMeshPro data = counter.AddComponent<TextMeshPro>();
+            TextHelper.CreateText(out TMP_Text data, position - new Vector3(0, 0.4f, 0));
             data.text = counterData;
             data.fontSize = 4;
             data.color = Color.white;
             data.alignment = TextAlignmentOptions.Center;
-
-            counter.transform.position = CountersController.determinePosition(counter, settings.Position, settings.Index) - new Vector3(0, 0.4f, 0);
+            
             if (!loadedMockCounters.Where((KeyValuePair <GameObject, IConfigModel> x) => x.Value == settings).Any())
                 loadedMockCounters.Add(counter, settings);
         }
@@ -51,16 +52,23 @@ namespace CountersPlus.UI
         {
             GameObject counter = new GameObject($"Counters+ | Static {counterName} Counter");
             GameObject nameGO = new GameObject($"Counters+ | Static {counterName} Label");
-            TMPRefresher.RefreshTMPsInGameObject(counter);
+            Vector3 position = Vector3.zero;
+            if (counterName == "Combo")
+                position = new Vector3(-3.2f, 0.9f, 7);
+            else if (counterName == "Multiplier")
+                position = new Vector3(3.2f, 0.9f, 7);
+            else if (counterName == "123 456")
+                position = new Vector3(-3.2f, -0.1f, 7);
             nameGO.transform.parent = counter.transform;
-            TextMeshPro name = nameGO.AddComponent<TextMeshPro>();
+            //TextMeshPro name = nameGO.AddComponent<TextMeshPro>();
+            TextHelper.CreateText(out TMP_Text name, position);
             name.text = counterName;
             name.fontSize = 3;
             name.color = Color.white;
             name.alignment = TextAlignmentOptions.Center;
-            name.rectTransform.localPosition = new Vector3(0, 0.4f, 0);
 
-            TextMeshPro data = counter.AddComponent<TextMeshPro>();
+            //TextMeshPro data = counter.AddComponent<TextMeshPro>();
+            TextHelper.CreateText(out TMP_Text data, position - new Vector3(0, 0.4f, 0));
             data.text = counterData;
             data.fontSize = 4;
             data.color = Color.white;
@@ -68,12 +76,6 @@ namespace CountersPlus.UI
 
             name.color = new Color(0.35f, 0.35f, 0.35f);
             data.color = new Color(0.35f, 0.35f, 0.35f);
-            if (counterName == "Combo")
-                counter.transform.position = new Vector3(-3.2f, 0.9f, 7);
-            else if (counterName == "Multiplier")
-                counter.transform.position = new Vector3(3.2f, 0.9f, 7);
-            else if (counterName == "123 456")
-                counter.transform.position = new Vector3(-3.2f, -0.1f, 7);
             loadedMockCounters.Add(counter, null as IConfigModel);
         }
         #endregion
@@ -87,6 +89,7 @@ namespace CountersPlus.UI
                 GameObject loaded = loadedMockCounters.Where((KeyValuePair<GameObject, IConfigModel> x) => x.Value == settings).First().Key;
                 UnityEngine.Object.Destroy(loaded);
                 loadedMockCounters.Remove(loaded);
+                Plugin.Log("Found");
             }
 
             //Mock Counter creation is here instead of CountersPlusSettingsFlowCoordinator.
