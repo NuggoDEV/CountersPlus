@@ -103,7 +103,7 @@ namespace CountersPlus.Counters
             _scoreMesh.color = Color.white;
             _scoreMesh.alignment = TextAlignmentOptions.Center;
 
-            transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = position + new Vector3(-6.375f, 7.75f, 0);
+            transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = position + new Vector3(-6.425f, 7.67f, 0);
             if (settings.DisplayRank)
             {
                 _RankObject = new GameObject("Counters+ | Score Rank");

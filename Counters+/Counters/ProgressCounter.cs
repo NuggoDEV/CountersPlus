@@ -56,7 +56,7 @@ namespace CountersPlus.Counters
             if (settings.Mode == ICounterMode.Original)
             {
                 Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-                TextHelper.CreateText(out _timeMesh, position + new Vector3(-0.2f, 0.2f, 0));
+                TextHelper.CreateText(out _timeMesh, position + new Vector3(-0.25f, 0.25f, 0));
                 _timeMesh.text = settings.ProgressTimeLeft ? $"{Math.Floor(length / 60):N0}:{Math.Floor(length % 60):00}" : "0:00";
                 _timeMesh.fontSize = 4;
                 _timeMesh.color = Color.white;
