@@ -111,7 +111,6 @@ namespace CountersPlus.Counters
                 _timeMesh.text = settings.ProgressTimeLeft ? "100%" : "0.00%";
                 _timeMesh.fontSize = 4;
                 _timeMesh.color = Color.white;
-                _timeMesh.font = Resources.Load<TMP_FontAsset>("Teko-Medium SDF No Glow");
                 _timeMesh.alignment = TextAlignmentOptions.Center;
             }
             transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
