@@ -86,6 +86,22 @@ namespace CountersPlus
                     LoadCounter<CustomConfigModel, CustomCounterHook>(section.Keys["SectionName"], potential);
                 }
             }
+            if (settings.HideCombo)
+            {
+                for (int i = 0; i < GameObject.Find("ComboPanel").transform.childCount; i++)
+                {
+                    GameObject child = GameObject.Find("ComboPanel").transform.GetChild(i).gameObject;
+                    if (child.name != "BG") Destroy(child);
+                }
+            }
+            if (settings.HideMultiplier)
+            {
+                for (int i = 0; i < GameObject.Find("MultiplierPanel").transform.childCount; i++)
+                {
+                    GameObject child = GameObject.Find("MultiplierPanel").transform.GetChild(i).gameObject;
+                    if (child.name != "BG") child.SetActive(false);
+                }
+            }
         }
 
         public static Vector3 determinePosition(GameObject counter, ICounterPositions position, int index)

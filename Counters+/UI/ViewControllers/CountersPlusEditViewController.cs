@@ -164,6 +164,16 @@ namespace CountersPlus.UI
             multiOffset.GetValue = () => (CountersController.settings.MultiplierOffset * 10) + 10;
             multiOffset.SetValue = (v) => CountersController.settings.MultiplierOffset = ((v - 10) / 10);
 
+            var hideCombo = AddList(ref sub, null as IConfigModel, "Hide Combo In-Game", "The combo counter wasn't good enough anyways.", 2);
+            hideCombo.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+            hideCombo.GetValue = () => CountersController.settings.HideCombo ? 1f : 0f;
+            hideCombo.SetValue = (v) => CountersController.settings.HideCombo = v != 0f;
+
+            var hideMultiplier = AddList(ref sub, null as IConfigModel, "Hide Multiplier In-Game", "The multiplier wasn't good enough anyways.", 2);
+            hideMultiplier.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+            hideMultiplier.GetValue = () => CountersController.settings.HideMultiplier ? 1f : 0f;
+            hideMultiplier.SetValue = (v) => CountersController.settings.HideMultiplier = v != 0f;
+
             toggleCounters.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
             comboOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
             multiOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();

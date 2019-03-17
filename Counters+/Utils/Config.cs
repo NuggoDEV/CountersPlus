@@ -20,6 +20,8 @@ namespace CountersPlus.Config
                 model.MultiplierOffset = model.MultiplierOffset;
                 model.AdvancedCounterInfo = model.AdvancedCounterInfo;
                 model.FirstStart = model.FirstStart;
+                model.HideCombo = model.HideCombo;
+                model.HideMultiplier = model.HideMultiplier;
                 model.missedConfig = new MissedConfigModel();
                 model.noteConfig = new NoteConfigModel();
                 model.progressConfig = new ProgressConfigModel();
@@ -99,6 +101,28 @@ namespace CountersPlus.Config
             set
             {
                 Plugin.config.SetBool("Main", "FirstStart", value);
+            }
+        }
+        public bool HideCombo
+        {
+            get
+            {
+                return Plugin.config.GetBool("Main", "HideCombo", false, true);
+            }
+            set
+            {
+                Plugin.config.SetBool("Main", "HideCombo", value);
+            }
+        }
+        public bool HideMultiplier
+        {
+            get
+            {
+                return Plugin.config.GetBool("Main", "HideMultiplier", false, true);
+            }
+            set
+            {
+                Plugin.config.SetBool("Main", "HideMultiplier", value);
             }
         }
         public float ComboOffset {

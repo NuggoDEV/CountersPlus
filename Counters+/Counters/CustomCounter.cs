@@ -72,7 +72,7 @@ namespace CountersPlus.Counters
                 {
                     TMP_Text tmp = counter.GetComponentsInChildren<TMP_Text>().Reverse().ToArray()[i];
                     if (i == 0) firstPosition = tmp.transform.position;
-                    tmp.transform.localPosition = (tmp.transform.position - firstPosition) * TextHelper.ScaleFactor;
+                    tmp.transform.localPosition = ((tmp.transform.position - firstPosition) * TextHelper.ScaleFactor) - new Vector3(0, 0.4f, 0);
                 }
             }
             transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
