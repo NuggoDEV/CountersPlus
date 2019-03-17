@@ -19,7 +19,7 @@ namespace CountersPlus.Counters
         private List<Quaternion> rightQuaternions = new List<Quaternion>();
         private List<Quaternion> leftQuaternions = new List<Quaternion>();
         private float highestSpin;
-        private TextMeshPro spinometer;
+        private TMP_Text spinometer;
         private SpinometerConfigModel settings;
         private int settingsMode; //Prevents calls to config
 
@@ -41,22 +41,21 @@ namespace CountersPlus.Counters
 
         void Init()
         {
-            spinometer = gameObject.AddComponent<TextMeshPro>();
+            Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            TextHelper.CreateText(out spinometer, position - new Vector3(0, 0.4f, 0));
             spinometer.text = settings.Mode == ICounterMode.SplitAverage ? "0 | 0" : "0";
             spinometer.fontSize = 4;
             spinometer.color = Color.white;
             spinometer.alignment = TextAlignmentOptions.Center;
-            spinometer.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
 
             GameObject labelGO = new GameObject("Counters+ | Spinometer Label");
             labelGO.transform.parent = transform;
-            TextMeshPro label = labelGO.AddComponent<TextMeshPro>();
+            TextHelper.CreateText(out TMP_Text label, position);
             label.text = "Spinometer";
             label.fontSize = 3;
             label.color = Color.white;
             label.alignment = TextAlignmentOptions.Center;
             StartCoroutine(SecondTick());
-            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
 
         void Update()

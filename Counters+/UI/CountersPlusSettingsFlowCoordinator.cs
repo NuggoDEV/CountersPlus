@@ -31,7 +31,7 @@ namespace CountersPlus.UI
 
                 navigationController = BeatSaberUI.CreateViewController<BackButton>();
                 navigationController.didFinishEvent += backButton_DidFinish;
-
+                
                 editSettings = BeatSaberUI.CreateViewController<CountersPlusEditViewController>();
                 placeholder = BeatSaberUI.CreateViewController<CountersPlusFillerForMainViewController>();
                 settingsList = BeatSaberUI.CreateViewController<CountersPlusSettingsListViewController>();
@@ -62,7 +62,6 @@ namespace CountersPlus.UI
             MockCounterInfo info = new MockCounterInfo();
             MockCounter.CreateStatic("Combo", $"{info.notesCut}");
             MockCounter.CreateStatic("Multiplier", "x8");
-            if (MockCounter.highlightedObject != null) MockCounter.RestoreHighlightedObject();
             StartCoroutine(UpdateMockCountersRoutine());
         }
 
@@ -93,8 +92,14 @@ namespace CountersPlus.UI
 
         private void backButton_DidFinish()
         {
-            foreach (KeyValuePair<GameObject, IConfigModel> kvp in MockCounter.loadedMockCounters) Destroy(kvp.Key);
+            foreach (KeyValuePair<MockCounterGroup, IConfigModel> kvp in MockCounter.loadedMockCounters)
+            {
+                Destroy(kvp.Key.CounterName);
+                Destroy(kvp.Key.CounterData);
+            }
             MockCounter.loadedMockCounters.Clear();
+            Destroy(TextHelper.CounterCanvas.gameObject);
+            TextHelper.CounterCanvas = null;
             MainScreen.transform.position = MainScreenPosition;
             MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
             mainFlow.InvokeMethod("DismissFlowCoordinator", this, null, false);

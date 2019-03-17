@@ -11,7 +11,7 @@ namespace CountersPlus
     public class Plugin : IPlugin
     {
         public string Name => "Counters+";
-        public string Version => "1.4.2";
+        public string Version => "1.5.0";
         internal static Plugin Instance;
         public enum LogInfo { Info, Warning, Error, Fatal };
         internal static BS_Utils.Utilities.Config config = new BS_Utils.Utilities.Config("CountersPlus"); //Conflicts with CountersPlus.Config POG
@@ -38,8 +38,8 @@ namespace CountersPlus
                     .FirstOrDefault()?
                     .currentLocalPlayer.playerSpecificSettings.noTextsAndHuds ?? true)
                 )
-            {
-                CountersController.LoadCounters();
+            {   //Some issues are probably fixed with this delay
+                CountersController.DelayedLoadCounters(0.1f);
             }
         }
 
@@ -47,7 +47,7 @@ namespace CountersPlus
         {
             try
             {
-                if (arg.name == "Menu") MenuUI.CreateUI();
+                if (arg.name == "MenuCore") MenuUI.CreateUI();
             }catch(Exception e)
             {
                 Log(e.ToString(), LogInfo.Fatal);

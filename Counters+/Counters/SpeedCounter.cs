@@ -15,8 +15,8 @@ namespace CountersPlus.Counters
 
         private PlayerController playerController;
         private SpeedConfigModel settings;
-        private TextMeshPro counterText;
-        private TextMeshPro altCounterText;
+        private TMP_Text counterText;
+        private TMP_Text altCounterText;
         private Saber right;
         private Saber left;
         private List<float> rSpeedList = new List<float>();
@@ -46,36 +46,35 @@ namespace CountersPlus.Counters
 
         private void Init()
         {
+            Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             right = playerController.rightSaber;
             left = playerController.leftSaber;
             if (settings.Mode == ICounterMode.Average || settings.Mode == ICounterMode.SplitAverage)
             {
-                counterText = gameObject.AddComponent<TextMeshPro>();
+                TextHelper.CreateText(out counterText, position - new Vector3(0, 0.4f, 0));
                 counterText.text = settings.Mode == ICounterMode.Average ? "0" : "0 | 0";
                 counterText.fontSize = 4;
                 counterText.color = Color.white;
                 counterText.alignment = TextAlignmentOptions.Center;
-                counterText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
 
                 GameObject labelGO = new GameObject("Counters+ | Speed Label");
                 labelGO.transform.parent = transform;
-                TextMeshPro label = labelGO.AddComponent<TextMeshPro>();
+                TextHelper.CreateText(out TMP_Text label, position);
                 label.text = "Average Speed";
                 label.fontSize = 3;
                 label.color = Color.white;
                 label.alignment = TextAlignmentOptions.Center;
             }else if (settings.Mode == ICounterMode.Top5Sec)
             {
-                counterText = gameObject.AddComponent<TextMeshPro>();
+                TextHelper.CreateText(out counterText, position - new Vector3(0, 0.4f, 0));
                 counterText.text = "00.00";
                 counterText.fontSize = 4;
                 counterText.color = Color.white;
                 counterText.alignment = TextAlignmentOptions.Center;
-                counterText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
 
                 GameObject labelGO = new GameObject("Counters+ | Highest Speed Label");
                 labelGO.transform.parent = transform;
-                TextMeshPro label = labelGO.AddComponent<TextMeshPro>();
+                TextHelper.CreateText(out TMP_Text label, position);
                 label.text = "Top Speed (5 Sec.)";
                 label.fontSize = 3;
                 label.color = Color.white;
@@ -83,16 +82,15 @@ namespace CountersPlus.Counters
 
                 StartCoroutine(FastestSpeed());
             }else if (settings.Mode == ICounterMode.Both || settings.Mode == ICounterMode.SplitBoth){
-                counterText = gameObject.AddComponent<TextMeshPro>();
+                TextHelper.CreateText(out counterText, position - new Vector3(0, 0.4f, 0));
                 counterText.text = settings.Mode == ICounterMode.Both ? "0" : "0 | 0";
                 counterText.fontSize = 4;
                 counterText.color = Color.white;
                 counterText.alignment = TextAlignmentOptions.Center;
-                counterText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
 
                 GameObject labelGO = new GameObject("Counters+ | Speed Label");
                 labelGO.transform.parent = transform;
-                TextMeshPro label = labelGO.AddComponent<TextMeshPro>();
+                TextHelper.CreateText(out TMP_Text label, position);
                 label.text = "Average Speed";
                 label.fontSize = 3;
                 label.color = Color.white;
@@ -100,16 +98,15 @@ namespace CountersPlus.Counters
 
                 GameObject altGO = new GameObject("Counters+ | Highest Speed");
                 altGO.transform.parent = transform;
-                altCounterText = altGO.AddComponent<TextMeshPro>();
+                TextHelper.CreateText(out altCounterText, position - new Vector3(0, 1.1f, 0));
                 altCounterText.text = "00.00";
                 altCounterText.fontSize = 4;
                 altCounterText.color = Color.white;
                 altCounterText.alignment = TextAlignmentOptions.Center;
-                altCounterText.rectTransform.localPosition = new Vector3(0, -0.2f, 0);
 
                 GameObject altLabelGO = new GameObject("Counters+ | Highest Speed Label");
                 altLabelGO.transform.parent = altGO.transform;
-                TextMeshPro altLabel = altLabelGO.AddComponent<TextMeshPro>();
+                TextHelper.CreateText(out TMP_Text altLabel, position - new Vector3(0, 0.7f, 0));
                 altLabel.text = "Top Speed (5 Sec.)";
                 altLabel.fontSize = 3;
                 altLabel.color = Color.white;
@@ -121,7 +118,6 @@ namespace CountersPlus.Counters
                     altGO.transform.position += new Vector3(0, -0.75f, 0);
                 StartCoroutine(FastestSpeed());
             }
-            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
 
         IEnumerator FastestSpeed()

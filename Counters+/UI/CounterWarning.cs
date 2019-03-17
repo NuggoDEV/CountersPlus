@@ -11,17 +11,19 @@ namespace CountersPlus.UI
 {
     class CounterWarning : MonoBehaviour
     {
-        private static int warnings = 0;
-        internal static List<CounterWarning> existing = new List<CounterWarning>();
         private string warningText = "";
+        private static int warnings = 0;
+        private static Canvas warningsCanvas;
+        internal static List<CounterWarning> existing = new List<CounterWarning>();
         private int warningOrder = 0;
         private float persistTime;
-        TextMeshPro tmpro;
+        TMP_Text tmpro;
 
         public static void CreateWarning(string text, float persistTimeInSeconds)
         {
             CounterWarning newWarning = new GameObject("Counters+ | Warning").AddComponent<CounterWarning>();
-            newWarning.UpdateText(text);
+            GameObject go = newWarning.gameObject;
+            newWarning.warningText = text;
             newWarning.persistTime = persistTimeInSeconds - 0.5f;
             newWarning.warningOrder = warnings;
             existing.Add(newWarning);
@@ -30,22 +32,18 @@ namespace CountersPlus.UI
 
         void Awake()
         {
-            tmpro = gameObject.AddComponent<TextMeshPro>();
+            if (warningsCanvas == null) warningsCanvas = TextHelper.CreateCanvas(new Vector3(0, 0, 2.25f));
+            Vector3 position = new Vector3(0, 2.1f - (warningOrder * 0.1f), 0);
+            TextHelper.CreateText(out tmpro, warningsCanvas, position);
             tmpro.fontSize = 1;
             tmpro.color = Color.white;
             tmpro.alignment = TextAlignmentOptions.Center;
             StartCoroutine(PersistALittleBit());
         }
 
-        void UpdateText(string newWarning)
-        {
-            warningText = newWarning;
-        }
-
         void Update()
         {
             tmpro.text = $"<u>{warningText}</u>";
-            tmpro.rectTransform.position = new Vector3(0, 2.1f - (warningOrder * 0.1f), 2.25f);
         }
 
         IEnumerator PersistALittleBit()
@@ -58,6 +56,7 @@ namespace CountersPlus.UI
         {
             yield return new WaitForSeconds(persistTime);
             existing.Remove(this);
+            Destroy(tmpro);
             Destroy(gameObject);
             warnings--;
         }

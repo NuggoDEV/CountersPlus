@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
 using System.Linq;
 
 namespace CountersPlus.Config
@@ -48,20 +47,6 @@ namespace CountersPlus.Config
                 {
                     Plugin.Log(e.ToString());
                     ResetSettings(model);
-                }
-            }
-            if (File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json"))
-            {
-                try
-                {
-                    string json = File.ReadAllText(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json");
-                    model = JsonConvert.DeserializeObject<MainConfigModel>(json);
-                    File.Delete(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.json");
-                    Plugin.Log("Loaded JSON for the last time. Goodbye, JSON!");
-                }
-                catch
-                {
-                    Plugin.Log("Error loading JSON!", Plugin.LogInfo.Error);
                 }
             }
             Plugin.Log("Config loaded.");

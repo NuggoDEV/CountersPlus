@@ -15,7 +15,7 @@ namespace CountersPlus.Counters
 
         private ScoreController scoreController;
         private NoteConfigModel settings;
-        private TextMeshPro counterText;
+        private TMP_Text counterText;
         private int counter;
         private int total;
 
@@ -37,16 +37,16 @@ namespace CountersPlus.Counters
 
         private void Init()
         {
-            counterText = gameObject.AddComponent<TextMeshPro>();
+            Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            TextHelper.CreateText(out counterText, position - new Vector3(0, 0.4f, 0));
             counterText.text = settings.ShowPercentage ? "0 / 0 - (100%)" : "0 / 0";
             counterText.fontSize = 4;
             counterText.color = Color.white;
             counterText.alignment = TextAlignmentOptions.Center;
-            counterText.rectTransform.localPosition = new Vector3(0, -0.4f, 0);
 
             GameObject labelGO = new GameObject("Counters+ | Notes Label");
             labelGO.transform.parent = transform;
-            TextMeshPro label = labelGO.AddComponent<TextMeshPro>();
+            TextHelper.CreateText(out TMP_Text label, position);
             label.text = "Notes";
             label.fontSize = 3;
             label.color = Color.white;
@@ -57,7 +57,6 @@ namespace CountersPlus.Counters
                 scoreController.noteWasCutEvent += onNoteCut;
                 scoreController.noteWasMissedEvent += onNoteMiss;
             }
-            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
 
         void OnDestroy()
