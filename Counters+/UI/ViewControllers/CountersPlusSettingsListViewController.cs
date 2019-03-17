@@ -128,9 +128,15 @@ namespace CountersPlus.UI
                 author.text = info.Description;
                 try
                 {
-                    image.sprite = Images.Images.Load(info.Name);
+                    if (info.IsCustom)
+                        image.sprite = Images.Images.Load("Custom");
+                    else
+                        image.sprite = Images.Images.Load(info.Name);
                 }
-                catch { image.sprite = Images.Images.Load("Custom"); }
+                catch(Exception e) {
+                    Plugin.Log(e.ToString(), Plugin.LogInfo.Error);
+                    image.sprite = Images.Images.Load("WotAreYeDoin");
+                }
             }
             //cell.coverImage = Sprite.Create(Texture2D.blackTexture, new Rect(), Vector2.zero);
             cell.reuseIdentifier = "CountersPlusSettingCell";
