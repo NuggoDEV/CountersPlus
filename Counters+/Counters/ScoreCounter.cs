@@ -120,7 +120,7 @@ namespace CountersPlus.Counters
             if (settings.Mode == ICounterMode.LeavePoints || settings.Mode == ICounterMode.BaseWithOutPoints)
             {
                 transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = new Vector3(-3.2f,
-                    0.35f + (settings.Mode == ICounterMode.LeavePoints ? 7.8f : 0), 7);
+                    0.3f + (settings.Mode == ICounterMode.LeavePoints ? 7.8f : 0), 7);
             }
         }
         

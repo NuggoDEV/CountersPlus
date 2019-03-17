@@ -22,10 +22,7 @@ namespace CountersPlus.Counters
         void Awake()
         {
             settings = CountersController.settings.missedConfig;
-            if (transform.parent == null)
-                StartCoroutine(GetRequired());
-            else
-                Init();
+            StartCoroutine(GetRequired());
         }
 
         IEnumerator GetRequired()
