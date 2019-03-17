@@ -65,12 +65,17 @@ namespace CountersPlus.Counters
         {
             counter.transform.parent = transform;
             counter.transform.localPosition = Vector3.zero;
-            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            Vector3 firstPosition = Vector3.zero;
             if (counter.GetComponentsInChildren<TMP_Text>().Any())
             {
-                foreach (TMP_Text tmp in counter.GetComponentsInChildren<TMP_Text>())
-                    tmp.transform.localPosition = Vector3.zero;
+                for (int i = 0; i < counter.GetComponentsInChildren<TMP_Text>().Reverse().Count(); i++)
+                {
+                    TMP_Text tmp = counter.GetComponentsInChildren<TMP_Text>().Reverse().ToArray()[i];
+                    if (i == 0) firstPosition = tmp.transform.position;
+                    tmp.transform.localPosition = (tmp.transform.position - firstPosition) * TextHelper.ScaleFactor;
+                }
             }
+            transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
     }
 }

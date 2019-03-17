@@ -97,6 +97,17 @@ namespace CountersPlus.UI
         {
             if (settings is null) return;
 
+            if (!settings.Enabled)
+            {
+                if (loadedMockCounters.Where((KeyValuePair<MockCounterGroup, IConfigModel> x) => x.Value == settings).Any())
+                {
+                    MockCounterGroup group = loadedMockCounters.First((KeyValuePair<MockCounterGroup, IConfigModel> x) => x.Value == settings).Key;
+                    UnityEngine.Object.Destroy(group.CounterName);
+                    UnityEngine.Object.Destroy(group.CounterData);
+                    loadedMockCounters.Remove(group);
+                }
+            }
+
             //Mock Counter creation is here instead of CountersPlusSettingsFlowCoordinator.
             if (CountersController.settings.AdvancedCounterInfo)
             {

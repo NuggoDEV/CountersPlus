@@ -129,7 +129,7 @@ namespace CountersPlus
                     if (nextToScore && baseScore) offset += new Vector3(0, -0.15f, 0);
                     break;
                 case Config.ICounterPositions.AboveHighway:
-                    pos = new Vector3(0, 2.25f, 7);
+                    pos = new Vector3(0, 2.5f, 7);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     if (nextToProgress) offset -= new Vector3(0, -0.5f, 0);
                     break;
