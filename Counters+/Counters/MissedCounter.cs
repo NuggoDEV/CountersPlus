@@ -17,6 +17,7 @@ namespace CountersPlus.Counters
         //private StandardLevelSceneSetup sceneSetup;
         private MissedConfigModel settings;
         private TMP_Text missedText;
+        private TMP_Text label;
         private int counter;
 
         void Awake()
@@ -43,7 +44,7 @@ namespace CountersPlus.Counters
 
             GameObject labelGO = new GameObject("Counters+ | Missed Label");
             labelGO.transform.parent = transform;
-            TextHelper.CreateText(out TMP_Text label, position);
+            TextHelper.CreateText(out label, position);
             label.text = "Misses";
             label.fontSize = 3;
             label.color = Color.white;
@@ -55,15 +56,16 @@ namespace CountersPlus.Counters
                 scoreController.noteWasMissedEvent += onNoteMiss;
             }
 
-            if ((DateTime.Now.Month == 4 && DateTime.Now.Day == 1)) StartCoroutine(yeet());
+            if (CountersController.settings.AprilFools) StartCoroutine(yeet());
         }
 
         IEnumerator yeet()
         {
-            float yeetTime = 5;
+            float yeetTime = 1;
+            yield return new WaitForSeconds(UnityEngine.Random.Range(5, 115));
+            label.text = "Misses?";
             while (true)
             {
-                if (!(DateTime.Now.Month == 4 && DateTime.Now.Day == 1)) yield break;
                 yield return new WaitForSeconds(yeetTime);
                 yeetTime -= 0.01f;
                 if (yeetTime <= 0) yeetTime = 0.01f;

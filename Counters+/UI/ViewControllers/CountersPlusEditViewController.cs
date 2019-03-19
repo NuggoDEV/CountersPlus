@@ -85,7 +85,7 @@ namespace CountersPlus.UI
                 loadedElements.Add(warning.gameObject);
             }
 
-            if (DateTime.Now.Month == 4 && DateTime.Now.Day == 1)
+            if (CountersController.settings.AprilFools)
             {
                 TextMeshProUGUI aprilFools = BeatSaberUI.CreateText(rect, "April Fools!", Vector2.zero);
                 aprilFools.fontSize = 4;
@@ -182,6 +182,14 @@ namespace CountersPlus.UI
             hideMultiplier.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
             hideMultiplier.GetValue = () => CountersController.settings.HideMultiplier ? 1f : 0f;
             hideMultiplier.SetValue = (v) => CountersController.settings.HideMultiplier = v != 0f;
+
+            if (CountersController.settings.AprilFools)
+            {
+                var aprilFools = AddList(ref sub, null as IConfigModel, "April Fools Tomfoolery", "Why did you think it was a good idea to put April Fools stuff in a Counters mod?", 2);
+                aprilFools.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+                aprilFools.GetValue = () => CountersController.settings.AprilFools ? 1f : 0f;
+                aprilFools.SetValue = (v) => CountersController.settings.AprilFools = v != 0f;
+            }
 
             toggleCounters.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
             comboOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
