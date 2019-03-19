@@ -74,11 +74,11 @@ namespace CountersPlus.UI
                         return scoreSettings[Mathf.RoundToInt(v)].Item2;
                     };
                     scoreMode.GetValue = () => {
-                        if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, DetermineModeText(CountersController.settings.scoreConfig.Mode));
+                        if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, DetermineModeText(CountersController.settings.scoreConfig.Mode, true));
                         return scoreSettings.ToList().IndexOf(scoreSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CountersController.settings.scoreConfig.Mode)).First());
                     };
                     scoreMode.SetValue += (v) => {
-                        if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, DetermineModeText(CountersController.settings.scoreConfig.Mode));
+                        if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, DetermineModeText(CountersController.settings.scoreConfig.Mode, true));
                         CountersController.settings.scoreConfig.Mode = scoreSettings[Mathf.RoundToInt(v)].Item1;
                         scoreHover.text = DetermineModeText(CountersController.settings.scoreConfig.Mode, true);
                     };
@@ -190,7 +190,7 @@ namespace CountersPlus.UI
                     break;
                 case ICounterMode.Both:
                     if (alternateText)
-                        mode = "Both: Have Counters+ counter with the Points above the percentage.";
+                        mode = "Original: Have Counters+ counter with the Points above the percentage.";
                     else
                         mode = "Both: A secondary Counter will be added so both Average and Top Speed will be displayed.";
                     break;

@@ -85,6 +85,15 @@ namespace CountersPlus.UI
                 loadedElements.Add(warning.gameObject);
             }
 
+            if (DateTime.Now.Month == 4 && DateTime.Now.Day == 1)
+            {
+                TextMeshProUGUI aprilFools = BeatSaberUI.CreateText(rect, "April Fools!", Vector2.zero);
+                aprilFools.fontSize = 4;
+                aprilFools.alignment = TextAlignmentOptions.Center;
+                setPositioning(aprilFools.rectTransform, 0, 0.4f, 1, 0.166f, 0.5f);
+                loadedElements.Add(aprilFools.gameObject);
+            }
+
             creator = BeatSaberUI.CreateText(rect, "Developed by: <color=#00c0ff>Caeden117</color>", Vector2.zero);
             creator.fontSize = 5;
             creator.alignment = TextAlignmentOptions.Center;

@@ -56,6 +56,7 @@ namespace CountersPlus.UI
                     }
                     _customListTableView.didSelectCellWithIdxEvent += onCellSelect;
                     _customListTableView.ReloadData();
+                    _customListTableView.SelectCellWithIdx(0, false);
                 }
             }
             catch (Exception e) {
@@ -138,6 +139,7 @@ namespace CountersPlus.UI
                     image.sprite = Images.Images.Load("WotAreYeDoin");
                 }
             }
+            if (DateTime.Now.Month == 4 && DateTime.Now.Day == 1) image.sprite = Images.Images.Load("WotAreYeDoin");
             //cell.coverImage = Sprite.Create(Texture2D.blackTexture, new Rect(), Vector2.zero);
             cell.reuseIdentifier = "CountersPlusSettingCell";
             return cell;

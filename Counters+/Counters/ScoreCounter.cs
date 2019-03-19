@@ -101,7 +101,8 @@ namespace CountersPlus.Counters
             _scoreMesh.color = Color.white;
             _scoreMesh.alignment = TextAlignmentOptions.Center;
 
-            transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = position + new Vector3(-6.425f, 7.67f, 0);
+            //transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = position + new Vector3(-6.425f, 7.67f, 0);
+            transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = position + new Vector3(-0.01f, 7.77f, 0);
             if (settings.DisplayRank)
             {
                 _RankObject = new GameObject("Counters+ | Score Rank");
@@ -120,7 +121,7 @@ namespace CountersPlus.Counters
             if (settings.Mode == ICounterMode.LeavePoints || settings.Mode == ICounterMode.BaseWithOutPoints)
             {
                 transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = new Vector3(-3.2f,
-                    0.3f + (settings.Mode == ICounterMode.LeavePoints ? 7.8f : 0), 7);
+                    0.35f + (settings.Mode == ICounterMode.LeavePoints ? 7.8f : 0), 7);
             }
         }
         
