@@ -54,6 +54,21 @@ namespace CountersPlus.Counters
                 scoreController.noteWasCutEvent += onNoteCut;
                 scoreController.noteWasMissedEvent += onNoteMiss;
             }
+
+            if ((DateTime.Now.Month == 4 && DateTime.Now.Day == 1)) StartCoroutine(yeet());
+        }
+
+        IEnumerator yeet()
+        {
+            float yeetTime = 5;
+            while (true)
+            {
+                if (!(DateTime.Now.Month == 4 && DateTime.Now.Day == 1)) yield break;
+                yield return new WaitForSeconds(yeetTime);
+                yeetTime -= 0.01f;
+                if (yeetTime <= 0) yeetTime = 0.01f;
+                incrementCounter();
+            }
         }
 
         void OnDestroy()
