@@ -150,7 +150,7 @@ namespace CountersPlus.Config
         {
             get
             {
-                return (DateTime.Now.Month == 3 && DateTime.Now.Day == 19) && Plugin.config.GetBool("Main", "AprilFools", true, false);
+                return (DateTime.Now.Month == 4 && DateTime.Now.Day == 1) && Plugin.config.GetBool("Main", "AprilFools", true, false);
             }
             set
             {
