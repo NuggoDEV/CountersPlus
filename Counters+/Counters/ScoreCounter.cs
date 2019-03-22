@@ -21,6 +21,7 @@ namespace CountersPlus.Counters
         GameObject _RankObject;
         TMP_Text _RankText;
         int _maxPossibleScore = 0;
+        int notesHit = 0;
         float roundMultiple;
         int _currentScore;
 
@@ -116,6 +117,7 @@ namespace CountersPlus.Counters
             if (_scoreController != null)
             {
                 _scoreController.scoreDidChangeEvent += UpdateScore;
+                _scoreController.noteWasCutEvent += OnNoteCut;
                 _scoreController.noteWasMissedEvent += _OnNoteWasMissed;
             }
             if (settings.Mode == ICounterMode.LeavePoints || settings.Mode == ICounterMode.BaseWithOutPoints)
@@ -142,23 +144,21 @@ namespace CountersPlus.Counters
             UpdateScore(_currentScore);
         }
 
+        private void OnNoteCut(NoteData data, NoteCutInfo info, int score)
+        {
+            if (info.allIsOK && data.noteType != NoteType.Bomb) notesHit++;
+        }
+
         public void UpdateScore(int score)
         {
+            StartCoroutine(DelayedUpdate(score));
+        }
+
+        private IEnumerator DelayedUpdate(int score)
+        {
+            yield return new WaitForEndOfFrame();
             _currentScore = score;
-            if (_objectRatingRecorder != null)
-            {
-                List<BeatmapObjectExecutionRating> _ratings = ReflectionUtil.GetPrivateField<List<BeatmapObjectExecutionRating>>(_objectRatingRecorder, "_beatmapObjectExecutionRatings");
-                if (_ratings != null)
-                {
-                    int notes = 0;
-                    foreach (BeatmapObjectExecutionRating rating in _ratings)
-                    {
-                        if (rating.beatmapObjectRatingType == BeatmapObjectExecutionRating.BeatmapObjectExecutionRatingType.Note)
-                            notes++;
-                    }
-                    _maxPossibleScore = ScoreController.MaxScoreForNumberOfNotes(notes);
-                }
-            }
+            _maxPossibleScore = ScoreController.MaxScoreForNumberOfNotes(notesHit);
 
             if (_scoreMesh != null)
             {

@@ -59,12 +59,11 @@ namespace CountersPlus.Counters
 
         public void UpdateScore(NoteData data, NoteCutInfo info, int score)
         {
-            int a, b, c;
             if (data.noteType == NoteType.Bomb || !info.allIsOK) return;
             info.afterCutSwingRatingCounter.didFinishEvent += (v) =>
             {
-                ScoreController.ScoreWithoutMultiplier(info, info.afterCutSwingRatingCounter, out a, out b, out c);
-                cuts.Add(a+b);
+                ScoreController.ScoreWithoutMultiplier(info, info.afterCutSwingRatingCounter, out int beforeCut, out int afterCut, out int why);
+                cuts.Add(beforeCut+afterCut);
                 cutCounter.text = $"{Math.Round(cuts.Average())}";
             };
         }
