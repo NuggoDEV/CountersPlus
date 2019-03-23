@@ -151,7 +151,7 @@ namespace CountersPlus.Counters
 
         public void UpdateScore(int score)
         {
-            StartCoroutine(DelayedUpdate(score));
+            StartCoroutine(DelayedUpdate(score)); //Give time for OnNoteCut to update local note hit counter.
         }
 
         private IEnumerator DelayedUpdate(int score)

@@ -13,7 +13,8 @@ namespace CountersPlus.UI.Images
     {
         public static Sprite Load(string name)
         {
-            return UIUtilities.LoadSpriteFromResources($"CountersPlus.UI.Images.{name}.png");
+            Sprite cranberry = UIUtilities.LoadSpriteFromResources($"CountersPlus.UI.Images.{name}.png");
+            return cranberry; //God damn it, Nova.
         }
     }
 }
