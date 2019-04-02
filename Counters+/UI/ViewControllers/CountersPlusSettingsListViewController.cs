@@ -146,18 +146,12 @@ namespace CountersPlus.UI
 
         private void onCellSelect(TableView view, int row)
         {
+            SettingsInfo info = null;
+            if (row > 0 && row < NumberOfCells() - 1) info = counterInfos[row - 1];
             if (row == 0) CountersPlusEditViewController.ShowMainSettings();
             else if (row == NumberOfCells() - 2) CountersPlusEditViewController.CreateCredits();
             else if (row == NumberOfCells() - 1) CountersPlusEditViewController.ShowContributors();
-            else StartCoroutine(WaitForSettings(counterInfos[row - 1]));
-        }
-
-        IEnumerator WaitForSettings(SettingsInfo info)
-        {
-            yield return new WaitUntil(() => !String.IsNullOrWhiteSpace(info.Model.DisplayName));
-            yield return new WaitUntil(() => !String.IsNullOrWhiteSpace(info.Name));
-            CountersPlusEditViewController.UpdateSettings(info.Model, info);
-            Plugin.Log("Loading settings for: " + info.Name);
+            else CountersPlusEditViewController.UpdateSettings(info.Model, info);
         }
     }
 
