@@ -85,15 +85,6 @@ namespace CountersPlus.UI
                 loadedElements.Add(warning.gameObject);
             }
 
-            if (CountersController.settings.AprilFools)
-            {
-                TextMeshProUGUI aprilFools = BeatSaberUI.CreateText(rect, "April Fools!", Vector2.zero);
-                aprilFools.fontSize = 4;
-                aprilFools.alignment = TextAlignmentOptions.Center;
-                setPositioning(aprilFools.rectTransform, 0, 0.4f, 1, 0.166f, 0.5f);
-                loadedElements.Add(aprilFools.gameObject);
-            }
-
             creator = BeatSaberUI.CreateText(rect, "Developed by: <color=#00c0ff>Caeden117</color>", Vector2.zero);
             creator.fontSize = 5;
             creator.alignment = TextAlignmentOptions.Center;
@@ -182,14 +173,6 @@ namespace CountersPlus.UI
             hideMultiplier.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
             hideMultiplier.GetValue = () => CountersController.settings.HideMultiplier ? 1f : 0f;
             hideMultiplier.SetValue = (v) => CountersController.settings.HideMultiplier = v != 0f;
-
-            if (CountersController.settings.AprilFools)
-            {
-                var aprilFools = AddList(ref sub, null as IConfigModel, "April Fools Tomfoolery", "Why did you think it was a good idea to put April Fools stuff in a Counters mod?", 2);
-                aprilFools.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
-                aprilFools.GetValue = () => CountersController.settings.AprilFools ? 1f : 0f;
-                aprilFools.SetValue = (v) => CountersController.settings.AprilFools = v != 0f;
-            }
 
             toggleCounters.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
             comboOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();

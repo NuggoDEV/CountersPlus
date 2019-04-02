@@ -22,7 +22,6 @@ namespace CountersPlus.Config
                 model.FirstStart = model.FirstStart;
                 model.HideCombo = model.HideCombo;
                 model.HideMultiplier = model.HideMultiplier;
-                model.AprilFools = model.AprilFools;
                 model.missedConfig = new MissedConfigModel();
                 model.noteConfig = new NoteConfigModel();
                 model.progressConfig = new ProgressConfigModel();
@@ -144,17 +143,6 @@ namespace CountersPlus.Config
             set
             {
                 Plugin.config.SetFloat("Main", "MultiplierOffset", value);
-            }
-        }
-        public bool AprilFools
-        {
-            get
-            {
-                return (DateTime.Now.Month == 4 && DateTime.Now.Day == 1) && Plugin.config.GetBool("Main", "AprilFools", true, false);
-            }
-            set
-            {
-                if (DateTime.Now.Month == 4 && DateTime.Now.Day == 1) Plugin.config.SetBool("Main", "AprilFools", value);
             }
         }
         public MissedConfigModel missedConfig;

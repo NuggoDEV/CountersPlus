@@ -139,7 +139,6 @@ namespace CountersPlus.UI
                     image.sprite = Images.Images.Load("WotAreYeDoin");
                 }
             }
-            if (CountersController.settings.AprilFools) image.sprite = Images.Images.Load("WotAreYeDoin");
             //cell.coverImage = Sprite.Create(Texture2D.blackTexture, new Rect(), Vector2.zero);
             cell.reuseIdentifier = "CountersPlusSettingCell";
             return cell;
