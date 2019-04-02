@@ -17,6 +17,7 @@ using IllusionPlugin;
 using System.Collections;
 using CountersPlus.UI.Images;
 using TMPro;
+using CustomUI.Settings;
 
 namespace CountersPlus.UI
 {
@@ -146,6 +147,7 @@ namespace CountersPlus.UI
 
         private void onCellSelect(TableView view, int row)
         {
+            SettingsUI.Instance.InitSettings();
             SettingsInfo info = null;
             if (row > 0 && row < NumberOfCells() - 1) info = counterInfos[row - 1];
             if (row == 0) CountersPlusEditViewController.ShowMainSettings();

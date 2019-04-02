@@ -253,7 +253,6 @@ namespace CountersPlus.UI
             List<float> values = new List<float>() { };
             for (var i = 0; i < sizeCount; i++) values.Add(i);
             var list = sub.AddList(Label, values.ToArray(), HintText);
-            list.applyImmediately = true;
             PositionElement(list.gameObject);
             loadedSettings.Add(list);
             if (!(settings is null)) list.SetValue = (v) => Instance.StartCoroutine(DelayedMockCounterUpdate(settings));
