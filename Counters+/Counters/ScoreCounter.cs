@@ -21,7 +21,7 @@ namespace CountersPlus.Counters
         GameObject _RankObject;
         TMP_Text _RankText;
         int _maxPossibleScore = 0;
-        int notesHit = 0;
+        int notes = 0;
         float roundMultiple;
         int _currentScore;
 
@@ -141,12 +141,13 @@ namespace CountersPlus.Counters
 
         private void _OnNoteWasMissed(NoteData noteData, int score)
         {
+            notes++;
             UpdateScore(_currentScore);
         }
 
         private void OnNoteCut(NoteData data, NoteCutInfo info, int score)
         {
-            if (info.allIsOK && data.noteType != NoteType.Bomb) notesHit++;
+            if (data.noteType != NoteType.Bomb) notes++;
         }
 
         public void UpdateScore(int score)
@@ -158,7 +159,7 @@ namespace CountersPlus.Counters
         {
             yield return new WaitForEndOfFrame();
             _currentScore = score;
-            _maxPossibleScore = ScoreController.MaxScoreForNumberOfNotes(notesHit);
+            _maxPossibleScore = ScoreController.MaxScoreForNumberOfNotes(notes);
 
             if (_scoreMesh != null)
             {

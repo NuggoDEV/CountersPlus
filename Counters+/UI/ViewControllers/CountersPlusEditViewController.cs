@@ -235,6 +235,7 @@ namespace CountersPlus.UI
                 return positions.ToList().IndexOf(positions.Where((Tuple<ICounterPositions, string> x) => (x.Item1 == settings.Position)).First());
             };
             position.SetValue += (v) => {
+                Plugin.Log(v.ToString());
                 if (restrictedList.Count() == 0)
                     settings.Position = positions[Mathf.RoundToInt(v)].Item1;
                 else
@@ -253,6 +254,7 @@ namespace CountersPlus.UI
             List<float> values = new List<float>() { };
             for (var i = 0; i < sizeCount; i++) values.Add(i);
             var list = sub.AddList(Label, values.ToArray(), HintText);
+            list.applyImmediately = true;
             PositionElement(list.gameObject);
             loadedSettings.Add(list);
             if (!(settings is null)) list.SetValue = (v) => Instance.StartCoroutine(DelayedMockCounterUpdate(settings));

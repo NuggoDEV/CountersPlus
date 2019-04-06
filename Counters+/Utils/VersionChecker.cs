@@ -32,17 +32,18 @@ namespace CountersPlus
         private static IEnumerator GetOnlineVersionRoutine()
         {
             Plugin.Log("Obtaining latest version information...");
-            using (UnityWebRequest www = UnityWebRequest.Get("https://modsaber.org/api/v1.1/mods/versions/countersplus"))
+            using (UnityWebRequest www = UnityWebRequest.Get("https://beatmods.com/api/v1/mod?search=Counters"))
             {
                 yield return (www.SendWebRequest());
                 if (www.isHttpError || www.isNetworkError) Plugin.Log("Failed to download version info.", Plugin.LogInfo.Warning);
                 else
                 {
                     Plugin.Log("Obtained latest version info!");
+                    Plugin.Log(www.downloadHandler.text);
                     JSONNode node = JSON.Parse(www.downloadHandler.text);
                     foreach(JSONNode child in node.Children)
                     {
-                        if (child["approval"]["status"] != "approved") continue;
+                        if (child["status"] != "approved") continue;
                         try
                         {
                             string version = child["version"].Value;
