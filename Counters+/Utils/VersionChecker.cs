@@ -39,7 +39,6 @@ namespace CountersPlus
                 else
                 {
                     Plugin.Log("Obtained latest version info!");
-                    Plugin.Log(www.downloadHandler.text);
                     JSONNode node = JSON.Parse(www.downloadHandler.text);
                     foreach(JSONNode child in node.Children)
                     {
