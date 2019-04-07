@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CountersPlus.Config;
-using IllusionPlugin;
+using IPA.Loader;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using CustomUI.Settings;
@@ -12,6 +12,8 @@ using System.Threading;
 using System.IO;
 using IniParser.Model;
 using IniParser;
+using IPA;
+using IPA.Old;
 
 namespace CountersPlus.Custom
 {
@@ -30,12 +32,19 @@ namespace CountersPlus.Custom
             foreach (SectionData section in data.Sections)
             {
                 if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
-                {
                     if (section.SectionName == model.Name) return;
-                }
             }
             if (scene.name == "" || scene.name == "Init" || scene.name == "EmptyTransition" || scene.name == "HealthWarning")
             {
+                string modCreator = "";
+                if (model.Mod != null)
+                    modCreator = model.Mod.Name;
+                if (model.BSIPAMod != null)
+                {   //Fucking hell DaNike can't you expose the IBeatSaberPlugins so it would be easier for stuff like this!?!?
+                    PluginLoader.PluginInfo info = PluginManager.AllPlugins.Where((PluginLoader.PluginInfo x) => model.BSIPAMod == x.GetPrivateField<IBeatSaberPlugin>("Plugin")).FirstOrDefault();
+                    if (info != null)
+                        modCreator = info.Metadata.Name;
+                }
                 CustomConfigModel counter = new CustomConfigModel(model.Name)
                 {
                     DisplayName = model.Name,
@@ -77,7 +86,12 @@ namespace CountersPlus.Custom
         /// <summary>
         /// The plugin that created this custom counter. Will be displayed in the Settings UI.
         /// </summary>
+        #pragma warning disable CS0618 //Fuck off DaNike
         public IPlugin Mod { get; set; }
+        /// <summary>
+        /// The plugin that created this custom counter. Will be displayed in the Settings UI.
+        /// </summary>
+        public IBeatSaberPlugin BSIPAMod { get; set; }
         /// <summary>
         /// The name of the counter that will be added when it gets created.
         /// </summary>

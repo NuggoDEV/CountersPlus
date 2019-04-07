@@ -6,12 +6,11 @@ using CountersPlus.Config;
 using CountersPlus.Counters;
 using CountersPlus.Custom;
 using UnityEngine.SceneManagement;
-using IllusionInjector;
-using IllusionPlugin;
+using IPA.Loader;
 using IniParser;
 using IniParser.Model;
-using TMPro;
 using System.Collections;
+using IPA.Old;
 
 namespace CountersPlus
 {
@@ -81,7 +80,9 @@ namespace CountersPlus
             {
                 if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
                 {
-                    if (!PluginManager.Plugins.Any((IPlugin x) => x.Name == section.Keys["ModCreator"])) return;
+                    if (PluginManager.GetPlugin(section.Keys["ModCreator"]) == null &&
+                        #pragma warning disable CS0618 //Fuck off DaNike
+                        PluginManager.Plugins.Where((IPlugin x) => x.Name == section.Keys["ModCreator"]) == null) return;
                     CustomConfigModel potential = new CustomConfigModel(section.SectionName);
                     LoadCounter<CustomConfigModel, CustomCounterHook>(section.Keys["SectionName"], potential);
                 }
@@ -91,7 +92,7 @@ namespace CountersPlus
                 for (int i = 0; i < GameObject.Find("ComboPanel").transform.childCount; i++)
                 {
                     GameObject child = GameObject.Find("ComboPanel").transform.GetChild(i).gameObject;
-                    if (child.name != "BG") Destroy(child);
+                    if (child.name != "BG") child.SetActive(false);
                 }
             }
             if (settings.HideMultiplier)

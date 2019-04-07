@@ -14,6 +14,7 @@ using CountersPlus.Custom;
 using System.Threading;
 using BS_Utils.Gameplay;
 using System.Collections;
+using IPA.Loader;
 
 namespace CountersPlus.UI
 {
@@ -70,7 +71,7 @@ namespace CountersPlus.UI
             setPositioning(name.rectTransform, 0, 0.7f, 1, 0.166f, 0.5f);
 
             version = BeatSaberUI.CreateText(rect,
-                $"Version <color={(Plugin.upToDate ? "#00FF00" : "#FF0000")}>{Plugin.Instance.Version}</color>", Vector2.zero);
+                $"Version <color={(Plugin.upToDate ? "#00FF00" : "#FF0000")}>{PluginManager.GetPlugin("Counters+").Metadata.Version.ToString()}</color>", Vector2.zero);
             version.fontSize = 3;
             version.alignment = TextAlignmentOptions.Center;
             setPositioning(version.rectTransform, 0, 0.5f, 1, 0.166f, 0.5f);
@@ -205,7 +206,7 @@ namespace CountersPlus.UI
                 loadedElements.Add(settingsTitle.gameObject);
                 foreach (ListViewController list in loadedSettings) list.Init();
             }
-            catch(Exception e) { Plugin.Log(e.ToString(), Plugin.LogInfo.Fatal); }
+            catch(Exception e) { Plugin.Log(e.ToString(), Plugin.LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue."); }
         }
 
         private static SubMenu CreateBase<T>(T settings, params ICounterPositions[] restricted) where T : IConfigModel
@@ -226,6 +227,7 @@ namespace CountersPlus.UI
 
             var position = AddList(ref sub, settings, "Position", "The relative position of common UI elements", (restrictedList.Count() == 0) ? positions.Count() : restrictedList.Count());
             position.GetTextForValue = (v) => {
+                Plugin.Log(v.ToString());
                 if (restrictedList.Count() == 0)
                     return positions[Mathf.RoundToInt(v)].Item2;
                 else
@@ -235,7 +237,6 @@ namespace CountersPlus.UI
                 return positions.ToList().IndexOf(positions.Where((Tuple<ICounterPositions, string> x) => (x.Item1 == settings.Position)).First());
             };
             position.SetValue += (v) => {
-                Plugin.Log(v.ToString());
                 if (restrictedList.Count() == 0)
                     settings.Position = positions[Mathf.RoundToInt(v)].Item1;
                 else

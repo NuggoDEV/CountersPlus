@@ -139,9 +139,9 @@ namespace CountersPlus.Counters
             return "E";
         }
 
-        private void _OnNoteWasMissed(NoteData noteData, int score)
+        private void _OnNoteWasMissed(NoteData data, int score)
         {
-            notes++;
+            if (data.noteType != NoteType.Bomb) notes++;
             UpdateScore(_currentScore);
         }
 

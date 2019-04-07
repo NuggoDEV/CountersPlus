@@ -1,35 +1,39 @@
-﻿using IllusionPlugin;
-using System;
+﻿using System;
 using System.IO;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using System.Linq;
 using CountersPlus.UI;
+using IPA;
+using IPA.Logging;
 
 namespace CountersPlus
 {
-    public class Plugin : IPlugin
+    public class Plugin : IBeatSaberPlugin
     {
-        public string Name => "Counters+";
-        public string Version => "1.5.3";
         internal static Plugin Instance;
-        public enum LogInfo { Info, Warning, Error, Fatal };
+        internal static IPA.Logging.Logger Logger;
+        public enum LogInfo { Info, Warning, Notice, Error, Fatal };
         internal static BS_Utils.Utilities.Config config = new BS_Utils.Utilities.Config("CountersPlus"); //Conflicts with CountersPlus.Config POG
         internal static bool upToDate = true;
         internal static string webVersion;
 
-        public void OnApplicationStart()
+        public void Init(object thisIsNull, IPA.Logging.Logger log)
         {
-            VersionChecker.GetOnlineVersion();   
+            Logger = log;
+            VersionChecker.GetOnlineVersion();
             Instance = this;
             if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini"))
                 File.Create(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
-            SceneManager.activeSceneChanged += SceneManager_sceneLoaded;
-            SceneManager.sceneLoaded += AddUI;
             CountersController.OnLoad();
         }
 
-        private void SceneManager_sceneLoaded(Scene arg0, Scene arg1)
+        public void OnApplicationStart()
+        {
+            
+        }
+
+        public void OnActiveSceneChanged(Scene arg0, Scene arg1)
         {
             //if (CountersController.settings.Enabled) CountersController.OnLoad();
             if (arg1.name == "GameCore" &&
@@ -43,25 +47,19 @@ namespace CountersPlus
             }
         }
 
-        private void AddUI(Scene arg, LoadSceneMode hiBrian)
+        public void OnSceneLoaded(Scene arg, LoadSceneMode hiBrian)
         {
             try
             {
                 if (arg.name == "MenuCore") MenuUI.CreateUI();
             }catch(Exception e)
             {
-                Log(e.ToString(), LogInfo.Fatal);
+                Log(e.ToString(), LogInfo.Fatal, "Install your dependencies!");
             }
         }
 
-        public void OnApplicationQuit()
-        {
-            SceneManager.activeSceneChanged -= SceneManager_sceneLoaded;
-            SceneManager.sceneLoaded -= AddUI;
-        }
-
-        public void OnLevelWasLoaded(int level) { }
-        public void OnLevelWasInitialized(int level) { }
+        public void OnApplicationQuit() { }
+        public void OnSceneUnloaded(Scene scene) { }
         public void OnUpdate() { }
         public void OnFixedUpdate() { }
 
@@ -72,9 +70,23 @@ namespace CountersPlus
 
         public static void Log(string m, LogInfo l)
         {
-            Console.WriteLine("Counters+ [" + l.ToString() + "] | " + m);
-            if (l == LogInfo.Fatal)
-                Console.WriteLine("Counters+ [IMPORTANT] | Contact Caeden117#0117 on Discord with this issue!");
+            Log(m, l, null);
+        }
+
+        public static void Log(string m, LogInfo l, string suggestedAction)
+        {
+            IPA.Logging.Logger.Level level = IPA.Logging.Logger.Level.Debug;
+            switch (l)
+            {
+                case LogInfo.Info: level = IPA.Logging.Logger.Level.Debug; break;
+                case LogInfo.Notice: level = IPA.Logging.Logger.Level.Notice; break;
+                case LogInfo.Warning: level = IPA.Logging.Logger.Level.Warning; break;
+                case LogInfo.Error: level = IPA.Logging.Logger.Level.Error; break;
+                case LogInfo.Fatal: level = IPA.Logging.Logger.Level.Critical; break;
+            }
+            Logger.Log(level, m);
+            if (suggestedAction != null)
+                Logger.Log(level, $"Suggested Action: {suggestedAction}");
         }
     }
 }

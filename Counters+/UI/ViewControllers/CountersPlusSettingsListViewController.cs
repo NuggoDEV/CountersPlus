@@ -12,12 +12,11 @@ using CountersPlus.Config;
 using IniParser.Model;
 using IniParser;
 using CountersPlus.Custom;
-using IllusionInjector;
-using IllusionPlugin;
 using System.Collections;
 using CountersPlus.UI.Images;
 using TMPro;
 using CustomUI.Settings;
+using IPA.Loader;
 
 namespace CountersPlus.UI
 {
@@ -46,7 +45,7 @@ namespace CountersPlus.UI
                         if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
                         {
                             CustomConfigModel potential = new CustomConfigModel(section.SectionName);
-                            if (!PluginManager.Plugins.Any((IPlugin x) => x.Name == section.Keys["ModCreator"])) continue;
+                            if (PluginManager.GetPlugin(section.Keys["ModCreator"]) == null) continue;
                             counterInfos.Add(new SettingsInfo()
                             {
                                 Name = potential.DisplayName,
@@ -151,7 +150,7 @@ namespace CountersPlus.UI
                 SettingsListInit = true;
             }
             SettingsInfo info = null;
-            if (row > 0 && row < NumberOfCells() - 2) info = counterInfos[row - 2];
+            if (row > 0 && row < NumberOfCells() - 2) info = counterInfos[row - 1];
             if (row == 0) CountersPlusEditViewController.ShowMainSettings();
             else if (row == NumberOfCells() - 2) CountersPlusEditViewController.CreateCredits();
             else if (row == NumberOfCells() - 1) CountersPlusEditViewController.ShowContributors();

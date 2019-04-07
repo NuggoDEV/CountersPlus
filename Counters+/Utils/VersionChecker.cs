@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using SimpleJSON;
+using IPA.Loader;
 
 namespace CountersPlus
 {
@@ -57,9 +58,10 @@ namespace CountersPlus
 
         private static bool isLatestVersion(string downloadedVersion)
         {
+            string Version = PluginManager.GetPlugin("Counters+").Metadata.Version.ToString();
             List<int> pluginVersion = new List<int>();
             List<int> webVersion = new List<int>();
-            foreach(string num in Plugin.Instance.Version.Split('.'))
+            foreach(string num in Version.Split('.'))
                 pluginVersion.Add(int.Parse(num));
             foreach (string num in downloadedVersion.Split('.'))
                 webVersion.Add(int.Parse(num));
@@ -70,7 +72,7 @@ namespace CountersPlus
                     else if (pluginVersion[i] < webVersion[i]) return false;
                 else if (pluginVersion[i] > webVersion[i]) return true;
             }
-            if (Plugin.Instance.Version == downloadedVersion) return true;
+            if (Version == downloadedVersion) return true;
             return false;
         }
     }
