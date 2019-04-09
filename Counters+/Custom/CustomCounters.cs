@@ -7,7 +7,6 @@ using CountersPlus.Config;
 using IPA.Loader;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using CustomUI.Settings;
 using System.Threading;
 using System.IO;
 using IniParser.Model;
@@ -57,19 +56,31 @@ namespace CountersPlus.Custom
                     RestrictedPositions = (restrictedPositions.Count() == 0 || restrictedPositions == null) ? new ICounterPositions[] { } : restrictedPositions, //Thanks Viscoci for this
                 };
                 if (string.IsNullOrEmpty(counter.SectionName) || string.IsNullOrEmpty(counter.DisplayName))
-                    throw new CustomCounterException("Custom Counter properties invalid. Please make sure JSONName and DisplayName are properly assigned.");
-                Plugin.Log("Custom Counter added!");
+                    throw new CustomCounterException("Custom Counter properties invalid. Please make sure SectionName and DisplayName are properly assigned.");
+                Plugin.Log($"Custom Counter added by: {modCreator}!", Plugin.LogInfo.Notice);
             }
             else
             {
                 throw new CustomCounterException("It is too late to add Custom Counters. Please add Custom Counters at launch.");
             }
         }
+
+        /// <summary>
+        /// A simpler way to create a custom Counter.
+        /// <param name="model"/>The CustomCounter object.</param>
+        /// <param name="restrictedPositions">Restrict your Custom Counter to any of these positions. No parameters would allow the Counter to use all 6.</param>
+        /// </summary>
+        public static void Create<T>(T model, params ICounterPositions[] restrictedPositions) where T : CustomCounter
+        {
+            CreateCustomCounter(model, restrictedPositions);
+        }
     }
 
     internal class CustomCounterException : Exception
     {
-        public CustomCounterException(String msg) : base("Counters+ | " + msg) { }
+        public CustomCounterException(String msg) : base("Counters+ | " + msg) {
+            Plugin.Log(msg, Plugin.LogInfo.Error, "Contact the developer of the infringing mod to check their Custom Counter creation code.");
+        }
     }
 
     public class CustomCounter

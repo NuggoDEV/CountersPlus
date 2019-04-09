@@ -62,7 +62,6 @@ namespace CountersPlus.Counters
                 yield return new WaitForSeconds(0.1f);
             }
             baseCounter.AddComponent<ScoreCounter>();
-            Plugin.Log("Score Counter has been moved to the base game counter!");
             Destroy(gameObject);
         }
 
@@ -88,7 +87,6 @@ namespace CountersPlus.Counters
 
         private void Init()
         {
-            Plugin.Log("Creating Score Counter stuff");
             roundMultiple = (float)Math.Pow(10, settings.DecimalPrecision + 2);
 
             transform.localScale = Vector3.one;

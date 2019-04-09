@@ -178,8 +178,7 @@ namespace CountersPlus.UI
             toggleCounters.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
             comboOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
             multiOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
-
-            foreach (ListViewController list in loadedSettings) list.Init();
+            InitSettings();
         }
 
         public static void UpdateSettings<T>(T settings, SettingsInfo info) where T : IConfigModel
@@ -204,9 +203,9 @@ namespace CountersPlus.UI
                 settingsTitle.alignment = TextAlignmentOptions.Center;
                 setPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
                 loadedElements.Add(settingsTitle.gameObject);
-                foreach (ListViewController list in loadedSettings) list.Init();
+                InitSettings();
             }
-            catch(Exception e) { Plugin.Log(e.ToString(), Plugin.LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue."); }
+            catch(Exception e) { Plugin.Log(e.ToString(), Plugin.LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue. This shouldn't happen!"); }
         }
 
         private static SubMenu CreateBase<T>(T settings, params ICounterPositions[] restricted) where T : IConfigModel
@@ -281,6 +280,15 @@ namespace CountersPlus.UI
             loadedElements.Add(element);
             setPositioning(element.transform as RectTransform, 0.05f, 0.75f - (settingsCount * 0.1f), 0.9f, 0.166f, 0f);
             settingsCount++;
+        }
+
+        private static void InitSettings()
+        {
+            foreach (ListViewController list in loadedSettings)
+            {
+                list.InvokePrivateMethod("OnDisable", new object[] { });
+                list.InvokePrivateMethod("OnEnable", new object[] { });
+            }
         }
     }
 }

@@ -61,7 +61,7 @@ namespace CountersPlus.UI
                 }
             }
             catch (Exception e) {
-                Plugin.Log(e.Message + e.StackTrace, Plugin.LogInfo.Fatal);
+                Plugin.Log(e.Message + e.StackTrace, Plugin.LogInfo.Fatal, "Check dependencies. If issue persists, re-install Counters+. If issue still persists, create an issue on the Counters+ GitHub.");
             }
         }
 
@@ -134,7 +134,7 @@ namespace CountersPlus.UI
                     else image.sprite = Images.Images.Load(info.Name);
                 }
                 catch(Exception e) {
-                    Plugin.Log(e.ToString(), Plugin.LogInfo.Error);
+                    Plugin.Log(e.ToString(), Plugin.LogInfo.Error, "Create an Issue on the Counters+ GitHub.");
                     image.sprite = Images.Images.Load("WotAreYeDoin");
                 }
             }
@@ -146,7 +146,7 @@ namespace CountersPlus.UI
         {
             if (!SettingsListInit)
             {
-                SettingsUI.Instance.InitSettings();
+                //SettingsUI.Instance.InitSettings();
                 SettingsListInit = true;
             }
             SettingsInfo info = null;

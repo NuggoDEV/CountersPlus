@@ -47,11 +47,11 @@ namespace CountersPlus.Config
             {
                 if (e.GetType() != typeof(NullReferenceException))
                 {
-                    Plugin.Log(e.ToString());
+                    Plugin.Log(e.ToString(), Plugin.LogInfo.Error);
                     ResetSettings(model);
                 }
             }
-            Plugin.Log("Config loaded.");
+            Plugin.Log("Config loaded!", Plugin.LogInfo.Notice);
             return model;
         }
 

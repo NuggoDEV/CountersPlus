@@ -29,7 +29,7 @@ namespace CountersPlus
                 GameObject controller = new GameObject("Counters+ | Controller");
                 DontDestroyOnLoad(controller);
                 Instance = controller.AddComponent<CountersController>();
-                Plugin.Log("Controller | Counters Controller created.");
+                Plugin.Log("Counters Controller created.", Plugin.LogInfo.Notice);
             }
         }
 
@@ -49,7 +49,7 @@ namespace CountersPlus
             GameObject counter = new GameObject("Counters+ | " + name + " Counter");
             counter.transform.position = determinePosition(counter, settings.Position, settings.Index);
             counter.AddComponent(typeof(R));
-            Plugin.Log("Controller | Loaded Counter: " + name);
+            Plugin.Log("Loaded Counter: " + name);
             loadedCounters.Add(counter);
         }
 
@@ -66,7 +66,7 @@ namespace CountersPlus
 
         public static void LoadCounters()
         {
-            Plugin.Log("Controller | Loading Counters...");
+            Plugin.Log("Loading Counters...", Plugin.LogInfo.Notice);
             LoadCounter<MissedConfigModel, MissedCounter>("Missed", settings.missedConfig);
             LoadCounter<NoteConfigModel, AccuracyCounter>("Notes", settings.noteConfig);
             LoadCounter<ScoreConfigModel, ScoreCounter>("Score", settings.scoreConfig);
@@ -103,6 +103,7 @@ namespace CountersPlus
                     if (child.name != "BG") child.SetActive(false);
                 }
             }
+            Plugin.Log("Counters loaded!", Plugin.LogInfo.Notice);
         }
 
         public static Vector3 determinePosition(GameObject counter, ICounterPositions position, int index)

@@ -12,7 +12,7 @@ namespace CountersPlus
     public class Plugin : IBeatSaberPlugin
     {
         internal static Plugin Instance;
-        internal static IPA.Logging.Logger Logger;
+        internal static IPA.Logging.Logger Logger; //Conflicts with UnityEngine.Logger POG
         public enum LogInfo { Info, Warning, Notice, Error, Fatal };
         internal static BS_Utils.Utilities.Config config = new BS_Utils.Utilities.Config("CountersPlus"); //Conflicts with CountersPlus.Config POG
         internal static bool upToDate = true;
@@ -26,11 +26,6 @@ namespace CountersPlus
             if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini"))
                 File.Create(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
             CountersController.OnLoad();
-        }
-
-        public void OnApplicationStart()
-        {
-            
         }
 
         public void OnActiveSceneChanged(Scene arg0, Scene arg1)
@@ -58,6 +53,7 @@ namespace CountersPlus
             }
         }
 
+        public void OnApplicationStart() { }
         public void OnApplicationQuit() { }
         public void OnSceneUnloaded(Scene scene) { }
         public void OnUpdate() { }
