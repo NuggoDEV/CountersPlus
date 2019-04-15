@@ -3,9 +3,14 @@
   "author": "Caeden117",
   "description": "A collection of widely used counters, all configurable in one mod!",
   "gameVersion": "0.13.2",
-  "id": "countersplus",
+  "id": "Counters",
   "name": "Counters+",
   "version": "1.5.4",
-  "features": [
-  ]
+  "dependsOn": {
+    "BS Utils": "^1.2.4",
+    "CustomUI": "^1.5.4",
+    "Ini Parser": "^2.5.2"
+  },
+  "loadAfter": ["BS Utils", "CustomUI", "Ini Parser"],
+  "features": [ ]
 }
