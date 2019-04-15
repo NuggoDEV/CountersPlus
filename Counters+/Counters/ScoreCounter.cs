@@ -123,7 +123,7 @@ namespace CountersPlus.Counters
         private void _OnNoteWasMissed(NoteData data, int score)
         {
             if (data.noteType != NoteType.Bomb) notes++;
-            UpdateScore(_currentScore);
+            UpdateScore(score);
         }
 
         private void OnNoteCut(NoteData data, NoteCutInfo info, int score)
