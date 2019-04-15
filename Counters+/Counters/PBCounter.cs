@@ -62,14 +62,6 @@ namespace CountersPlus.Counters
             else _PbTrackerText.text = "PB: " + (Mathf.Clamp(pb, 0.0f, 1.0f) * 100.0f).ToString("F" + settings.DecimalPrecision) + "%";
         }
 
-        void Update()
-        {
-            transform.position = Vector3.Lerp(
-                transform.position,
-                CountersController.determinePosition(gameObject, settings.Position, settings.Index),
-                Time.deltaTime);
-        }
-
         public void UpdateScore(int score)
         {
             if (_maxPossibleScore != 0)
