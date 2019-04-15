@@ -23,14 +23,6 @@ namespace CountersPlus.Counters
         bool useTimeLeft = false;
         float t = 0;
         float length = 0;
-
-        IEnumerator WaitForLoad()
-        {
-            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().Any());
-            _audioTimeSync = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().FirstOrDefault();
-            Init();
-        }
-
         void Awake()
         {
             settings = CountersController.settings.progressConfig;
@@ -39,7 +31,7 @@ namespace CountersPlus.Counters
             if (settings.Mode == ICounterMode.BaseGame && gameObject.name != "SongProgressPanel")
                 StartCoroutine(YeetToBaseCounter());
             else if (settings.Mode != ICounterMode.BaseGame)
-                StartCoroutine(WaitForLoad());
+                CountersController.ReadyToInit += Init;
         }
 
         IEnumerator YeetToBaseCounter()
@@ -50,8 +42,9 @@ namespace CountersPlus.Counters
             Destroy(gameObject);
         }
 
-        void Init()
+        void Init(CountersData data)
         {
+            _audioTimeSync = data.AudioTimeSyncController;
             length = _audioTimeSync.songLength;
             if (settings.Mode == ICounterMode.Original)
             {

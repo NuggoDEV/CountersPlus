@@ -13,10 +13,9 @@ namespace CountersPlus.Counters
     public class ScoreCounter : MonoBehaviour
     {
         TMP_Text _scoreMesh;
-        ScoreController _scoreController;
-        BeatmapObjectExecutionRatingsRecorder _objectRatingRecorder;
 
         private ScoreConfigModel settings;
+        private ScoreController _scoreController;
 
         GameObject _RankObject;
         TMP_Text _RankText;
@@ -24,23 +23,6 @@ namespace CountersPlus.Counters
         int notes = 0;
         float roundMultiple;
         int _currentScore;
-
-        IEnumerator WaitForLoad()
-        {
-            bool loaded = false;
-            while (!loaded)
-            {
-                _scoreController = Resources.FindObjectsOfTypeAll<ScoreController>().FirstOrDefault();
-                _objectRatingRecorder = FindObjectOfType<BeatmapObjectExecutionRatingsRecorder>();
-
-                if (_scoreController == null || _objectRatingRecorder == null)
-                    yield return new WaitForSeconds(0.1f);
-                else
-                    loaded = true;
-            }
-
-            Init();
-        }
 
         void Awake()
         {
@@ -80,14 +62,15 @@ namespace CountersPlus.Counters
                     }
                 }
                 if (settings.Mode == ICounterMode.ScoreOnly) Destroy(GameObject.Find("ScoreText"));
-                StartCoroutine(WaitForLoad());
+                CountersController.ReadyToInit += Init;
             }else
                 transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
 
-        private void Init()
+        private void Init(CountersData data)
         {
             roundMultiple = (float)Math.Pow(10, settings.DecimalPrecision + 2);
+            _scoreController = data.ScoreController;
 
             transform.localScale = Vector3.one;
             transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().fontSize = 0.325f;
@@ -145,7 +128,7 @@ namespace CountersPlus.Counters
 
         private void OnNoteCut(NoteData data, NoteCutInfo info, int score)
         {
-            if (data.noteType != NoteType.Bomb) notes++;
+            if (info.allIsOK && data.noteType != NoteType.Bomb) notes++;
         }
 
         public void UpdateScore(int score)

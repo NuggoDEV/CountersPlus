@@ -12,9 +12,7 @@ namespace CountersPlus.Counters
 {
     class MissedCounter : MonoBehaviour
     {
-
         private ScoreController scoreController;
-        //private StandardLevelSceneSetup sceneSetup;
         private MissedConfigModel settings;
         private TMP_Text missedText;
         private TMP_Text label;
@@ -23,18 +21,12 @@ namespace CountersPlus.Counters
         void Awake()
         {
             settings = CountersController.settings.missedConfig;
-            StartCoroutine(GetRequired());
+            CountersController.ReadyToInit += Init;
         }
 
-        IEnumerator GetRequired()
+        private void Init(CountersData data)
         {
-            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<ScoreController>().Any());
-            scoreController = Resources.FindObjectsOfTypeAll<ScoreController>().FirstOrDefault();
-            Init();
-        }
-
-        private void Init()
-        {
+            scoreController = data.ScoreController;
             Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out missedText, position - new Vector3(0, 0.4f, 0));
             missedText.text = "0";
@@ -62,6 +54,7 @@ namespace CountersPlus.Counters
             scoreController.noteWasCutEvent -= onNoteCut;
             scoreController.noteWasMissedEvent -= onNoteMiss;
         }
+
         private void onNoteCut(NoteData data, NoteCutInfo info, int c)
         {
             if (data.noteType == NoteType.Bomb || !info.allIsOK) incrementCounter();

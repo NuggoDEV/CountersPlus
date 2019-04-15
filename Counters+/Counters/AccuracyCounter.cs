@@ -22,21 +22,12 @@ namespace CountersPlus.Counters
         void Awake()
         {
             settings = CountersController.settings.noteConfig;
-            if (transform.parent == null)
-                StartCoroutine(GetRequired());
-            else
-                Init();
+            CountersController.ReadyToInit += Init;
         }
 
-        IEnumerator GetRequired()
+        private void Init(CountersData data)
         {
-            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<ScoreController>().Any());
-            scoreController = Resources.FindObjectsOfTypeAll<ScoreController>().FirstOrDefault();
-            Init();
-        }
-
-        private void Init()
-        {
+            scoreController = data.ScoreController;
             Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out counterText, position - new Vector3(0, 0.4f, 0));
             counterText.text = settings.ShowPercentage ? "0 / 0 - (100%)" : "0 / 0";

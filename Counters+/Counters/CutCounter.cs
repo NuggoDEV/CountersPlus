@@ -22,22 +22,15 @@ namespace CountersPlus.Counters
         GameObject _RankObject;
         TMP_Text cutCounter;
 
-        IEnumerator GetRequired()
-        {
-            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<ScoreController>().Any());
-            _scoreController = Resources.FindObjectsOfTypeAll<ScoreController>().FirstOrDefault();
-            Init();
-        }
-
         void Awake()
         {
             settings = CountersController.settings.cutConfig;
-            StartCoroutine(GetRequired());
+            CountersController.ReadyToInit += Init;
         }
 
-        private void Init()
+        private void Init(CountersData data)
         {
-
+            _scoreController = data.ScoreController;
             Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out cutLabel, position);
             cutLabel.text = "Average Cut";

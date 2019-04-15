@@ -12,8 +12,6 @@ namespace CountersPlus.Counters
 {
     class SpeedCounter : MonoBehaviour
     {
-
-        private PlayerController playerController;
         private SpeedConfigModel settings;
         private TMP_Text counterText;
         private TMP_Text altCounterText;
@@ -30,25 +28,15 @@ namespace CountersPlus.Counters
         {
             settings = CountersController.settings.speedConfig;
             settingsMode = (int)settings.Mode;
-            StartCoroutine(GetRequired());
-            for (var i = 0; i < settings.DecimalPrecision; i++)
-            {
-                precision += "0";
-            }
+            for (var i = 0; i < settings.DecimalPrecision; i++) precision += "0";
+            CountersController.ReadyToInit += Init;
         }
 
-        IEnumerator GetRequired()
-        {
-            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<PlayerController>().Any());
-            playerController = Resources.FindObjectsOfTypeAll<PlayerController>().FirstOrDefault();
-            Init();
-        }
-
-        private void Init()
+        private void Init(CountersData data)
         {
             Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-            right = playerController.rightSaber;
-            left = playerController.leftSaber;
+            right = data.PlayerController.rightSaber;
+            left = data.PlayerController.leftSaber;
             if (settings.Mode == ICounterMode.Average || settings.Mode == ICounterMode.SplitAverage)
             {
                 TextHelper.CreateText(out counterText, position - new Vector3(0, 0.4f, 0));

@@ -21,6 +21,8 @@ namespace CountersPlus
         internal static MainConfigModel settings;
         internal static List<CustomCounter> customCounters { get; private set; } = new List<CustomCounter>();
 
+        public static Action<CountersData> ReadyToInit;
+
         public static void OnLoad()
         {
             settings = ConfigLoader.LoadSettings();
@@ -53,19 +55,23 @@ namespace CountersPlus
             loadedCounters.Add(counter);
         }
 
-        public static void DelayedLoadCounters(float delay)
+        private IEnumerator ObtainRequiredData()
         {
-            Instance.StartCoroutine(Instance.DelayLoad(delay));
-        }
-
-        private IEnumerator DelayLoad(float d)
-        {
-            yield return new WaitForSeconds(d);
-            LoadCounters();
+            Plugin.Log("Obtaining required counter data...");
+            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<ScoreController>().Any());
+            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<PlayerController>().Any());
+            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().Any());
+            ReadyToInit.Invoke(new CountersData
+            {
+                ScoreController = Resources.FindObjectsOfTypeAll<ScoreController>().First(),
+                PlayerController = Resources.FindObjectsOfTypeAll<PlayerController>().First(),
+                AudioTimeSyncController = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().First(),
+            });
         }
 
         public static void LoadCounters()
         {
+            Instance.StartCoroutine(Instance.ObtainRequiredData());
             Plugin.Log("Loading Counters...", Plugin.LogInfo.Notice);
             LoadCounter<MissedConfigModel, MissedCounter>("Missed", settings.missedConfig);
             LoadCounter<NoteConfigModel, AccuracyCounter>("Notes", settings.noteConfig);
@@ -156,5 +162,12 @@ namespace CountersPlus
                 if (settings.progressConfig.Mode == ICounterMode.Original) offset += new Vector3(0.25f, 0, 0);
             return pos + offset;
         }
+    }
+
+    public class CountersData
+    {
+        public ScoreController ScoreController;
+        public PlayerController PlayerController;
+        public AudioTimeSyncController AudioTimeSyncController;
     }
 }

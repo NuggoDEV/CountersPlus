@@ -36,10 +36,7 @@ namespace CountersPlus
                 (!Resources.FindObjectsOfTypeAll<PlayerDataModelSO>()
                     .FirstOrDefault()?
                     .currentLocalPlayer.playerSpecificSettings.noTextsAndHuds ?? true)
-                )
-            {   //Some issues are probably fixed with this delay
-                CountersController.DelayedLoadCounters(0.1f);
-            }
+                ) CountersController.LoadCounters();
         }
 
         public void OnSceneLoaded(Scene arg, LoadSceneMode hiBrian)
