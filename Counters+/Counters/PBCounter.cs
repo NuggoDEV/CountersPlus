@@ -22,6 +22,7 @@ namespace CountersPlus.Counters
         TMP_Text _PbTrackerText;
         int _maxPossibleScore = 0;
         float roundMultiple;
+        float pbAtBeginningOfSong = 0;
         
         void Awake()
         {
@@ -34,11 +35,12 @@ namespace CountersPlus.Counters
             roundMultiple = (float)Math.Pow(100, settings.DecimalPrecision);
             levelData = BS_Utils.Plugin.LevelData;
             PlayerDataModelSO player = Resources.FindObjectsOfTypeAll<PlayerDataModelSO>().First();
+            IDifficultyBeatmap beatmap = levelData.GameplayCoreSceneSetupData.difficultyBeatmap;
             PlayerLevelStatsData stats = player.currentLocalPlayer.GetPlayerLevelStatsData(
-                levelData.GameplayCoreSceneSetupData.difficultyBeatmap.level.levelID,
-                levelData.GameplayCoreSceneSetupData.difficultyBeatmap.difficulty,
-                levelData.GameplayCoreSceneSetupData.difficultyBeatmap.parentDifficultyBeatmapSet.beatmapCharacteristic);
-            SetPersonalBest(stats.highScore);
+                beatmap.level.levelID, beatmap.difficulty, beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic);
+            _maxPossibleScore = stats.highScore;
+            pbAtBeginningOfSong = stats.highScore / ScoreController.MaxScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
+            SetPersonalBest(pbAtBeginningOfSong);
         }
 
         //Sometimes a leaderboard request will run past creation of this object.
@@ -78,10 +80,13 @@ namespace CountersPlus.Counters
                     float ratio = score / (float)_maxPossibleScore;
                     //Force percent to round down to decimal precision
                     ratio = (float)Math.Floor(ratio * roundMultiple) / roundMultiple;
-                    
-                    if (ratio != 0 && ratio > 1)
+
+                    if (ratio != 0 && ratio > pbAtBeginningOfSong)
+                    {
                         _PbTrackerText.color = Color.red;
-                    else if (ratio != 0 && ratio < 1)
+                        _PbTrackerText.text = "PB: " + (Mathf.Clamp(ratio, 0.0f, 1.0f) * 100.0f).ToString("F" + settings.DecimalPrecision) + "%";
+                    }
+                    else if (ratio != 0 && ratio < pbAtBeginningOfSong)
                         _PbTrackerText.color = Color.white;
                 }
             }
