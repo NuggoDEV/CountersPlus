@@ -83,6 +83,7 @@ namespace CountersPlus.UI
                 default: return "Huh, I dont know, I cant find this!";
                 case "Missed": return "<i>MISS</i>";
                 case "Notes": return "Notes hit over total notes!";
+                case "Personal Best": return "<i>\"Did ya... miss me?\"</i>";
                 case "Progress": return "The original you know and love.";
                 case "Score": return "If the in-game score counter wasn't good enough.";
                 case "Speed": return "<i>\"Speed, motherfucker, do you speak it?\"</i>";

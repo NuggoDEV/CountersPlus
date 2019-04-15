@@ -90,6 +90,14 @@ namespace CountersPlus.UI
                     scorePrecision.GetValue = () => CC.settings.scoreConfig.DecimalPrecision;
                     scorePrecision.SetValue += (v) => CC.settings.scoreConfig.DecimalPrecision = Mathf.RoundToInt(v);
                 } },
+            { CC.settings.pbConfig,
+                (sub, config) =>
+                {
+                    var pbPrecision = CPEVC.AddList(ref sub, config, "Percentage Precision", "How precise should the precentage be?", 6);
+                    pbPrecision.GetTextForValue = (v) => Mathf.RoundToInt(v).ToString();
+                    pbPrecision.GetValue = () => CC.settings.pbConfig.DecimalPrecision;
+                    pbPrecision.SetValue += (v) => CC.settings.pbConfig.DecimalPrecision = Mathf.RoundToInt(v);
+                } },
             { CC.settings.progressConfig,
                 (sub, config) => {
                     var progressRank = CPEVC.AddList(ref sub, config, "Progress From End", "Starts the counter from the end of the song and decreases while the song is played.", 2);

@@ -67,6 +67,7 @@ namespace CountersPlus
                 PlayerController = Resources.FindObjectsOfTypeAll<PlayerController>().First(),
                 AudioTimeSyncController = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().First(),
             });
+            Plugin.Log("Obtained data!");
         }
 
         public static void LoadCounters()
@@ -76,6 +77,7 @@ namespace CountersPlus
             LoadCounter<MissedConfigModel, MissedCounter>("Missed", settings.missedConfig);
             LoadCounter<NoteConfigModel, AccuracyCounter>("Notes", settings.noteConfig);
             LoadCounter<ScoreConfigModel, ScoreCounter>("Score", settings.scoreConfig);
+            LoadCounter<PBConfigModel, PBCounter>("Personal Best", settings.pbConfig);
             LoadCounter<ProgressConfigModel, ProgressCounter>("Progress", settings.progressConfig);
             LoadCounter<SpeedConfigModel, SpeedCounter>("Speed", settings.speedConfig);
             LoadCounter<CutConfigModel, CutCounter>("Cut", settings.cutConfig);

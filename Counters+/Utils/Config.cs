@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using IniParser;
+using IniParser.Model;
+using System;
 using System.Linq;
 
 namespace CountersPlus.Config
@@ -9,6 +9,10 @@ namespace CountersPlus.Config
     {
         public static MainConfigModel LoadSettings()
         {
+            FileIniDataParser parser = new FileIniDataParser();
+            IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
+            bool pbExists = false;
+            if (data.Sections.Any((SectionData x) => x.SectionName == "Personal Best")) pbExists = true;
             MainConfigModel model = new MainConfigModel();
             try
             {
@@ -27,6 +31,7 @@ namespace CountersPlus.Config
                 model.progressConfig = new ProgressConfigModel();
                 model.scoreConfig = new ScoreConfigModel();
                 model.pbConfig = new PBConfigModel();
+                if (!pbExists) ResetSetting(model.pbConfig, false, ICounterPositions.BelowMultiplier, 1);
                 model.speedConfig = new SpeedConfigModel();
                 model.cutConfig = new CutConfigModel();
                 model.spinometerConfig = new SpinometerConfigModel();
@@ -308,7 +313,7 @@ namespace CountersPlus.Config
     }
 
     public sealed class PBConfigModel : IConfigModel{
-        public PBConfigModel() { DisplayName = "PB"; }
+        public PBConfigModel() { DisplayName = "Personal Best"; }
         public int DecimalPrecision
         {
             get

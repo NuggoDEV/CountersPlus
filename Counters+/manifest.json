@@ -7,10 +7,9 @@
   "name": "Counters+",
   "version": "1.5.4",
   "dependsOn": {
-    "BS Utils": "^1.2.4",
-    "CustomUI": "^1.5.4",
-    "Ini Parser": "^2.5.2"
+    "BS Utils": "^1.2.3",
+    "CustomUI": "^1.5.4"
   },
-  "loadAfter": ["BS Utils", "CustomUI", "Ini Parser"],
+  "loadAfter": ["BS Utils", "CustomUI"],
   "features": [ ]
 }
