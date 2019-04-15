@@ -26,6 +26,7 @@ namespace CountersPlus.Config
                 model.noteConfig = new NoteConfigModel();
                 model.progressConfig = new ProgressConfigModel();
                 model.scoreConfig = new ScoreConfigModel();
+                model.pbConfig = new PBConfigModel();
                 model.speedConfig = new SpeedConfigModel();
                 model.cutConfig = new CutConfigModel();
                 model.spinometerConfig = new SpinometerConfigModel();
@@ -149,7 +150,7 @@ namespace CountersPlus.Config
         public NoteConfigModel noteConfig;
         public ProgressConfigModel progressConfig;
         public ScoreConfigModel scoreConfig;
-        //public PBConfigModel pBConfig;
+        public PBConfigModel pbConfig;
         public SpeedConfigModel speedConfig;
         public CutConfigModel cutConfig;
         public SpinometerConfigModel spinometerConfig;
