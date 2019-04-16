@@ -16,13 +16,13 @@ namespace CountersPlus.Counters
         private ScoreController _scoreController;
 
         private PBConfigModel settings;
-        private LevelData levelData;
+        private GameplayModifiersModelSO gameplayMods;
+        private GameplayCoreSceneSetupData gcssd;
 
         private TMP_Text _PbTrackerText;
         private int _maxPossibleScore = 0;
         private int decimalPrecision = 2;
-        private float roundMultiple;
-        private float pbAtBeginningOfSong = 0;
+        private float beginningPB = 0;
         
         void Awake()
         {
@@ -34,14 +34,16 @@ namespace CountersPlus.Counters
         private void Init(CountersData data)
         {
             _scoreController = data.ScoreController;
-            roundMultiple = (float)Math.Pow(100, settings.DecimalPrecision);
-            levelData = BS_Utils.Plugin.LevelData;
-            PlayerDataModelSO player = Resources.FindObjectsOfTypeAll<PlayerDataModelSO>().First();
-            IDifficultyBeatmap beatmap = levelData.GameplayCoreSceneSetupData.difficultyBeatmap;
+            gcssd = data.GCSSD;
+            PlayerDataModelSO player = data.PlayerData;
+            gameplayMods = data.ModifiersData;
+            IDifficultyBeatmap beatmap = data.GCSSD.difficultyBeatmap;
             PlayerLevelStatsData stats = player.currentLocalPlayer.GetPlayerLevelStatsData(
                 beatmap.level.levelID, beatmap.difficulty, beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic);
             _maxPossibleScore = stats.highScore;
-            pbAtBeginningOfSong = (float)stats.highScore / (float)ScoreController.MaxScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
+            int HighScoreWithoutMultiplier = Mathf.RoundToInt(
+                stats.highScore / gameplayMods.GetTotalMultiplier(gcssd.gameplayModifiers));
+            beginningPB = (float)HighScoreWithoutMultiplier / ((float)ScoreController.MaxScoreForNumberOfNotes(beatmap.beatmapData.notesCount));
 
             Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out _PbTrackerText, position);
@@ -51,23 +53,23 @@ namespace CountersPlus.Counters
             
             _scoreController.scoreDidChangeEvent += UpdateScore;
 
-            SetPersonalBest(pbAtBeginningOfSong);
+            SetPersonalBest(beginningPB);
         }
         
         public void SetPersonalBest(float pb)
         {
             //Force personal best percent to round down to decimal precision
-            pb = (float)Math.Round((decimal)pb, decimalPrecision);
+            pb = (float)Math.Round((decimal)pb, decimalPrecision + 2);
             if (pb == 0) _PbTrackerText.text = "--";
-            else _PbTrackerText.text = "PB: " + (Mathf.Clamp(pb, 0.0f, 1.0f) * 100.0f).ToString("F" + settings.DecimalPrecision) + "%";
+            else _PbTrackerText.text = "PB: " + (pb * 100.0f).ToString("F" + settings.DecimalPrecision) + "%";
         }
 
         public void UpdateScore(int score)
         {
             if (_maxPossibleScore != 0)
             {
-                float ratio = score / (float)_maxPossibleScore;
-                if (ratio > pbAtBeginningOfSong)
+                float ratio = score * gameplayMods.GetTotalMultiplier(gcssd.gameplayModifiers) / (float)_maxPossibleScore;
+                if (ratio > beginningPB)
                 {
                     _PbTrackerText.color = Color.red;
                     SetPersonalBest(ratio);

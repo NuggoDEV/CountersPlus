@@ -16,6 +16,8 @@ namespace CountersPlus.Counters
 
         private ScoreConfigModel settings;
         private ScoreController _scoreController;
+        private GameplayModifiersModelSO gm;
+        private GameplayCoreSceneSetupData gcssd;
 
         GameObject _RankObject;
         TMP_Text _RankText;
@@ -71,6 +73,8 @@ namespace CountersPlus.Counters
         {
             roundMultiple = (float)Math.Pow(10, settings.DecimalPrecision + 2);
             _scoreController = data.ScoreController;
+            gm = data.ModifiersData;
+            gcssd = data.GCSSD;
 
             transform.localScale = Vector3.one;
             transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().fontSize = 0.325f;

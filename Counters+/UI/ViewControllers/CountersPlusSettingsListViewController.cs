@@ -134,10 +134,7 @@ namespace CountersPlus.UI
                     if (info.IsCustom) image.sprite = Images.Images.Load("Custom");
                     else image.sprite = Images.Images.Load(info.Name);
                 }
-                catch(Exception e) {
-                    Plugin.Log(e.ToString(), Plugin.LogInfo.Error, "Create an Issue on the Counters+ GitHub.");
-                    image.sprite = Images.Images.Load("WotAreYeDoin");
-                }
+                catch { image.sprite = Images.Images.Load("WotAreYeDoin"); }
             }
             cell.reuseIdentifier = "CountersPlusSettingCell";
             return cell;

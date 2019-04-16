@@ -14,7 +14,6 @@ namespace CountersPlus.UI
 {
     public class AdvancedCounterSettings
     {
-        internal class ModeViewController : TupleViewController<Tuple<ICounterMode, string>> { }
         static List<Tuple<ICounterMode, string>> speedSettings = new List<Tuple<ICounterMode, string>> {
             {ICounterMode.Average, "Mean Speed" },
             {ICounterMode.Top5Sec, "Top (5 Sec.)" },

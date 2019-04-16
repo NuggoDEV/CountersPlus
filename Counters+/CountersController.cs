@@ -66,13 +66,15 @@ namespace CountersPlus
                 ScoreController = Resources.FindObjectsOfTypeAll<ScoreController>().First(),
                 PlayerController = Resources.FindObjectsOfTypeAll<PlayerController>().First(),
                 AudioTimeSyncController = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().First(),
+                PlayerData = Resources.FindObjectsOfTypeAll<PlayerDataModelSO>().First(),
+                ModifiersData = Resources.FindObjectsOfTypeAll<GameplayModifiersModelSO>().First(),
+                GCSSD = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData, //By the time all of these load, so should GCSSD.
             });
             Plugin.Log("Obtained data!");
         }
 
         public static void LoadCounters()
         {
-            Instance.StartCoroutine(Instance.ObtainRequiredData());
             Plugin.Log("Loading Counters...", Plugin.LogInfo.Notice);
             LoadCounter<MissedConfigModel, MissedCounter>("Missed", settings.missedConfig);
             LoadCounter<NoteConfigModel, AccuracyCounter>("Notes", settings.noteConfig);
@@ -112,6 +114,7 @@ namespace CountersPlus
                 }
             }
             Plugin.Log("Counters loaded!", Plugin.LogInfo.Notice);
+            Instance.StartCoroutine(Instance.ObtainRequiredData());
         }
 
         public static Vector3 determinePosition(GameObject counter, ICounterPositions position, int index)
@@ -171,5 +174,8 @@ namespace CountersPlus
         public ScoreController ScoreController;
         public PlayerController PlayerController;
         public AudioTimeSyncController AudioTimeSyncController;
+        public PlayerDataModelSO PlayerData;
+        public GameplayModifiersModelSO ModifiersData;
+        public GameplayCoreSceneSetupData GCSSD;
     }
 }
