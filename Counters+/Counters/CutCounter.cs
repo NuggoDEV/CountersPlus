@@ -19,6 +19,9 @@ namespace CountersPlus.Counters
 
         private List<int> cuts = new List<int>();
 
+        private double previousAverage;
+        private int previousCuts;
+
         GameObject _RankObject;
         TMP_Text cutCounter;
 
@@ -48,17 +51,34 @@ namespace CountersPlus.Counters
             
             if (_scoreController != null)
                 _scoreController.noteWasCutEvent += UpdateScore;
+            StartCoroutine(CleanupEverySecond());
         }
 
-        public void UpdateScore(NoteData data, NoteCutInfo info, int score)
+        private IEnumerator CleanupEverySecond()
+        {
+            while (true){
+                yield return new WaitForSeconds(1);
+                previousAverage = cuts.Average();
+                previousCuts = cuts.Count;
+                cuts.Clear();
+            }
+        }
+
+        private void UpdateScore(NoteData data, NoteCutInfo info, int score)
         {
             if (data.noteType == NoteType.Bomb || !info.allIsOK) return;
             info.afterCutSwingRatingCounter.didFinishEvent += (v) =>
             {
                 ScoreController.ScoreWithoutMultiplier(info, info.afterCutSwingRatingCounter, out int beforeCut, out int afterCut, out int why);
                 cuts.Add(beforeCut+afterCut);
-                cutCounter.text = $"{Math.Round(cuts.Average())}";
+                cutCounter.text = $"{Math.Round(DetermineAverage())}";
             };
+        }
+
+        private double DetermineAverage()
+        {
+            if (previousCuts == 0) return cuts.Average();
+            return ((previousAverage * previousCuts) + cuts.Sum()) / previousCuts + cuts.Count;
         }
     }
 }

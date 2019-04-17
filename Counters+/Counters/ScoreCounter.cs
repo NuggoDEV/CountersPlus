@@ -23,12 +23,13 @@ namespace CountersPlus.Counters
         TMP_Text _RankText;
         int _maxPossibleScore = 0;
         int notes = 0;
-        float roundMultiple;
+        int decimalPrecision;
         int _currentScore;
 
         void Awake()
         {
             settings = CountersController.settings.scoreConfig;
+            decimalPrecision = settings.DecimalPrecision;
             if (gameObject.name == "ScorePanel")
                 PreInit();
             else
@@ -41,7 +42,6 @@ namespace CountersPlus.Counters
             while (true)
             {
                 baseCounter = GameObject.Find("ScorePanel");
-                Console.WriteLine(baseCounter != null);
                 if (baseCounter != null) break;
                 yield return new WaitForSeconds(0.1f);
             }
@@ -71,7 +71,6 @@ namespace CountersPlus.Counters
 
         private void Init(CountersData data)
         {
-            roundMultiple = (float)Math.Pow(10, settings.DecimalPrecision + 2);
             _scoreController = data.ScoreController;
             gm = data.ModifiersData;
             gcssd = data.GCSSD;
@@ -155,10 +154,9 @@ namespace CountersPlus.Counters
                 }
                 else
                 {
-                    float ratio = score / (float)_maxPossibleScore;
+                    float ratio = ScoreController.GetScoreForGameplayModifiersScoreMultiplier(score, gm.GetTotalMultiplier(gcssd.gameplayModifiers)) / (float)_maxPossibleScore;
                     //Force percent to round down to decimal precision
-                    ratio = (float)Math.Floor(ratio * roundMultiple) / roundMultiple;
-                    _scoreMesh.text = (Mathf.Clamp(ratio, 0.0f, 1.0f) * 100.0f).ToString("F" + settings.DecimalPrecision) + "%";
+                    _scoreMesh.text = Math.Round(ratio * 100, settings.DecimalPrecision).ToString() + "%";
                     if (settings.DisplayRank) _RankText.text = "\n" + GetRank(score, ratio);
                 }
             }

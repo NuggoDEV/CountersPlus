@@ -19,6 +19,7 @@ namespace CountersPlus.Counters
         private GameplayModifiersModelSO gameplayMods;
         private GameplayCoreSceneSetupData gcssd;
 
+        private Color orange;
         private TMP_Text _PbTrackerText;
         private int _maxPossibleScore = 0;
         private int decimalPrecision = 2;
@@ -29,6 +30,7 @@ namespace CountersPlus.Counters
             settings = CountersController.settings.pbConfig;
             decimalPrecision = settings.DecimalPrecision;
             CountersController.ReadyToInit += Init;
+            ColorUtility.TryParseHtmlString("#FFA500", out orange);
         }
 
         private void Init(CountersData data)
@@ -40,10 +42,8 @@ namespace CountersPlus.Counters
             IDifficultyBeatmap beatmap = data.GCSSD.difficultyBeatmap;
             PlayerLevelStatsData stats = player.currentLocalPlayer.GetPlayerLevelStatsData(
                 beatmap.level.levelID, beatmap.difficulty, beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic);
-            _maxPossibleScore = stats.highScore;
-            int HighScoreWithoutMultiplier = Mathf.RoundToInt(
-                stats.highScore / gameplayMods.GetTotalMultiplier(gcssd.gameplayModifiers));
-            beginningPB = (float)HighScoreWithoutMultiplier / ((float)ScoreController.MaxScoreForNumberOfNotes(beatmap.beatmapData.notesCount));
+            _maxPossibleScore = ScoreController.MaxScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
+            beginningPB = (float)stats.highScore / ((float)ScoreController.MaxScoreForNumberOfNotes(beatmap.beatmapData.notesCount));
 
             Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out _PbTrackerText, position);
@@ -68,12 +68,13 @@ namespace CountersPlus.Counters
         {
             if (_maxPossibleScore != 0)
             {
-                float ratio = score * gameplayMods.GetTotalMultiplier(gcssd.gameplayModifiers) / (float)_maxPossibleScore;
+                float ratio = ScoreController.GetScoreForGameplayModifiersScoreMultiplier(score, gameplayMods.GetTotalMultiplier(gcssd.gameplayModifiers)) / (float)_maxPossibleScore;
                 if (ratio > beginningPB)
                 {
-                    _PbTrackerText.color = Color.red;
                     SetPersonalBest(ratio);
+                    _PbTrackerText.color = Color.red;
                 }
+                else _PbTrackerText.color = Color.Lerp(Color.white, orange, ratio / beginningPB);
             }
         }
     }

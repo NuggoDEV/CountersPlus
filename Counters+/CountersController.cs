@@ -61,15 +61,8 @@ namespace CountersPlus
             yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<ScoreController>().Any());
             yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<PlayerController>().Any());
             yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().Any());
-            ReadyToInit.Invoke(new CountersData
-            {
-                ScoreController = Resources.FindObjectsOfTypeAll<ScoreController>().First(),
-                PlayerController = Resources.FindObjectsOfTypeAll<PlayerController>().First(),
-                AudioTimeSyncController = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().First(),
-                PlayerData = Resources.FindObjectsOfTypeAll<PlayerDataModelSO>().First(),
-                ModifiersData = Resources.FindObjectsOfTypeAll<GameplayModifiersModelSO>().First(),
-                GCSSD = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData, //By the time all of these load, so should GCSSD.
-            });
+            CountersData data = new CountersData();
+            ReadyToInit.Invoke(data);
             Plugin.Log("Obtained data!");
         }
 
@@ -177,5 +170,15 @@ namespace CountersPlus
         public PlayerDataModelSO PlayerData;
         public GameplayModifiersModelSO ModifiersData;
         public GameplayCoreSceneSetupData GCSSD;
+
+        public CountersData()
+        {
+            ScoreController = Resources.FindObjectsOfTypeAll<ScoreController>().First();
+            PlayerController = Resources.FindObjectsOfTypeAll<PlayerController>().First();
+            AudioTimeSyncController = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().First();
+            PlayerData = Resources.FindObjectsOfTypeAll<PlayerDataModelSO>().First();
+            ModifiersData = Resources.FindObjectsOfTypeAll<GameplayModifiersModelSO>().First();
+            GCSSD = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData; //By the time all of these load, so should GCSSD.
+        }
     }
 }
