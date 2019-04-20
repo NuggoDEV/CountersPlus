@@ -147,6 +147,7 @@ namespace CountersPlus.UI
                 { "SkyKiwiTV", "Original version checking code" },
                 { "Dracrius", "Bug fixing and beta testing" },
                 { "Stackeror", "Creator of the original Progress Counter mod" },
+                { "altrewin", "Thanks for the love, and coffee. <3" },
             };
             string user = GetUserInfo.GetUserName();
             if (user == null) user = "Channel Monitor Bot";
