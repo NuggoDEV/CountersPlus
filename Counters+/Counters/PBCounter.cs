@@ -55,6 +55,12 @@ namespace CountersPlus.Counters
 
             SetPersonalBest(beginningPB);
         }
+
+        void OnDestroy()
+        {
+            _scoreController.scoreDidChangeEvent -= UpdateScore;
+            CountersController.ReadyToInit -= Init;
+        }
         
         public void SetPersonalBest(float pb)
         {

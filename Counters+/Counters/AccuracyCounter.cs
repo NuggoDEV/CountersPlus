@@ -54,6 +54,7 @@ namespace CountersPlus.Counters
         {
             scoreController.noteWasCutEvent -= onNoteCut;
             scoreController.noteWasMissedEvent -= onNoteMiss;
+            CountersController.ReadyToInit -= Init;
         }
 
         private void onNoteCut(NoteData data, NoteCutInfo info, int c)

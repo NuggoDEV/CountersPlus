@@ -111,6 +111,17 @@ namespace CountersPlus.Counters
             }
         }
         
+        void OnDestroy()
+        {
+            if (_scoreController != null)
+            {
+                _scoreController.scoreDidChangeEvent -= UpdateScore;
+                _scoreController.noteWasCutEvent -= OnNoteCut;
+                _scoreController.noteWasMissedEvent -= _OnNoteWasMissed;
+            }
+            CountersController.ReadyToInit -= Init;
+        }
+
         public string GetRank(int score, float prec)
         {
             if (score >= _maxPossibleScore) return "SSS";

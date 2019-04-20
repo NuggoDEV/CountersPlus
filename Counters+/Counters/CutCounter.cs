@@ -54,6 +54,12 @@ namespace CountersPlus.Counters
             StartCoroutine(CleanupEverySecond());
         }
 
+        void OnDestroy()
+        {
+            _scoreController.noteWasCutEvent -= UpdateScore;
+            CountersController.ReadyToInit -= Init;
+        }
+
         private IEnumerator CleanupEverySecond()
         {
             while (true){

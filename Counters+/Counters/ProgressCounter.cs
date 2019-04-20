@@ -111,6 +111,11 @@ namespace CountersPlus.Counters
             StartCoroutine(SecondTick());
         }
 
+        void OnDestroy()
+        {
+            CountersController.ReadyToInit -= Init;
+        }
+
         IEnumerator SecondTick()
         {
             while (true)
