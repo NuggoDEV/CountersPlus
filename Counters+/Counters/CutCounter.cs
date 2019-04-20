@@ -17,10 +17,8 @@ namespace CountersPlus.Counters
 
         private CutConfigModel settings;
 
-        private List<int> cuts = new List<int>();
-
-        private double previousAverage;
-        private int previousCuts;
+        private uint previousTotal; //Dont need negative numbers, and I need larger numbers.
+        private uint previousCuts;
 
         GameObject _RankObject;
         TMP_Text cutCounter;
@@ -51,7 +49,6 @@ namespace CountersPlus.Counters
             
             if (_scoreController != null)
                 _scoreController.noteWasCutEvent += UpdateScore;
-            StartCoroutine(CleanupEverySecond());
         }
 
         void OnDestroy()
@@ -60,32 +57,16 @@ namespace CountersPlus.Counters
             CountersController.ReadyToInit -= Init;
         }
 
-        private IEnumerator CleanupEverySecond()
-        {
-            while (true){
-                yield return new WaitForSeconds(1);
-                if (cuts.Count > 0) previousAverage = cuts.Average();
-                previousCuts = cuts.Count;
-                cuts.Clear();
-            }
-        }
-
         private void UpdateScore(NoteData data, NoteCutInfo info, int score)
         {
             if (data.noteType == NoteType.Bomb || !info.allIsOK) return;
             info.afterCutSwingRatingCounter.didFinishEvent += (v) =>
             {
                 ScoreController.ScoreWithoutMultiplier(info, info.afterCutSwingRatingCounter, out int beforeCut, out int afterCut, out int why);
-                cuts.Add(beforeCut+afterCut);
-                cutCounter.text = $"{Math.Round(DetermineAverage())}";
+                previousTotal += (uint)(beforeCut + afterCut);
+                previousCuts++;
+                cutCounter.text = $"{Math.Round((double)(previousTotal / previousCuts))}";
             };
-        }
-
-        private double DetermineAverage()
-        {
-            if (cuts.Count == 0) return 0;
-            if (previousCuts == 0) return cuts.Average();
-            return ((previousAverage * previousCuts) + cuts.Sum()) / previousCuts + cuts.Count;
         }
     }
 }

@@ -92,17 +92,17 @@ namespace CountersPlus.UI
             creator.alignment = TextAlignmentOptions.Center;
             setPositioning(creator.rectTransform, 0, 0.35f, 1, 0.166f, 0.5f);
 
-            github = BeatSaberUI.CreateUIButton(rect, "QuitButton", Vector2.zero, null, "GitHub", Images.Images.Load("GitHub"));
+            github = BeatSaberUI.CreateUIButton(rect, "QuitButton", Vector2.zero, null, "GitHub");
             github.onClick.AddListener(() => { GoTo("https://github.com/Caeden117/CountersPlus", github); });
             setPositioning(github.transform as RectTransform, 0.1f, 0.1f, 0.25f, 0.166f, 0.5f);
             BeatSaberUI.AddHintText(github.transform as RectTransform, "Opens in a new browser tab on your desktop. Feel free to explore the source code! Maybe try out experimental versions?");
 
-            issues = BeatSaberUI.CreateUIButton(rect, "QuitButton", Vector2.zero, null, "Report an Issue", null);
+            issues = BeatSaberUI.CreateUIButton(rect, "QuitButton", Vector2.zero, null, "Report an Issue");
             issues.onClick.AddListener(() => { GoTo("https://github.com/Caeden117/CountersPlus/issues", issues); });
             setPositioning(issues.transform as RectTransform, 0.55f, 0.1f, 0.35f, 0.166f, 0.5f);
             BeatSaberUI.AddHintText(issues.transform as RectTransform, "Opens in a new browser tab on your desktop. Be sure to read the Issue template thoroughly!");
 
-            donate = BeatSaberUI.CreateUIButton(rect, "PlayButton", Vector2.zero, null, "<3", null);
+            donate = BeatSaberUI.CreateUIButton(rect, "PlayButton", Vector2.zero, null, "<3");
             ColorUtility.TryParseHtmlString("#FF0048", out Color color);
             donate.gameObject.GetComponentInChildren<Image>().color = color;
             donate.onClick.AddListener(() => { GoTo("https://ko-fi.com/Caeden117", donate); });
@@ -150,9 +150,9 @@ namespace CountersPlus.UI
                 { "altrewin", "Thanks for the love, and coffee. <3" },
             };
             string user = GetUserInfo.GetUserName();
-            if (user == null) user = "Channel Monitor Bot";
+            if (user == null) user = "You";
             if (contributors.ContainsKey(user))
-                contributors.Add($"<i>\"{user}\"</i>", "For enjoying this mod!");
+                contributors.Add($"{user}, again!", "For enjoying this mod!");
             else contributors.Add(user, "For enjoying this mod!"); //Teehee :)
 
             ClearScreen();

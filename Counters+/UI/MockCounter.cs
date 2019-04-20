@@ -143,6 +143,8 @@ namespace CountersPlus.UI
                 else if (settings is SpinometerConfigModel)
                     Create(settings, "Spinometer",
                                 $"{((settings as SpinometerConfigModel).Mode == ICounterMode.SplitAverage ? $"{info.leftSpinAverage} | {info.rightSpinAverage}" : $"{(info.leftSpinAverage + info.rightSpinAverage) / 2}")}");
+                else if (settings is PBConfigModel)
+                    Create(settings, "", $"PB: {Math.Round((info.score / (info.score + UnityEngine.Random.Range(0.05f, 0.25f))) * 100, 2)}%");
             }
             else //Reduces calls to config. However with the new system I'm not sure if it matters all that much anymore.
             {
@@ -153,6 +155,7 @@ namespace CountersPlus.UI
                 else if (settings is CutConfigModel) Create(settings, "Average Cut", "0");
                 else if (settings is ProgressConfigModel) Create(settings, "Progress", "0%");
                 else if (settings is SpinometerConfigModel) Create(settings, "Spinometer", "0");
+                else if (settings is PBConfigModel) Create(settings, "", "PB: 0%");
             }
             if (settings is CustomConfigModel) Create(settings, "", settings.DisplayName);
         }
