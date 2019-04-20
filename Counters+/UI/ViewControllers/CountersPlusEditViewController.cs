@@ -62,7 +62,7 @@ namespace CountersPlus.UI
         {
             ClearScreen();
             TextMeshProUGUI name, version, creator;
-            Button github, issues;
+            Button github, issues, donate;
 
             //name = BeatSaberUI.CreateText(rect, "Temporary Name LMAO", Vector2.zero);
             name = BeatSaberUI.CreateText(rect, "Counters+", Vector2.zero);
@@ -92,17 +92,24 @@ namespace CountersPlus.UI
             creator.alignment = TextAlignmentOptions.Center;
             setPositioning(creator.rectTransform, 0, 0.35f, 1, 0.166f, 0.5f);
 
-            github = BeatSaberUI.CreateUIButton(rect, "QuitButton", Vector2.zero, null, "GitHub", null);
+            github = BeatSaberUI.CreateUIButton(rect, "QuitButton", Vector2.zero, null, "GitHub", Images.Images.Load("GitHub"));
             github.onClick.AddListener(() => { GoTo("https://github.com/Caeden117/CountersPlus", github); });
             setPositioning(github.transform as RectTransform, 0.1f, 0.1f, 0.25f, 0.166f, 0.5f);
-            BeatSaberUI.AddHintText(github.transform as RectTransform, "Opens in a new browser tab on your desktop. Feel free to explore the source code!");
+            BeatSaberUI.AddHintText(github.transform as RectTransform, "Opens in a new browser tab on your desktop. Feel free to explore the source code! Maybe try out experimental versions?");
 
             issues = BeatSaberUI.CreateUIButton(rect, "QuitButton", Vector2.zero, null, "Report an Issue", null);
             issues.onClick.AddListener(() => { GoTo("https://github.com/Caeden117/CountersPlus/issues", issues); });
             setPositioning(issues.transform as RectTransform, 0.55f, 0.1f, 0.35f, 0.166f, 0.5f);
             BeatSaberUI.AddHintText(issues.transform as RectTransform, "Opens in a new browser tab on your desktop. Be sure to read the Issue template thoroughly!");
 
-            loadedElements.AddRange(new GameObject[] { name.gameObject, version.gameObject, creator.gameObject, github.gameObject, issues.gameObject });
+            donate = BeatSaberUI.CreateUIButton(rect, "PlayButton", Vector2.zero, null, "<3", null);
+            ColorUtility.TryParseHtmlString("#FF0048", out Color color);
+            donate.gameObject.GetComponentInChildren<Image>().color = color;
+            donate.onClick.AddListener(() => { GoTo("https://ko-fi.com/Caeden117", donate); });
+            BeatSaberUI.AddHintText(donate.transform as RectTransform, "Buy me a coffee if you feel like I'm deserving of one.");
+            setPositioning(donate.transform as RectTransform, 0.375f, 0.075f, 0.15f, 0.166f, 0.5f);
+
+            loadedElements.AddRange(new GameObject[] { name.gameObject, version.gameObject, creator.gameObject, github.gameObject, issues.gameObject, donate.gameObject });
         }
 
         private static void GoTo(string url, Button button)
@@ -119,7 +126,7 @@ namespace CountersPlus.UI
         }
 
         private IEnumerator SecondRemove(GameObject go, Button button) {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(5);
             loadedElements.Remove(go);
             Destroy(go);
             button.interactable = true;
