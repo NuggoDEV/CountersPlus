@@ -1,8 +1,9 @@
 ﻿{
   "$schema": "https://github.com/nike4613/BSIPA-MetadataFileSchema/master/Schema.json",
   "author": "Caeden117",
-  "description": "A collection of widely used counters, all configurable in one mod!",
+  "description": "A collection of counters, both widely used and quite unusual, all configurable under one mod! Please report all bugs and issues to the Counters+ GitHub: <color=#00c0ff>https://github.com/Caeden117/CountersPlus</color>",
   "gameVersion": "0.13.2",
+  "icon": "CountersPlus.UI.Images.Logo.png",
   "id": "Counters",
   "name": "Counters+",
   "version": "1.5.4",
@@ -10,6 +11,6 @@
     "BS Utils": "^1.2.3",
     "CustomUI": "^1.5.4"
   },
-  "loadAfter": ["BS Utils", "CustomUI"],
-  "features": [ ]
+  "loadAfter": [ "BS Utils", "CustomUI" ],
+  "features": []
 }

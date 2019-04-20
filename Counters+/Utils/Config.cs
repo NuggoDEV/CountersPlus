@@ -390,7 +390,7 @@ namespace CountersPlus.Config
         }
     }
 
-    public class CutConfigModel : IConfigModel {
+    public sealed class CutConfigModel : IConfigModel {
         public CutConfigModel() { DisplayName = "Cut"; }
     }
     

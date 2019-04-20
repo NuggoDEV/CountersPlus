@@ -58,7 +58,7 @@ namespace CountersPlus.Counters
         {
             while (true){
                 yield return new WaitForSeconds(1);
-                previousAverage = cuts.Average();
+                if (cuts.Count > 0) previousAverage = cuts.Average();
                 previousCuts = cuts.Count;
                 cuts.Clear();
             }
@@ -77,6 +77,7 @@ namespace CountersPlus.Counters
 
         private double DetermineAverage()
         {
+            if (cuts.Count == 0) return 0;
             if (previousCuts == 0) return cuts.Average();
             return ((previousAverage * previousCuts) + cuts.Sum()) / previousCuts + cuts.Count;
         }
