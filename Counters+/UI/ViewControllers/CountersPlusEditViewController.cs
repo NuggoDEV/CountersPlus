@@ -62,6 +62,7 @@ namespace CountersPlus.UI
         {
             ClearScreen();
             TextMeshProUGUI name, version, creator;
+            Button github, issues;
 
             //name = BeatSaberUI.CreateText(rect, "Temporary Name LMAO", Vector2.zero);
             name = BeatSaberUI.CreateText(rect, "Counters+", Vector2.zero);
@@ -91,7 +92,37 @@ namespace CountersPlus.UI
             creator.alignment = TextAlignmentOptions.Center;
             setPositioning(creator.rectTransform, 0, 0.35f, 1, 0.166f, 0.5f);
 
-            loadedElements.AddRange(new GameObject[] { name.gameObject, version.gameObject, creator.gameObject });
+            github = BeatSaberUI.CreateUIButton(rect, "QuitButton", Vector2.zero, null, "GitHub", null);
+            github.onClick.AddListener(() => { GoTo("https://github.com/Caeden117/CountersPlus", github); });
+            setPositioning(github.transform as RectTransform, 0.1f, 0.1f, 0.25f, 0.166f, 0.5f);
+            BeatSaberUI.AddHintText(github.transform as RectTransform, "Opens in a new browser tab on your desktop. Feel free to explore the source code!");
+
+            issues = BeatSaberUI.CreateUIButton(rect, "QuitButton", Vector2.zero, null, "Report an Issue", null);
+            issues.onClick.AddListener(() => { GoTo("https://github.com/Caeden117/CountersPlus/issues", issues); });
+            setPositioning(issues.transform as RectTransform, 0.55f, 0.1f, 0.35f, 0.166f, 0.5f);
+            BeatSaberUI.AddHintText(issues.transform as RectTransform, "Opens in a new browser tab on your desktop. Be sure to read the Issue template thoroughly!");
+
+            loadedElements.AddRange(new GameObject[] { name.gameObject, version.gameObject, creator.gameObject, github.gameObject, issues.gameObject });
+        }
+
+        private static void GoTo(string url, Button button)
+        {
+            Plugin.Log("Opened a link to: " + url);
+            button.interactable = false;
+            TextMeshProUGUI reminder = BeatSaberUI.CreateText(rect, "Link opened in your browser!", Vector2.zero);
+            reminder.fontSize = 4;
+            reminder.alignment = TextAlignmentOptions.Center;
+            setPositioning(reminder.rectTransform, 0, 0.25f, 1, 0.166f, 0.5f);
+            loadedElements.Add(reminder.gameObject);
+            Instance.StartCoroutine(Instance.SecondRemove(reminder.gameObject, button));
+            System.Diagnostics.Process.Start(url);
+        }
+
+        private IEnumerator SecondRemove(GameObject go, Button button) {
+            yield return new WaitForSeconds(1);
+            loadedElements.Remove(go);
+            Destroy(go);
+            button.interactable = true;
         }
 
         internal static void ShowContributors()
