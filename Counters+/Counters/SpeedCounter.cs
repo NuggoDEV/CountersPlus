@@ -15,6 +15,7 @@ namespace CountersPlus.Counters
         private SpeedConfigModel settings;
         private TMP_Text counterText;
         private TMP_Text altCounterText;
+        private PlayerController pc = null;
         private Saber right;
         private Saber left;
         private List<float> rSpeedList = new List<float>();
@@ -35,6 +36,7 @@ namespace CountersPlus.Counters
         private void Init(CountersData data)
         {
             Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            pc = data.PlayerController;
             right = data.PlayerController.rightSaber;
             left = data.PlayerController.leftSaber;
             if (settings.Mode == ICounterMode.Average || settings.Mode == ICounterMode.SplitAverage)
@@ -131,6 +133,7 @@ namespace CountersPlus.Counters
 
         void Update()
         {
+            if (pc == null) return;
             switch (settingsMode)
             {
                 case (int)ICounterMode.Average:
