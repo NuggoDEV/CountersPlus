@@ -18,6 +18,7 @@ namespace CountersPlus.Counters
         private ScoreController _scoreController;
         private GameplayModifiersModelSO gm;
         private GameplayCoreSceneSetupData gcssd;
+        private float gameplayModifier = 1;
 
         GameObject _RankObject;
         TMP_Text _RankText;
@@ -74,7 +75,7 @@ namespace CountersPlus.Counters
             _scoreController = data.ScoreController;
             gm = data.ModifiersData;
             gcssd = data.GCSSD;
-
+            gameplayModifier = gm.GetTotalMultiplier(gcssd.gameplayModifiers);
             transform.localScale = Vector3.one;
             transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().fontSize = 0.325f;
             GameObject scoreMesh = new GameObject("Counters+ | Score Percent");
@@ -137,7 +138,6 @@ namespace CountersPlus.Counters
         private void _OnNoteWasMissed(NoteData data, int score)
         {
             if (data.noteType != NoteType.Bomb) notes++;
-            UpdateScore(score);
         }
 
         private void OnNoteCut(NoteData data, NoteCutInfo info, int score)
@@ -165,7 +165,7 @@ namespace CountersPlus.Counters
                 }
                 else
                 {
-                    float ratio = ScoreController.GetScoreForGameplayModifiersScoreMultiplier(score, gm.GetTotalMultiplier(gcssd.gameplayModifiers)) / (float)_maxPossibleScore;
+                    float ratio = (float)ScoreController.GetScoreForGameplayModifiersScoreMultiplier(score, gameplayModifier) / _maxPossibleScore;
                     //Force percent to round down to decimal precision
                     _scoreMesh.text = Math.Round(ratio * 100, settings.DecimalPrecision).ToString() + "%";
                     if (settings.DisplayRank) _RankText.text = "\n" + GetRank(score, ratio);

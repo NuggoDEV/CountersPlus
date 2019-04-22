@@ -24,6 +24,7 @@ namespace CountersPlus.Counters
         private int _maxPossibleScore = 0;
         private int decimalPrecision = 2;
         private float beginningPB = 0;
+        private float gmModifier = 1;
         
         void Awake()
         {
@@ -39,6 +40,7 @@ namespace CountersPlus.Counters
             gcssd = data.GCSSD;
             PlayerDataModelSO player = data.PlayerData;
             gameplayMods = data.ModifiersData;
+            gmModifier = gameplayMods.GetTotalMultiplier(gcssd.gameplayModifiers);
             IDifficultyBeatmap beatmap = data.GCSSD.difficultyBeatmap;
             PlayerLevelStatsData stats = player.currentLocalPlayer.GetPlayerLevelStatsData(
                 beatmap.level.levelID, beatmap.difficulty, beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic);
@@ -66,7 +68,7 @@ namespace CountersPlus.Counters
         {
             //Force personal best percent to round down to decimal precision
             pb = (float)Math.Round((decimal)pb, decimalPrecision + 2);
-            if (pb == 0) _PbTrackerText.text = "--";
+            if (_maxPossibleScore == 0) _PbTrackerText.text = "--";
             else _PbTrackerText.text = "PB: " + (pb * 100.0f).ToString("F" + settings.DecimalPrecision) + "%";
         }
 
@@ -74,7 +76,7 @@ namespace CountersPlus.Counters
         {
             if (_maxPossibleScore != 0)
             {
-                float ratio = ScoreController.GetScoreForGameplayModifiersScoreMultiplier(score, gameplayMods.GetTotalMultiplier(gcssd.gameplayModifiers)) / (float)_maxPossibleScore;
+                float ratio = ScoreController.GetScoreForGameplayModifiersScoreMultiplier(score, gmModifier) / (float)_maxPossibleScore;
                 if (ratio > beginningPB)
                 {
                     SetPersonalBest(ratio);
