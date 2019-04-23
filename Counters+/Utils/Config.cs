@@ -2,6 +2,7 @@
 using IniParser.Model;
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace CountersPlus.Config
 {
@@ -11,177 +12,84 @@ namespace CountersPlus.Config
         {
             FileIniDataParser parser = new FileIniDataParser();
             IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
-            bool pbExists = false;
-            if (data.Sections.Any((SectionData x) => x.SectionName == "Personal Best")) pbExists = true;
             MainConfigModel model = new MainConfigModel();
+            model = (MainConfigModel)DeserializeFromConfig(model, typeof(MainConfigModel), model.DisplayName);
             try
             {
-                //Pings all the settings options so they are both:
-                //A) assigned in CountersController.settings
-                //B) created if they do not exist in CountersPlus.ini
-                model.Enabled = model.Enabled;
-                model.ComboOffset = model.ComboOffset;
-                model.MultiplierOffset = model.MultiplierOffset;
-                model.AdvancedCounterInfo = model.AdvancedCounterInfo;
-                model.FirstStart = model.FirstStart;
-                model.HideCombo = model.HideCombo;
-                model.HideMultiplier = model.HideMultiplier;
-                model.missedConfig = new MissedConfigModel();
-                model.noteConfig = new NoteConfigModel();
-                model.progressConfig = new ProgressConfigModel();
-                model.scoreConfig = new ScoreConfigModel();
-                model.pbConfig = new PBConfigModel();
-                if (!pbExists) ResetSetting(model.pbConfig, false, ICounterPositions.BelowMultiplier, 1);
-                model.speedConfig = new SpeedConfigModel();
-                model.cutConfig = new CutConfigModel();
-                model.spinometerConfig = new SpinometerConfigModel();
-                if (new[] {
-                    model.missedConfig.Index, model.noteConfig.Index, model.progressConfig.Index, model.scoreConfig.Index,
-                    model.speedConfig.Index, model.cutConfig.Index, model.spinometerConfig.Index
-                }.All(x => x == 0))
-                {
-                    if (new[] {
-                        model.missedConfig.Position, model.noteConfig.Position, model.progressConfig.Position, model.scoreConfig.Position,
-                        model.speedConfig.Position, model.cutConfig.Position, model.spinometerConfig.Position
-                    }.All(x => x == ICounterPositions.BelowCombo))
-                    {
-                        ResetSettings(model);
-                    }
-                }
+                Type type = model.GetType();
+                MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
+                model.missedConfig = GrabFromConfig(ref model.missedConfig);
+                model.noteConfig = GrabFromConfig(ref model.noteConfig);
+                model.progressConfig = GrabFromConfig(ref model.progressConfig);
+                model.scoreConfig = GrabFromConfig(ref model.scoreConfig);
+                model.speedConfig = GrabFromConfig(ref model.speedConfig);
+                model.cutConfig = GrabFromConfig(ref model.cutConfig);
+                model.spinometerConfig = GrabFromConfig(ref model.spinometerConfig);
+                model.pbConfig = GrabFromConfig(ref model.pbConfig);
             }
             catch (Exception e)
             {
-                if (e.GetType() != typeof(NullReferenceException))
-                {
-                    Plugin.Log(e.ToString(), Plugin.LogInfo.Error);
-                    ResetSettings(model);
-                }
+                if (e.GetType() != typeof(NullReferenceException)) Plugin.Log(e.ToString(), Plugin.LogInfo.Error);
             }
             Plugin.Log("Config loaded!", Plugin.LogInfo.Notice);
             return model;
         }
 
-        //im not sure if I need this function anymore.
-        internal static void ResetSettings(MainConfigModel settings)
+        private static T GrabFromConfig<T>(ref T settings) where T : IConfigModel
         {
-            ResetSetting(settings.missedConfig, true, ICounterPositions.BelowCombo, 0);
-            ResetSetting(settings.noteConfig, true, ICounterPositions.BelowCombo, 1);
-            ResetSetting(settings.progressConfig, true, ICounterPositions.BelowEnergy, 0);
-            ResetSetting(settings.scoreConfig, true, ICounterPositions.BelowMultiplier, 0);
-            ResetSetting(settings.speedConfig, false, ICounterPositions.AboveMultiplier, 0);
-            ResetSetting(settings.cutConfig, false, ICounterPositions.AboveHighway, 0);
-            ResetSetting(settings.spinometerConfig, false, ICounterPositions.AboveHighway, 1);
+            return (T)DeserializeFromConfig(settings, typeof(T), settings.DisplayName);
         }
 
-        private static void ResetSetting<T>(T model, bool en, ICounterPositions pos, int index) where T : IConfigModel
+        private static object DeserializeFromConfig(object input, Type type, string DisplayName)
         {
-            model.Enabled = en;
-            model.Position = pos;
-            model.Index = index;
+            MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
+            //DisplayName = ((PropertyInfo)infos.Where((MemberInfo x) => x.Name == "DisplayName").First()).GetValue(input).ToString();
+            foreach (MemberInfo info in infos)
+            {
+                if (info.MemberType == MemberTypes.Field)
+                {
+                    try
+                    {
+                        if (info.DeclaringType == typeof(ICounterMode))
+                            input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterMode), Plugin.config.GetString(DisplayName, info.Name)));
+                        else if (info.DeclaringType == typeof(ICounterPositions))
+                            input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterPositions), Plugin.config.GetString(DisplayName, info.Name)));
+                        else input.SetPrivateField(info.Name, Convert.ChangeType(Plugin.config.GetString(DisplayName, info.Name), info.DeclaringType));
+                    }
+                    catch
+                    {
+                        Plugin.Log($"Failed to load variable {info.Name} in {type.Name}.", Plugin.LogInfo.Warning);
+                    }
+                }
+            }
+            return input;
         }
     }
     
     public class MainConfigModel {
-        public bool Enabled { get {
-                return Plugin.config.GetBool("Main", "Enabled", true, true);
-            } set {
-                Plugin.config.SetBool("Main", "Enabled", value);
-            } }
-        public bool AdvancedCounterInfo
-        {
-            get
-            {
-                return Plugin.config.GetBool("Main", "AdvancedCounterInfo", true, true);
-            }
-            set
-            {
-                Plugin.config.SetBool("Main", "AdvancedCounterInfo", value);
-            }
-        }
-        public bool FirstStart
-        {
-            get
-            {
-                return Plugin.config.GetBool("Main", "FirstStart", false, true);
-            }
-            set
-            {
-                Plugin.config.SetBool("Main", "FirstStart", value);
-            }
-        }
-        public bool HideCombo
-        {
-            get
-            {
-                return Plugin.config.GetBool("Main", "HideCombo", false, true);
-            }
-            set
-            {
-                Plugin.config.SetBool("Main", "HideCombo", value);
-            }
-        }
-        public bool HideMultiplier
-        {
-            get
-            {
-                return Plugin.config.GetBool("Main", "HideMultiplier", false, true);
-            }
-            set
-            {
-                Plugin.config.SetBool("Main", "HideMultiplier", value);
-            }
-        }
-        public float ComboOffset {
-            get
-            {
-                return Plugin.config.GetFloat("Main", "ComboOffset", 0.2f, true);
-            }
-            set
-            {
-                Plugin.config.SetFloat("Main", "ComboOffset", value);
-            }
-        }
-        public float MultiplierOffset {
-            get
-            {
-                return Plugin.config.GetFloat("Main", "MultiplierOffset", 0.2f, true);
-            }
-            set
-            {
-                Plugin.config.SetFloat("Main", "MultiplierOffset", value);
-            }
-        }
-        public MissedConfigModel missedConfig;
-        public NoteConfigModel noteConfig;
-        public ProgressConfigModel progressConfig;
-        public ScoreConfigModel scoreConfig;
-        public PBConfigModel pbConfig;
-        public SpeedConfigModel speedConfig;
-        public CutConfigModel cutConfig;
-        public SpinometerConfigModel spinometerConfig;
+        public string DisplayName { get { return "Main"; } }
+        public bool Enabled;
+        public bool AdvancedCounterInfo;
+        public bool FirstStart;
+        public bool HideCombo;
+        public bool HideMultiplier;
+        public float ComboOffset;
+        public float MultiplierOffset;
+        public MissedConfigModel missedConfig = new MissedConfigModel();
+        public NoteConfigModel noteConfig = new NoteConfigModel();
+        public ProgressConfigModel progressConfig = new ProgressConfigModel();
+        public ScoreConfigModel scoreConfig = new ScoreConfigModel();
+        public PBConfigModel pbConfig = new PBConfigModel();
+        public SpeedConfigModel speedConfig = new SpeedConfigModel();
+        public CutConfigModel cutConfig = new CutConfigModel();
+        public SpinometerConfigModel spinometerConfig = new SpinometerConfigModel();
     }
 
     public abstract class IConfigModel {
         public string DisplayName { get; internal set; }
-        public bool Enabled { get {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return Plugin.config.GetBool(DisplayName, "Enabled", true, true);
-                else return true;
-            }set{ if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetBool(DisplayName, "Enabled", value); } }
-        public ICounterPositions Position { get {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return (ICounterPositions)Enum.Parse(typeof(ICounterPositions), Plugin.config.GetString(DisplayName, "Position", "BelowCombo", true));
-                else return ICounterPositions.BelowCombo;
-            } set {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetString(DisplayName, "Position", value.ToString());
-            } }
-        public int Index { get{
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return Plugin.config.GetInt(DisplayName, "Index", 0, true);
-                else return 0;
-            }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetInt(DisplayName, "Index", value); }
-        }
+        public bool Enabled;
+        public ICounterPositions Position;
+        public int Index;
     }
 
     public sealed class MissedConfigModel : IConfigModel {
@@ -190,204 +98,42 @@ namespace CountersPlus.Config
 
     public sealed class NoteConfigModel : IConfigModel {
         public NoteConfigModel() { DisplayName = "Notes"; }
-        public bool ShowPercentage
-        {
-            get
-            {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return Plugin.config.GetBool(DisplayName, "ShowPercentage", true, true);
-                else return true;
-            }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetBool("Notes", "ShowPercentage", value); }
-        }
-        public int DecimalPrecision
-        {
-            get
-            {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return Plugin.config.GetInt(DisplayName, "DecimalPrecision", 2, true);
-                else return 2;
-            }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetInt("Notes", "DecimalPrecision", value); }
-        }
+        public bool ShowPercentage;
+        public int DecimalPrecision;
     }
 
     public sealed class ProgressConfigModel : IConfigModel {
         public ProgressConfigModel() { DisplayName = "Progress"; }
-        public ICounterMode Mode
-        {
-            get
-            {
-                try
-                {
-                    if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                        return (ICounterMode)Enum.Parse(typeof(ICounterMode), Plugin.config.GetString("Progress", "Mode", "Original", true));
-                    else return ICounterMode.Original;
-                }
-                catch
-                {
-                    Plugin.config.SetString(DisplayName, "Mode", ICounterMode.Original.ToString());
-                    return ICounterMode.Original;
-                }
-            }
-            set
-            {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    Plugin.config.SetString("Progress", "Mode", value.ToString());
-            }
-        }
-        public bool ProgressTimeLeft
-        {
-            get
-            {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return Plugin.config.GetBool("Progress", "ProgressTimeLeft", false, true);
-                else return false;
-            }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetBool("Progress", "ProgressTimeLeft", value); }
-        }
-        public bool IncludeRing
-        {
-            get
-            {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return Plugin.config.GetBool("Progress", "IncludeRing", true, true);
-                else return false;
-            }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetBool("Progress", "IncludeRing", value); }
-        }
+        public ICounterMode Mode;
+        public bool ProgressTimeLeft;
+        public bool IncludeRing;
     }
 
     public sealed class ScoreConfigModel : IConfigModel
     {
         public ScoreConfigModel() { DisplayName = "Score"; }
-        public ICounterMode Mode
-        {
-            get
-            {
-                try
-                {
-                    if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                        return (ICounterMode)Enum.Parse(typeof(ICounterMode), Plugin.config.GetString("Score", "Mode", "Both", true));
-                    else return ICounterMode.Both;
-                }
-                catch
-                {
-                    Plugin.config.SetString(DisplayName, "Mode", ICounterMode.Both.ToString());
-                    return ICounterMode.Both;
-                }
-            }
-            set
-            {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    Plugin.config.SetString("Score", "Mode", value.ToString());
-            }
-        }
-        public bool UseOld
-        {
-            get
-            {
-                return (Mode == ICounterMode.BaseGame) || (Mode == ICounterMode.BaseWithOutPoints);
-            }
-        }
-        public int DecimalPrecision
-        {
-            get
-            {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return Plugin.config.GetInt("Score", "DecimalPrecision", 2, true);
-                else return 2;
-            }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetInt("Score", "DecimalPrecision", value); }
-        }
-        public bool DisplayRank
-        {
-            get
-            {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return Plugin.config.GetBool("Score", "DisplayRank", true, true);
-                else return true;
-            }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetBool("Score", "DisplayRank", value); }
-        }
+        public ICounterMode Mode;
+        public bool UseOld;
+        public int DecimalPrecision;
+        public bool DisplayRank;
     }
 
     public sealed class PBConfigModel : IConfigModel{
         public PBConfigModel() { DisplayName = "Personal Best"; }
-        public int DecimalPrecision
-        {
-            get
-            {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return Plugin.config.GetInt(DisplayName, "DecimalPrecision", 0, true);
-                else return 0;
-            }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetInt(DisplayName, "DecimalPrecision", value); }
-        }
+        public int DecimalPrecision;
     }
 
     public sealed class SpeedConfigModel : IConfigModel
     {
         public SpeedConfigModel() { DisplayName = "Speed"; }
-        public int DecimalPrecision
-        {
-            get
-            {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    return Plugin.config.GetInt("Speed", "DecimalPrecision", 2, true);
-                else return 2;
-            }
-            set { if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main") Plugin.config.SetInt("Speed", "DecimalPrecision", value); }
-        }
-        public ICounterMode Mode
-        {
-            get
-            {
-                try
-                {
-                    if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                        return (ICounterMode)Enum.Parse(typeof(ICounterMode), Plugin.config.GetString("Speed", "Mode", "Average", true));
-                    else return ICounterMode.Average;
-                }
-                catch
-                {
-                    Plugin.config.SetString(DisplayName, "Mode", ICounterMode.Average.ToString());
-                    return ICounterMode.Average;
-                }
-            }
-            set
-            {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    Plugin.config.SetString("Speed", "Mode", value.ToString());
-            }
-        }
+        public int DecimalPrecision;
+        public ICounterMode Mode;
     }
 
     public sealed class SpinometerConfigModel : IConfigModel
     {
         public SpinometerConfigModel() { DisplayName = "Spinometer"; }
-        public ICounterMode Mode
-        {
-            get
-            {
-                try
-                {
-                    if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                        return (ICounterMode)Enum.Parse(typeof(ICounterMode), Plugin.config.GetString("Spinometer", "Mode", "Highest", true));
-                    else return ICounterMode.Highest;
-                }
-                catch
-                {
-                    Plugin.config.SetString(DisplayName, "Mode", ICounterMode.Highest.ToString());
-                    return ICounterMode.Highest;
-                }
-            }
-            set
-            {
-                if (!String.IsNullOrWhiteSpace(DisplayName) && DisplayName != "Main")
-                    Plugin.config.SetString("Spinometer", "Mode", value.ToString());
-            }
-        }
+        public ICounterMode Mode;
     }
 
     public sealed class CutConfigModel : IConfigModel {
