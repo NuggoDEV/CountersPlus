@@ -43,22 +43,25 @@ namespace CountersPlus.Config
         private static object DeserializeFromConfig(object input, Type type, string DisplayName)
         {
             MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
-            //DisplayName = ((PropertyInfo)infos.Where((MemberInfo x) => x.Name == "DisplayName").First()).GetValue(input).ToString();
+            string[] Blacklist = new string[] { "get_DisplayName", "Equals", "GetHashCode", "GetType", "ToString", ".ctor"};
             foreach (MemberInfo info in infos)
             {
                 if (info.MemberType == MemberTypes.Field)
                 {
+                    FieldInfo finfo = (FieldInfo)info;
+                    if (finfo.Name.Contains("Config")) continue;
                     try
                     {
-                        if (info.DeclaringType == typeof(ICounterMode))
+                        if (finfo.FieldType == typeof(ICounterMode))
                             input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterMode), Plugin.config.GetString(DisplayName, info.Name)));
-                        else if (info.DeclaringType == typeof(ICounterPositions))
+                        else if (finfo.FieldType == typeof(ICounterPositions))
                             input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterPositions), Plugin.config.GetString(DisplayName, info.Name)));
-                        else input.SetPrivateField(info.Name, Convert.ChangeType(Plugin.config.GetString(DisplayName, info.Name), info.DeclaringType));
+                        else input.SetPrivateField(info.Name, Convert.ChangeType(Plugin.config.GetString(DisplayName, info.Name), finfo.FieldType));
                     }
-                    catch
+                    catch (Exception e)
                     {
                         Plugin.Log($"Failed to load variable {info.Name} in {type.Name}.", Plugin.LogInfo.Warning);
+                        Plugin.Log(e.ToString(), Plugin.LogInfo.Warning);
                     }
                 }
             }
@@ -113,7 +116,6 @@ namespace CountersPlus.Config
     {
         public ScoreConfigModel() { DisplayName = "Score"; }
         public ICounterMode Mode;
-        public bool UseOld;
         public int DecimalPrecision;
         public bool DisplayRank;
     }
