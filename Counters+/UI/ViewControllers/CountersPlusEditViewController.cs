@@ -217,6 +217,10 @@ namespace CountersPlus.UI
             toggleCounters.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
             comboOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
             multiOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
+
+            foreach (ListViewController list in loadedSettings) //Should be cleared from the ClearScreen function.
+                list.SetValue += (v) => CountersController.settings.Save();
+
             InitSettings();
         }
 
@@ -303,6 +307,7 @@ namespace CountersPlus.UI
         private static IEnumerator DelayedMockCounterUpdate<T>(T settings) where T : IConfigModel
         {
             yield return new WaitForEndOfFrame();
+            settings.Save();
             MockCounter.Update(settings);
         }
 
