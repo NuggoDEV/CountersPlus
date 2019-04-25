@@ -97,6 +97,7 @@
     <Compile Include="Plugin.cs" />
     <Compile Include="Counters\ProgressCounter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\ConfigDefaults.cs" />
     <Compile Include="Utils\ReflectionUtil.cs" />
     <Compile Include="Counters\ScoreCounter.cs" />
     <Compile Include="Counters\SpeedCounter.cs" />

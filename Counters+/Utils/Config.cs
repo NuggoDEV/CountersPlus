@@ -10,22 +10,19 @@ namespace CountersPlus.Config
     {
         public static MainConfigModel LoadSettings()
         {
-            FileIniDataParser parser = new FileIniDataParser();
-            IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
             MainConfigModel model = new MainConfigModel();
-            model = (MainConfigModel)DeserializeFromConfig(model, typeof(MainConfigModel), model.DisplayName);
+            model = (MainConfigModel)DeserializeFromConfig(model, model.DisplayName);
             try
             {
-                Type type = model.GetType();
-                MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
-                model.missedConfig = GrabFromConfig(ref model.missedConfig);
-                model.noteConfig = GrabFromConfig(ref model.noteConfig);
-                model.progressConfig = GrabFromConfig(ref model.progressConfig);
-                model.scoreConfig = GrabFromConfig(ref model.scoreConfig);
-                model.speedConfig = GrabFromConfig(ref model.speedConfig);
-                model.cutConfig = GrabFromConfig(ref model.cutConfig);
-                model.spinometerConfig = GrabFromConfig(ref model.spinometerConfig);
-                model.pbConfig = GrabFromConfig(ref model.pbConfig);
+                MemberInfo[] infos = model.GetType().GetMembers(BindingFlags.Public | BindingFlags.Instance);
+                model.missedConfig = DeserializeFromConfig(model.missedConfig, model.missedConfig.DisplayName) as MissedConfigModel;
+                model.noteConfig = DeserializeFromConfig(model.noteConfig, model.noteConfig.DisplayName) as NoteConfigModel;
+                model.progressConfig = DeserializeFromConfig(model.progressConfig, model.progressConfig.DisplayName) as ProgressConfigModel;
+                model.scoreConfig = DeserializeFromConfig(model.scoreConfig, model.scoreConfig.DisplayName) as ScoreConfigModel;
+                model.speedConfig = DeserializeFromConfig(model.speedConfig, model.speedConfig.DisplayName) as SpeedConfigModel;
+                model.cutConfig = DeserializeFromConfig(model.cutConfig, model.cutConfig.DisplayName) as CutConfigModel;
+                model.spinometerConfig = DeserializeFromConfig(model.spinometerConfig, model.spinometerConfig.DisplayName) as SpinometerConfigModel;
+                model.pbConfig = DeserializeFromConfig(model.pbConfig, model.pbConfig.DisplayName) as PBConfigModel;
             }
             catch (Exception e)
             {
@@ -35,33 +32,30 @@ namespace CountersPlus.Config
             return model;
         }
 
-        private static T GrabFromConfig<T>(ref T settings) where T : IConfigModel
+        private static object DeserializeFromConfig(object input, string DisplayName)
         {
-            return (T)DeserializeFromConfig(settings, typeof(T), settings.DisplayName);
-        }
-
-        private static object DeserializeFromConfig(object input, Type type, string DisplayName)
-        {
+            Type type = input.GetType();
             MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
-            string[] Blacklist = new string[] { "get_DisplayName", "Equals", "GetHashCode", "GetType", "ToString", ".ctor"};
             foreach (MemberInfo info in infos)
             {
                 if (info.MemberType == MemberTypes.Field)
                 {
                     FieldInfo finfo = (FieldInfo)info;
-                    if (finfo.Name.Contains("Config")) continue;
+                    if (finfo.Name.ToLower().Contains("config")) continue;
                     try
                     {
                         if (finfo.FieldType == typeof(ICounterMode))
-                            input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterMode), Plugin.config.GetString(DisplayName, info.Name)));
+                            input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterMode), Plugin.config.GetString(DisplayName, info.Name, null)));
                         else if (finfo.FieldType == typeof(ICounterPositions))
-                            input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterPositions), Plugin.config.GetString(DisplayName, info.Name)));
-                        else input.SetPrivateField(info.Name, Convert.ChangeType(Plugin.config.GetString(DisplayName, info.Name), finfo.FieldType));
+                            input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterPositions), Plugin.config.GetString(DisplayName, info.Name, null)));
+                        else input.SetPrivateField(info.Name, Convert.ChangeType(Plugin.config.GetString(DisplayName, info.Name, null), finfo.FieldType));
+                        if (finfo.GetValue(input) == null) throw new Exception(); //I guess I can just reset the singular variable to defaults, but eh, why not all of it to make sure the rest are available in config?
                     }
-                    catch (Exception e)
+                    catch
                     {
-                        Plugin.Log($"Failed to load variable {info.Name} in {type.Name}.", Plugin.LogInfo.Warning);
-                        Plugin.Log(e.ToString(), Plugin.LogInfo.Warning);
+                        Plugin.Log($"Failed to load variable {info.Name} in {type.Name}. Resetting to defaults...", Plugin.LogInfo.Warning);
+                        input = ConfigDefaults.Defaults[DisplayName];
+                        ConfigDefaults.Defaults[DisplayName].Save();
                     }
                 }
             }
@@ -86,6 +80,21 @@ namespace CountersPlus.Config
         public SpeedConfigModel speedConfig = new SpeedConfigModel();
         public CutConfigModel cutConfig = new CutConfigModel();
         public SpinometerConfigModel spinometerConfig = new SpinometerConfigModel();
+
+        public void Save()
+        {
+            Type type = GetType();
+            MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
+            foreach (MemberInfo info in infos)
+            {
+                if (info.MemberType == MemberTypes.Field)
+                {
+                    FieldInfo finfo = (FieldInfo)info;
+                    if (finfo.Name.ToLower().Contains("config")) continue;
+                    Plugin.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
+                }
+            }
+        }
     }
 
     public abstract class IConfigModel {
@@ -93,6 +102,20 @@ namespace CountersPlus.Config
         public bool Enabled;
         public ICounterPositions Position;
         public int Index;
+
+        public void Save()
+        {
+            Type type = GetType();
+            MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
+            foreach (MemberInfo info in infos)
+            {
+                if (info.MemberType == MemberTypes.Field)
+                {
+                    FieldInfo finfo = (FieldInfo)info;
+                    Plugin.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
+                }
+            }
+        }
     }
 
     public sealed class MissedConfigModel : IConfigModel {
