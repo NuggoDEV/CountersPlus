@@ -12,7 +12,9 @@ namespace CountersPlus.Counters
 {
     public class ScoreCounter : MonoBehaviour
     {
-        TMP_Text _scoreMesh;
+        internal TMP_Text ScoreMesh;
+        internal TMP_Text RankText;
+        internal TMP_Text PointsText;
 
         private ScoreConfigModel settings;
         private ScoreController _scoreController;
@@ -21,7 +23,6 @@ namespace CountersPlus.Counters
         private float gameplayModifier = 1;
 
         GameObject _RankObject;
-        TMP_Text _RankText;
         int _maxPossibleScore = 0;
         int notes = 0;
         int decimalPrecision;
@@ -46,8 +47,10 @@ namespace CountersPlus.Counters
                 if (baseCounter != null) break;
                 yield return new WaitForSeconds(0.1f);
             }
+            CountersController.loadedCounters.Remove(gameObject);
             baseCounter.AddComponent<ScoreCounter>();
             Destroy(gameObject);
+            CountersController.loadedCounters.Add(baseCounter);
         }
 
         private void PreInit()
@@ -63,6 +66,7 @@ namespace CountersPlus.Counters
                         if (child.GetComponent<TextMeshProUGUI>() != null) Destroy(child.GetComponent<TextMeshProUGUI>());
                         Destroy(child.gameObject);
                     }
+                    else PointsText = child.GetComponent<TMP_Text>();
                 }
                 if (settings.Mode == ICounterMode.ScoreOnly) Destroy(GameObject.Find("ScoreText"));
                 CountersController.ReadyToInit += Init;
@@ -81,11 +85,11 @@ namespace CountersPlus.Counters
             GameObject scoreMesh = new GameObject("Counters+ | Score Percent");
             scoreMesh.transform.SetParent(transform, false);
             Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
-            TextHelper.CreateText(out _scoreMesh, position);
-            _scoreMesh.text = "100.0%";
-            _scoreMesh.fontSize = 3;
-            _scoreMesh.color = Color.white;
-            _scoreMesh.alignment = TextAlignmentOptions.Center;
+            TextHelper.CreateText(out ScoreMesh, position);
+            ScoreMesh.text = "100.0%";
+            ScoreMesh.fontSize = 3;
+            ScoreMesh.color = Color.white;
+            ScoreMesh.alignment = TextAlignmentOptions.Center;
 
             //transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = position + new Vector3(-6.425f, 7.67f, 0);
             transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = position + new Vector3(-0.01f, 7.77f, 0);
@@ -93,11 +97,11 @@ namespace CountersPlus.Counters
             {
                 _RankObject = new GameObject("Counters+ | Score Rank");
                 _RankObject.transform.SetParent(transform, false);
-                TextHelper.CreateText(out _RankText, position);
-                _RankText.text = "\nSSS";
-                _RankText.fontSize = 4;
-                _RankText.color = Color.white;
-                _RankText.alignment = TextAlignmentOptions.Center;
+                TextHelper.CreateText(out RankText, position);
+                RankText.text = "\nSSS";
+                RankText.fontSize = 4;
+                RankText.color = Color.white;
+                RankText.alignment = TextAlignmentOptions.Center;
             }
             if (_scoreController != null)
             {
@@ -156,19 +160,19 @@ namespace CountersPlus.Counters
             _currentScore = score;
             _maxPossibleScore = ScoreController.MaxScoreForNumberOfNotes(notes);
 
-            if (_scoreMesh != null)
+            if (ScoreMesh != null)
             {
                 if (_maxPossibleScore == 0)
                 {
-                    _scoreMesh.text = "100.0%";
-                    if (settings.DisplayRank) _RankText.text = "\nSSS";
+                    ScoreMesh.text = "100.0%";
+                    if (settings.DisplayRank) RankText.text = "\nSSS";
                 }
                 else
                 {
                     float ratio = (float)ScoreController.GetScoreForGameplayModifiersScoreMultiplier(score, gameplayModifier) / _maxPossibleScore;
                     //Force percent to round down to decimal precision
-                    _scoreMesh.text = Math.Round(ratio * 100, settings.DecimalPrecision).ToString() + "%";
-                    if (settings.DisplayRank) _RankText.text = "\n" + GetRank(score, ratio);
+                    ScoreMesh.text = Math.Round(ratio * 100, settings.DecimalPrecision).ToString() + "%";
+                    if (settings.DisplayRank) RankText.text = "\n" + GetRank(score, ratio);
                 }
             }
         }

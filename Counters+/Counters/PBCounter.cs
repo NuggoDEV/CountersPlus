@@ -49,13 +49,33 @@ namespace CountersPlus.Counters
 
             Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out _PbTrackerText, position);
-            _PbTrackerText.fontSize = 2;
+            _PbTrackerText.fontSize = settings.TextSize;
             _PbTrackerText.color = Color.white;
             _PbTrackerText.alignment = TextAlignmentOptions.Center;
             
             _scoreController.scoreDidChangeEvent += UpdateScore;
-
+            
             SetPersonalBest(beginningPB);
+
+            if (settings.UnderScore) StartCoroutine(WaitForScoreCounter());
+        }
+
+        private IEnumerator WaitForScoreCounter()
+        {
+            ScoreCounter counter = CountersController.loadedCounters.Where((GameObject x) => x?.GetComponent<ScoreCounter>() != null).FirstOrDefault()?.GetComponent<ScoreCounter>();
+            if (counter == null) yield break;
+            float offset = 0;
+            yield return new WaitUntil(() => counter.PointsText != null);
+            if (!(CountersController.settings.scoreConfig.Mode == ICounterMode.BaseGame || CountersController.settings.scoreConfig.Mode == ICounterMode.BaseWithOutPoints))
+            {
+                if (CountersController.settings.scoreConfig.DisplayRank)
+                    offset = 3.35f;
+                else
+                    offset = 3.1f;
+            }
+
+            _PbTrackerText.rectTransform.SetParent(counter.PointsText.rectTransform);
+            _PbTrackerText.rectTransform.localPosition = new Vector2(0, (TextHelper.ScaleFactor / 2) + (settings.TextSize / 10) + offset) * -1;
         }
 
         void OnDestroy()
@@ -67,7 +87,7 @@ namespace CountersPlus.Counters
         public void SetPersonalBest(float pb)
         {
             //Force personal best percent to round down to decimal precision
-            pb = (float)Math.Round((decimal)pb, decimalPrecision + 2);
+            pb = (float)Math.Round((decimal)pb, decimalPrecision);
             if (_maxPossibleScore == 0) _PbTrackerText.text = "--";
             else _PbTrackerText.text = "PB: " + (pb * 100.0f).ToString("F" + settings.DecimalPrecision) + "%";
         }

@@ -267,7 +267,7 @@ namespace CountersPlus.UI
             enabled.GetValue = () => settings.Enabled ? 1f : 0f;
             enabled.SetValue += (v) => settings.Enabled = v != 0f;
 
-            var position = AddList(ref sub, settings, "Position", "The relative position of common UI elements", (restrictedList.Count() == 0) ? positions.Count() : restrictedList.Count());
+            var position = AddList(ref sub, settings, "Position", "The relative position of common UI elements.", (restrictedList.Count() == 0) ? positions.Count() : restrictedList.Count());
             position.GetTextForValue = (v) => {
                 Plugin.Log(v.ToString());
                 if (restrictedList.Count() == 0)

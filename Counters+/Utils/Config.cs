@@ -146,6 +146,8 @@ namespace CountersPlus.Config
     public sealed class PBConfigModel : IConfigModel{
         public PBConfigModel() { DisplayName = "Personal Best"; }
         public int DecimalPrecision;
+        public int TextSize;
+        public bool UnderScore;
     }
 
     public sealed class SpeedConfigModel : IConfigModel

@@ -42,7 +42,7 @@ namespace CountersPlus
 
         void activeSceneChanged(Scene arg, Scene arg1)
         {
-            if (arg1.name == "Menu") loadedCounters.Clear();
+            loadedCounters.Clear();
         }
 
         static void LoadCounter<T, R>(string name, T settings) where T : IConfigModel
