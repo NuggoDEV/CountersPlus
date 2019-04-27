@@ -150,6 +150,9 @@
   <ItemGroup>
     <EmbeddedResource Include="UI\Images\Personal Best.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /Y "$(TargetPath)" "D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Plugins\CountersPlus.dll"</PostBuildEvent>
