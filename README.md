@@ -14,6 +14,7 @@ A combination of widely-used counters, all configurable in one mod.
 |***Speed***|`1.1.0`, suggested by [Ragesaq](https://www.twitch.tv/ragesaq)|*"Speed, motherfucker, do you speak it?"* Displays how fast your arms are swinging!|
 |***Cut***|`1.1.0`|Displays the average cut score (Anywhere from 0-110), so you can see how well you are hitting those notes!|
 |***Spinometer***|`1.4.1`, suggested by [Ragesaq](https://www.twitch.tv/ragesaq) and [Steven](https://www.twitch.tv/StevenTheCat)|Displays angular velocity of your sabers. Can you beat 3600 degress per second?|
+|***Personal Best***|`1.5.5`|Displays your high score in a map, and changes color depending on how close you are to beating it!|
 
 ### Custom Counters
 Counters+ also supports the addition of Custom Counters. Other mods can input their counters into the Counters+ system and it will work just like any other Counters+ counter!
@@ -46,12 +47,14 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
 ### Advanced Options
 |Setting|Counters|Description
 |-|-|-|
-|***Percentage Precision***|*Notes*, *Score*, and *Speed*|How precise do the decimals go?|
+|***Percentage Precision***|*Notes*, *Score*, *Speed*, and *Personal Best*|How precise do the decimals go?|
 |***Show Precentage***|*Notes*|Displays the percentage of notes hit over notes in total.|
 |***Display Rank***|*Score*|Displays the Rank you get during a song (SS, S, A, B, C, D, E)|
 |***Progress From End***|*Progress*|The counter starts at full, and decreases as you progress though a song.|
 |***Include Progress Ring***|*Progress*|Whether or not the *Progress From End* option will also effect the Progress Ring. Only available in *Original* mode.|
 |***Mode***|*Speed*, *Progress*, *Spinometer*, and *Score*|Changes the display mode for the Counter (See Hint Text in-game for more detail)|
+|***Text Size***|*Personal Best*|How large should the counter be?|
+|***Below Score Counter***|*Personal Best*|Whether or not the Personal Best counter should be displayed below the Score Counter instead.|
 
 ### Some Notes
 
@@ -77,7 +80,7 @@ using IllusionInjector; //Add References from Beat Saber_Data/Managed
 public class Plugin : IPlugin {
 
 	public void OnApplicationStart(){
-		if(PluginManager.Plugins.Any(x => x.Name == "Counters+")) {
+		if(PluginManager.GetPlugin("Counters+")) {
 			AddCustomCounter();
 		}//If the user does not have Counters+ installed, don't worry about it.
 	}
