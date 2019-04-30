@@ -47,12 +47,12 @@ namespace CountersPlus.Custom
                 CustomConfigModel counter = new CustomConfigModel(model.Name)
                 {
                     DisplayName = model.Name,
-                    SectionName = model.JSONName,
+                    SectionName = model.SectionName,
                     Enabled = true,
                     Position = ICounterPositions.BelowCombo,
                     Index = 2,
                     Counter = model.Counter,
-                    ModCreator = model.Mod.Name,
+                    ModCreator = modCreator,
                     RestrictedPositions = (restrictedPositions.Count() == 0 || restrictedPositions == null) ? new ICounterPositions[] { } : restrictedPositions, //Thanks Viscoci for this
                 };
                 if (string.IsNullOrEmpty(counter.SectionName) || string.IsNullOrEmpty(counter.DisplayName))
@@ -87,9 +87,9 @@ namespace CountersPlus.Custom
     {
 
         /// <summary>
-        /// The name in JSON that'll store variables. Try and keep to one name and not change it. It cannot conflict with other loaded counters.
+        /// The name in CountersPlus.ini that'll store variables. Try and keep to one name and not change it. It cannot conflict with other loaded counters.
         /// </summary>
-        public string JSONName { get; set; }
+        public string SectionName { get; set; }
         /// <summary>
         /// The name of the counter. Will be shown in the submenu title.
         /// </summary>
@@ -115,39 +115,9 @@ namespace CountersPlus.Custom
         {
             DisplayName = name;
         }
-        [Obsolete("Custom Counters is no longer stored using JSON. Consider using \"SectionName\" instead.")]
-        public string JSONName { get {
-                return SectionName;
-            } set {
-                SectionName = value;
-            } }
-        public string SectionName { get {
-                return Plugin.config.GetString(DisplayName, "SectionName", "unknown", false);
-            } set {
-                Plugin.config.SetString(DisplayName, "SectionName", value);
-            }
-        }
-        public string Counter
-        {
-            get
-            {
-                return Plugin.config.GetString(DisplayName, "Counter", "unknown", false);
-            }
-            set
-            {
-                Plugin.config.SetString(DisplayName, "Counter", value);
-            }
-        }
-        public string ModCreator {
-            get
-            {
-                return Plugin.config.GetString(DisplayName, "ModCreator", "unknown", false);
-            }
-            set
-            {
-                Plugin.config.SetString(DisplayName, "ModCreator", value);
-            }
-        }
+        public string SectionName;
+        public string Counter;
+        public string ModCreator;
         public ICounterPositions[] RestrictedPositions { get {
                 string doodads = Plugin.config.GetString(DisplayName, "RestrictedPositions", "All", true);
                 if (doodads == "All") return new ICounterPositions[] { };

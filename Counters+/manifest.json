@@ -4,7 +4,7 @@
   "description": "A collection of counters, both widely used and quite unusual, all configurable under one mod! Please report all bugs and issues to the Counters+ GitHub. ",
   "gameVersion": "0.13.2",
   "icon": "CountersPlus.UI.Images.Logo.png",
-  "id": "Counters",
+  "id": "Counters+",
   "name": "Counters+",
   "version": "1.5.5",
   "dependsOn": {

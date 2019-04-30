@@ -87,9 +87,9 @@ namespace CountersPlus.Counters
         public void SetPersonalBest(float pb)
         {
             //Force personal best percent to round down to decimal precision
-            pb = (float)Math.Round((decimal)pb, decimalPrecision);
+            pb = (float)Math.Round((decimal)pb * 100, decimalPrecision);
             if (_maxPossibleScore == 0) _PbTrackerText.text = "--";
-            else _PbTrackerText.text = "PB: " + (pb * 100.0f).ToString("F" + settings.DecimalPrecision) + "%";
+            else _PbTrackerText.text = "PB: " + pb.ToString("F" + settings.DecimalPrecision) + "%";
         }
 
         public void UpdateScore(int score)

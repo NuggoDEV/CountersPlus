@@ -33,7 +33,7 @@ namespace CountersPlus
         private static IEnumerator GetOnlineVersionRoutine()
         {
             Plugin.Log("Obtaining latest version information...", Plugin.LogInfo.Notice);
-            using (UnityWebRequest www = UnityWebRequest.Get("https://beatmods.com/api/v1/mod?search=Counters"))
+            using (UnityWebRequest www = UnityWebRequest.Get("https://beatmods.com/api/v1/mod?search=Counters%2B"))
             {
                 yield return (www.SendWebRequest());
                 if (www.isHttpError || www.isNetworkError) Plugin.Log("Failed to download version info.", Plugin.LogInfo.Error, "Check your internet connection, or the BeatMods website.");

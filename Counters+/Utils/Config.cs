@@ -32,7 +32,7 @@ namespace CountersPlus.Config
             return model;
         }
 
-        private static object DeserializeFromConfig(object input, string DisplayName)
+        internal static object DeserializeFromConfig(object input, string DisplayName)
         {
             Type type = input.GetType();
             MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
@@ -41,7 +41,7 @@ namespace CountersPlus.Config
                 if (info.MemberType == MemberTypes.Field)
                 {
                     FieldInfo finfo = (FieldInfo)info;
-                    if (finfo.Name.ToLower().Contains("config")) continue;
+                    if (finfo.Name.ToLower().Contains("config") || finfo.Name.ToLower() == "restrictedpositions") continue;
                     try
                     {
                         if (finfo.FieldType == typeof(ICounterMode))

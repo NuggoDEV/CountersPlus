@@ -75,9 +75,9 @@ Adding your own Counter is a simple as:
 
 ```csharp
 using CountersPlus.Custom; //Add CountersPlus.dll as a Reference
-using IllusionInjector; //Add References from Beat Saber_Data/Managed
+using IPA; //Add References from Beat Saber_Data/Managed
 
-public class Plugin : IPlugin {
+public class Plugin : IBeatSaberPlugin {
 
 	public void OnApplicationStart(){
 		if(PluginManager.GetPlugin("Counters+")) {

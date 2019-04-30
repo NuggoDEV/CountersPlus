@@ -87,6 +87,7 @@ namespace CountersPlus
                         #pragma warning disable CS0618 //Fuck off DaNike
                         PluginManager.Plugins.Where((IPlugin x) => x.Name == section.Keys["ModCreator"]) == null) return;
                     CustomConfigModel potential = new CustomConfigModel(section.SectionName);
+                    potential = ConfigLoader.DeserializeFromConfig(potential, section.SectionName) as CustomConfigModel;
                     LoadCounter<CustomConfigModel, CustomCounterHook>(section.Keys["SectionName"], potential);
                 }
             }
