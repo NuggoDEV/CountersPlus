@@ -85,7 +85,8 @@ namespace CountersPlus.Custom
 
     public class CustomCounter
     {
-
+        [Obsolete("Counters+ no longer uses JSON for configuration. Consider using SectionName instead.")]
+        public string JSONName { get { return SectionName; } set { SectionName = value; } }
         /// <summary>
         /// The name in CountersPlus.ini that'll store variables. Try and keep to one name and not change it. It cannot conflict with other loaded counters.
         /// </summary>
@@ -104,7 +105,7 @@ namespace CountersPlus.Custom
         /// </summary>
         public IBeatSaberPlugin BSIPAMod { get; set; }
         /// <summary>
-        /// The name of the counter that will be added when it gets created.
+        /// The name of the counter (as a GameObject) that will be added when it gets created.
         /// </summary>
         public string Counter { get; set; }
     }

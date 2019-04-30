@@ -17,6 +17,7 @@ using CountersPlus.UI.Images;
 using TMPro;
 using CustomUI.Settings;
 using IPA.Loader;
+using IPA.Old;
 
 namespace CountersPlus.UI
 {
@@ -45,7 +46,10 @@ namespace CountersPlus.UI
                         if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
                         {
                             CustomConfigModel potential = new CustomConfigModel(section.SectionName);
-                            if (PluginManager.GetPlugin(section.Keys["ModCreator"]) == null) continue;
+                            potential = ConfigLoader.DeserializeFromConfig(potential, section.SectionName) as CustomConfigModel;
+                            if (PluginManager.GetPlugin(section.Keys["ModCreator"]) == null &&
+                            #pragma warning disable CS0618 //Fuck off DaNike
+                            PluginManager.Plugins.Where((IPlugin x) => x.Name == section.Keys["ModCreator"]).FirstOrDefault() == null) continue;
                             counterInfos.Add(new SettingsInfo()
                             {
                                 Name = potential.DisplayName,
