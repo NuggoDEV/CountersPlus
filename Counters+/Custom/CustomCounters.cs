@@ -23,56 +23,66 @@ namespace CountersPlus.Custom
         /// <param name="model"/>The CustomCounter object.</param>
         /// <param name="restrictedPositions">Restrict your Custom Counter to any of these positions.</param>
         /// </summary>
+        [Obsolete("Use the simpler CustomCounterCreator.Create() function for creating custom counters.")]
         public static void CreateCustomCounter<T>(T model, params ICounterPositions[] restrictedPositions) where T : CustomCounter
+        {
+            Create(model, null, restrictedPositions);
+        }
+
+        /// <summary>
+        /// Adds an outside MonoBehaviour into the Counters+ system.
+        /// <param name="model"/>The CustomCounter object.</param>
+        /// <param name="restrictedPositions">Restrict your Custom Counter to any of these positions. Inputting no parameters would allow the Counter to use all that are available.</param>
+        /// </summary>
+        public static void Create<T>(T model, params ICounterPositions[] restrictedPositions) where T : CustomCounter
+        {
+            Create(model, null, restrictedPositions);
+        }
+
+        /// <summary>
+        /// Adds an outside MonoBehaviour into the Counters+ system.
+        /// <param name="model"/>The CustomCounter object.</param>
+        /// <param name="defaults">Default configuration options for your custom counter.</param>
+        /// <param name="restrictedPositions">Restrict your Custom Counter to any of these positions. Inputting no parameters would allow the Counter to use all that are available.</param>
+        /// </summary>
+        public static void Create<T>(T model, IConfigModel defaults = null, params ICounterPositions[] restrictedPositions) where T : CustomCounter
         {
             FileIniDataParser parser = new FileIniDataParser();
             IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
             Scene scene = SceneManager.GetActiveScene();
+
+            string modCreator = "";
+            if (model.Mod != null) modCreator = model.Mod.Name;
+            if (model.BSIPAMod != null)
+            {   //Fucking hell DaNike can't you expose the IBeatSaberPlugins so it would be easier for stuff like this!?!?
+                PluginLoader.PluginInfo info = PluginManager.AllPlugins.Where((PluginLoader.PluginInfo x) => model.BSIPAMod == x.GetPrivateField<IBeatSaberPlugin>("Plugin")).FirstOrDefault();
+                if (info != null) modCreator = info.Metadata.Name;
+            }
+            Plugin.Log($"Custom Counter added by: {modCreator}!", Plugin.LogInfo.Notice);
+
             foreach (SectionData section in data.Sections)
             {
                 if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
                     if (section.SectionName == model.Name) return;
             }
-            if (scene.name == "" || scene.name == "Init" || scene.name == "EmptyTransition" || scene.name == "HealthWarning")
-            {
-                string modCreator = "";
-                if (model.Mod != null)
-                    modCreator = model.Mod.Name;
-                if (model.BSIPAMod != null)
-                {   //Fucking hell DaNike can't you expose the IBeatSaberPlugins so it would be easier for stuff like this!?!?
-                    PluginLoader.PluginInfo info = PluginManager.AllPlugins.Where((PluginLoader.PluginInfo x) => model.BSIPAMod == x.GetPrivateField<IBeatSaberPlugin>("Plugin")).FirstOrDefault();
-                    if (info != null)
-                        modCreator = info.Metadata.Name;
-                }
-                CustomConfigModel counter = new CustomConfigModel(model.Name)
-                {
-                    DisplayName = model.Name,
-                    SectionName = model.SectionName,
-                    Enabled = true,
-                    Position = ICounterPositions.BelowCombo,
-                    Index = 2,
-                    Counter = model.Counter,
-                    ModCreator = modCreator,
-                    RestrictedPositions = (restrictedPositions.Count() == 0 || restrictedPositions == null) ? new ICounterPositions[] { } : restrictedPositions, //Thanks Viscoci for this
-                };
-                if (string.IsNullOrEmpty(counter.SectionName) || string.IsNullOrEmpty(counter.DisplayName))
-                    throw new CustomCounterException("Custom Counter properties invalid. Please make sure SectionName and DisplayName are properly assigned.");
-                Plugin.Log($"Custom Counter added by: {modCreator}!", Plugin.LogInfo.Notice);
-            }
-            else
-            {
-                throw new CustomCounterException("It is too late to add Custom Counters. Please add Custom Counters at launch.");
-            }
-        }
 
-        /// <summary>
-        /// A simpler way to create a custom Counter.
-        /// <param name="model"/>The CustomCounter object.</param>
-        /// <param name="restrictedPositions">Restrict your Custom Counter to any of these positions. No parameters would allow the Counter to use all 6.</param>
-        /// </summary>
-        public static void Create<T>(T model, params ICounterPositions[] restrictedPositions) where T : CustomCounter
-        {
-            CreateCustomCounter(model, restrictedPositions);
+            if (!(scene.name == "" || scene.name == "Init" || scene.name == "EmptyTransition" || scene.name == "HealthWarning"))
+                Plugin.Log("Custom Counter is being created after the recommended scenes. It might take a relaunch or a scene reload to appear!", Plugin.LogInfo.Warning);
+            
+            CustomConfigModel counter = new CustomConfigModel(model.Name)
+            {
+                DisplayName = model.Name,
+                SectionName = model.SectionName,
+                Enabled = (defaults == null ? true : defaults.Enabled),
+                Position = (defaults == null ? ICounterPositions.BelowCombo : defaults.Position),
+                Index = (defaults == null ? 2 : defaults.Index),
+                Counter = model.Counter,
+                ModCreator = modCreator,
+                RestrictedPositions = (restrictedPositions.Count() == 0 || restrictedPositions == null) ? new ICounterPositions[] { } : restrictedPositions, //Thanks Viscoci for this
+            };
+
+            if (string.IsNullOrEmpty(counter.SectionName) || string.IsNullOrEmpty(counter.DisplayName))
+                throw new CustomCounterException("Custom Counter properties invalid. Please make sure SectionName and DisplayName are properly assigned.");
         }
     }
 
