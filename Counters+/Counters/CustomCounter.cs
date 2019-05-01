@@ -18,7 +18,7 @@ namespace CountersPlus.Counters
     {
 
         private GameObject counter;
-        private CustomConfigModel settings;
+        private CustomConfigModel settings = null;
         private string Name;
 
         void Awake()
@@ -31,8 +31,7 @@ namespace CountersPlus.Counters
                 if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
                 {
                     CustomConfigModel potential = new CustomConfigModel(section.SectionName);
-                    potential = ConfigLoader.DeserializeFromConfig(potential, section.SectionName) as CustomConfigModel;
-                    if (potential.SectionName == Name) settings = potential;
+                    if (section.Keys["SectionName"] == Name) settings = ConfigLoader.DeserializeFromConfig(potential, section.SectionName) as CustomConfigModel;
                 }
             }
             if (settings == null)
@@ -48,15 +47,19 @@ namespace CountersPlus.Counters
             int tries = 1;
             while (true)
             {
-                counter = GameObject.Find(settings.Counter);
-                if (counter != null) break;
-                tries++;
-                if (tries > 10)
+                try
                 {
-                    Plugin.Log($"Custom Counter ({Name}) could not find its referenced GameObject in 10 tries. Destroying...", Plugin.LogInfo.Notice);
-                    Destroy(this);
-                    break;
+                    counter = GameObject.Find(settings.Counter);
+                    if (counter != null) break;
+                    tries++;
+                    if (tries > 10)
+                    {
+                        Plugin.Log($"Custom Counter ({Name}) could not find its referenced GameObject in 10 tries. Destroying...", Plugin.LogInfo.Notice);
+                        Destroy(this);
+                        break;
+                    }
                 }
+                catch { }
                 yield return new WaitForSeconds(tries * 0.1f);
             }
             if (tries <= 10) Init();

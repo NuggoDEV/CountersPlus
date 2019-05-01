@@ -269,14 +269,16 @@ namespace CountersPlus.UI
 
             var position = AddList(ref sub, settings, "Position", "The relative position of common UI elements.", (restrictedList.Count() == 0) ? positions.Count() : restrictedList.Count());
             position.GetTextForValue = (v) => {
-                Plugin.Log(v.ToString());
                 if (restrictedList.Count() == 0)
                     return positions[Mathf.RoundToInt(v)].Item2;
                 else
                     return restrictedList[Mathf.RoundToInt(v)].Item2;
             };
             position.GetValue = () => {
-                return positions.ToList().IndexOf(positions.Where((Tuple<ICounterPositions, string> x) => (x.Item1 == settings.Position)).First());
+                if (restrictedList.Count() == 0)
+                    return positions.ToList().IndexOf(positions.Where((Tuple<ICounterPositions, string> x) => (x.Item1 == settings.Position)).First());
+                else
+                    return restrictedList.ToList().IndexOf(positions.Where((Tuple<ICounterPositions, string> x) => (x.Item1 == settings.Position)).First());
             };
             position.SetValue += (v) => {
                 if (restrictedList.Count() == 0)

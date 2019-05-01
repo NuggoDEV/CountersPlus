@@ -35,13 +35,13 @@ namespace CountersPlus.Config
         internal static object DeserializeFromConfig(object input, string DisplayName)
         {
             Type type = input.GetType();
-            MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
+            MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
             foreach (MemberInfo info in infos)
             {
                 if (info.MemberType == MemberTypes.Field)
                 {
                     FieldInfo finfo = (FieldInfo)info;
-                    if (finfo.Name.ToLower().Contains("config") || finfo.Name.ToLower() == "restrictedpositions") continue;
+                    if (finfo.Name.ToLower().Contains("config")) continue;
                     try
                     {
                         if (finfo.FieldType == typeof(ICounterMode))
@@ -54,6 +54,7 @@ namespace CountersPlus.Config
                     catch
                     {
                         Plugin.Log($"Failed to load variable {info.Name} in {type.Name}. Resetting to defaults...", Plugin.LogInfo.Warning);
+                        if (type.ReflectedType == typeof(Custom.CustomConfigModel)) return null;
                         input = ConfigDefaults.Defaults[DisplayName];
                         ConfigDefaults.Defaults[DisplayName].Save();
                     }
@@ -106,7 +107,7 @@ namespace CountersPlus.Config
         public void Save()
         {
             Type type = GetType();
-            MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
+            MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
             foreach (MemberInfo info in infos)
             {
                 if (info.MemberType == MemberTypes.Field)

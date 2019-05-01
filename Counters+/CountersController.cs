@@ -77,20 +77,6 @@ namespace CountersPlus
             LoadCounter<SpeedConfigModel, SpeedCounter>("Speed", settings.speedConfig);
             LoadCounter<CutConfigModel, CutCounter>("Cut", settings.cutConfig);
             LoadCounter<SpinometerConfigModel, Spinometer>("Spinometer", settings.spinometerConfig);
-            FileIniDataParser parser = new FileIniDataParser();
-            IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
-            foreach (SectionData section in data.Sections)
-            {
-                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
-                {
-                    if (PluginManager.GetPlugin(section.Keys["ModCreator"]) == null &&
-                        #pragma warning disable CS0618 //Fuck off DaNike
-                        PluginManager.Plugins.Where((IPlugin x) => x.Name == section.Keys["ModCreator"]).FirstOrDefault() == null) return;
-                    CustomConfigModel potential = new CustomConfigModel(section.SectionName);
-                    potential = ConfigLoader.DeserializeFromConfig(potential, section.SectionName) as CustomConfigModel;
-                    LoadCounter<CustomConfigModel, CustomCounterHook>(section.Keys["SectionName"], potential);
-                }
-            }
             if (settings.HideCombo)
             {
                 for (int i = 0; i < GameObject.Find("ComboPanel").transform.childCount; i++)
@@ -109,6 +95,21 @@ namespace CountersPlus
             }
             Plugin.Log("Counters loaded!", Plugin.LogInfo.Notice);
             Instance.StartCoroutine(Instance.ObtainRequiredData());
+
+            FileIniDataParser parser = new FileIniDataParser();
+            IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
+            foreach (SectionData section in data.Sections)
+            {
+                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
+                {
+                    if (PluginManager.GetPlugin(section.Keys["ModCreator"]) == null &&
+                        #pragma warning disable CS0618 //Fuck off DaNike
+                        PluginManager.Plugins.Where((IPlugin x) => x.Name == section.Keys["ModCreator"]).FirstOrDefault() == null) return;
+                    CustomConfigModel potential = new CustomConfigModel(section.SectionName);
+                    potential = ConfigLoader.DeserializeFromConfig(potential, section.SectionName) as CustomConfigModel;
+                    LoadCounter<CustomConfigModel, CustomCounterHook>(section.Keys["SectionName"], potential);
+                }
+            }
         }
 
         public static Vector3 determinePosition(GameObject counter, ICounterPositions position, int index)
