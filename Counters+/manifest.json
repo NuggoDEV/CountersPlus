@@ -6,7 +6,7 @@
   "icon": "CountersPlus.UI.Images.Logo.png",
   "id": "Counters+",
   "name": "Counters+",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "dependsOn": {
     "BS Utils": "^1.2.3",
     "CustomUI": "^1.5.4"

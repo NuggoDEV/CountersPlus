@@ -45,7 +45,7 @@ namespace CountersPlus.Custom
         /// <param name="defaults">Default configuration options for your custom counter.</param>
         /// <param name="restrictedPositions">Restrict your Custom Counter to any of these positions. Inputting no parameters would allow the Counter to use all that are available.</param>
         /// </summary>
-        public static void Create<T>(T model, IConfigModel defaults = null, params ICounterPositions[] restrictedPositions) where T : CustomCounter
+        public static void Create<T>(T model, CustomConfigModel defaults = null, params ICounterPositions[] restrictedPositions) where T : CustomCounter
         {
             FileIniDataParser parser = new FileIniDataParser();
             IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
@@ -126,10 +126,10 @@ namespace CountersPlus.Custom
         {
             DisplayName = name;
         }
-        public string SectionName;
-        public string Counter;
-        public string ModCreator;
-        public ICounterPositions[] RestrictedPositions { get {
+        internal string SectionName;
+        internal string Counter;
+        internal string ModCreator;
+        internal ICounterPositions[] RestrictedPositions { get {
                 string doodads = Plugin.config.GetString(DisplayName, "RestrictedPositions", "All", true);
                 if (doodads == "All") return new ICounterPositions[] { };
                 string[] split = doodads.Split(',');

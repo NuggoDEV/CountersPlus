@@ -89,10 +89,18 @@ public class Plugin : IBeatSaberPlugin {
 		CustomCounter counter = new CustomCounter {
 			SectionName = "testCounter", //Used as an identifier in the Counters+ config file. Don't plan on changing this.
 			Name = "Test", //Display name that will appear in the Counters+ settings list.
-			Mod = this, //IPA Plugin. Will show up in Credits in the Counters+ settings  list.
+			BSIPAMod = this, //BSIPA Plugin. Will show up in Credits in the Counters+ settings list.
+			Mod = this, //If you are using IPA, and not BSIPA, you can use this instead.
 			Counter = "testCounterGameObject", //Name of the GameObject that holds your Counter component. Used to hook into the Counters+ system.
 		};
-		CustomCounterCreator.CreateCustomCounter(counter);
+
+		CustomConfigModel defaults = new CustomConfigModel(counter.Name) { //Let's add some defaults to our custom counter.
+			Enabled = true,
+			Position = CountersPlus.Config.ICounterPositions.AboveCombo,
+			Index = 1,
+		}
+
+		CustomCounterCreator.Create(counter, defaults); //Adds the counter to the system with the defaults we made.
 	}
 
 }
@@ -100,7 +108,7 @@ public class Plugin : IBeatSaberPlugin {
 
 A few things to keep in mind:
 1. Try to keep your counters under one GameObject each (Have anything else as a child), you can only add one GameObject per custom counter!
-2. Add Counters before the Menu scene is loaded (It'll thrown an exception after), this is so it can create UI in settings without having to reload.
+2. Add Counters before the Menu scene is loaded so it can create UI in settings without having to reload.
 3. Your `SectionName` is an identifier in the Counters+ config file. Make sure this identifier is unique, and will not be used by anyone else.
 4. Do not plan on changing `SectionName` after you release your first public build that uses Counters+ custom counters.
 
