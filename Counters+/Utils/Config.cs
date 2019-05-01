@@ -112,6 +112,7 @@ namespace CountersPlus.Config
                 if (info.MemberType == MemberTypes.Field)
                 {
                     FieldInfo finfo = (FieldInfo)info;
+                    if (finfo.Name.ToLower() == "restrictedpositions") continue;
                     Plugin.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
                 }
             }
