@@ -31,6 +31,7 @@ namespace CountersPlus.Counters
                 if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
                 {
                     CustomConfigModel potential = new CustomConfigModel(section.SectionName);
+                    potential = ConfigLoader.DeserializeFromConfig(potential, section.SectionName) as CustomConfigModel;
                     if (potential.SectionName == Name) settings = potential;
                 }
             }
