@@ -19,5 +19,19 @@ namespace CountersPlus.Config
             { "Spinometer", new SpinometerConfigModel() { Enabled = false, Position = ICounterPositions.AboveMultiplier, Index = 0, Mode = ICounterMode.Highest } },
             { "Personal Best", new PBConfigModel() { Enabled = false, Position = ICounterPositions.BelowMultiplier, Index = 1, DecimalPrecision = 2, TextSize = 2, UnderScore = false } }
         };
+
+        internal static MainConfigModel MainDefaults { get
+            {
+                return new MainConfigModel
+                {
+                    Enabled = true,
+                    AdvancedCounterInfo = true,
+                    FirstStart = false,
+                    HideCombo = false,
+                    HideMultiplier = false,
+                    ComboOffset = 0.2f,
+                    MultiplierOffset = 0.4f,
+                };
+            } }
     }
 }

@@ -53,8 +53,14 @@ namespace CountersPlus.Config
                     }
                     catch
                     {
+                        if (type.DeclaringType == typeof(MainConfigModel))
+                        {
+                            MainConfigModel defaults = ConfigDefaults.MainDefaults;
+                            defaults.Save();
+                            return defaults;
+                        }
+                        if (type.DeclaringType != typeof(IConfigModel)) return null;
                         Plugin.Log($"Failed to load variable {info.Name} in {type.Name}. Resetting to defaults...", Plugin.LogInfo.Warning);
-                        if (type.ReflectedType == typeof(Custom.CustomConfigModel)) return null;
                         input = ConfigDefaults.Defaults[DisplayName];
                         ConfigDefaults.Defaults[DisplayName].Save();
                     }
