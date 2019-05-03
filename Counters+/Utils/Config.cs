@@ -44,24 +44,23 @@ namespace CountersPlus.Config
                     if (finfo.Name.ToLower().Contains("config")) continue;
                     try
                     {
-                        if (finfo.GetValue(input) == null) throw new Exception(); //I guess I can just reset the singular variable to defaults, but eh, why not all of it to make sure the rest are available in config?
                         if (finfo.FieldType == typeof(ICounterMode))
                             input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterMode), Plugin.config.GetString(DisplayName, info.Name, null)));
                         else if (finfo.FieldType == typeof(ICounterPositions))
                             input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterPositions), Plugin.config.GetString(DisplayName, info.Name, null)));
-                        else input.SetPrivateField(info.Name, Convert.ChangeType(Plugin.config.GetString(DisplayName, info.Name, null), finfo.FieldType));
+                        else input.SetPrivateField(info.Name, Convert.ChangeType(Plugin.config.GetString(DisplayName, info.Name, null), finfo.FieldType)); if (finfo.GetValue(input) == null) throw new Exception(); //I guess I can just reset the singular variable to defaults, but eh, why not all of it to make sure the rest are available in config?
                     }
                     catch
                     {
                         Plugin.Log($"Failed to load variable {info.Name} in {type.Name}. Resetting to defaults...", Plugin.LogInfo.Warning);
-                        if (type.Namespace == "CountersPlus.Config")
+                        if (type.Namespace.Contains("CountersPlus"))
                         {
                             if (type.Name.Contains("Main"))
                             {
                                 ConfigDefaults.MainDefaults.Save();
                                 return ConfigDefaults.MainDefaults;
                             }
-                            else
+                            else if (!type.Name.Contains("Custom"))
                             {
                                 input = ConfigDefaults.Defaults[DisplayName];
                                 ConfigDefaults.Defaults[DisplayName].Save();
