@@ -67,7 +67,7 @@ namespace CountersPlus.Counters
 
         private void Init()
         {
-            counter.transform.parent = transform;
+            counter.transform.SetParent(transform, false);
             counter.transform.localPosition = Vector3.zero;
             Vector3 firstPosition = Vector3.zero;
             if (counter.GetComponentsInChildren<TMP_Text>().Any())

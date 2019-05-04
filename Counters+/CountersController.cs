@@ -79,19 +79,27 @@ namespace CountersPlus
             LoadCounter<SpinometerConfigModel, Spinometer>("Spinometer", settings.spinometerConfig);
             if (settings.HideCombo)
             {
-                for (int i = 0; i < GameObject.Find("ComboPanel").transform.childCount; i++)
+                try
                 {
-                    GameObject child = GameObject.Find("ComboPanel").transform.GetChild(i).gameObject;
-                    if (child.name != "BG") child.SetActive(false);
+                    for (int i = 0; i < GameObject.Find("ComboPanel").transform.childCount; i++)
+                    {
+                        GameObject child = GameObject.Find("ComboPanel").transform.GetChild(i).gameObject;
+                        if (child.name != "BG") child.SetActive(false);
+                    }
                 }
+                catch { Plugin.Log("Can't remove the Combo counter!", Plugin.LogInfo.Warning); }
             }
             if (settings.HideMultiplier)
             {
-                for (int i = 0; i < GameObject.Find("MultiplierPanel").transform.childCount; i++)
+                try
                 {
-                    GameObject child = GameObject.Find("MultiplierPanel").transform.GetChild(i).gameObject;
-                    if (child.name != "BG") child.SetActive(false);
+                    for (int i = 0; i < GameObject.Find("MultiplierPanel").transform.childCount; i++)
+                    {
+                        GameObject child = GameObject.Find("MultiplierPanel").transform.GetChild(i).gameObject;
+                        if (child.name != "BG") child.SetActive(false);
+                    }
                 }
+                catch { Plugin.Log("Can't remove the Multiplier counter!", Plugin.LogInfo.Warning); }
             }
             Plugin.Log("Counters loaded!", Plugin.LogInfo.Notice);
             Instance.StartCoroutine(Instance.ObtainRequiredData());
