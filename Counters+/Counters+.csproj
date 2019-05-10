@@ -39,6 +39,10 @@
       <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Plugins\BeatSaberCustomUI.dll</HintPath>
     </Reference>
     <Reference Include="BS_Utils" />
+    <Reference Include="CustomMissText, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Plugins\CustomMissText.dll</HintPath>
+    </Reference>
     <Reference Include="INIFileParser" />
     <Reference Include="IPA.Loader, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

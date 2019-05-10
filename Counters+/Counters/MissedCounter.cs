@@ -42,6 +42,13 @@ namespace CountersPlus.Counters
             label.color = Color.white;
             label.alignment = TextAlignmentOptions.Center;
 
+            if (settings.CustomMissTextIntegration)
+            {
+                #pragma warning disable CS0618 //Fuck off DaNike
+                if (IPA.Loader.PluginManager.Plugins.Where((IPA.Old.IPlugin x) => x.Name == "CustomMissText").Any())
+                    label.text = String.Join("\n", CustomMissText.Plugin.allEntries[UnityEngine.Random.Range(0, CustomMissText.Plugin.allEntries.Count)]);
+            }
+
             if (scoreController != null)
             {
                 scoreController.noteWasCutEvent += onNoteCut;
@@ -63,7 +70,16 @@ namespace CountersPlus.Counters
 
         private void onNoteMiss(NoteData data, int c)
         {
-            if (data.noteType != NoteType.Bomb) incrementCounter();
+            if (data.noteType != NoteType.Bomb)
+            {
+                incrementCounter();
+                if (settings.CustomMissTextIntegration)
+                {
+                    #pragma warning disable CS0618 //Fuck off DaNike
+                    if (IPA.Loader.PluginManager.Plugins.Where((IPA.Old.IPlugin x) => x.Name == "CustomMissText").Any())
+                        label.text = String.Join(" ", CustomMissText.Plugin.allEntries[UnityEngine.Random.Range(0, CustomMissText.Plugin.allEntries.Count)]);
+                }
+            }
         }
 
         private void incrementCounter()

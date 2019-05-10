@@ -50,7 +50,16 @@ namespace CountersPlus.UI
 
         internal static Dictionary<IConfigModel, Action<SubMenu, IConfigModel>> counterUIItems = new Dictionary<IConfigModel, Action<SubMenu, IConfigModel>>()
         {
-            { CC.settings.missedConfig, (sub, config) => { } },
+            { CC.settings.missedConfig, (sub, config) => {
+                #pragma warning disable CS0618 //Fuck off DaNike
+                if (IPA.Loader.PluginManager.Plugins.Where((IPA.Old.IPlugin x) => x.Name == "CustomMissText").Any())
+                {
+                    var cmt = CPEVC.AddList(ref sub, config, "Custom Miss Text Integration", "Replaces the \"Misses\" label with one of the custom miss text entries.", 2);
+                    cmt.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+                    cmt.GetValue = () => CC.settings.missedConfig.CustomMissTextIntegration ? 1f : 0f;
+                    cmt.SetValue += (v) => CC.settings.missedConfig.CustomMissTextIntegration = v != 0f;
+                }
+            } },
             { CC.settings.noteConfig, (sub, config) => {
                 var accuracyPercentage = CPEVC.AddList(ref sub, config, "Show Percentage", "Toggles the percentage of notes hit over total notes.", 2);
                 accuracyPercentage.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";

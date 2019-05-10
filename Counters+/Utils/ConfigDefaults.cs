@@ -10,7 +10,7 @@ namespace CountersPlus.Config
     {
         internal static Dictionary<string, IConfigModel> Defaults = new Dictionary<string, IConfigModel>()
         {
-            { "Missed", new MissedConfigModel(){ Enabled = true, Position = ICounterPositions.BelowCombo, Index = 0 } },
+            { "Missed", new MissedConfigModel(){ Enabled = true, Position = ICounterPositions.BelowCombo, Index = 0, CustomMissTextIntegration = false } },
             { "Notes", new NoteConfigModel() { Enabled = true, Position = ICounterPositions.BelowCombo, Index = 1, DecimalPrecision = 2, ShowPercentage = true} },
             { "Progress", new ProgressConfigModel() { Enabled = true, Position = ICounterPositions.BelowEnergy, Index = 0, Mode = ICounterMode.Original, ProgressTimeLeft = false, IncludeRing = false } },
             { "Score", new ScoreConfigModel() { Enabled = true, Position = ICounterPositions.BelowMultiplier, Index = 0, DecimalPrecision = 2, DisplayRank = true, Mode = ICounterMode.Both} },

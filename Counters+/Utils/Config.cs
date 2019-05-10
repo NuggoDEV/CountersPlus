@@ -132,6 +132,7 @@ namespace CountersPlus.Config
 
     public sealed class MissedConfigModel : IConfigModel {
         public MissedConfigModel() { DisplayName = "Missed"; }
+        public bool CustomMissTextIntegration;
     }
 
     public sealed class NoteConfigModel : IConfigModel {
