@@ -54,7 +54,7 @@ namespace CountersPlus.UI
                 #pragma warning disable CS0618 //Fuck off DaNike
                 if (IPA.Loader.PluginManager.Plugins.Where((IPA.Old.IPlugin x) => x.Name == "CustomMissText").Any())
                 {
-                    var cmt = CPEVC.AddList(ref sub, config, "Custom Miss Text Integration", "Replaces the \"Misses\" label with one of the custom miss text entries.", 2);
+                    var cmt = CPEVC.AddList(ref sub, config, "Custom Miss Text Integration", "Replaces the \"Misses\" label with one of the Custom Miss Text insults.\nAlso changes when you miss a note.", 2);
                     cmt.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
                     cmt.GetValue = () => CC.settings.missedConfig.CustomMissTextIntegration ? 1f : 0f;
                     cmt.SetValue += (v) => CC.settings.missedConfig.CustomMissTextIntegration = v != 0f;
