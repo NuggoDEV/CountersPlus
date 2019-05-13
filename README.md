@@ -36,6 +36,8 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
 |***Advanced Counter Properties***|Displays more information about the counters in the new menu.|
 |***Combo Offset***|Before Distance is taken into account, how far away should counters be from Combo.|
 |***Multiplier Offset***|Before Distance is taken into account, how far away should counters be from the Multiplier.|
+|***Hide Combo***|Will attempt to hide the Combo counter when entering a song.|
+|***Hide Multiplier***|Will attempt to hide the Multiplier counter when entering a song.|
 
 ### Every Counter has these 3 options
 |Setting|Description|
@@ -75,7 +77,7 @@ Adding your own Counter is a simple as:
 
 ```csharp
 using CountersPlus.Custom; //Add CountersPlus.dll as a Reference
-using IPA; //Add References from Beat Saber_Data/Managed
+using IPA.Loader; //Add References from Beat Saber_Data/Managed
 
 public class Plugin : IBeatSaberPlugin {
 
@@ -95,9 +97,9 @@ public class Plugin : IBeatSaberPlugin {
 		};
 
 		CustomConfigModel defaults = new CustomConfigModel(counter.Name) { //Let's add some defaults to our custom counter.
-			Enabled = true,
-			Position = CountersPlus.Config.ICounterPositions.AboveCombo,
-			Index = 1,
+			Enabled = true, //Let's have the hook be enabled by default.
+			Position = CountersPlus.Config.ICounterPositions.AboveCombo, //Above the Combo counter should be fine.
+			Index = 1, //I feel like something could be directly above, so let's put it just a little bit higher.
 		}
 
 		CustomCounterCreator.Create(counter, defaults); //Adds the counter to the system with the defaults we made.
@@ -107,10 +109,11 @@ public class Plugin : IBeatSaberPlugin {
 ```
 
 A few things to keep in mind:
-1. Try to keep your counters under one GameObject each (Have anything else as a child), you can only add one GameObject per custom counter!
-2. Add Counters before the Menu scene is loaded so it can create UI in settings without having to reload.
-3. Your `SectionName` is an identifier in the Counters+ config file. Make sure this identifier is unique, and will not be used by anyone else.
-4. Do not plan on changing `SectionName` after you release your first public build that uses Counters+ custom counters.
+1. Try to keep your counters under one GameObject each (Have text objects as a child); you can only add one GameObject per custom counter!
+2. Make sure your text objects are parented to the GameObject you input to the system, as Counters+ will access the children and move them.
+3. Add Counters before the Menu scene is loaded so it can create UI in settings without having to reload.
+4. Your `SectionName` is an identifier in the Counters+ config file. Make sure this identifier is unique, and will not be used by anyone else.
+5. Do not plan on changing `SectionName` after you release your first public build that uses Counters+ custom counters.
 
 And you're done! If it has not yet been created, Counters+ will append the custom counter to its `CountersPlus.ini` file, and will go off of that from now on. Your Counter can now be subject to the same base configuration settings as every counter!
 

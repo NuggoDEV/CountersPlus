@@ -25,7 +25,7 @@ namespace CountersPlus
             GameObject CanvasGO = new GameObject("Counters+ | Counters Canvas");
             canvas = CanvasGO.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.WorldSpace;
-            CanvasGO.transform.localScale = Vector3.one * 0.1f;
+            CanvasGO.transform.localScale = Vector3.one / ScaleFactor;
             CanvasGO.transform.position = Position;
             return canvas;
         }
