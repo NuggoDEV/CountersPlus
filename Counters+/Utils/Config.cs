@@ -1,6 +1,7 @@
 ﻿using IniParser;
 using IniParser.Model;
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -10,6 +11,8 @@ namespace CountersPlus.Config
     {
         public static MainConfigModel LoadSettings()
         {
+            if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini"))
+                File.Create(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
             MainConfigModel model = new MainConfigModel();
             model = (MainConfigModel)DeserializeFromConfig(model, model.DisplayName);
             try

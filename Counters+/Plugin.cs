@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 using System.Linq;
@@ -23,8 +22,6 @@ namespace CountersPlus
             Logger = log;
             VersionChecker.GetOnlineVersion();
             Instance = this;
-            if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini"))
-                File.Create(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
             CountersController.OnLoad();
         }
 
