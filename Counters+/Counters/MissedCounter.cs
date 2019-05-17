@@ -42,12 +42,7 @@ namespace CountersPlus.Counters
             label.color = Color.white;
             label.alignment = TextAlignmentOptions.Center;
 
-            if (settings.CustomMissTextIntegration)
-            {
-                #pragma warning disable CS0618 //Fuck off DaNike
-                if (IPA.Loader.PluginManager.Plugins.Where((IPA.Old.IPlugin x) => x.Name == "CustomMissText").Any())
-                    label.text = String.Join(" ", CustomMissText.Plugin.allEntries[UnityEngine.Random.Range(0, CustomMissText.Plugin.allEntries.Count)]);
-            }
+            if (settings.CustomMissTextIntegration) UpdateCustomMissText();
 
             if (scoreController != null)
             {
@@ -73,13 +68,19 @@ namespace CountersPlus.Counters
             if (data.noteType != NoteType.Bomb)
             {
                 incrementCounter();
-                if (settings.CustomMissTextIntegration)
-                {
-                    #pragma warning disable CS0618 //Fuck off DaNike
-                    if (IPA.Loader.PluginManager.Plugins.Where((IPA.Old.IPlugin x) => x.Name == "CustomMissText").Any())
-                        label.text = String.Join(" ", CustomMissText.Plugin.allEntries[UnityEngine.Random.Range(0, CustomMissText.Plugin.allEntries.Count)]);
-                }
+                if (settings.CustomMissTextIntegration) UpdateCustomMissText();
             }
+        }
+
+        private void UpdateCustomMissText()
+        {
+            try
+            {
+#pragma warning disable CS0618 //Fuck off DaNike
+                if (IPA.Loader.PluginManager.Plugins.Where((IPA.Old.IPlugin x) => x.Name == "CustomMissText").Any())
+                    label.text = String.Join(" ", CustomMissText.Plugin.allEntries[UnityEngine.Random.Range(0, CustomMissText.Plugin.allEntries.Count)]);
+            }
+            catch { }
         }
 
         private void incrementCounter()

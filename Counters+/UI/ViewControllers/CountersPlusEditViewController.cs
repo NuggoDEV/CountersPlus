@@ -333,6 +333,8 @@ namespace CountersPlus.UI
             foreach (ListViewController list in loadedSettings)
             {
                 list.Init();
+                list.InvokePrivateMethod("OnDisable", new object[] { });
+                list.InvokePrivateMethod("OnEnable", new object[] { });
             }
         }
     }
