@@ -32,17 +32,17 @@ namespace CountersPlus.Harmony
             ref RankModel.Rank ____prevImmediateRank, ref float ____prevRelativeScore, ref TextMeshProUGUI ____rankText,
             ref TextMeshProUGUI ____relativeScoreText)
         {
-            if (!CountersController.settings.Enabled) return true; //Dont use Score Counters decimal precision if the plugin is disabled 
+            if (!CountersController.settings.Enabled) return true; //Dont use Score Counters decimal precision if the plugin is disabled
+            if (model == null) model = CountersController.settings.scoreConfig;
             RankModel.Rank rank = ____relativeScoreAndImmediateRankCounter.immediateRank;
             if (rank != ____prevImmediateRank)
             {
-                ____rankText.text = $"\n{RankModel.GetRankName(rank)}";
+                ____rankText.text = model.Mode != ICounterMode.BaseGame ? $"\n{RankModel.GetRankName(rank)}" : RankModel.GetRankName(rank);
                 ____prevImmediateRank = rank;
             }
             float score = ____relativeScoreAndImmediateRankCounter.relativeScore;
             if (Mathf.Abs(____prevRelativeScore - score) >= 0.001f)
             {
-                if (model == null) model = CountersController.settings.scoreConfig;
                 float roundedScore = (float)Math.Round((decimal)score * 100, model.DecimalPrecision);
                 ____relativeScoreText.text = $"{roundedScore.ToString($"F{model.DecimalPrecision}")}%";
             }
