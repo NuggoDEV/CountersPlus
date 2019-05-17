@@ -17,10 +17,7 @@ namespace CountersPlus.Counters
 
         private CutConfigModel settings;
 
-        private uint previousTotal; //Dont need negative numbers, and I need larger numbers.
-        private uint previousCuts;
-
-        private List<int> totalCuts;
+        private List<int> totalCuts = new List<int>();
         private NoteCutInfo currentCutInfo = null;
 
         GameObject _RankObject;
