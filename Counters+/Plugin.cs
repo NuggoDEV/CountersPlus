@@ -5,6 +5,7 @@ using System.Linq;
 using CountersPlus.UI;
 using IPA;
 using IPA.Logging;
+using Harmony;
 
 namespace CountersPlus
 {
@@ -16,9 +17,12 @@ namespace CountersPlus
         internal static BS_Utils.Utilities.Config config = new BS_Utils.Utilities.Config("CountersPlus"); //Conflicts with CountersPlus.Config POG
         internal static bool upToDate = true;
         internal static string webVersion;
+        internal static HarmonyInstance HarmonyInstance;
 
         public void Init(object thisIsNull, IPA.Logging.Logger log)
         {
+            HarmonyInstance = HarmonyInstance.Create("com.Caeden117.CountersPlus");
+            HarmonyInstance.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
             Logger = log;
             VersionChecker.GetOnlineVersion();
             Instance = this;

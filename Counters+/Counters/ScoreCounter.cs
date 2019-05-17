@@ -17,10 +17,6 @@ namespace CountersPlus.Counters
         internal TMP_Text PointsText;
 
         private ScoreConfigModel settings;
-        private ScoreController _scoreController;
-        private GameplayModifiersModelSO gm;
-        private GameplayCoreSceneSetupData gcssd;
-        private float gameplayModifier = 1;
 
         GameObject _RankObject;
         int _maxPossibleScore = 0;
@@ -57,7 +53,6 @@ namespace CountersPlus.Counters
         {
             if (!(settings.Mode == ICounterMode.BaseGame || settings.Mode == ICounterMode.BaseWithOutPoints))
             {
-                Destroy(GetComponent<ImmediateRankUIPanel>());
                 for (var i = 0; i < transform.childCount; i++)
                 {
                     Transform child = transform.GetChild(i);
@@ -69,17 +64,15 @@ namespace CountersPlus.Counters
                     else PointsText = child.GetComponent<TMP_Text>();
                 }
                 if (settings.Mode == ICounterMode.ScoreOnly) Destroy(GameObject.Find("ScoreText"));
-                CountersController.ReadyToInit += Init;
-            }else
+                CreateText();
+                GetComponent<ImmediateRankUIPanel>().Start(); //BS way of getting Harmony patch to function but "if it works its not stupid" ~Caeden117
+            }
+            else
                 transform.position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
         }
 
-        private void Init(CountersData data)
+        private void CreateText()
         {
-            _scoreController = data.ScoreController;
-            gm = data.ModifiersData;
-            gcssd = data.GCSSD;
-            gameplayModifier = gm.GetTotalMultiplier(gcssd.gameplayModifiers);
             transform.localScale = Vector3.one;
             transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().fontSize = 0.325f;
             GameObject scoreMesh = new GameObject("Counters+ | Score Percent");
@@ -98,82 +91,15 @@ namespace CountersPlus.Counters
                 _RankObject = new GameObject("Counters+ | Score Rank");
                 _RankObject.transform.SetParent(transform, false);
                 TextHelper.CreateText(out RankText, position);
-                RankText.text = "\nSSS";
+                RankText.text = "\nSS";
                 RankText.fontSize = 4;
                 RankText.color = Color.white;
                 RankText.alignment = TextAlignmentOptions.Center;
-            }
-            if (_scoreController != null)
-            {
-                _scoreController.scoreDidChangeEvent += UpdateScore;
-                _scoreController.noteWasCutEvent += OnNoteCut;
-                _scoreController.noteWasMissedEvent += _OnNoteWasMissed;
             }
             if (settings.Mode == ICounterMode.LeavePoints || settings.Mode == ICounterMode.BaseWithOutPoints)
             {
                 transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = new Vector3(-3.2f,
                     0.35f + (settings.Mode == ICounterMode.LeavePoints ? 7.8f : 0), 7);
-            }
-        }
-        
-        void OnDestroy()
-        {
-            if (_scoreController != null)
-            {
-                _scoreController.scoreDidChangeEvent -= UpdateScore;
-                _scoreController.noteWasCutEvent -= OnNoteCut;
-                _scoreController.noteWasMissedEvent -= _OnNoteWasMissed;
-            }
-            CountersController.ReadyToInit -= Init;
-        }
-
-        public string GetRank(int score, float prec)
-        {
-            if (score >= _maxPossibleScore) return "SSS";
-            if (prec > 0.9f) return "SS";
-            if (prec > 0.8f) return "S";
-            if (prec > 0.65f) return "A";
-            if (prec > 0.5f) return "B";
-            if (prec > 0.35f) return "C";
-            if (prec > 0.2f) return "D";
-            return "E";
-        }
-
-        private void _OnNoteWasMissed(NoteData data, int score)
-        {
-            if (data.noteType != NoteType.Bomb) notes++;
-        }
-
-        private void OnNoteCut(NoteData data, NoteCutInfo info, int score)
-        {
-            if (info.allIsOK && data.noteType != NoteType.Bomb) notes++;
-        }
-
-        public void UpdateScore(int score)
-        {
-            StartCoroutine(DelayedUpdate(score)); //Give time for OnNoteCut to update local note hit counter.
-        }
-
-        private IEnumerator DelayedUpdate(int score)
-        {
-            yield return new WaitForEndOfFrame();
-            _currentScore = score;
-            _maxPossibleScore = ScoreController.MaxScoreForNumberOfNotes(notes);
-
-            if (ScoreMesh != null)
-            {
-                if (_maxPossibleScore == 0)
-                {
-                    ScoreMesh.text = "100.0%";
-                    if (settings.DisplayRank) RankText.text = "\nSSS";
-                }
-                else
-                {
-                    float ratio = (float)ScoreController.GetScoreForGameplayModifiersScoreMultiplier(score, gameplayModifier) / _maxPossibleScore;
-                    ratio = (float)Math.Round((decimal)ratio * 100, decimalPrecision);
-                    ScoreMesh.text = $"{ratio.ToString($"F{settings.DecimalPrecision}")}%";
-                    if (settings.DisplayRank) RankText.text = "\n" + GetRank(score, ratio);
-                }
             }
         }
     }
