@@ -17,7 +17,6 @@ namespace CountersPlus.Config
             model = (MainConfigModel)DeserializeFromConfig(model, model.DisplayName);
             try
             {
-                MemberInfo[] infos = model.GetType().GetMembers(BindingFlags.Public | BindingFlags.Instance);
                 model.missedConfig = DeserializeFromConfig(model.missedConfig, model.missedConfig.DisplayName) as MissedConfigModel;
                 model.noteConfig = DeserializeFromConfig(model.noteConfig, model.noteConfig.DisplayName) as NoteConfigModel;
                 model.progressConfig = DeserializeFromConfig(model.progressConfig, model.progressConfig.DisplayName) as ProgressConfigModel;

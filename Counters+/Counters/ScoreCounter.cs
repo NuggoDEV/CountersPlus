@@ -170,8 +170,8 @@ namespace CountersPlus.Counters
                 else
                 {
                     float ratio = (float)ScoreController.GetScoreForGameplayModifiersScoreMultiplier(score, gameplayModifier) / _maxPossibleScore;
-                    //Force percent to round down to decimal precision
-                    ScoreMesh.text = Math.Round(ratio * 100, settings.DecimalPrecision).ToString() + "%";
+                    ratio = (float)Math.Round((decimal)ratio * 100, decimalPrecision);
+                    ScoreMesh.text = $"{ratio.ToString($"F{settings.DecimalPrecision}")}%";
                     if (settings.DisplayRank) RankText.text = "\n" + GetRank(score, ratio);
                 }
             }

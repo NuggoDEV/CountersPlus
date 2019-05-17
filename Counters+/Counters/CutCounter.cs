@@ -20,6 +20,9 @@ namespace CountersPlus.Counters
         private uint previousTotal; //Dont need negative numbers, and I need larger numbers.
         private uint previousCuts;
 
+        private List<int> totalCuts;
+        private NoteCutInfo currentCutInfo = null;
+
         GameObject _RankObject;
         TMP_Text cutCounter;
 
@@ -60,13 +63,16 @@ namespace CountersPlus.Counters
         private void UpdateScore(NoteData data, NoteCutInfo info, int score)
         {
             if (data.noteType == NoteType.Bomb || !info.allIsOK) return;
-            info.afterCutSwingRatingCounter.didFinishEvent += (v) =>
-            {
-                ScoreController.ScoreWithoutMultiplier(info, info.afterCutSwingRatingCounter, out int beforeCut, out int afterCut, out int why);
-                previousTotal += (uint)(beforeCut + afterCut);
-                previousCuts++;
-                cutCounter.text = $"{Math.Round((double)(previousTotal / previousCuts))}";
-            };
+            currentCutInfo = info;
+            info.afterCutSwingRatingCounter.didFinishEvent -= afterCutSwingRatingCounter_didFinishEvent;
+            info.afterCutSwingRatingCounter.didFinishEvent += afterCutSwingRatingCounter_didFinishEvent;
+        }
+
+        private void afterCutSwingRatingCounter_didFinishEvent(SaberAfterCutSwingRatingCounter v)
+        {
+            ScoreController.ScoreWithoutMultiplier(currentCutInfo, currentCutInfo.afterCutSwingRatingCounter, out int beforeCut, out int afterCut, out int why);
+            totalCuts.Add(beforeCut + afterCut);
+            cutCounter.text = $"{Math.Round(totalCuts.Average())}";
         }
     }
 }
