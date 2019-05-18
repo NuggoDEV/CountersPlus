@@ -38,7 +38,6 @@ namespace CountersPlus.Counters
         {
             yield return new WaitUntil(() => GameObject.Find("SongProgressPanel") != null);
             GameObject.Find("SongProgressPanel").AddComponent<ProgressCounter>();
-            Plugin.Log("Progress Counter has been moved to the base game counter!");
             Destroy(gameObject);
         }
 

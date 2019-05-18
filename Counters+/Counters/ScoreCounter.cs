@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using UnityEngine;
 using TMPro;
 using CountersPlus.Config;
@@ -19,10 +14,7 @@ namespace CountersPlus.Counters
         private ScoreConfigModel settings;
 
         GameObject _RankObject;
-        int _maxPossibleScore = 0;
-        int notes = 0;
         int decimalPrecision;
-        int _currentScore;
 
         void Awake()
         {
@@ -37,12 +29,8 @@ namespace CountersPlus.Counters
         IEnumerator YeetToBaseCounter()
         {
             GameObject baseCounter;
-            while (true)
-            {
-                baseCounter = GameObject.Find("ScorePanel");
-                if (baseCounter != null) break;
-                yield return new WaitForSeconds(0.1f);
-            }
+            yield return new WaitUntil(() => GameObject.Find("ScorePanel") != null);
+            baseCounter = GameObject.Find("ScorePanel");
             CountersController.loadedCounters.Remove(gameObject);
             baseCounter.AddComponent<ScoreCounter>();
             Destroy(gameObject);

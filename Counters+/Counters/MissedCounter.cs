@@ -76,7 +76,7 @@ namespace CountersPlus.Counters
         {
             try
             {
-#pragma warning disable CS0618 //Fuck off DaNike
+                #pragma warning disable CS0618 //Fuck off DaNike
                 if (IPA.Loader.PluginManager.Plugins.Where((IPA.Old.IPlugin x) => x.Name == "CustomMissText").Any())
                     label.text = String.Join(" ", CustomMissText.Plugin.allEntries[UnityEngine.Random.Range(0, CustomMissText.Plugin.allEntries.Count)]);
             }

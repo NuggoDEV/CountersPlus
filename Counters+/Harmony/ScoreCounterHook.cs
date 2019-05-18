@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Harmony;
 using UnityEngine;
 using TMPro;
@@ -15,9 +11,15 @@ namespace CountersPlus.Harmony
     [HarmonyPatch("Start", MethodType.Normal)]
     class ScoreCounterStartHook
     {
-        static void Postfix(ref ImmediateRankUIPanel __instance, ref TextMeshProUGUI ____rankText, ref TextMeshProUGUI ____relativeScoreText)
+        static void Postfix(ref ImmediateRankUIPanel __instance, ref TextMeshProUGUI ____rankText, ref TextMeshProUGUI ____relativeScoreText,
+            ref RelativeScoreAndImmediateRankCounter ____relativeScoreAndImmediateRankCounter)
         {
-            if (__instance.gameObject.GetComponent<ScoreCounter>() == null && CountersController.settings.scoreConfig.Enabled) return;
+            if (!CountersController.settings.scoreConfig.Enabled || !CountersController.settings.Enabled) return;
+            if (__instance.gameObject.GetComponent<ScoreCounter>() == null)
+            {
+                ____relativeScoreAndImmediateRankCounter.relativeScoreOrImmediateRankDidChangeEvent -= __instance.HandleRelativeScoreAndImmediateRankCounterRelativeScoreOrImmediateRankDidChange;
+                return;
+            }
             ____rankText = (TextMeshProUGUI)__instance.gameObject.GetComponent<ScoreCounter>().RankText;
             ____relativeScoreText = (TextMeshProUGUI)__instance.gameObject.GetComponent<ScoreCounter>().ScoreMesh;
         }
