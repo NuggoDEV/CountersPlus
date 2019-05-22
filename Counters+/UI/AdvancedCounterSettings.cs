@@ -28,7 +28,7 @@ namespace CountersPlus.UI
         };
         static List<Tuple<ICounterMode, string>> scoreSettings = new List<Tuple<ICounterMode, string>>
         {
-            {ICounterMode.Both, "Original" }, //Counters+ Counter w/ Points
+            {ICounterMode.Original, "Original" }, //Counters+ Counter w/ Points
             {ICounterMode.BaseGame, "Base Game" }, //Base Game w/ Points
             //{ICounterMode.BaseWithOutPoints, "Base No Points" }, //Base Game w/ Points Under Combo
             {ICounterMode.LeavePoints, "No Points" }, //Counters+ Counter w/ Points Under Combo
@@ -45,8 +45,6 @@ namespace CountersPlus.UI
         private static HoverHint speedHover;
         private static HoverHint scoreHover;
         private static HoverHint spinometerHover;
-
-        private static ListViewController IncludeRingSetting;
 
         internal static Dictionary<IConfigModel, Action<SubMenu, IConfigModel>> counterUIItems = new Dictionary<IConfigModel, Action<SubMenu, IConfigModel>>()
         {
@@ -83,6 +81,7 @@ namespace CountersPlus.UI
                 };
                 scoreMode.GetValue = () => {
                     if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, DetermineModeText(CC.settings.scoreConfig.Mode, true));
+                    if (CC.settings.scoreConfig.Mode == ICounterMode.Both) CC.settings.scoreConfig.Mode = ICounterMode.Original;
                     return scoreSettings.ToList().IndexOf(scoreSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CC.settings.scoreConfig.Mode)).First());
                 };
                 scoreMode.SetValue += (v) => {
@@ -122,15 +121,12 @@ namespace CountersPlus.UI
                 };
                 progressRank.SetValue += (v) => {
                     CC.settings.progressConfig.ProgressTimeLeft = v != 0f;
-                    if (CC.settings.progressConfig.ProgressTimeLeft && CC.settings.progressConfig.Mode == ICounterMode.Original && IncludeRingSetting == null)
-                        CreateIncludeRingSetting(ref sub);
-                    else if (IncludeRingSetting != null){
-                            CPEVC.loadedElements.Remove(IncludeRingSetting.gameObject);
-                            UnityEngine.Object.Destroy(IncludeRingSetting.gameObject);
-                            IncludeRingSetting = null;
-                            CPEVC.settingsCount--;
-                        }
                     };
+
+                var includeRing = CPEVC.AddList(ref sub, CC.settings.progressConfig, "Include Progress Ring", "Whether or not the Progress Ring will also be effected by the \"Progress From End\" setting.\nOnly active in \"Original\" mode.", 2);
+                includeRing.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+                includeRing.GetValue = () => CC.settings.progressConfig.IncludeRing ? 1f : 0f;
+                includeRing.SetValue += (v) => CC.settings.progressConfig.IncludeRing = v != 0f;
 
                 var progressMode = CPEVC.AddList(ref sub, config, "Mode", "", progressSettings.Count());
                 progressMode.GetTextForValue = (v) => {
@@ -144,17 +140,7 @@ namespace CountersPlus.UI
                     if (progressHover == null) progressHover = BeatSaberUI.AddHintText(progressMode.transform as RectTransform, DetermineModeText(CC.settings.progressConfig.Mode));
                     CC.settings.progressConfig.Mode = progressSettings[Mathf.RoundToInt(v)].Item1;
                     progressHover.text = DetermineModeText(CC.settings.progressConfig.Mode);
-                    if (CC.settings.progressConfig.ProgressTimeLeft && CC.settings.progressConfig.Mode == ICounterMode.Original && IncludeRingSetting == null)
-                        CreateIncludeRingSetting(ref sub);
-                    else if (IncludeRingSetting != null){
-                            CPEVC.loadedElements.Remove(IncludeRingSetting.gameObject);
-                            UnityEngine.Object.Destroy(IncludeRingSetting.gameObject);
-                            IncludeRingSetting = null;
-                            CPEVC.settingsCount--;
-                        }
                 };
-                if (CC.settings.progressConfig.ProgressTimeLeft && CC.settings.progressConfig.Mode == ICounterMode.Original)
-                    CreateIncludeRingSetting(ref sub);
             } },
             { CC.settings.speedConfig, (sub, config) => {
                 var speedPrecision = CPEVC.AddList(ref sub, config, "Percentage Precision", "How precise should the precentage be?", 6);
@@ -193,16 +179,6 @@ namespace CountersPlus.UI
                 };
             } },
         };
-
-        private static void CreateIncludeRingSetting(ref SubMenu sub)
-        {
-            var includeRing = CPEVC.AddList(ref sub, CC.settings.progressConfig, "Include Progress Ring", "Whether or not the Progress Ring will also be effected by the \"Progress From End\" setting.", 2);
-            includeRing.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
-            includeRing.GetValue = () => CC.settings.progressConfig.IncludeRing ? 1f : 0f;
-            includeRing.SetValue += (v) => CC.settings.progressConfig.IncludeRing = v != 0f;
-            IncludeRingSetting = includeRing;
-            includeRing.Init();
-        }
 
         private static string DetermineModeText(ICounterMode Mode, bool alternateText = false)
         {

@@ -339,15 +339,7 @@ namespace CountersPlus.UI
 
         private static void InitSettings()
         {
-            try
-            {
-                foreach (ListViewController list in loadedSettings)
-                {
-                    list.InvokePrivateMethod("OnDisable", new object[] { });
-                    list.InvokePrivateMethod("OnEnable", new object[] { });
-                }
-            }
-            catch { } //No, well fine, fuck you too, mr. list was modified - enumeration cannot continue.
+            foreach (ListViewController list in loadedSettings) list.Init();
         }
     }
 }
