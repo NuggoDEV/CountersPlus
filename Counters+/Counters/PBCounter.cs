@@ -18,13 +18,13 @@ namespace CountersPlus.Counters
         private PBConfigModel settings;
         private GameplayModifiersModelSO gameplayMods;
         private GameplayCoreSceneSetupData gcssd;
+        private GameplayModifiers modifiers;
 
         private Color orange;
         private TMP_Text _PbTrackerText;
         private int _maxPossibleScore = 0;
         private int decimalPrecision = 2;
         private float beginningPB = 0;
-        private float gmModifier = 1;
         
         void Awake()
         {
@@ -40,12 +40,12 @@ namespace CountersPlus.Counters
             gcssd = data.GCSSD;
             PlayerDataModelSO player = data.PlayerData;
             gameplayMods = data.ModifiersData;
-            gmModifier = gameplayMods.GetTotalMultiplier(gcssd.gameplayModifiers);
+            modifiers = data.PlayerData.sharedGameplayModifiers;
             IDifficultyBeatmap beatmap = data.GCSSD.difficultyBeatmap;
             PlayerLevelStatsData stats = player.currentLocalPlayer.GetPlayerLevelStatsData(
                 beatmap.level.levelID, beatmap.difficulty, beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic);
-            _maxPossibleScore = ScoreController.MaxScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
-            beginningPB = (float)stats.highScore / ((float)ScoreController.MaxScoreForNumberOfNotes(beatmap.beatmapData.notesCount));
+            _maxPossibleScore = ScoreController.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
+            beginningPB = (float)stats.highScore / ((float)ScoreController.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount));
 
             Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out _PbTrackerText, position);
@@ -92,11 +92,11 @@ namespace CountersPlus.Counters
             else _PbTrackerText.text = $"PB: {pb.ToString($"F{settings.DecimalPrecision}")}%";
         }
 
-        public void UpdateScore(int score)
+        public void UpdateScore(int score, int modifiedScore)
         {
             if (_maxPossibleScore != 0)
             {
-                float ratio = ScoreController.GetScoreForGameplayModifiersScoreMultiplier(score, gmModifier) / (float)_maxPossibleScore;
+                float ratio = ScoreController.MaxModifiedScoreForMaxRawScore(score, modifiers, gameplayMods) / (float)_maxPossibleScore;
                 if (ratio > beginningPB)
                 {
                     SetPersonalBest(ratio);

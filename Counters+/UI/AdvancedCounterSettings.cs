@@ -122,10 +122,12 @@ namespace CountersPlus.UI
                 };
                 progressRank.SetValue += (v) => {
                     CC.settings.progressConfig.ProgressTimeLeft = v != 0f;
-                    if (CC.settings.progressConfig.ProgressTimeLeft && CC.settings.progressConfig.Mode == ICounterMode.Original)
+                    if (CC.settings.progressConfig.ProgressTimeLeft && CC.settings.progressConfig.Mode == ICounterMode.Original && IncludeRingSetting == null)
                         CreateIncludeRingSetting(ref sub);
                     else if (IncludeRingSetting != null){
+                            CPEVC.loadedElements.Remove(IncludeRingSetting.gameObject);
                             UnityEngine.Object.Destroy(IncludeRingSetting.gameObject);
+                            IncludeRingSetting = null;
                             CPEVC.settingsCount--;
                         }
                     };
@@ -142,10 +144,12 @@ namespace CountersPlus.UI
                     if (progressHover == null) progressHover = BeatSaberUI.AddHintText(progressMode.transform as RectTransform, DetermineModeText(CC.settings.progressConfig.Mode));
                     CC.settings.progressConfig.Mode = progressSettings[Mathf.RoundToInt(v)].Item1;
                     progressHover.text = DetermineModeText(CC.settings.progressConfig.Mode);
-                    if (CC.settings.progressConfig.ProgressTimeLeft && CC.settings.progressConfig.Mode == ICounterMode.Original)
+                    if (CC.settings.progressConfig.ProgressTimeLeft && CC.settings.progressConfig.Mode == ICounterMode.Original && IncludeRingSetting == null)
                         CreateIncludeRingSetting(ref sub);
                     else if (IncludeRingSetting != null){
+                            CPEVC.loadedElements.Remove(IncludeRingSetting.gameObject);
                             UnityEngine.Object.Destroy(IncludeRingSetting.gameObject);
+                            IncludeRingSetting = null;
                             CPEVC.settingsCount--;
                         }
                 };
@@ -197,8 +201,7 @@ namespace CountersPlus.UI
             includeRing.GetValue = () => CC.settings.progressConfig.IncludeRing ? 1f : 0f;
             includeRing.SetValue += (v) => CC.settings.progressConfig.IncludeRing = v != 0f;
             IncludeRingSetting = includeRing;
-            includeRing.InvokePrivateMethod("OnDisable", new object[] { });
-            includeRing.InvokePrivateMethod("OnEnable", new object[] { });
+            includeRing.Init();
         }
 
         private static string DetermineModeText(ICounterMode Mode, bool alternateText = false)

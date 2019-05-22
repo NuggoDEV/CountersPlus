@@ -11,10 +11,9 @@ namespace CountersPlus.UI.Images
 {
     class Images
     {
-        public static Sprite Load(string name)
-        {
-            Sprite cranberry = UIUtilities.LoadSpriteFromResources($"CountersPlus.UI.Images.{name}.png");
-            return cranberry; //God damn it, Nova.
+        public static Texture Load(string name)
+        { //It's not easy without Sprite cranberry.
+            return UIUtilities.LoadTextureFromResources($"CountersPlus.UI.Images.{name}.png");
         }
     }
 }

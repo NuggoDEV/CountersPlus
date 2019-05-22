@@ -13,11 +13,11 @@ namespace CountersPlus.Config
             { "Missed", new MissedConfigModel(){ Enabled = true, Position = ICounterPositions.BelowCombo, Index = 0, CustomMissTextIntegration = false } },
             { "Notes", new NoteConfigModel() { Enabled = false, Position = ICounterPositions.BelowCombo, Index = 1, DecimalPrecision = 2, ShowPercentage = false} },
             { "Progress", new ProgressConfigModel() { Enabled = true, Position = ICounterPositions.BelowEnergy, Index = 0, Mode = ICounterMode.Original, ProgressTimeLeft = false, IncludeRing = false } },
-            { "Score", new ScoreConfigModel() { Enabled = true, Position = ICounterPositions.BelowMultiplier, Index = 0, DecimalPrecision = 2, DisplayRank = true, Mode = ICounterMode.BaseGame } },
+            { "Score", new ScoreConfigModel() { Enabled = true, Position = ICounterPositions.BelowMultiplier, Index = 0, DecimalPrecision = 2, DisplayRank = true, Mode = ICounterMode.Original } },
             { "Speed", new SpeedConfigModel() { Enabled = false, Position = ICounterPositions.BelowMultiplier, Index = 1, DecimalPrecision = 2, Mode = ICounterMode.Average } },
             { "Cut", new CutConfigModel() { Enabled = false, Position = ICounterPositions.AboveHighway, Index = 0 } },
             { "Spinometer", new SpinometerConfigModel() { Enabled = false, Position = ICounterPositions.AboveMultiplier, Index = 0, Mode = ICounterMode.Highest } },
-            { "Personal Best", new PBConfigModel() { Enabled = false, Position = ICounterPositions.BelowMultiplier, Index = 1, DecimalPrecision = 2, TextSize = 2, UnderScore = false } }
+            { "Personal Best", new PBConfigModel() { Enabled = true, Position = ICounterPositions.BelowMultiplier, Index = 1, DecimalPrecision = 2, TextSize = 2, UnderScore = true } }
         };
 
         internal static MainConfigModel MainDefaults { get

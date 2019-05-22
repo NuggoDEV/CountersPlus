@@ -39,6 +39,9 @@ namespace CountersPlus.UI
             {ICounterPositions.AboveHighway, "Over Highway" }
         };
 
+        private IConfigModel SelectedConfigModel = null;
+        private SettingsInfo SelectedSettingsInfo = null;
+
         static Action<RectTransform, float, float, float, float, float> setPositioning = delegate (RectTransform r, float x, float y, float w, float h, float pivotX)
         {
             r.anchorMin = new Vector2(x, y);
@@ -55,6 +58,10 @@ namespace CountersPlus.UI
             {
                 Instance = this;
                 CreateCredits();
+            }
+            else
+            {
+                UpdateSettings(SelectedConfigModel, SelectedSettingsInfo);
             }
         }
 
@@ -241,6 +248,8 @@ namespace CountersPlus.UI
                             ).First().Value(sub, settings);
                     }
                 }
+                Instance.SelectedSettingsInfo = info;
+                Instance.SelectedConfigModel = settings;
                 settingsTitle = BeatSaberUI.CreateText(rect, $"{settings.DisplayName} Settings", Vector2.zero);
                 settingsTitle.fontSize = 6;
                 settingsTitle.alignment = TextAlignmentOptions.Center;
@@ -313,7 +322,7 @@ namespace CountersPlus.UI
             MockCounter.Update(settings);
         }
 
-        private static void ClearScreen()
+        internal static void ClearScreen()
         {
             foreach (GameObject element in loadedElements) Destroy(element);
             loadedElements.Clear();
@@ -330,12 +339,15 @@ namespace CountersPlus.UI
 
         private static void InitSettings()
         {
-            foreach (ListViewController list in loadedSettings)
+            try
             {
-                list.Init();
-                list.InvokePrivateMethod("OnDisable", new object[] { });
-                list.InvokePrivateMethod("OnEnable", new object[] { });
+                foreach (ListViewController list in loadedSettings)
+                {
+                    list.InvokePrivateMethod("OnDisable", new object[] { });
+                    list.InvokePrivateMethod("OnEnable", new object[] { });
+                }
             }
+            catch { } //No, well fine, fuck you too, mr. list was modified - enumeration cannot continue.
         }
     }
 }

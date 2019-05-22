@@ -110,23 +110,23 @@ namespace CountersPlus.UI
             TextMeshProUGUI songName = cell.GetPrivateField<TextMeshProUGUI>("_songNameText");
             TextMeshProUGUI author = cell.GetPrivateField<TextMeshProUGUI>("_authorText");
             author.overflowMode = TextOverflowModes.Overflow;
-            UnityEngine.UI.Image image = cell.GetPrivateField<UnityEngine.UI.Image>("_coverImage");
+            UnityEngine.UI.RawImage image = cell.GetPrivateField<RawImage>("_coverRawImage");
             if (row == 0)
             {
                 songName.text = "Main Settings";
                 author.text = "Configure basic Counters+ settings.";
-                image.sprite = Images.Images.Load("MainSettings");
+                image.texture = Images.Images.Load("MainSettings");
             }
             else if (row == NumberOfCells() - 2)
             {
                 songName.text = "Credits";
                 author.text = "View credits for Counters+.";
-                image.sprite = Images.Images.Load("Credits");
+                image.texture = Images.Images.Load("Credits");
             }
             else if (row == NumberOfCells() - 1) {
                 songName.text = "Contributors";
                 author.text = "See who helped with Counters+!";
-                image.sprite = Images.Images.Load("Contributors");
+                image.texture = Images.Images.Load("Contributors");
             }
             else
             {
@@ -135,10 +135,10 @@ namespace CountersPlus.UI
                 author.text = info.Description;
                 try
                 {
-                    if (info.IsCustom) image.sprite = Images.Images.Load("Custom");
-                    else image.sprite = Images.Images.Load(info.Name);
+                    if (info.IsCustom) image.texture = Images.Images.Load("Custom");
+                    else image.texture = Images.Images.Load(info.Name);
                 }
-                catch { image.sprite = Images.Images.Load("WotAreYeDoin"); }
+                catch { image.texture = Images.Images.Load("WotAreYeDoin"); }
             }
             cell.reuseIdentifier = "CountersPlusSettingCell";
             return cell;

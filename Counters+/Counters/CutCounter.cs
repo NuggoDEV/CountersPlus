@@ -67,7 +67,7 @@ namespace CountersPlus.Counters
 
         private void afterCutSwingRatingCounter_didFinishEvent(SaberAfterCutSwingRatingCounter v)
         {
-            ScoreController.ScoreWithoutMultiplier(currentCutInfo, currentCutInfo.afterCutSwingRatingCounter, out int beforeCut, out int afterCut, out int why);
+            ScoreController.RawScoreWithoutMultiplier(currentCutInfo, currentCutInfo.afterCutSwingRatingCounter, out int beforeCut, out int afterCut, out int why);
             totalCuts.Add(beforeCut + afterCut);
             cutCounter.text = $"{Math.Round(totalCuts.Average())}";
         }

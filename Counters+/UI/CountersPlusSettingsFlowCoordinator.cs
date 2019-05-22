@@ -97,6 +97,7 @@ namespace CountersPlus.UI
                 Destroy(kvp.Key.CounterName);
                 Destroy(kvp.Key.CounterData);
             }
+            CountersPlusEditViewController.ClearScreen();
             MockCounter.loadedMockCounters.Clear();
             Destroy(TextHelper.CounterCanvas.gameObject);
             TextHelper.CounterCanvas = null;

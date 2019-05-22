@@ -4,7 +4,6 @@ using UnityEngine;
 using TMPro;
 using CountersPlus.Counters;
 using CountersPlus.Config;
-using System.Text;
 
 namespace CountersPlus.Harmony
 {
