@@ -17,7 +17,8 @@ namespace CountersPlus.Counters
 
         private CutConfigModel settings;
 
-        private List<int> totalCuts = new List<int>();
+        private int totalCutCount = 0;
+        private int totalScore = 0; // MaxScoreForNumberOfNotes() is an int. Don't expect scores over 2 billion.
         private NoteCutInfo currentCutInfo = null;
 
         GameObject _RankObject;
@@ -68,8 +69,9 @@ namespace CountersPlus.Counters
         private void afterCutSwingRatingCounter_didFinishEvent(SaberAfterCutSwingRatingCounter v)
         {
             ScoreController.RawScoreWithoutMultiplier(currentCutInfo, currentCutInfo.afterCutSwingRatingCounter, out int beforeCut, out int afterCut, out int why);
-            totalCuts.Add(beforeCut + afterCut);
-            cutCounter.text = $"{Math.Round(totalCuts.Average())}";
+            totalScore += beforeCut + afterCut;
+            ++totalCutCount; // Should always be non-zero.
+            cutCounter.text = $"{Math.Round( ((double)totalScore) / totalCutCount )}";
         }
     }
 }
