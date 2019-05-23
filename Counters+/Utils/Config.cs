@@ -67,6 +67,8 @@ namespace CountersPlus.Config
                             else if (finfo.FieldType == typeof(ICounterPositions))
                                 input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterPositions), finfo.GetValue(defaults).ToString()));
                             else input.SetPrivateField(info.Name, Convert.ChangeType(finfo.GetValue(defaults), finfo.FieldType));
+                            if (type.Name.Contains("Main")) (defaults as MainConfigModel).Save();
+                            else if (!type.Name.Contains("Custom")) (defaults as IConfigModel).Save();
                         }
                         else Plugin.Log($"Attempting to load an unrecognised type ({type.Name}) from Config. WTF!?!?", Plugin.LogInfo.Error, "Open an Issue on the Counters+ GitHub.");
                     }
