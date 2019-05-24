@@ -61,7 +61,8 @@ namespace CountersPlus.UI
             }
             else
             {
-                UpdateSettings(SelectedConfigModel, SelectedSettingsInfo);
+                if (SelectedConfigModel != null) UpdateSettings(SelectedConfigModel, SelectedSettingsInfo);
+                else CreateCredits();
             }
         }
 
@@ -73,7 +74,7 @@ namespace CountersPlus.UI
 
             //name = BeatSaberUI.CreateText(rect, "Temporary Name LMAO", Vector2.zero);
             name = BeatSaberUI.CreateText(rect, "Counters+", Vector2.zero);
-            name.fontSize = 9;
+            name.fontSize = 11;
             name.alignment = TextAlignmentOptions.Center;
             name.characterSpacing = 2;
             setPositioning(name.rectTransform, 0, 0.7f, 1, 0.166f, 0.5f);
@@ -99,22 +100,20 @@ namespace CountersPlus.UI
             creator.alignment = TextAlignmentOptions.Center;
             setPositioning(creator.rectTransform, 0, 0.35f, 1, 0.166f, 0.5f);
 
-            github = BeatSaberUI.CreateUIButton(rect, "QuitButton", Vector2.zero, null, "GitHub");
+            github = BeatSaberUI.CreateUIButton(rect, "SettingsButton", Vector2.left, null, "GitHub");
             github.onClick.AddListener(() => { GoTo("https://github.com/Caeden117/CountersPlus", github); });
-            setPositioning(github.transform as RectTransform, 0.1f, 0.1f, 0.25f, 0.166f, 0.5f);
+            setPositioning(github.transform as RectTransform, 0f, 0f, 0.39f, 0.125f, 0.5f);
             BeatSaberUI.AddHintText(github.transform as RectTransform, "Opens in a new browser tab on your desktop. Feel free to explore the source code! Maybe try out experimental versions?");
 
-            issues = BeatSaberUI.CreateUIButton(rect, "QuitButton", Vector2.zero, null, "Report an Issue");
+            issues = BeatSaberUI.CreateUIButton(rect, "QuitButton", Vector2.right, null, "Report an Issue");
             issues.onClick.AddListener(() => { GoTo("https://github.com/Caeden117/CountersPlus/issues", issues); });
-            setPositioning(issues.transform as RectTransform, 0.55f, 0.1f, 0.35f, 0.166f, 0.5f);
+            setPositioning(issues.transform as RectTransform, 0.5f, 0f, 0.5f, 0.125f, 0.5f);
             BeatSaberUI.AddHintText(issues.transform as RectTransform, "Opens in a new browser tab on your desktop. Be sure to read the Issue template thoroughly!");
 
-            donate = BeatSaberUI.CreateUIButton(rect, "PlayButton", Vector2.zero, null, "<3");
-            ColorUtility.TryParseHtmlString("#FF0048", out Color color);
-            donate.gameObject.GetComponentInChildren<Image>().color = color;
+            donate = BeatSaberUI.CreateUIButton(rect, "CreditsButton", Vector2.zero, null, "<3");
             donate.onClick.AddListener(() => { GoTo("https://ko-fi.com/Caeden117", donate); });
             BeatSaberUI.AddHintText(donate.transform as RectTransform, "Buy me a coffee if you feel like I'm deserving of one.");
-            setPositioning(donate.transform as RectTransform, 0.375f, 0.075f, 0.15f, 0.166f, 0.5f);
+            setPositioning(donate.transform as RectTransform, 0.36f, 0f, 0.17f, 0.125f, 0.5f);
 
             loadedElements.AddRange(new GameObject[] { name.gameObject, version.gameObject, creator.gameObject, github.gameObject, issues.gameObject, donate.gameObject });
         }
