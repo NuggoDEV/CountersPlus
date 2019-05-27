@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CountersPlus.Config;
 using IPA.Loader;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Threading;
-using System.IO;
 using IniParser.Model;
 using IniParser;
 using IPA;

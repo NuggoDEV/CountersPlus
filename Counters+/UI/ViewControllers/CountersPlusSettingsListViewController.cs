@@ -26,7 +26,6 @@ namespace CountersPlus.UI
         private LevelListTableCell cellInstance;
         internal static CountersPlusSettingsListViewController Instance;
         public List<SettingsInfo> counterInfos = new List<SettingsInfo>();
-        private bool SettingsListInit = false;
 
         protected override void DidActivate(bool firstActivation, ActivationType type)
         {
@@ -146,11 +145,6 @@ namespace CountersPlus.UI
 
         private void onCellSelect(TableView view, int row)
         {
-            if (!SettingsListInit)
-            {
-                //SettingsUI.Instance.InitSettings();
-                SettingsListInit = true;
-            }
             SettingsInfo info = null;
             if (row > 0 && row < NumberOfCells() - 2) info = counterInfos[row - 1];
             if (row == 0) CountersPlusEditViewController.ShowMainSettings();

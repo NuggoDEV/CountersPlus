@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine.UI;
 using VRUI;
 using CountersPlus.Config;
@@ -11,7 +9,6 @@ using UnityEngine;
 using TMPro;
 using CustomUI.Settings;
 using CountersPlus.Custom;
-using System.Threading;
 using BS_Utils.Gameplay;
 using System.Collections;
 using IPA.Loader;

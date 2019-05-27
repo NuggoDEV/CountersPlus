@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CustomUI.BeatSaber;
+﻿using System.Linq;
 using CustomUI.MenuButton;
 using CustomUI.Utilities;
 using UnityEngine;
-using UnityEngine.UI;
-using VRUI;
 
 namespace CountersPlus.UI
 {

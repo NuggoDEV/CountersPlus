@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CustomUI.Utilities;
+﻿using CustomUI.Utilities;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CountersPlus.UI.Images
 {

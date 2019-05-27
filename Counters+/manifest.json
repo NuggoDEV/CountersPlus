@@ -2,7 +2,7 @@
   "$schema": "https://github.com/nike4613/BSIPA-MetadataFileSchema/master/Schema.json",
   "author": "Caeden117",
   "description": "A collection of counters, both widely used and quite unusual, all configurable under one mod! Please report all bugs and issues to the Counters+ GitHub. ",
-  "gameVersion": "1.0.0",
+  "gameVersion": "1.0.1",
   "icon": "CountersPlus.UI.Images.Logo.png",
   "id": "Counters+",
   "name": "Counters+",
