@@ -91,7 +91,7 @@ namespace CountersPlus.UI
 
         private void backButton_DidFinish()
         {
-            foreach (KeyValuePair<MockCounterGroup, IConfigModel> kvp in MockCounter.loadedMockCounters)
+            foreach (KeyValuePair<MockCounterGroup, ConfigModel> kvp in MockCounter.loadedMockCounters)
             {
                 Destroy(kvp.Key.CounterName);
                 Destroy(kvp.Key.CounterData);

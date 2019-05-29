@@ -36,7 +36,7 @@ namespace CountersPlus.UI
             {ICounterPositions.AboveHighway, "Over Highway" }
         };
 
-        private IConfigModel SelectedConfigModel = null;
+        private ConfigModel SelectedConfigModel = null;
         private SettingsInfo SelectedSettingsInfo = null;
 
         static Action<RectTransform, float, float, float, float, float> setPositioning = delegate (RectTransform r, float x, float y, float w, float h, float pivotX)
@@ -187,32 +187,32 @@ namespace CountersPlus.UI
             loadedElements.Add(settingsTitle.gameObject);
 
             SubMenu sub = new SubMenu(rect);
-            var enabled = AddList(ref sub, null as IConfigModel, "Enabled", "Toggles Counters+ on or off.", 2);
+            var enabled = AddList(ref sub, null as ConfigModel, "Enabled", "Toggles Counters+ on or off.", 2);
             enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
             enabled.GetValue = () => CountersController.settings.Enabled ? 1f : 0f;
             enabled.SetValue = (v) => CountersController.settings.Enabled = v != 0f;
 
-            var toggleCounters = AddList(ref sub, null as IConfigModel, "Advanced Mock Counters", "Allows the mock counters to display more settings. To increase preformance, and reduce chances of bugs, disable this option.", 2);
+            var toggleCounters = AddList(ref sub, null as ConfigModel, "Advanced Mock Counters", "Allows the mock counters to display more settings. To increase preformance, and reduce chances of bugs, disable this option.", 2);
             toggleCounters.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
             toggleCounters.GetValue = () => CountersController.settings.AdvancedCounterInfo ? 1f : 0f;
             toggleCounters.SetValue = (v) => CountersController.settings.AdvancedCounterInfo = v != 0f;
 
-            var comboOffset = AddList(ref sub, null as IConfigModel, "Combo Offset", "How far from the Combo counters should be before Distance is taken into account.", 20);
+            var comboOffset = AddList(ref sub, null as ConfigModel, "Combo Offset", "How far from the Combo counters should be before Distance is taken into account.", 20);
             comboOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
             comboOffset.GetValue = () => (CountersController.settings.ComboOffset * 10) + 10;
             comboOffset.SetValue = (v) => CountersController.settings.ComboOffset = ((v - 10) / 10);
 
-            var multiOffset = AddList(ref sub, null as IConfigModel, "Multiplier Offset", "How far from the Multiplier counters should be before Distance is taken into account.", 20);
+            var multiOffset = AddList(ref sub, null as ConfigModel, "Multiplier Offset", "How far from the Multiplier counters should be before Distance is taken into account.", 20);
             multiOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
             multiOffset.GetValue = () => (CountersController.settings.MultiplierOffset * 10) + 10;
             multiOffset.SetValue = (v) => CountersController.settings.MultiplierOffset = ((v - 10) / 10);
 
-            var hideCombo = AddList(ref sub, null as IConfigModel, "Hide Combo In-Game", "The combo counter wasn't good enough anyways.", 2);
+            var hideCombo = AddList(ref sub, null as ConfigModel, "Hide Combo In-Game", "The combo counter wasn't good enough anyways.", 2);
             hideCombo.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
             hideCombo.GetValue = () => CountersController.settings.HideCombo ? 1f : 0f;
             hideCombo.SetValue = (v) => CountersController.settings.HideCombo = v != 0f;
 
-            var hideMultiplier = AddList(ref sub, null as IConfigModel, "Hide Multiplier In-Game", "The multiplier wasn't good enough anyways.", 2);
+            var hideMultiplier = AddList(ref sub, null as ConfigModel, "Hide Multiplier In-Game", "The multiplier wasn't good enough anyways.", 2);
             hideMultiplier.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
             hideMultiplier.GetValue = () => CountersController.settings.HideMultiplier ? 1f : 0f;
             hideMultiplier.SetValue = (v) => CountersController.settings.HideMultiplier = v != 0f;
@@ -227,7 +227,7 @@ namespace CountersPlus.UI
             InitSettings();
         }
 
-        public static void UpdateSettings<T>(T settings, SettingsInfo info) where T : IConfigModel
+        public static void UpdateSettings<T>(T settings, SettingsInfo info) where T : ConfigModel
         {
             try
             {
@@ -240,7 +240,7 @@ namespace CountersPlus.UI
                     {
                         SubMenu sub = CreateBase(settings);
                         AdvancedCounterSettings.counterUIItems.Where(
-                            (KeyValuePair<IConfigModel, Action<SubMenu, IConfigModel>> x) => (x.Key.DisplayName == settings.DisplayName)
+                            (KeyValuePair<ConfigModel, Action<SubMenu, ConfigModel>> x) => (x.Key.DisplayName == settings.DisplayName)
                             ).First().Value(sub, settings);
                     }
                 }
@@ -256,7 +256,7 @@ namespace CountersPlus.UI
             catch(Exception e) { Plugin.Log(e.ToString(), Plugin.LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue. This shouldn't happen!"); }
         }
 
-        private static SubMenu CreateBase<T>(T settings, params ICounterPositions[] restricted) where T : IConfigModel
+        private static SubMenu CreateBase<T>(T settings, params ICounterPositions[] restricted) where T : ConfigModel
         {
             SubMenu sub = new SubMenu(rect);
             List<Tuple<ICounterPositions, string>> restrictedList = new List<Tuple<ICounterPositions, string>>();
@@ -299,7 +299,7 @@ namespace CountersPlus.UI
             return sub;
         }
 
-        internal static ListViewController AddList<T>(ref SubMenu sub, T settings, string Label, string HintText, int sizeCount) where T : IConfigModel
+        internal static ListViewController AddList<T>(ref SubMenu sub, T settings, string Label, string HintText, int sizeCount) where T : ConfigModel
         {
             List<float> values = new List<float>() { };
             for (var i = 0; i < sizeCount; i++) values.Add(i);
@@ -311,7 +311,7 @@ namespace CountersPlus.UI
             return list;
         }
 
-        private static IEnumerator DelayedMockCounterUpdate<T>(T settings) where T : IConfigModel
+        private static IEnumerator DelayedMockCounterUpdate<T>(T settings) where T : ConfigModel
         {
             yield return new WaitForEndOfFrame();
             settings.Save();

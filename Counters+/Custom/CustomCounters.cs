@@ -117,7 +117,7 @@ namespace CountersPlus.Custom
         public string Counter { get; set; }
     }
 
-    public class CustomConfigModel : IConfigModel
+    public class CustomConfigModel : ConfigModel
     {
         public CustomConfigModel(string name)
         {

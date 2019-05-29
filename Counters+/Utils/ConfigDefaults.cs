@@ -4,7 +4,7 @@ namespace CountersPlus.Config
 {
     internal class ConfigDefaults
     {
-        internal static Dictionary<string, IConfigModel> Defaults = new Dictionary<string, IConfigModel>()
+        internal static Dictionary<string, ConfigModel> Defaults = new Dictionary<string, ConfigModel>()
         {
             { "Missed", new MissedConfigModel(){ Enabled = true, Position = ICounterPositions.BelowCombo, Index = 0, CustomMissTextIntegration = false } },
             { "Notes", new NoteConfigModel() { Enabled = false, Position = ICounterPositions.BelowCombo, Index = 1, DecimalPrecision = 2, ShowPercentage = false} },

@@ -68,7 +68,7 @@ namespace CountersPlus.UI
             }
         }
 
-        private SettingsInfo CreateFromModel<T>(T settings) where T : IConfigModel
+        private SettingsInfo CreateFromModel<T>(T settings) where T : ConfigModel
         {
             SettingsInfo info = new SettingsInfo()
             {
@@ -79,7 +79,7 @@ namespace CountersPlus.UI
             return info;
         }
 
-        private string DescriptionForModel<T>(T settings) where T : IConfigModel
+        private string DescriptionForModel<T>(T settings) where T : ConfigModel
         {
             switch (settings.DisplayName)
             {   //Dont mind me just compressing some code.
@@ -157,7 +157,7 @@ namespace CountersPlus.UI
     class SettingsInfo{
         public string Name;
         public string Description;
-        public IConfigModel Model;
+        public ConfigModel Model;
         public bool IsCustom = false;
     }
 }

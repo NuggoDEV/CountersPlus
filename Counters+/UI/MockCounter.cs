@@ -18,12 +18,12 @@ namespace CountersPlus.UI
     public class MockCounter
     {
 
-        public static Dictionary<MockCounterGroup, IConfigModel> loadedMockCounters = new Dictionary<MockCounterGroup, IConfigModel>();
+        public static Dictionary<MockCounterGroup, ConfigModel> loadedMockCounters = new Dictionary<MockCounterGroup, ConfigModel>();
         private static MockCounterInfo info = new MockCounterInfo();
         public static string highlightedObject { get; private set; } = null;
 
         #region MockCounter Creation
-        public static void Create<T>(T settings, string counterName, string counterData, bool UseCounterPositioning = true) where T : IConfigModel
+        public static void Create<T>(T settings, string counterName, string counterData, bool UseCounterPositioning = true) where T : ConfigModel
         {
             if (!settings.Enabled) return;
             GameObject counter = new GameObject($"Counters+ | Mock {counterName} Counter");
@@ -45,9 +45,9 @@ namespace CountersPlus.UI
             data.color = Color.white;
             data.alignment = TextAlignmentOptions.Center;
             
-            if (loadedMockCounters.Where((KeyValuePair <MockCounterGroup, IConfigModel> x) => x.Value == settings).Any())
+            if (loadedMockCounters.Where((KeyValuePair <MockCounterGroup, ConfigModel> x) => x.Value == settings).Any())
             {
-                MockCounterGroup group = loadedMockCounters.First((KeyValuePair<MockCounterGroup, IConfigModel> x) => x.Value == settings).Key;
+                MockCounterGroup group = loadedMockCounters.First((KeyValuePair<MockCounterGroup, ConfigModel> x) => x.Value == settings).Key;
                 UnityEngine.Object.Destroy(group.CounterName);
                 UnityEngine.Object.Destroy(group.CounterData);
                 loadedMockCounters.Remove(group);
@@ -88,20 +88,20 @@ namespace CountersPlus.UI
 
             name.color = new Color(0.35f, 0.35f, 0.35f);
             data.color = new Color(0.35f, 0.35f, 0.35f);
-            loadedMockCounters.Add(new MockCounterGroup(name, data), null as IConfigModel);
+            loadedMockCounters.Add(new MockCounterGroup(name, data), null as ConfigModel);
         }
         #endregion
 
         #region MockCounter Editing
-        public static void Update<T>(T settings) where T : IConfigModel
+        public static void Update<T>(T settings) where T : ConfigModel
         {
             if (settings is null) return;
 
             if (!settings.Enabled)
             {
-                if (loadedMockCounters.Where((KeyValuePair<MockCounterGroup, IConfigModel> x) => x.Value == settings).Any())
+                if (loadedMockCounters.Where((KeyValuePair<MockCounterGroup, ConfigModel> x) => x.Value == settings).Any())
                 {
-                    MockCounterGroup group = loadedMockCounters.First((KeyValuePair<MockCounterGroup, IConfigModel> x) => x.Value == settings).Key;
+                    MockCounterGroup group = loadedMockCounters.First((KeyValuePair<MockCounterGroup, ConfigModel> x) => x.Value == settings).Key;
                     UnityEngine.Object.Destroy(group.CounterName);
                     UnityEngine.Object.Destroy(group.CounterData);
                     loadedMockCounters.Remove(group);
@@ -160,9 +160,9 @@ namespace CountersPlus.UI
             if (settings is CustomConfigModel) Create(settings, "", settings.DisplayName);
         }
 
-        public static void Highlight<T>(T settings) where T : IConfigModel
+        public static void Highlight<T>(T settings) where T : ConfigModel
         {
-            foreach (KeyValuePair<MockCounterGroup, IConfigModel> kvp in loadedMockCounters)
+            foreach (KeyValuePair<MockCounterGroup, ConfigModel> kvp in loadedMockCounters)
             {
                 if (kvp.Value is null) continue;
                 if (settings.DisplayName == kvp.Value.DisplayName) highlightedObject = settings.DisplayName;

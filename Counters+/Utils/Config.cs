@@ -22,6 +22,8 @@ namespace CountersPlus.Config
                 model.cutConfig = DeserializeFromConfig(model.cutConfig, model.cutConfig.DisplayName) as CutConfigModel;
                 model.spinometerConfig = DeserializeFromConfig(model.spinometerConfig, model.spinometerConfig.DisplayName) as SpinometerConfigModel;
                 model.pbConfig = DeserializeFromConfig(model.pbConfig, model.pbConfig.DisplayName) as PBConfigModel;
+                model.notesLeftConfig = DeserializeFromConfig(model.notesLeftConfig, model.notesLeftConfig.DisplayName) as NotesLeftConfigModel;
+                model.failsConfig = DeserializeFromConfig(model.failsConfig, model.failsConfig.DisplayName) as FailConfigModel;
             }
             catch (Exception e)
             {
@@ -65,7 +67,7 @@ namespace CountersPlus.Config
                                 input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterPositions), finfo.GetValue(defaults).ToString()));
                             else input.SetPrivateField(info.Name, Convert.ChangeType(finfo.GetValue(defaults), finfo.FieldType));
                             if (type.Name.Contains("Main")) (defaults as MainConfigModel).Save();
-                            else if (!type.Name.Contains("Custom")) (defaults as IConfigModel).Save();
+                            else if (!type.Name.Contains("Custom")) (defaults as ConfigModel).Save();
                         }
                         else Plugin.Log($"Attempting to load an unrecognised type ({type.Name}) from Config. WTF!?!?", Plugin.LogInfo.Error, "Open an Issue on the Counters+ GitHub.");
                     }
@@ -92,6 +94,8 @@ namespace CountersPlus.Config
         public SpeedConfigModel speedConfig = new SpeedConfigModel();
         public CutConfigModel cutConfig = new CutConfigModel();
         public SpinometerConfigModel spinometerConfig = new SpinometerConfigModel();
+        public NotesLeftConfigModel notesLeftConfig = new NotesLeftConfigModel();
+        public FailConfigModel failsConfig = new FailConfigModel();
 
         public void Save()
         {
@@ -109,7 +113,7 @@ namespace CountersPlus.Config
         }
     }
 
-    public abstract class IConfigModel {
+    public abstract class ConfigModel {
         public string DisplayName { get; internal set; }
         public bool Enabled;
         public ICounterPositions Position;
@@ -131,25 +135,25 @@ namespace CountersPlus.Config
         }
     }
 
-    public sealed class MissedConfigModel : IConfigModel {
+    public sealed class MissedConfigModel : ConfigModel {
         public MissedConfigModel() { DisplayName = "Missed"; }
         public bool CustomMissTextIntegration;
     }
 
-    public sealed class NoteConfigModel : IConfigModel {
+    public sealed class NoteConfigModel : ConfigModel {
         public NoteConfigModel() { DisplayName = "Notes"; }
         public bool ShowPercentage;
         public int DecimalPrecision;
     }
 
-    public sealed class ProgressConfigModel : IConfigModel {
+    public sealed class ProgressConfigModel : ConfigModel {
         public ProgressConfigModel() { DisplayName = "Progress"; }
         public ICounterMode Mode;
         public bool ProgressTimeLeft;
         public bool IncludeRing;
     }
 
-    public sealed class ScoreConfigModel : IConfigModel
+    public sealed class ScoreConfigModel : ConfigModel
     {
         public ScoreConfigModel() { DisplayName = "Score"; }
         public ICounterMode Mode;
@@ -157,28 +161,38 @@ namespace CountersPlus.Config
         public bool DisplayRank;
     }
 
-    public sealed class PBConfigModel : IConfigModel{
+    public sealed class PBConfigModel : ConfigModel{
         public PBConfigModel() { DisplayName = "Personal Best"; }
         public int DecimalPrecision;
         public int TextSize;
         public bool UnderScore;
     }
 
-    public sealed class SpeedConfigModel : IConfigModel
+    public sealed class SpeedConfigModel : ConfigModel
     {
         public SpeedConfigModel() { DisplayName = "Speed"; }
         public int DecimalPrecision;
         public ICounterMode Mode;
     }
 
-    public sealed class SpinometerConfigModel : IConfigModel
+    public sealed class SpinometerConfigModel : ConfigModel
     {
         public SpinometerConfigModel() { DisplayName = "Spinometer"; }
         public ICounterMode Mode;
     }
 
-    public sealed class CutConfigModel : IConfigModel {
+    public sealed class CutConfigModel : ConfigModel {
         public CutConfigModel() { DisplayName = "Cut"; }
+    }
+
+    public sealed class NotesLeftConfigModel : ConfigModel
+    {
+        public NotesLeftConfigModel() { DisplayName = "Notes Left"; }
+    }
+
+    public sealed class FailConfigModel : ConfigModel
+    {
+        public FailConfigModel() { DisplayName = "Fails"; }
     }
     
     public enum ICounterPositions { BelowCombo, AboveCombo, BelowMultiplier, AboveMultiplier, BelowEnergy, AboveHighway }

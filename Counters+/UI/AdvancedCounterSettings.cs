@@ -46,7 +46,7 @@ namespace CountersPlus.UI
         private static HoverHint scoreHover;
         private static HoverHint spinometerHover;
 
-        internal static Dictionary<IConfigModel, Action<SubMenu, IConfigModel>> counterUIItems = new Dictionary<IConfigModel, Action<SubMenu, IConfigModel>>()
+        internal static Dictionary<ConfigModel, Action<SubMenu, ConfigModel>> counterUIItems = new Dictionary<ConfigModel, Action<SubMenu, ConfigModel>>()
         {
             { CC.settings.missedConfig, (sub, config) => {
                 #pragma warning disable CS0618 //Fuck off DaNike

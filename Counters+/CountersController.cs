@@ -45,7 +45,7 @@ namespace CountersPlus
             loadedCounters.Clear();
         }
 
-        static void LoadCounter<T, R>(string name, T settings) where T : IConfigModel
+        static void LoadCounter<T, R>(string name, T settings) where T : ConfigModel
         {
             if (!settings.Enabled || GameObject.Find("Counters+ | " + name + " Counter")) return;
             GameObject counter = new GameObject("Counters+ | " + name + " Counter");
