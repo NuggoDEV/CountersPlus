@@ -77,6 +77,7 @@ namespace CountersPlus
             LoadCounter<SpeedConfigModel, SpeedCounter>("Speed", settings.speedConfig);
             LoadCounter<CutConfigModel, CutCounter>("Cut", settings.cutConfig);
             LoadCounter<SpinometerConfigModel, Spinometer>("Spinometer", settings.spinometerConfig);
+            LoadCounter<NotesLeftConfigModel, NotesLeftCounter>("Notes Left", settings.notesLeftConfig);
             if (settings.HideCombo)
             {
                 try

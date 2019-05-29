@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using CustomUI.BeatSaber;
-using VRUI;
 using HMUI;
 using CountersPlus.Config;
 using IniParser.Model;
 using IniParser;
 using CountersPlus.Custom;
-using System.Collections;
-using CountersPlus.UI.Images;
 using TMPro;
-using CustomUI.Settings;
 using IPA.Loader;
 using IPA.Old;
 
@@ -92,6 +86,8 @@ namespace CountersPlus.UI
                 case "Speed": return "<i>\"Speed, motherfucker, do you speak it?\"</i>";
                 case "Cut": return "How well you hit those bloqs.";
                 case "Spinometer": return "Can you break 3600 degrees per second?";
+                case "Notes Left": return "Oh hi! So, how are you holding up?";
+                case "Fails": return "You cannot hide from how trash you are...";
             }
         }
 
@@ -109,7 +105,7 @@ namespace CountersPlus.UI
             TextMeshProUGUI songName = cell.GetPrivateField<TextMeshProUGUI>("_songNameText");
             TextMeshProUGUI author = cell.GetPrivateField<TextMeshProUGUI>("_authorText");
             author.overflowMode = TextOverflowModes.Overflow;
-            UnityEngine.UI.RawImage image = cell.GetPrivateField<RawImage>("_coverRawImage");
+            RawImage image = cell.GetPrivateField<RawImage>("_coverRawImage");
             if (row == 0)
             {
                 songName.text = "Main Settings";
@@ -137,7 +133,7 @@ namespace CountersPlus.UI
                     if (info.IsCustom) image.texture = Images.Images.Load("Custom");
                     else image.texture = Images.Images.Load(info.Name);
                 }
-                catch { image.texture = Images.Images.Load("WotAreYeDoin"); }
+                catch { image.texture = Images.Images.Load("Bug"); }
             }
             cell.reuseIdentifier = "CountersPlusSettingCell";
             return cell;

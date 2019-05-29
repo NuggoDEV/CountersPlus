@@ -178,6 +178,8 @@ namespace CountersPlus.UI
                     spinometerHover.text = DetermineModeText(CC.settings.spinometerConfig.Mode, true);
                 };
             } },
+            { CC.settings.notesLeftConfig, (sub, config) => { } },
+            { CC.settings.failsConfig, (sub, config) => { } },
         };
 
         private static string DetermineModeText(ICounterMode Mode, bool alternateText = false)
