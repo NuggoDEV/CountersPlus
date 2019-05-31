@@ -85,6 +85,7 @@
     <Compile Include="Counters\AccuracyCounter.cs" />
     <Compile Include="Counters\CustomCounter.cs" />
     <Compile Include="Counters\CutCounter.cs" />
+    <Compile Include="Counters\FailCounter.cs" />
     <Compile Include="Counters\NotesLeftCounter.cs" />
     <Compile Include="Counters\Spinometer.cs" />
     <Compile Include="Custom\CustomCounters.cs" />

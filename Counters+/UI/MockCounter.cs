@@ -145,6 +145,9 @@ namespace CountersPlus.UI
                                 $"{((settings as SpinometerConfigModel).Mode == ICounterMode.SplitAverage ? $"{info.leftSpinAverage} | {info.rightSpinAverage}" : $"{(info.leftSpinAverage + info.rightSpinAverage) / 2}")}");
                 else if (settings is PBConfigModel)
                     Create(settings, "", $"PB: {Math.Round((info.score / (info.score + UnityEngine.Random.Range(0.05f, 0.25f))) * 100, 2)}%");
+                else if (settings is NotesLeftConfigModel)
+                    Create(settings, $"Notes Remaining: {UnityEngine.Random.Range((int)15, 50)}", "");
+                else if (settings is FailConfigModel) Create(settings, $"Fails", $"{info.GetRandomInsult()}");
             }
             else //Reduces calls to config. However with the new system I'm not sure if it matters all that much anymore.
             {
@@ -156,6 +159,8 @@ namespace CountersPlus.UI
                 else if (settings is ProgressConfigModel) Create(settings, "Progress", "0%");
                 else if (settings is SpinometerConfigModel) Create(settings, "Spinometer", "0");
                 else if (settings is PBConfigModel) Create(settings, "", "PB: 0%");
+                else if (settings is NotesLeftConfigModel) Create(settings, "", "Notes Left");
+                else if (settings is FailConfigModel) Create(settings, "Fails", "A lot");
             }
             if (settings is CustomConfigModel) Create(settings, "", settings.DisplayName);
         }
@@ -189,6 +194,8 @@ namespace CountersPlus.UI
         public float leftSpinAverage;
         public float rightSpinAverage;
 
+        private string[] failInsults = new string[] { "A lot", "Embarrasing large", "Still a lot", "MonkaS", "One, two, skip a few...", "99999", "Yikes!" };
+
         public MockCounterInfo()
         {
             notesCut = UnityEngine.Random.Range(100, 250);
@@ -209,6 +216,11 @@ namespace CountersPlus.UI
             if (prec > 0.9f) return "SS";
             if (prec > 0.8f) return "S";
             return "A";
+        }
+
+        public string GetRandomInsult()
+        {
+            return failInsults[UnityEngine.Random.Range((int)0, failInsults.Count())];
         }
     }
 

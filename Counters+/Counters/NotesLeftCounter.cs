@@ -22,11 +22,11 @@ namespace CountersPlus.Counters
             SC = data.ScoreController;
             SC.noteWasCutEvent += OnNoteCut;
             SC.noteWasMissedEvent += OnNoteMiss;
-            notesLeft = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData.difficultyBeatmap.beatmapData.notesCount;
-            Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            notesLeft = data.GCSSD.difficultyBeatmap.beatmapData.notesCount;
+            Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index) - new Vector3(0, 0.4f, 0);
             TextHelper.CreateText(out counter, position);
             counter.text = $"Notes Remaining {notesLeft}";
-            counter.fontSize = 2.5f;
+            counter.fontSize = 3f;
             counter.color = Color.white;
             counter.alignment = TextAlignmentOptions.Center;
         }
