@@ -80,14 +80,14 @@ namespace CountersPlus.UI
                     return scoreSettings[Mathf.RoundToInt(v)].Item2;
                 };
                 scoreMode.GetValue = () => {
-                    if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, DetermineModeText(CC.settings.scoreConfig.Mode, true));
+                    if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, DetermineModeText(CC.settings.scoreConfig.Mode, false));
                     if (CC.settings.scoreConfig.Mode == ICounterMode.Both) CC.settings.scoreConfig.Mode = ICounterMode.Original;
                     return scoreSettings.ToList().IndexOf(scoreSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CC.settings.scoreConfig.Mode)).First());
                 };
                 scoreMode.SetValue += (v) => {
-                    if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, DetermineModeText(CC.settings.scoreConfig.Mode, true));
+                    if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, DetermineModeText(CC.settings.scoreConfig.Mode, false));
                     CC.settings.scoreConfig.Mode = scoreSettings[Mathf.RoundToInt(v)].Item1;
-                    scoreHover.text = DetermineModeText(CC.settings.scoreConfig.Mode, true);
+                    scoreHover.text = DetermineModeText(CC.settings.scoreConfig.Mode, false);
                 };
 
                 var scorePrecision = CPEVC.AddList(ref sub, config, "Percentage Precision", "How precise should the precentage be?", 6);
@@ -220,7 +220,7 @@ namespace CountersPlus.UI
                     if (alternateText)
                         mode = "Original: Updates your average rotation speed every second.";
                     else
-                        mode = "Original: Uses the original display mode, with a white circle bordering a time.";
+                        mode = "Original: Uses the Counters+ counter.";
                     break;
                 case ICounterMode.Percent:
                     mode = "Percent: Displays a simple percent of the completed song.\n<color=#FF0000>Some settings will not apply in this mode.</color>";
