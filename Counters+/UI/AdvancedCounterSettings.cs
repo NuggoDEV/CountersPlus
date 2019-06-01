@@ -179,7 +179,12 @@ namespace CountersPlus.UI
                 };
             } },
             { CC.settings.notesLeftConfig, (sub, config) => { } },
-            { CC.settings.failsConfig, (sub, config) => { } },
+            { CC.settings.failsConfig, (sub, config) => {
+                var showRestarts = CPEVC.AddList(ref sub, CC.settings.failsConfig, "Track Restarts", "Instead of showing global fail count, show the amount of times you've restarted the same song.", 2);
+                showRestarts.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+                showRestarts.GetValue = () => CC.settings.failsConfig.ShowRestartsInstead ? 1f : 0f;
+                showRestarts.SetValue += (v) => CC.settings.failsConfig.ShowRestartsInstead = v != 0f;
+            } },
         };
 
         private static string DetermineModeText(ICounterMode Mode, bool alternateText = false)

@@ -192,7 +192,8 @@ namespace CountersPlus.Config
 
     public sealed class FailConfigModel : ConfigModel
     {
-        public FailConfigModel() { DisplayName = "Fails"; }
+        public FailConfigModel() { DisplayName = "Fail"; }
+        public bool ShowRestartsInstead;
     }
     
     public enum ICounterPositions { BelowCombo, AboveCombo, BelowMultiplier, AboveMultiplier, BelowEnergy, AboveHighway }

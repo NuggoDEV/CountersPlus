@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using CountersPlus.Config;
 using UnityEngine;
 using TMPro;
@@ -12,6 +8,9 @@ namespace CountersPlus.Counters
 {
     class FailCounter : MonoBehaviour
     {
+        private static int Restarts = 0;
+        private static IBeatmapLevel CurrentLevel = null;
+        private static IDifficultyBeatmap BeatmapDiff = null;
         private FailConfigModel settings;
         private TMP_Text failText;
         private GameEnergyCounter energy;
@@ -29,9 +28,30 @@ namespace CountersPlus.Counters
             //before invoking, it is safe to assume that the objects we find do indeed exist.
             energy = Resources.FindObjectsOfTypeAll<GameEnergyCounter>().First();
             fails = data.PlayerData.currentLocalPlayer.playerAllOverallStatsData.allOverallStatsData.failedLevelsCount;
+
+            if (settings.ShowRestartsInstead)
+            {
+                bool SameLevel = false;
+                if (CurrentLevel != null) {
+                    SameLevel = data.GCSSD.difficultyBeatmap.level.songName == CurrentLevel.songName && //I mean,
+                        data.GCSSD.difficultyBeatmap.level.songSubName == CurrentLevel.songSubName && //Probably not the best way to compare levels,
+                        data.GCSSD.difficultyBeatmap.level.songAuthorName == CurrentLevel.songAuthorName && //But that means I have more lines to spend
+                        data.GCSSD.difficultyBeatmap.beatmapData.notesCount == BeatmapDiff.beatmapData.notesCount && //Making snarky comments like these
+                        data.GCSSD.difficultyBeatmap.beatmapData.obstaclesCount == BeatmapDiff.beatmapData.obstaclesCount && //For you to find
+                        data.GCSSD.difficultyBeatmap.beatmapData.bombsCount == BeatmapDiff.beatmapData.bombsCount; //And to @ me on Discord.
+                }
+                if (SameLevel) Restarts++;
+                else
+                {
+                    CurrentLevel = data.GCSSD.difficultyBeatmap.level;
+                    BeatmapDiff = data.GCSSD.difficultyBeatmap;
+                    Restarts = 0;
+                }
+            }
+
             Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out failText, position - new Vector3(0, 0.4f, 0));
-            failText.text = fails.ToString();
+            failText.text = settings.ShowRestartsInstead ? Restarts.ToString() : fails.ToString();
             failText.fontSize = 4;
             failText.color = Color.white;
             failText.alignment = TextAlignmentOptions.Center;
@@ -39,12 +59,12 @@ namespace CountersPlus.Counters
             GameObject labelGO = new GameObject("Counters+ | Fail Label");
             labelGO.transform.parent = transform;
             TextHelper.CreateText(out TMP_Text label, position);
-            label.text = "Fails";
+            label.text = settings.ShowRestartsInstead ? "Restarts" : "Fails";
             label.fontSize = 3;
             label.color = Color.white;
             label.alignment = TextAlignmentOptions.Center;
 
-            energy.gameEnergyDidReach0Event += SlowlyAnnoyThePlayerBecauseTheyFailed;
+            if (!settings.ShowRestartsInstead) energy.gameEnergyDidReach0Event += SlowlyAnnoyThePlayerBecauseTheyFailed;
         }
 
         private void SlowlyAnnoyThePlayerBecauseTheyFailed()
@@ -67,7 +87,7 @@ namespace CountersPlus.Counters
 
         private void OnDestroy()
         {
-            energy.gameEnergyDidReach0Event -= SlowlyAnnoyThePlayerBecauseTheyFailed;
+            if (!settings.ShowRestartsInstead) energy.gameEnergyDidReach0Event -= SlowlyAnnoyThePlayerBecauseTheyFailed;
             CountersController.ReadyToInit -= Init;
         }
     }
