@@ -163,6 +163,10 @@
   <ItemGroup>
     <EmbeddedResource Include="UI\Images\Bug.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Images\Fail.png" />
+    <EmbeddedResource Include="UI\Images\Notes Left.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /Y "$(TargetPath)" "D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Plugins\CountersPlus.dll"</PostBuildEvent>
