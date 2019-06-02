@@ -14,7 +14,7 @@ namespace CountersPlus.Config
             { "Cut", new CutConfigModel() { Enabled = false, Position = ICounterPositions.AboveHighway, Index = 0 } },
             { "Spinometer", new SpinometerConfigModel() { Enabled = false, Position = ICounterPositions.AboveMultiplier, Index = 0, Mode = ICounterMode.Highest } },
             { "Personal Best", new PBConfigModel() { Enabled = true, Position = ICounterPositions.BelowMultiplier, Index = 1, DecimalPrecision = 2, TextSize = 2, UnderScore = true } },
-            { "Notes Left", new NotesLeftConfigModel() { Enabled = false, Position = ICounterPositions.AboveHighway, Index = -1 } },
+            { "Notes Left", new NotesLeftConfigModel() { Enabled = false, Position = ICounterPositions.AboveHighway, Index = -1, LabelAboveCount = false, } },
             { "Fails", new FailConfigModel() { Enabled = false, Position = ICounterPositions.AboveCombo, Index = 0, ShowRestartsInstead = false, } },
         };
 

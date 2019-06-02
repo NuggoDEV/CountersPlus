@@ -188,6 +188,7 @@ namespace CountersPlus.Config
     public sealed class NotesLeftConfigModel : ConfigModel
     {
         public NotesLeftConfigModel() { DisplayName = "Notes Left"; }
+        public bool LabelAboveCount;
     }
 
     public sealed class FailConfigModel : ConfigModel

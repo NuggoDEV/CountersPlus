@@ -178,7 +178,12 @@ namespace CountersPlus.UI
                     spinometerHover.text = DetermineModeText(CC.settings.spinometerConfig.Mode, true);
                 };
             } },
-            { CC.settings.notesLeftConfig, (sub, config) => { } },
+            { CC.settings.notesLeftConfig, (sub, config) => {
+                var label = CPEVC.AddList(ref sub, CC.settings.notesLeftConfig, "Label Above Count", "Put the label above the number, similar to a usual Counters+ counter.", 2);
+                label.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+                label.GetValue = () => CC.settings.notesLeftConfig.LabelAboveCount ? 1f : 0f;
+                label.SetValue += (v) => CC.settings.notesLeftConfig.LabelAboveCount = v != 0f;
+            } },
             { CC.settings.failsConfig, (sub, config) => {
                 var showRestarts = CPEVC.AddList(ref sub, CC.settings.failsConfig, "Track Restarts", "Instead of showing global fail count, show the amount of times you've restarted the same song.", 2);
                 showRestarts.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
