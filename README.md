@@ -26,7 +26,7 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
 
 |Mod|Description|
 |-|-|
-|***YURFit***, previously *BeFit*|Displays a calorie counter that increases while you play a song.|
+|***YURFit***|Displays a calorie counter while you play a song.|
 
 ## Configuration
 
@@ -73,52 +73,4 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
     - No score will appear.
 
 ## For Developers
-For plugin developers who plan on adding a counter of their own, Counters+ has a way to easily integrate your created counter into the Counters+ system.
-
-Adding a Custom Counter will not make your plugin dependent on Counters+ (Unless you *really* want it to be).
-
-Adding your own Counter is a simple as:
-
-```csharp
-using CountersPlus.Custom; //Add CountersPlus.dll as a Reference
-using IPA.Loader; //Add References from Beat Saber_Data/Managed
-
-public class Plugin : IBeatSaberPlugin {
-
-	public void Init(){
-		if(PluginManager.GetPlugin("Counters+")) { //Check if Counters+ exists BEFORE attempting to add the counter.
-			AddCustomCounter();
-		}
-	}
-	
-	void AddCustomCounter(){
-		CustomCounter counter = new CustomCounter {
-			SectionName = "testCounter", //Used as an identifier in the Counters+ config file. Don't plan on changing this.
-			Name = "Test", //Display name that will appear in the Counters+ settings list.
-			BSIPAMod = this, //BSIPA Plugin. Will show up in Credits in the Counters+ settings list.
-			Mod = this, //If you are using IPA, and not BSIPA, you can use this instead.
-			Counter = "testCounterGameObject", //Name of the GameObject that holds your Counter component. Used to hook into the Counters+ system.
-		};
-
-		CustomConfigModel defaults = new CustomConfigModel(counter.Name) { //Let's add some defaults to our custom counter.
-			Enabled = true, //Let's have the hook be enabled by default.
-			Position = CountersPlus.Config.ICounterPositions.AboveCombo, //Above the Combo counter should be fine.
-			Index = 1, //I feel like something could be directly above, so let's put it just a little bit higher.
-		}
-
-		CustomCounterCreator.Create(counter, defaults); //Adds the counter to the system with the defaults we made.
-	}
-
-}
-```
-
-A few things to keep in mind:
-1. Keep your counters under one parent GameObject (Have extra text objects as a child); you can only add one GameObject per custom counter!
-2. Make sure extra text objects are parented to the GameObject you input to the system, as Counters+ will access the children and move them.
-3. Add Counters before the Menu scene is loaded so it can create UI in settings without having to reload.
-4. Your `SectionName` is an identifier in the Counters+ config file. Make sure this identifier is unique, and will not be used by anyone else.
-5. Do not plan on changing `SectionName` after you release your first public build that uses Counters+ custom counters.
-
-And you're done! If it has not yet been created, Counters+ will append the custom counter to its `CountersPlus.ini` file, and will go off of that from now on. Your Counter can now be subject to the same base configuration settings as every counter!
-
-Custom Counters no longer have a `Delete` option. Instead, simply disabling the Custom Counter via the Counters+ menu will achieve the same effect. ~~to be honest though I should probably add that back~~
+If you wish to add your own custom counter to Counters+, or see how it can be used in your plugin, see the [Wiki page.](https://github.com/Caeden117/CountersPlus/wiki/For-Developers)

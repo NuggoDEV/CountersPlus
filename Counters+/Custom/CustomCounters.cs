@@ -38,6 +38,17 @@ namespace CountersPlus.Custom
         /// <summary>
         /// Adds an outside MonoBehaviour into the Counters+ system.
         /// <param name="model"/>The CustomCounter object.</param>
+        /// <param name="restrictedPositions">Restrict your Custom Counter to any of these positions. Inputting no parameters would allow the Counter to use all that are available.</param>
+        /// </summary>
+        public static void Create<T>(T model, CustomConfigModel defaults = null) where T : CustomCounter
+        {
+            Create(model, defaults, null);
+        }
+
+
+        /// <summary>
+        /// Adds an outside MonoBehaviour into the Counters+ system.
+        /// <param name="model"/>The CustomCounter object.</param>
         /// <param name="defaults">Default configuration options for your custom counter.</param>
         /// <param name="restrictedPositions">Restrict your Custom Counter to any of these positions. Inputting no parameters would allow the Counter to use all that are available.</param>
         /// </summary>
