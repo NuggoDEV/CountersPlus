@@ -33,45 +33,36 @@ namespace CountersPlus.Config
             return model;
         }
 
-        internal static object DeserializeFromConfig(object input, string DisplayName)
+        public static object DeserializeFromConfig(object input, string DisplayName)
         {
+            bool resetToDefaults = false;
             Type type = input.GetType();
             MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
             foreach (MemberInfo info in infos)
             {
-                if (info.MemberType == MemberTypes.Field)
+                if (info.MemberType != MemberTypes.Field || info.Name.ToLower().Contains("config")) continue;
+                FieldInfo finfo = (FieldInfo)info;
+                string value = Plugin.config.GetString(DisplayName, info.Name, null);
+                if (value == null)
                 {
-                    FieldInfo finfo = (FieldInfo)info;
-                    if (finfo.Name.ToLower().Contains("config")) continue;
-                    try
-                    {
-                        if (finfo.FieldType == typeof(ICounterMode))
-                            input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterMode), Plugin.config.GetString(DisplayName, info.Name, null)));
-                        else if (finfo.FieldType == typeof(ICounterPositions))
-                            input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterPositions), Plugin.config.GetString(DisplayName, info.Name, null)));
-                        else input.SetPrivateField(info.Name, Convert.ChangeType(Plugin.config.GetString(DisplayName, info.Name, null), finfo.FieldType));
-                        if (finfo.GetValue(input) == null) throw new Exception();
-                    }
-                    catch
-                    {
-                        Plugin.Log($"Failed to load variable {info.Name} in {type.Name}. Resetting to defaults...", Plugin.LogInfo.Info);
-                        if (type.Namespace.Contains("CountersPlus"))
-                        {
-                            object defaults = null;
-                            if (type.Name.Contains("Main")) defaults = ConfigDefaults.MainDefaults;
-                            else if (!type.Name.Contains("Custom")) defaults = ConfigDefaults.Defaults[DisplayName];
-                            if (defaults == null) continue;
-                            if (finfo.FieldType == typeof(ICounterMode))
-                                input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterMode), finfo.GetValue(defaults).ToString()));
-                            else if (finfo.FieldType == typeof(ICounterPositions))
-                                input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterPositions), finfo.GetValue(defaults).ToString()));
-                            else input.SetPrivateField(info.Name, Convert.ChangeType(finfo.GetValue(defaults), finfo.FieldType));
-                            if (type.Name.Contains("Main")) (defaults as MainConfigModel).Save();
-                            else if (!type.Name.Contains("Custom")) (defaults as ConfigModel).Save();
-                        }
-                        else Plugin.Log($"Attempting to load an unrecognised type ({type.Name}) from Config. WTF!?!?", Plugin.LogInfo.Error, "Open an Issue on the Counters+ GitHub.");
-                    }
+                    object defaults = null;
+                    if (type.Name.Contains("Main")) value = finfo.GetValue(ConfigDefaults.MainDefaults).ToString();
+                    else if (!type.Name.Contains("Custom")) defaults = finfo.GetValue(ConfigDefaults.Defaults[DisplayName]).ToString();
+                    if (value == null) continue;
+                    Plugin.Log($"Failed to load variable {info.Name} in {type.Name}. Resetting to defaults...", Plugin.LogInfo.Info);
+                    resetToDefaults = true;
                 }
+                if (finfo.FieldType == typeof(ICounterMode))
+                    input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterMode), value));
+                else if (finfo.FieldType == typeof(ICounterPositions))
+                    input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterPositions), value));
+                else input.SetPrivateField(info.Name, Convert.ChangeType(value, finfo.FieldType));
+                if (finfo.GetValue(input) == null) throw new Exception();
+            }
+            if (resetToDefaults)
+            {
+                if (type.Name.Contains("Main")) (input as MainConfigModel).Save();
+                else if (!type.Name.Contains("Custom")) (input as ConfigModel).Save();
             }
             return input;
         }
@@ -125,12 +116,9 @@ namespace CountersPlus.Config
             MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
             foreach (MemberInfo info in infos)
             {
-                if (info.MemberType == MemberTypes.Field)
-                {
-                    FieldInfo finfo = (FieldInfo)info;
-                    if (finfo.Name.ToLower() == "restrictedpositions") continue;
-                    Plugin.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
-                }
+                if (info.MemberType != MemberTypes.Field || info.Name.ToLower() == "restrictedpositions") continue;
+                FieldInfo finfo = (FieldInfo)info;
+                Plugin.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
             }
         }
     }

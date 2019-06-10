@@ -86,8 +86,8 @@ namespace CountersPlus.UI
                 case "Speed": return "<i>\"Speed, motherfucker, do you speak it?\"</i>";
                 case "Cut": return "How well you hit those bloqs.";
                 case "Spinometer": return "Can you break 3600 degrees per second?";
-                case "Notes Left": return "Oh hi! So, how are you holding up?";
-                case "Fail": return "You cannot hide from how trash you are...";
+                case "Notes Left": return "<i>\"Ah shit, here we go again...\"</i>";
+                case "Fail": return "You cannot hide from how trash you truly are...";
             }
         }
 
