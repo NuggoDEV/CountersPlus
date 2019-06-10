@@ -64,21 +64,6 @@ namespace CountersPlus
             CountersData data = new CountersData();
             ReadyToInit.Invoke(data);
             Plugin.Log("Obtained data!");
-        }
-
-        public static void LoadCounters()
-        {
-            Plugin.Log("Loading Counters...", Plugin.LogInfo.Notice);
-            LoadCounter<MissedConfigModel, MissedCounter>("Missed", settings.missedConfig);
-            LoadCounter<NoteConfigModel, AccuracyCounter>("Notes", settings.noteConfig);
-            LoadCounter<ScoreConfigModel, ScoreCounter>("Score", settings.scoreConfig);
-            LoadCounter<PBConfigModel, PBCounter>("Personal Best", settings.pbConfig);
-            LoadCounter<ProgressConfigModel, ProgressCounter>("Progress", settings.progressConfig);
-            LoadCounter<SpeedConfigModel, SpeedCounter>("Speed", settings.speedConfig);
-            LoadCounter<CutConfigModel, CutCounter>("Cut", settings.cutConfig);
-            LoadCounter<SpinometerConfigModel, Spinometer>("Spinometer", settings.spinometerConfig);
-            LoadCounter<NotesLeftConfigModel, NotesLeftCounter>("Notes Left", settings.notesLeftConfig);
-            LoadCounter<FailConfigModel, FailCounter>("Fail", settings.failsConfig);
             if (settings.HideCombo)
             {
                 try
@@ -103,6 +88,21 @@ namespace CountersPlus
                 }
                 catch { Plugin.Log("Can't remove the Multiplier counter!", Plugin.LogInfo.Warning); }
             }
+        }
+
+        public static void LoadCounters()
+        {
+            Plugin.Log("Loading Counters...", Plugin.LogInfo.Notice);
+            LoadCounter<MissedConfigModel, MissedCounter>("Missed", settings.missedConfig);
+            LoadCounter<NoteConfigModel, AccuracyCounter>("Notes", settings.noteConfig);
+            LoadCounter<ScoreConfigModel, ScoreCounter>("Score", settings.scoreConfig);
+            LoadCounter<PBConfigModel, PBCounter>("Personal Best", settings.pbConfig);
+            LoadCounter<ProgressConfigModel, ProgressCounter>("Progress", settings.progressConfig);
+            LoadCounter<SpeedConfigModel, SpeedCounter>("Speed", settings.speedConfig);
+            LoadCounter<CutConfigModel, CutCounter>("Cut", settings.cutConfig);
+            LoadCounter<SpinometerConfigModel, Spinometer>("Spinometer", settings.spinometerConfig);
+            LoadCounter<NotesLeftConfigModel, NotesLeftCounter>("Notes Left", settings.notesLeftConfig);
+            LoadCounter<FailConfigModel, FailCounter>("Fail", settings.failsConfig);
             Plugin.Log("Counters loaded!", Plugin.LogInfo.Notice);
             Instance.StartCoroutine(Instance.ObtainRequiredData());
 

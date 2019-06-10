@@ -194,7 +194,7 @@ namespace CountersPlus.UI
         public float leftSpinAverage;
         public float rightSpinAverage;
 
-        private string[] failInsults = new string[] { "A lot", "Embarrasing large", "Still a lot", "MonkaS", "One, two, skip a few...", "99999", "Yikes!" };
+        private string[] failInsults = new string[] { "A lot", "Embarrasing large", "Still a lot", "MonkaS", "One, two, skip a few...", "99999", "Yikes!", "Zoinks!", "Uhhh..." };
 
         public MockCounterInfo()
         {

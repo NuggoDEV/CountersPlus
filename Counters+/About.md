@@ -1,5 +1,5 @@
 ﻿# Counters+
-**Counters+** (Also known as CountersPlus) is a mod that bundles different counters, both widely used and quite unusual, into one mod. Counters+ also boasts a large amount of configuration, all available from a custom made settings menu that updates in real time!
+**Counters+** (Also known as CountersPlus) is a mod that bundles different counters, both widely used and quite unusual, into one mod. Counters+ also boasts a large amount of configuration, all available from a custom made settings menu.
 
 ## Configuration
 Counters+ has an easy to use, custom made settings menu that allows you to easily edit Counters+ to your preference, and preview your changes in real time.
@@ -8,5 +8,3 @@ To access this, go to the main menu, and click on the `Mods` button near the bot
 
 ## Custom Counters
 Counters+ also supports the addition of custom counters. Other mods can input counters of their own into the Counters+ system, and allow the user to edit the positioning of the counter, just like any Counters+ counter!
-
-Support Custom Counters: **YURFit**
