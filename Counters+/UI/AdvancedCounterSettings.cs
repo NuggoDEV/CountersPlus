@@ -111,6 +111,11 @@ namespace CountersPlus.UI
                 underScore.GetTextForValue = (v) => (v != 0f) ? "YES" : "NO";
                 underScore.GetValue = () => CC.settings.pbConfig.UnderScore ? 1f : 0f;
                 underScore.SetValue += (v) => CC.settings.pbConfig.UnderScore = v != 0f;
+
+                var hideFirstScore = CPEVC.AddList(ref sub, CC.settings.pbConfig, "Hide First Score", "Hides Personal Best if you play a map that doesn't have a personal best set.", 2);
+                hideFirstScore.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+                hideFirstScore.GetValue = () => CC.settings.pbConfig.HideFirstScore ? 1f : 0f;
+                hideFirstScore.SetValue += (v) => CC.settings.pbConfig.HideFirstScore = v != 0f;
             } },
             { CC.settings.progressConfig, (sub, config) => {
                 var progressRank = CPEVC.AddList(ref sub, config, "Progress From End", "Starts the counter from the end of the song and decreases while the song is played.", 2);

@@ -15,6 +15,7 @@ namespace CountersPlus.Counters
         private GameplayModifiersModelSO gameplayMods;
         private GameplayCoreSceneSetupData gcssd;
         private GameplayModifiers modifiers;
+        private PlayerLevelStatsData stats;
 
         private Color orange;
         private TMP_Text _PbTrackerText;
@@ -38,7 +39,7 @@ namespace CountersPlus.Counters
             gameplayMods = data.ModifiersData;
             modifiers = data.PlayerData.sharedGameplayModifiers;
             IDifficultyBeatmap beatmap = data.GCSSD.difficultyBeatmap;
-            PlayerLevelStatsData stats = player.currentLocalPlayer.GetPlayerLevelStatsData(
+            stats = player.currentLocalPlayer.GetPlayerLevelStatsData(
                 beatmap.level.levelID, beatmap.difficulty, beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic);
             _maxPossibleScore = ScoreController.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
             beginningPB = (float)stats.highScore / ((float)ScoreController.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount));
@@ -84,7 +85,7 @@ namespace CountersPlus.Counters
         {
             //Force personal best percent to round down to decimal precision
             pb = (float)Math.Round((decimal)pb * 100, decimalPrecision);
-            if (_maxPossibleScore == 0) _PbTrackerText.text = "--";
+            if (settings.HideFirstScore && stats.highScore == 0) _PbTrackerText.text = "--";
             else _PbTrackerText.text = $"PB: {pb.ToString($"F{settings.DecimalPrecision}")}%";
         }
 

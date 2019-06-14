@@ -154,6 +154,7 @@ namespace CountersPlus.Config
         public int DecimalPrecision;
         public int TextSize;
         public bool UnderScore;
+        public bool HideFirstScore;
     }
 
     public sealed class SpeedConfigModel : ConfigModel
