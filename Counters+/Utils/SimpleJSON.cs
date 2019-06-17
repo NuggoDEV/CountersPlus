@@ -338,8 +338,7 @@ namespace SimpleJSON
         {
             get
             {
-                double v = 0.0;
-                if (double.TryParse(Value, NumberStyles.Float, CultureInfo.InvariantCulture, out v))
+                if (double.TryParse(Value, NumberStyles.Float, CultureInfo.InvariantCulture, out double v))
                     return v;
                 return 0.0;
             }
@@ -365,8 +364,7 @@ namespace SimpleJSON
         {
             get
             {
-                bool v = false;
-                if (bool.TryParse(Value, out v))
+                if (bool.TryParse(Value, out bool v))
                     return v;
                 return !string.IsNullOrEmpty(Value);
             }
@@ -380,8 +378,7 @@ namespace SimpleJSON
         {
             get
             {
-                long val = 0;
-                if (long.TryParse(Value, out val))
+                if (long.TryParse(Value, out long val))
                     return val;
                 return 0L;
             }
@@ -418,7 +415,7 @@ namespace SimpleJSON
         }
         public static implicit operator string(JSONNode d)
         {
-            return (d == null) ? null : d.Value;
+            return d?.Value;
         }
 
         public static implicit operator JSONNode(double n)
@@ -568,8 +565,7 @@ namespace SimpleJSON
                 return tmp == "true";
             if (tmp == "null")
                 return JSONNull.CreateOrGet();
-            double val;
-            if (double.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out val))
+            if (double.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out double val))
                 return val;
             else
                 return token;
@@ -1051,8 +1047,7 @@ namespace SimpleJSON
             get { return m_Data.ToString(CultureInfo.InvariantCulture); }
             set
             {
-                double v;
-                if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out v))
+                if (double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out double v))
                     m_Data = v;
             }
         }
@@ -1124,8 +1119,7 @@ namespace SimpleJSON
             get { return m_Data.ToString(); }
             set
             {
-                bool v;
-                if (bool.TryParse(value, out v))
+                if (bool.TryParse(value, out bool v))
                     m_Data = v;
             }
         }
