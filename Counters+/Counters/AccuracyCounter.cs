@@ -23,7 +23,7 @@ namespace CountersPlus.Counters
         private void Init(CountersData data)
         {
             scoreController = data.ScoreController;
-            Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out counterText, position - new Vector3(0, 0.4f, 0));
             counterText.text = settings.ShowPercentage ? "0 / 0 - (100%)" : "0 / 0";
             counterText.fontSize = 4;
@@ -40,32 +40,32 @@ namespace CountersPlus.Counters
 
             if (scoreController != null)
             {
-                scoreController.noteWasCutEvent += onNoteCut;
-                scoreController.noteWasMissedEvent += onNoteMiss;
+                scoreController.noteWasCutEvent += OnNoteCut;
+                scoreController.noteWasMissedEvent += OnNoteMiss;
             }
         }
 
         void OnDestroy()
         {
-            scoreController.noteWasCutEvent -= onNoteCut;
-            scoreController.noteWasMissedEvent -= onNoteMiss;
+            scoreController.noteWasCutEvent -= OnNoteCut;
+            scoreController.noteWasMissedEvent -= OnNoteMiss;
             CountersController.ReadyToInit -= Init;
         }
 
-        private void onNoteCut(NoteData data, NoteCutInfo info, int c)
+        private void OnNoteCut(NoteData data, NoteCutInfo info, int c)
         {
             if (data.noteType != NoteType.Bomb && info.allIsOK)
-                increment(true);
+                Increment(true);
             else
-                increment(false);
+                Increment(false);
         }
 
-        private void onNoteMiss(NoteData data, int what)
+        private void OnNoteMiss(NoteData data, int what)
         {
-            if (data.noteType != NoteType.Bomb) increment(false);
+            if (data.noteType != NoteType.Bomb) Increment(false);
         }
 
-        private void increment(bool incCounter)
+        private void Increment(bool incCounter)
         {
             total++;
             if (incCounter) counter++;

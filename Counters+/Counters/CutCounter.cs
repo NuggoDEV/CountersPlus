@@ -28,7 +28,7 @@ namespace CountersPlus.Counters
         private void Init(CountersData data)
         {
             _scoreController = data.ScoreController;
-            Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out cutLabel, position);
             cutLabel.text = "Average Cut";
             cutLabel.fontSize = 3;
@@ -57,11 +57,11 @@ namespace CountersPlus.Counters
         {
             if (data.noteType == NoteType.Bomb || !info.allIsOK) return;
             currentCutInfo = info;
-            info.afterCutSwingRatingCounter.didFinishEvent -= afterCutSwingRatingCounter_didFinishEvent;
-            info.afterCutSwingRatingCounter.didFinishEvent += afterCutSwingRatingCounter_didFinishEvent;
+            info.afterCutSwingRatingCounter.didFinishEvent -= AfterCutSwingRatingCounter_didFinishEvent;
+            info.afterCutSwingRatingCounter.didFinishEvent += AfterCutSwingRatingCounter_didFinishEvent;
         }
 
-        private void afterCutSwingRatingCounter_didFinishEvent(SaberAfterCutSwingRatingCounter v)
+        private void AfterCutSwingRatingCounter_didFinishEvent(SaberAfterCutSwingRatingCounter v)
         {
             ScoreController.RawScoreWithoutMultiplier(currentCutInfo, currentCutInfo.afterCutSwingRatingCounter, out int beforeCut, out int afterCut, out int why);
             totalScore += beforeCut + afterCut;

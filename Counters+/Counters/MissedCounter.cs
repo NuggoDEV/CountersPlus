@@ -23,7 +23,7 @@ namespace CountersPlus.Counters
         private void Init(CountersData data)
         {
             scoreController = data.ScoreController;
-            Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out missedText, position - new Vector3(0, 0.4f, 0));
             missedText.text = "0";
             missedText.fontSize = 4;
@@ -42,28 +42,28 @@ namespace CountersPlus.Counters
 
             if (scoreController != null)
             {
-                scoreController.noteWasCutEvent += onNoteCut;
-                scoreController.noteWasMissedEvent += onNoteMiss;
+                scoreController.noteWasCutEvent += OnNoteCut;
+                scoreController.noteWasMissedEvent += OnNoteMiss;
             }
         }
 
         void OnDestroy()
         {
-            scoreController.noteWasCutEvent -= onNoteCut;
-            scoreController.noteWasMissedEvent -= onNoteMiss;
+            scoreController.noteWasCutEvent -= OnNoteCut;
+            scoreController.noteWasMissedEvent -= OnNoteMiss;
             CountersController.ReadyToInit -= Init;
         }
 
-        private void onNoteCut(NoteData data, NoteCutInfo info, int c)
+        private void OnNoteCut(NoteData data, NoteCutInfo info, int c)
         {
-            if (data.noteType == NoteType.Bomb || !info.allIsOK) incrementCounter();
+            if (data.noteType == NoteType.Bomb || !info.allIsOK) IncrementCounter();
         }
 
-        private void onNoteMiss(NoteData data, int c)
+        private void OnNoteMiss(NoteData data, int c)
         {
             if (data.noteType != NoteType.Bomb)
             {
-                incrementCounter();
+                IncrementCounter();
                 if (settings.CustomMissTextIntegration) UpdateCustomMissText();
             }
         }
@@ -79,7 +79,7 @@ namespace CountersPlus.Counters
             catch { }
         }
 
-        private void incrementCounter()
+        private void IncrementCounter()
         {
             counter++;
             missedText.text = counter.ToString();

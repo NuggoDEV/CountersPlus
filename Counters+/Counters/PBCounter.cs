@@ -44,7 +44,7 @@ namespace CountersPlus.Counters
             _maxPossibleScore = ScoreController.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
             beginningPB = (float)stats.highScore / ((float)ScoreController.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount));
 
-            Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out _PbTrackerText, position);
             _PbTrackerText.fontSize = settings.TextSize;
             _PbTrackerText.color = Color.white;
@@ -59,7 +59,7 @@ namespace CountersPlus.Counters
 
         private IEnumerator WaitForScoreCounter()
         {
-            ScoreCounter counter = CountersController.loadedCounters.Where((GameObject x) => x?.GetComponent<ScoreCounter>() != null).FirstOrDefault()?.GetComponent<ScoreCounter>();
+            ScoreCounter counter = CountersController.LoadedCounters.Where((GameObject x) => x?.GetComponent<ScoreCounter>() != null).FirstOrDefault()?.GetComponent<ScoreCounter>();
             if (counter == null) yield break;
             float offset = 0;
             yield return new WaitUntil(() => counter.PointsText != null);

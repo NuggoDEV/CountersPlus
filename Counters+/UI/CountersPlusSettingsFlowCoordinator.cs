@@ -29,7 +29,7 @@ namespace CountersPlus.UI
                 title = "Counters+";
 
                 navigationController = BeatSaberUI.CreateViewController<BackButton>();
-                navigationController.didFinishEvent += backButton_DidFinish;
+                navigationController.DidFinishEvent += BackButton_DidFinish;
                 
                 editSettings = BeatSaberUI.CreateViewController<CountersPlusEditViewController>();
                 placeholder = BeatSaberUI.CreateViewController<CountersPlusFillerForMainViewController>();
@@ -89,7 +89,7 @@ namespace CountersPlus.UI
             }
         }
 
-        private void backButton_DidFinish()
+        private void BackButton_DidFinish()
         {
             foreach (KeyValuePair<MockCounterGroup, ConfigModel> kvp in MockCounter.loadedMockCounters)
             {
