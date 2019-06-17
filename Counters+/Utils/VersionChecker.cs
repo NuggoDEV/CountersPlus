@@ -44,7 +44,7 @@ namespace CountersPlus
                         try
                         {
                             string version = child["version"].Value;
-                            Plugin.upToDate = isLatestVersion(version);
+                            Plugin.upToDate = IsLatestVersion(version);
                             Plugin.webVersion = version;
                             break;
                         } catch { }
@@ -53,7 +53,7 @@ namespace CountersPlus
             }
         }
 
-        private static bool isLatestVersion(string downloadedVersion)
+        private static bool IsLatestVersion(string downloadedVersion)
         {
             string Version = PluginManager.GetPlugin("Counters+").Metadata.Version.ToString();
             List<int> pluginVersion = new List<int>();

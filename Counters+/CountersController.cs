@@ -17,9 +17,9 @@ namespace CountersPlus
     public class CountersController : MonoBehaviour
     {
         public static CountersController Instance { get; private set; }
-        public static List<GameObject> loadedCounters { get; private set; } = new List<GameObject>();
+        public static List<GameObject> LoadedCounters { get; private set; } = new List<GameObject>();
         internal static MainConfigModel settings;
-        internal static List<CustomCounter> customCounters { get; private set; } = new List<CustomCounter>();
+        internal static List<CustomCounter> CustomCounters { get; private set; } = new List<CustomCounter>();
 
         public static Action<CountersData> ReadyToInit;
 
@@ -37,22 +37,22 @@ namespace CountersPlus
 
         void Awake()
         {
-            SceneManager.activeSceneChanged += activeSceneChanged;
+            SceneManager.activeSceneChanged += ActiveSceneChanged;
         }
 
-        void activeSceneChanged(Scene arg, Scene arg1)
+        void ActiveSceneChanged(Scene arg, Scene arg1)
         {
-            loadedCounters.Clear();
+            LoadedCounters.Clear();
         }
 
         static void LoadCounter<T, R>(string name, T settings) where T : ConfigModel
         {
             if (!settings.Enabled || GameObject.Find("Counters+ | " + name + " Counter")) return;
             GameObject counter = new GameObject("Counters+ | " + name + " Counter");
-            counter.transform.position = determinePosition(counter, settings.Position, settings.Index);
+            counter.transform.position = DeterminePosition(counter, settings.Position, settings.Index);
             counter.AddComponent(typeof(R));
             Plugin.Log("Loaded Counter: " + name);
-            loadedCounters.Add(counter);
+            LoadedCounters.Add(counter);
         }
 
         private IEnumerator ObtainRequiredData()
@@ -122,7 +122,7 @@ namespace CountersPlus
             }
         }
 
-        public static Vector3 determinePosition(GameObject counter, ICounterPositions position, int index)
+        public static Vector3 DeterminePosition(GameObject counter, ICounterPositions position, int index)
         {
             float X = 3.2f;
             Vector3 pos = new Vector3(); //Base position

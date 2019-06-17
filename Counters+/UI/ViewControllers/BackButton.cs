@@ -7,7 +7,7 @@ namespace CountersPlus.UI
 {
     class BackButton : VRUINavigationController
     {
-        public event Action didFinishEvent;
+        public event Action DidFinishEvent;
 
         private Button _backButton;
 
@@ -15,7 +15,7 @@ namespace CountersPlus.UI
         {
             if (firstActivation && activationType == ActivationType.AddedToHierarchy)
             {
-                _backButton = BeatSaberUI.CreateBackButton(rectTransform, didFinishEvent.Invoke);
+                _backButton = BeatSaberUI.CreateBackButton(rectTransform, DidFinishEvent.Invoke);
             }
         }
     }

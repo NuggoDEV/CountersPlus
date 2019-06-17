@@ -49,7 +49,7 @@ namespace CountersPlus.Counters
                 }
             }
 
-            Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out failText, position - new Vector3(0, 0.4f, 0));
             failText.text = settings.ShowRestartsInstead ? Restarts.ToString() : fails.ToString();
             failText.fontSize = 4;

@@ -52,7 +52,7 @@ namespace CountersPlus.UI
                             });
                         }
                     }
-                    _customListTableView.didSelectCellWithIdxEvent += onCellSelect;
+                    _customListTableView.didSelectCellWithIdxEvent += OnCellSelect;
                     _customListTableView.ReloadData();
                     _customListTableView.SelectCellWithIdx(0, false);
                 }
@@ -139,7 +139,7 @@ namespace CountersPlus.UI
             return cell;
         }
 
-        private void onCellSelect(TableView view, int row)
+        private void OnCellSelect(TableView view, int row)
         {
             SettingsInfo info = null;
             if (row > 0 && row < NumberOfCells() - 2) info = counterInfos[row - 1];

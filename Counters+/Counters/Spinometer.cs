@@ -38,7 +38,7 @@ namespace CountersPlus.Counters
 
         void Init()
         {
-            Vector3 position = CountersController.determinePosition(gameObject, settings.Position, settings.Index);
+            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out spinometer, position - new Vector3(0, 0.4f, 0));
             spinometer.text = settings.Mode == ICounterMode.SplitAverage ? "0 | 0" : "0";
             spinometer.fontSize = 4;

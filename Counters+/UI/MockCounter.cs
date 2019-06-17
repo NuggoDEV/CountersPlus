@@ -20,7 +20,7 @@ namespace CountersPlus.UI
 
         public static Dictionary<MockCounterGroup, ConfigModel> loadedMockCounters = new Dictionary<MockCounterGroup, ConfigModel>();
         private static MockCounterInfo info = new MockCounterInfo();
-        public static string highlightedObject { get; private set; } = null;
+        public static string HighlightedObject { get; private set; } = null;
 
         #region MockCounter Creation
         public static void Create<T>(T settings, string counterName, string counterData, bool UseCounterPositioning = true) where T : ConfigModel
@@ -28,7 +28,7 @@ namespace CountersPlus.UI
             if (!settings.Enabled) return;
             GameObject counter = new GameObject($"Counters+ | Mock {counterName} Counter");
             GameObject nameGO = new GameObject($"Counters+ | Mock {counterName} Label");
-            Vector3 position = (CountersController.determinePosition(counter, settings.Position, settings.Index) - new Vector3(0, 0.4f, 0));
+            Vector3 position = (CountersController.DeterminePosition(counter, settings.Position, settings.Index) - new Vector3(0, 0.4f, 0));
             nameGO.transform.parent = counter.transform;
             //TextMeshPro name = nameGO.AddComponent<TextMeshPro>();
             TextHelper.CreateText(out TMP_Text name, position);
@@ -52,7 +52,7 @@ namespace CountersPlus.UI
                 UnityEngine.Object.Destroy(group.CounterData);
                 loadedMockCounters.Remove(group);
             }
-            if (settings.DisplayName == highlightedObject)
+            if (settings.DisplayName == HighlightedObject)
             {
                 name.color = Color.yellow;
                 data.color = Color.yellow;
@@ -170,7 +170,7 @@ namespace CountersPlus.UI
             foreach (KeyValuePair<MockCounterGroup, ConfigModel> kvp in loadedMockCounters)
             {
                 if (kvp.Value is null) continue;
-                if (settings.DisplayName == kvp.Value.DisplayName) highlightedObject = settings.DisplayName;
+                if (settings.DisplayName == kvp.Value.DisplayName) HighlightedObject = settings.DisplayName;
                 kvp.Key.CounterName.color = (settings.DisplayName == kvp.Value.DisplayName) ? Color.yellow : Color.white;
                 kvp.Key.CounterData.color = (settings.DisplayName == kvp.Value.DisplayName) ? Color.yellow : Color.white;
             }
