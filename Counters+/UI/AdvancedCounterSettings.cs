@@ -7,7 +7,7 @@ using CountersPlus.Config;
 using CustomUI.BeatSaber;
 using CustomUI.Settings;
 using UnityEngine;
-using CPEVC = CountersPlus.UI.CountersPlusEditViewController;
+using CPEVC = CountersPlus.UI.ViewControllers.CountersPlusEditViewController;
 using CC = CountersPlus.CountersController;
 
 namespace CountersPlus.UI

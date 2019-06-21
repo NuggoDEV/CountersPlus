@@ -3,7 +3,7 @@ using System;
 using UnityEngine.UI;
 using VRUI;
 
-namespace CountersPlus.UI
+namespace CountersPlus.UI.ViewControllers
 {
     class BackButton : VRUINavigationController
     {

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VRUI;
+using CountersPlus.UI.ViewControllers;
 
 namespace CountersPlus.UI
 {

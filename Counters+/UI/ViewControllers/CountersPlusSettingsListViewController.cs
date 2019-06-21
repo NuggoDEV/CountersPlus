@@ -13,7 +13,7 @@ using TMPro;
 using IPA.Loader;
 using IPA.Old;
 
-namespace CountersPlus.UI
+namespace CountersPlus.UI.ViewControllers
 {
     class CountersPlusSettingsListViewController : CustomListViewController
     {

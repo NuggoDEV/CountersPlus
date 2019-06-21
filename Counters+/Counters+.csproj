@@ -89,6 +89,7 @@
     <Compile Include="UI\CounterWarning.cs" />
     <Compile Include="UI\Images\Images.cs" />
     <Compile Include="UI\ViewControllers\BackButton.cs" />
+    <Compile Include="UI\ViewControllers\ContributorsAndDonators.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusEditViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusFillerForMainViewController.cs" />
     <Compile Include="UI\CountersPlusSettingsFlowCoordinator.cs" />

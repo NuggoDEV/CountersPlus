@@ -1,6 +1,6 @@
 ﻿using VRUI;
 
-namespace CountersPlus.UI
+namespace CountersPlus.UI.ViewControllers
 {
     class CountersPlusFillerForMainViewController : VRUIViewController
     {

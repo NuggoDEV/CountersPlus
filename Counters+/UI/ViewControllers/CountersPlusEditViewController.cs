@@ -13,7 +13,7 @@ using BS_Utils.Gameplay;
 using System.Collections;
 using IPA.Loader;
 
-namespace CountersPlus.UI
+namespace CountersPlus.UI.ViewControllers
 {
     class CountersPlusEditViewController : VRUIViewController
     {
@@ -137,21 +137,8 @@ namespace CountersPlus.UI
 
         internal static void ShowContributors()
         {
-            Dictionary<string, string> contributors = new Dictionary<string, string>()
-            {
-                { "Moon", "Bug fixing and code optimization" },
-                { "Shoko84", "Bug fixing" },
-                { "xhuytox", "Big helper in bug hunting - thanks man!" },
-                { "Brian", "Saving Beat Saber Modding with CustomUI" },
-                { "Viscoci", "Helper code that fixed displaying text and saved my bacon" },
-                { "Assistant", "Stole some Custom Avatars UI code to help with settings" },
-                { "Kyle1413", "Beat Saber Utils and for Progress/Score Counter code" },
-                { "Ragesaq", "Speed Counter and Spinometer idea <i>(and some bug fixing on stream)</i>" },
-                { "SkyKiwiTV", "Original version checking code" },
-                { "Dracrius", "Bug fixing and beta testing" },
-                { "Stackeror", "Creator of the original Progress Counter mod" },
-                { "altrewin", "Thanks for the love, and coffee. <3" },
-            };
+            Dictionary<string, string> contributors = new Dictionary<string, string>(ContributorsAndDonators.Contributors);
+            Dictionary<string, string> donators = new Dictionary<string, string>(ContributorsAndDonators.Donators);
             string user = GetUserInfo.GetUserName();
             if (user == null) user = "You";
             if (contributors.ContainsKey(user))
@@ -159,12 +146,18 @@ namespace CountersPlus.UI
             else contributors.Add(user, "For enjoying this mod!"); //Teehee :)
 
             ClearScreen();
-            TextMeshProUGUI contributorLabel;
+            TextMeshProUGUI contributorLabel, donatorLabel;
             contributorLabel = BeatSaberUI.CreateText(rect, "Thanks to these contributors for, directly or indirectly, helping make Counters+ what it is!", Vector2.zero);
             contributorLabel.fontSize = 3;
             contributorLabel.alignment = TextAlignmentOptions.Center;
             setPositioning(contributorLabel.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
             loadedElements.Add(contributorLabel.gameObject);
+
+            donatorLabel = BeatSaberUI.CreateText(rect, "Thanks to the <color=#FF0048>Ko-fi</color> donators who support me! <i>DM me on Discord for any corrections to these names.</i>", Vector2.zero);
+            donatorLabel.fontSize = 3;
+            donatorLabel.alignment = TextAlignmentOptions.Center;
+            setPositioning(donatorLabel.rectTransform, 0, 0.25f, 1, 0.166f, 0.5f);
+            loadedElements.Add(donatorLabel.gameObject);
 
             foreach (var kvp in contributors)
             {
@@ -174,6 +167,16 @@ namespace CountersPlus.UI
                 setPositioning(contributor.rectTransform, 0.15f,
                     0.8f - (contributors.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
                 loadedElements.Add(contributor.gameObject);
+            }
+
+            foreach (var kvp in donators)
+            {
+                TextMeshProUGUI donator = BeatSaberUI.CreateText(rect, $"<color=#FF0048>{kvp.Key}</color> | {kvp.Value}", Vector2.zero);
+                donator.fontSize = 3;
+                donator.alignment = TextAlignmentOptions.Left;
+                setPositioning(donator.rectTransform, 0.15f,
+                    0.2f - (donators.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
+                loadedElements.Add(donator.gameObject);
             }
         }
 
