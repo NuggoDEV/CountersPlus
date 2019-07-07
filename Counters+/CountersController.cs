@@ -19,14 +19,13 @@ namespace CountersPlus
         public static CountersController Instance { get; private set; }
         public static List<GameObject> LoadedCounters { get; private set; } = new List<GameObject>();
         internal static MainConfigModel settings;
-        internal static List<CustomCounter> CustomCounters { get; private set; } = new List<CustomCounter>();
 
         public static Action<CountersData> ReadyToInit;
 
         public static void OnLoad()
         {
             settings = ConfigLoader.LoadSettings();
-            if (Instance == null && settings.Enabled)
+            if (Instance == null)
             {
                 GameObject controller = new GameObject("Counters+ | Controller");
                 DontDestroyOnLoad(controller);
