@@ -33,6 +33,7 @@ namespace CountersPlus.UI
         {
             foreach (CounterWarning warning in existing) Destroy(warning.gameObject);
             warnings = 0;
+            existing.Clear();
         }
 
         void Start()
