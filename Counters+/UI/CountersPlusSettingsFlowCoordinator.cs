@@ -41,11 +41,6 @@ namespace CountersPlus.UI
             MainScreen.transform.position = new Vector3(0, -100, 0); //"If it works it's not stupid"
             
             CounterWarning.CreateWarning("Due to limitations, some counters may not reflect their true appearance in-game.", 7.5f);
-            if (!CountersController.settings.FirstStart)
-            {
-                CountersController.settings.FirstStart = true;
-                CounterWarning.CreateWarning("If you see anything weird, try restarting your game, or re-enter the Counters+ menu!", 15);
-            }
             if (!Plugin.upToDate) CounterWarning.CreateWarning("A new Counters+ update is available to download!", 5);
             StartCoroutine(InitMockCounters());
         }
@@ -65,7 +60,7 @@ namespace CountersPlus.UI
             StartCoroutine(UpdateMockCountersRoutine());
         }
 
-        public static void UpdateMockCounters()
+        internal static void UpdateMockCounters()
         {
             Instance.StartCoroutine(UpdateMockCountersRoutine());
         }

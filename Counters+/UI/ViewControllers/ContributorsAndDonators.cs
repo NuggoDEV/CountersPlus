@@ -25,8 +25,8 @@ namespace CountersPlus.UI.ViewControllers
         internal static Dictionary<string, string> Donators = new Dictionary<string, string>()
         {
             { "altrewin", "Thanks for the love, and coffee. <3" },
-            { "Someone", "OwO, indeed!" },
-            { "Latest", "Sorry I was late on thanking you, here you go!" }
+            { "Latest", "Sorry I was late on thanking you, here you go!" },
+            { "Someone", "To all the people who remain anonymous, I thank you." },
         };
 
     }

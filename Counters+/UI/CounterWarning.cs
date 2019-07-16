@@ -21,15 +21,15 @@ namespace CountersPlus.UI
 
         public static void CreateWarning(string text, float persistTimeInSeconds)
         {
+            warnings++;
             CounterWarning newWarning = new GameObject("Counters+ | Warning").AddComponent<CounterWarning>();
             newWarning.warningText = text;
             newWarning.persistTime = persistTimeInSeconds - 0.5f;
             newWarning.warningOrder = warnings;
             existing.Add(newWarning);
-            warnings++;
         }
 
-        void Awake()
+        void Start()
         {
             if (warningsCanvas == null) warningsCanvas = TextHelper.CreateCanvas(new Vector3(0, 0, 2.25f));
             Vector3 position = new Vector3(0, 2.1f - (warningOrder * 0.1f), 0);
@@ -37,12 +37,8 @@ namespace CountersPlus.UI
             tmpro.fontSize = 1;
             tmpro.color = Color.white;
             tmpro.alignment = TextAlignmentOptions.Center;
-            StartCoroutine(PersistALittleBit());
-        }
-
-        void Update()
-        {
             tmpro.text = $"<u>{warningText}</u>";
+            StartCoroutine(PersistALittleBit());
         }
 
         IEnumerator PersistALittleBit()

@@ -24,7 +24,6 @@ namespace CountersPlus.Config
                 {
                     Enabled = true,
                     AdvancedCounterInfo = true,
-                    FirstStart = false,
                     HideCombo = false,
                     HideMultiplier = false,
                     ComboOffset = 0.2f,

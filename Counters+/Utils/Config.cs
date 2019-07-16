@@ -72,7 +72,6 @@ namespace CountersPlus.Config
         public string DisplayName { get { return "Main"; } }
         public bool Enabled;
         public bool AdvancedCounterInfo;
-        public bool FirstStart;
         public bool HideCombo;
         public bool HideMultiplier;
         public float ComboOffset;

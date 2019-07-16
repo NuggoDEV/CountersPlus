@@ -34,12 +34,17 @@ namespace CountersPlus
             }
         }
 
-        void Awake()
+        private void Awake()
         {
             SceneManager.activeSceneChanged += ActiveSceneChanged;
         }
 
-        void ActiveSceneChanged(Scene arg, Scene arg1)
+        private void OnDestroy()
+        {
+            SceneManager.activeSceneChanged -= ActiveSceneChanged;
+        }
+
+        private void ActiveSceneChanged(Scene arg, Scene arg1)
         {
             LoadedCounters.Clear();
         }
@@ -63,30 +68,21 @@ namespace CountersPlus
             CountersData data = new CountersData();
             ReadyToInit.Invoke(data);
             Plugin.Log("Obtained data!");
-            if (settings.HideCombo)
+            if (settings.HideCombo) HideUIElement("Combo");
+            if (settings.HideMultiplier) HideUIElement("Multiplier");
+        }
+
+        private void HideUIElement(string Name)
+        {
+            try
             {
-                try
+                for (int i = 0; i < GameObject.Find($"{Name}Panel").transform.childCount; i++)
                 {
-                    for (int i = 0; i < GameObject.Find("ComboPanel").transform.childCount; i++)
-                    {
-                        GameObject child = GameObject.Find("ComboPanel").transform.GetChild(i).gameObject;
-                        if (child.name != "BG") child.SetActive(false);
-                    }
+                    GameObject child = GameObject.Find($"{Name}Panel").transform.GetChild(i).gameObject;
+                    if (child.name != "BG") child.SetActive(false);
                 }
-                catch { Plugin.Log("Can't remove the Combo counter!", Plugin.LogInfo.Warning); }
             }
-            if (settings.HideMultiplier)
-            {
-                try
-                {
-                    for (int i = 0; i < GameObject.Find("MultiplierPanel").transform.childCount; i++)
-                    {
-                        GameObject child = GameObject.Find("MultiplierPanel").transform.GetChild(i).gameObject;
-                        if (child.name != "BG") child.SetActive(false);
-                    }
-                }
-                catch { Plugin.Log("Can't remove the Multiplier counter!", Plugin.LogInfo.Warning); }
-            }
+            catch { Plugin.Log($"Can't remove the {Name} counter!", Plugin.LogInfo.Warning); }
         }
 
         public static void LoadCounters()
@@ -131,37 +127,37 @@ namespace CountersPlus
             bool baseScore = settings.scoreConfig.Mode == ICounterMode.BaseGame;
             switch (position)
             {
-                case Config.ICounterPositions.BelowCombo:
+                case ICounterPositions.BelowCombo:
                     pos = new Vector3(-X, 0.85f - settings.ComboOffset, 7);
                     if (nextToProgress) offset += new Vector3(0, -0.25f, 0);
                     if (nextToScore) offset += new Vector3(0, -0.25f, 0);
                     if (nextToScore && baseScore) offset += new Vector3(0, -0.15f, 0);
                     break;
-                case Config.ICounterPositions.AboveCombo:
+                case ICounterPositions.AboveCombo:
                     pos = new Vector3(-X, 1.7f + settings.ComboOffset, 7);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     if (nextToProgress) offset -= new Vector3(0, -0.5f, 0);
                     break;
-                case Config.ICounterPositions.BelowMultiplier:
+                case ICounterPositions.BelowMultiplier:
                     pos = new Vector3(X, 0.75f - settings.MultiplierOffset, 7);
                     if (GameObject.Find("FCDisplay")) offset += new Vector3(0, -0.25f, 0);
                     if (nextToProgress) offset += new Vector3(0, -0.25f, 0);
                     if (nextToScore) offset += new Vector3(0, -0.25f, 0);
                     if (nextToScore && baseScore) offset += new Vector3(0, -0.15f, 0);
                     break;
-                case Config.ICounterPositions.AboveMultiplier:
+                case ICounterPositions.AboveMultiplier:
                     pos = new Vector3(X, 1.7f + settings.MultiplierOffset, 7);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     if (GameObject.Find("FCDisplay")) offset += new Vector3(0, -0.25f, 0);
                     if (nextToProgress) offset -= new Vector3(0, -0.5f, 0);
                     break;
-                case Config.ICounterPositions.BelowEnergy:
+                case ICounterPositions.BelowEnergy:
                     pos = new Vector3(0, -1.5f, 7);
                     if (nextToProgress) offset += new Vector3(0, -0.25f, 0);
                     if (nextToScore) offset += new Vector3(0, -0.25f, 0);
                     if (nextToScore && baseScore) offset += new Vector3(0, -0.15f, 0);
                     break;
-                case Config.ICounterPositions.AboveHighway:
+                case ICounterPositions.AboveHighway:
                     pos = new Vector3(0, 2.5f, 7);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     if (nextToProgress) offset -= new Vector3(0, -0.5f, 0);
