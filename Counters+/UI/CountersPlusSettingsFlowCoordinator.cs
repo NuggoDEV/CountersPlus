@@ -94,6 +94,7 @@ namespace CountersPlus.UI
             }
             CountersPlusEditViewController.ClearScreen();
             MockCounter.loadedMockCounters.Clear();
+            CounterWarning.ClearAllWarnings();
             Destroy(TextHelper.CounterCanvas.gameObject);
             TextHelper.CounterCanvas = null;
             MainScreen.transform.position = MainScreenPosition;

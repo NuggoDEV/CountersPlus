@@ -1,5 +1,5 @@
 ﻿# Counters+
-**Counters+** (Also known as CountersPlus) is a mod that bundles different counters, both widely used and quite unusual, into one mod. Counters+ also boasts a large amount of configuration, all available from a custom made settings menu.
+**Counters+** (Also known as CountersPlus) is a mod that enhances Beat Saber's UI with more statistics to display. Counters+ also boasts a large amount of configuration, all available from a custom made settings menu.
 
 ## Configuration
 Counters+ has an easy to use, custom made settings menu that allows you to easily edit Counters+ to your preference, and preview your changes in real time.

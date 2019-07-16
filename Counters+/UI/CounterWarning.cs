@@ -21,12 +21,18 @@ namespace CountersPlus.UI
 
         public static void CreateWarning(string text, float persistTimeInSeconds)
         {
-            warnings++;
             CounterWarning newWarning = new GameObject("Counters+ | Warning").AddComponent<CounterWarning>();
             newWarning.warningText = text;
             newWarning.persistTime = persistTimeInSeconds - 0.5f;
             newWarning.warningOrder = warnings;
             existing.Add(newWarning);
+            warnings++;
+        }
+
+        public static void ClearAllWarnings()
+        {
+            foreach (CounterWarning warning in existing) Destroy(warning.gameObject);
+            warnings = 0;
         }
 
         void Start()

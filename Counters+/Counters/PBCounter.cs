@@ -41,8 +41,10 @@ namespace CountersPlus.Counters
             IDifficultyBeatmap beatmap = data.GCSSD.difficultyBeatmap;
             stats = player.currentLocalPlayer.GetPlayerLevelStatsData(
                 beatmap.level.levelID, beatmap.difficulty, beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic);
-            _maxPossibleScore = ScoreController.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
-            beginningPB = (float)stats.highScore / ((float)ScoreController.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount));
+            int maxRawScore = ScoreController.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
+            float modifier = gameplayMods.GetTotalMultiplier(modifiers);
+            _maxPossibleScore = Mathf.RoundToInt(maxRawScore * modifier);
+            beginningPB = stats.highScore / (float)_maxPossibleScore;
 
             Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
             TextHelper.CreateText(out _PbTrackerText, position);
@@ -85,7 +87,7 @@ namespace CountersPlus.Counters
         {
             //Force personal best percent to round down to decimal precision
             pb = (float)Math.Round((decimal)pb * 100, decimalPrecision);
-            if (settings.HideFirstScore && stats.highScore == 0) _PbTrackerText.text = "--";
+            if (settings.HideFirstScore && stats.highScore == 0) _PbTrackerText.text = "PB: --";
             else _PbTrackerText.text = $"PB: {pb.ToString($"F{settings.DecimalPrecision}")}%";
         }
 
@@ -97,7 +99,7 @@ namespace CountersPlus.Counters
                 if (ratio > beginningPB)
                 {
                     SetPersonalBest(ratio);
-                    _PbTrackerText.color = Color.red;
+                    if (!(settings.HideFirstScore && stats.highScore == 0)) _PbTrackerText.color = Color.red;
                 }
                 else _PbTrackerText.color = Color.Lerp(Color.white, orange, ratio / beginningPB);
             }
