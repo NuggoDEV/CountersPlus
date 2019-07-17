@@ -66,13 +66,14 @@ namespace CountersPlus.Counters
             counter.transform.SetParent(transform, false);
             counter.transform.localPosition = Vector3.zero;
             Vector3 firstPosition = Vector3.zero;
-            if (counter.GetComponentsInChildren<TMP_Text>().Any())
+            if (counter.GetComponentsInChildren<Canvas>().Any())
             {
-                for (int i = 0; i < counter.GetComponentsInChildren<TMP_Text>().Reverse().Count(); i++)
+                Canvas canvas = counter.GetComponentsInChildren<Canvas>().First();
+                for (int i = 0; i < canvas.transform.childCount; i++)
                 {
-                    TMP_Text tmp = counter.GetComponentsInChildren<TMP_Text>().Reverse().ToArray()[i];
-                    if (i == 0) firstPosition = tmp.transform.position;
-                    tmp.transform.localPosition = ((tmp.transform.position - firstPosition) * TextHelper.ScaleFactor) - new Vector3(0, 0.4f, 0);
+                    Transform child = canvas.transform.GetChild(i);
+                    if (i == 0) firstPosition = child.transform.position;
+                    child.transform.localPosition = ((child.transform.position - firstPosition) * TextHelper.ScaleFactor) - new Vector3(0, 0.4f, 0);
                 }
             }
             transform.position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);

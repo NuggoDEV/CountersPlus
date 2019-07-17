@@ -98,9 +98,14 @@ namespace CountersPlus
             LoadCounter<SpinometerConfigModel, Spinometer>("Spinometer", settings.spinometerConfig);
             LoadCounter<NotesLeftConfigModel, NotesLeftCounter>("Notes Left", settings.notesLeftConfig);
             LoadCounter<FailConfigModel, FailCounter>("Fail", settings.failsConfig);
+            LoadCustomCounters();
             Plugin.Log("Counters loaded!", Plugin.LogInfo.Notice);
             Instance.StartCoroutine(Instance.ObtainRequiredData());
+        }
 
+        private static void LoadCustomCounters()
+        {
+            Plugin.Log("Loading Custom Counters...", Plugin.LogInfo.Notice);
             FileIniDataParser parser = new FileIniDataParser();
             IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
             foreach (SectionData section in data.Sections)
@@ -109,7 +114,7 @@ namespace CountersPlus
                 {
                     if (PluginManager.GetPlugin(section.Keys["ModCreator"]) == null &&
                         #pragma warning disable CS0618 //Fuck off DaNike
-                        PluginManager.Plugins.Where((IPlugin x) => x.Name == section.Keys["ModCreator"]).FirstOrDefault() == null) return;
+                        PluginManager.Plugins.Where((IPlugin x) => x.Name == section.Keys["ModCreator"]).FirstOrDefault() == null) continue;
                     CustomConfigModel potential = new CustomConfigModel(section.SectionName);
                     potential = ConfigLoader.DeserializeFromConfig(potential, section.SectionName) as CustomConfigModel;
                     LoadCounter<CustomConfigModel, CustomCounterHook>(section.Keys["SectionName"], potential);
