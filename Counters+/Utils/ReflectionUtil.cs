@@ -16,7 +16,12 @@ namespace CountersPlus
 
         public static T GetPrivateField<T>(this object obj, string fieldName)
         {
-            return (T)((object)obj.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic).GetValue(obj));
+            return (T)((object)obj.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic ).GetValue(obj));
+        }
+
+        public static T GetPrivateProperty<T>(this object obj, string fieldName)
+        {
+            return (T)((object)obj.GetType().GetProperty(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).GetValue(obj));
         }
 
         public static void SetPrivateProperty(this object obj, string propertyName, object value)

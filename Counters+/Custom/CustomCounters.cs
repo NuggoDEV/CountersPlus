@@ -62,10 +62,10 @@ namespace CountersPlus.Custom
             if (model.Mod != null) modCreator = model.Mod.Name;
             if (model.BSIPAMod != null)
             {   //Fucking hell DaNike can't you expose the IBeatSaberPlugins so it would be easier for stuff like this!?!?
-                PluginLoader.PluginInfo info = PluginManager.AllPlugins.Where((PluginLoader.PluginInfo x) => model.BSIPAMod == x.GetPrivateField<IBeatSaberPlugin>("Plugin")).FirstOrDefault();
+                PluginLoader.PluginInfo info = PluginManager.AllPlugins.Where((PluginLoader.PluginInfo x) => x != null && model.BSIPAMod == x.GetPrivateProperty<IBeatSaberPlugin>("Plugin")).FirstOrDefault() ?? null;
                 if (info != null) modCreator = info.Metadata.Name;
             }
-            Plugin.Log($"Custom Counter added by: {modCreator}!", Plugin.LogInfo.Notice);
+            Plugin.Log($"Custom Counter ({model.Name}) added!", Plugin.LogInfo.Notice);
 
             foreach (SectionData section in data.Sections)
             {
@@ -85,7 +85,7 @@ namespace CountersPlus.Custom
                 Index = (defaults == null ? 2 : defaults.Index),
                 Counter = model.Counter,
                 ModCreator = modCreator,
-                RestrictedPositions = (restrictedPositions.Count() == 0 || restrictedPositions == null) ? new ICounterPositions[] { } : restrictedPositions, //Thanks Viscoci for this
+                RestrictedPositions = (restrictedPositions?.Count() == 0 || restrictedPositions == null) ? new ICounterPositions[] { } : restrictedPositions, //Thanks Viscoci for this
             };
             counter.Save();
 
