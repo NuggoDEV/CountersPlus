@@ -30,6 +30,7 @@ namespace CountersPlus
                 GameObject controller = new GameObject("Counters+ | Controller");
                 DontDestroyOnLoad(controller);
                 Instance = controller.AddComponent<CountersController>();
+                controller.AddComponent<VersionChecker>();
                 Plugin.Log("Counters Controller created.", Plugin.LogInfo.Notice);
             }
         }

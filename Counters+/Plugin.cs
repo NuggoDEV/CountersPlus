@@ -24,7 +24,6 @@ namespace CountersPlus
             HarmonyInstance = HarmonyInstance.Create("com.Caeden117.CountersPlus");
             HarmonyInstance.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
             Logger = log;
-            VersionChecker.GetOnlineVersion();
             Instance = this;
             CountersController.OnLoad();
         }
