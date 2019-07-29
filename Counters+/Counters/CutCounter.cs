@@ -2,22 +2,21 @@
 using UnityEngine;
 using TMPro;
 using CountersPlus.Config;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace CountersPlus.Counters
 {
     public class CutCounter : MonoBehaviour
     {
-        TMP_Text cutLabel;
-        ScoreController _scoreController;
-
+        private TMP_Text cutLabel;
+        private ScoreController _scoreController;
+        private GameObject _RankObject;
+        private TMP_Text cutCounter;
         private CutConfigModel settings;
-
         private int totalCutCount = 0;
         private int totalScore = 0; // MaxScoreForNumberOfNotes() is an int. Don't expect scores over 2 billion.
-        private NoteCutInfo currentCutInfo = null;
-
-        GameObject _RankObject;
-        TMP_Text cutCounter;
+        private Dictionary<SaberAfterCutSwingRatingCounter, NoteCutInfo> noteCutInfos = new Dictionary<SaberAfterCutSwingRatingCounter, NoteCutInfo>();
 
         void Awake()
         {
@@ -56,17 +55,18 @@ namespace CountersPlus.Counters
         private void UpdateScore(NoteData data, NoteCutInfo info, int score)
         {
             if (data.noteType == NoteType.Bomb || !info.allIsOK) return;
-            currentCutInfo = info;
+            noteCutInfos.Add(info.afterCutSwingRatingCounter, info);
             info.afterCutSwingRatingCounter.didFinishEvent -= AfterCutSwingRatingCounter_didFinishEvent;
             info.afterCutSwingRatingCounter.didFinishEvent += AfterCutSwingRatingCounter_didFinishEvent;
         }
 
         private void AfterCutSwingRatingCounter_didFinishEvent(SaberAfterCutSwingRatingCounter v)
         {
-            ScoreController.RawScoreWithoutMultiplier(currentCutInfo, currentCutInfo.afterCutSwingRatingCounter, out int beforeCut, out int afterCut, out int why);
+            ScoreController.RawScoreWithoutMultiplier(noteCutInfos[v], v, out int beforeCut, out int afterCut, out int why);
             totalScore += beforeCut + afterCut;
             ++totalCutCount; // Should always be non-zero.
             cutCounter.text = $"{Math.Round( ((double)totalScore) / totalCutCount )}";
+            noteCutInfos.Remove(v);
         }
     }
 }
