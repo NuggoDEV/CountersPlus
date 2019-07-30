@@ -18,6 +18,7 @@ namespace CountersPlus.UI
         private CountersPlusFillerForMainViewController placeholder;
         private CountersPlusEditViewController editSettings;
         private CountersPlusSettingsListViewController settingsList;
+        private CountersPlusHorizontalSettingsListViewController test;
         internal static CountersPlusSettingsFlowCoordinator Instance;
 
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
@@ -35,9 +36,10 @@ namespace CountersPlus.UI
                 editSettings = BeatSaberUI.CreateViewController<CountersPlusEditViewController>();
                 placeholder = BeatSaberUI.CreateViewController<CountersPlusFillerForMainViewController>();
                 settingsList = BeatSaberUI.CreateViewController<CountersPlusSettingsListViewController>();
+                test = BeatSaberUI.CreateViewController<CountersPlusHorizontalSettingsListViewController>();
             }
             SetViewControllersToNavigationConctroller(navigationController, new VRUIViewController[] { settingsList });
-            ProvideInitialViewControllers(placeholder, navigationController, editSettings);
+            ProvideInitialViewControllers(placeholder, navigationController, editSettings, test);
             MainScreen.transform.position = new Vector3(0, -100, 0); //"If it works it's not stupid"
             
             CounterWarning.CreateWarning("Due to limitations, some counters may not reflect their true appearance in-game.", 7.5f);

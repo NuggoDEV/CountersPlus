@@ -15,6 +15,11 @@ using IPA.Old;
 
 namespace CountersPlus.UI.ViewControllers
 {
+    /*
+     * Now with CountersPlusHorizontalViewController, this is no longer necessary.
+     * 
+     * Bottom screen looks better, plus you dont need to look to the left and right everytime to change settings.
+     */ 
     class CountersPlusSettingsListViewController : CustomListViewController
     {
         private LevelListTableCell cellInstance;
@@ -110,18 +115,18 @@ namespace CountersPlus.UI.ViewControllers
             {
                 songName.text = "Main Settings";
                 author.text = "Configure basic Counters+ settings.";
-                image.texture = Images.Images.Load("MainSettings");
+                image.texture = Images.Images.LoadTexture("MainSettings");
             }
             else if (row == NumberOfCells() - 2)
             {
                 songName.text = "Credits";
                 author.text = "View credits for Counters+.";
-                image.texture = Images.Images.Load("Credits");
+                image.texture = Images.Images.LoadTexture("Credits");
             }
             else if (row == NumberOfCells() - 1) {
                 songName.text = "Contributors";
                 author.text = "See who helped with Counters+!";
-                image.texture = Images.Images.Load("Contributors");
+                image.texture = Images.Images.LoadTexture("Contributors");
             }
             else
             {
@@ -130,10 +135,10 @@ namespace CountersPlus.UI.ViewControllers
                 author.text = info.Description;
                 try
                 {
-                    if (info.IsCustom) image.texture = Images.Images.Load("Custom");
-                    else image.texture = Images.Images.Load(info.Name);
+                    if (info.IsCustom) image.texture = Images.Images.LoadTexture("Custom");
+                    else image.texture = Images.Images.LoadTexture(info.Name);
                 }
-                catch { image.texture = Images.Images.Load("Bug"); }
+                catch { image.texture = Images.Images.LoadTexture("Bug"); }
             }
             cell.reuseIdentifier = "CountersPlusSettingCell";
             return cell;

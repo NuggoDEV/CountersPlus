@@ -175,7 +175,7 @@ namespace CountersPlus.UI.ViewControllers
                 donator.fontSize = 3;
                 donator.alignment = TextAlignmentOptions.Left;
                 setPositioning(donator.rectTransform, 0.15f,
-                    0.2f - (donators.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
+                    0.15f - (donators.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
                 loadedElements.Add(donator.gameObject);
             }
         }

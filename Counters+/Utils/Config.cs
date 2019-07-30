@@ -105,6 +105,7 @@ namespace CountersPlus.Config
 
     public abstract class ConfigModel {
         public string DisplayName { get; internal set; }
+        public SemVer.Version VersionAdded { get; internal set; }
         public bool Enabled;
         public ICounterPositions Position;
         public int Index;
@@ -123,7 +124,7 @@ namespace CountersPlus.Config
     }
 
     public sealed class MissedConfigModel : ConfigModel {
-        public MissedConfigModel() { DisplayName = "Missed"; }
+        public MissedConfigModel() { DisplayName = "Missed"; VersionAdded = new SemVer.Version("1.0.0"); }
         public bool CustomMissTextIntegration;
     }
 

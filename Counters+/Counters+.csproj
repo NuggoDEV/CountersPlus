@@ -93,6 +93,7 @@
     <Compile Include="UI\ViewControllers\CountersPlusEditViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusFillerForMainViewController.cs" />
     <Compile Include="UI\CountersPlusSettingsFlowCoordinator.cs" />
+    <Compile Include="UI\ViewControllers\CountersPlusHorizontalSettingsListViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusSettingsListViewController.cs" />
     <Compile Include="UI\MenuUI.cs" />
     <Compile Include="UI\MockCounter.cs" />
