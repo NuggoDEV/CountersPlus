@@ -54,91 +54,29 @@ namespace CountersPlus.UI.ViewControllers
             if (firstActivation)
             {
                 Instance = this;
-                CreateCredits();
+                CreateFiller();
             }
             else
             {
                 if (SelectedConfigModel != null) UpdateSettings(SelectedConfigModel, SelectedSettingsInfo);
-                else CreateCredits();
+                else CreateFiller();
             }
         }
 
-        internal static void CreateCredits()
+        internal static void CreateFiller()
         {
             ClearScreen();
-            TextMeshProUGUI name, version, creator;
-            Button github, issues, donate;
-
-            //name = BeatSaberUI.CreateText(rect, "Temporary Name LMAO", Vector2.zero);
-            name = BeatSaberUI.CreateText(rect, "Counters+", Vector2.zero);
-            name.fontSize = 11;
-            name.alignment = TextAlignmentOptions.Center;
-            name.characterSpacing = 2;
-            setPositioning(name.rectTransform, 0, 0.7f, 1, 0.166f, 0.5f);
-
-            version = BeatSaberUI.CreateText(rect,
-                $"Version <color={(Plugin.upToDate ? "#00FF00" : "#FF0000")}>{PluginManager.GetPlugin("Counters+").Metadata.Version.ToString()}</color>", Vector2.zero);
-            version.fontSize = 3;
-            version.alignment = TextAlignmentOptions.Center;
-            setPositioning(version.rectTransform, 0, 0.5f, 1, 0.166f, 0.5f);
-
-            if (!Plugin.upToDate)
-            {
-                TextMeshProUGUI warning = BeatSaberUI.CreateText(rect,
-                $"<color=#FF0000>Version {Plugin.webVersion} available for download!</color>", Vector2.zero);
-                warning.fontSize = 3;
-                warning.alignment = TextAlignmentOptions.Center;
-                setPositioning(warning.rectTransform, 0, 0.47f, 1, 0.166f, 0.5f);
-                loadedElements.Add(warning.gameObject);
-            }
-
-            creator = BeatSaberUI.CreateText(rect, "Developed by: <color=#00c0ff>Caeden117</color>", Vector2.zero);
-            creator.fontSize = 5;
-            creator.alignment = TextAlignmentOptions.Center;
-            setPositioning(creator.rectTransform, 0, 0.35f, 1, 0.166f, 0.5f);
-
-            github = BeatSaberUI.CreateUIButton(rect, "SettingsButton", Vector2.left, null, "GitHub");
-            github.onClick.AddListener(() => { GoTo("https://github.com/Caeden117/CountersPlus", github); });
-            setPositioning(github.transform as RectTransform, 0f, 0f, 0.39f, 0.125f, 0.5f);
-            BeatSaberUI.AddHintText(github.transform as RectTransform, "Opens in a new browser tab on your desktop. Feel free to explore the source code! Maybe try out experimental versions?");
-
-            issues = BeatSaberUI.CreateUIButton(rect, "QuitButton", Vector2.right, null, "Report an Issue");
-            issues.onClick.AddListener(() => { GoTo("https://github.com/Caeden117/CountersPlus/issues", issues); });
-            setPositioning(issues.transform as RectTransform, 0.5f, 0f, 0.5f, 0.125f, 0.5f);
-            BeatSaberUI.AddHintText(issues.transform as RectTransform, "Opens in a new browser tab on your desktop. Be sure to read the Issue template thoroughly!");
-
-            donate = BeatSaberUI.CreateUIButton(rect, "CreditsButton", Vector2.zero, null, "<3");
-            donate.onClick.AddListener(() => { GoTo("https://ko-fi.com/Caeden117", donate); });
-            BeatSaberUI.AddHintText(donate.transform as RectTransform, "Buy me a coffee if you feel like I'm deserving of one.");
-            setPositioning(donate.transform as RectTransform, 0.36f, 0f, 0.17f, 0.125f, 0.5f);
-
-            loadedElements.AddRange(new GameObject[] { name.gameObject, version.gameObject, creator.gameObject, github.gameObject, issues.gameObject, donate.gameObject });
-        }
-
-        private static void GoTo(string url, Button button)
-        {
-            Plugin.Log("Opened a link to: " + url);
-            button.interactable = false;
-            TextMeshProUGUI reminder = BeatSaberUI.CreateText(rect, "Link opened in your browser!", Vector2.zero);
-            reminder.fontSize = 4;
-            reminder.alignment = TextAlignmentOptions.Center;
-            setPositioning(reminder.rectTransform, 0, 0.25f, 1, 0.166f, 0.5f);
-            loadedElements.Add(reminder.gameObject);
-            Instance.StartCoroutine(Instance.SecondRemove(reminder.gameObject, button));
-            System.Diagnostics.Process.Start(url);
-        }
-
-        private IEnumerator SecondRemove(GameObject go, Button button) {
-            yield return new WaitForSeconds(5);
-            loadedElements.Remove(go);
-            Destroy(go);
-            button.interactable = true;
+            TextMeshProUGUI filler = BeatSaberUI.CreateText(rect, "Select an option, and\nsettings will appear here!", Vector2.zero);
+            filler.fontSize = 11;
+            filler.alignment = TextAlignmentOptions.Center;
+            filler.characterSpacing = 2;
+            setPositioning(filler.rectTransform, 0, 0.6f, 1, 0.166f, 0.5f);
+            loadedElements.Add(filler.gameObject);
         }
 
         internal static void ShowContributors()
         {
             Dictionary<string, string> contributors = new Dictionary<string, string>(ContributorsAndDonators.Contributors);
-            Dictionary<string, string> donators = new Dictionary<string, string>(ContributorsAndDonators.Donators);
             string user = GetUserInfo.GetUserName();
             if (user == null) user = "You";
             if (contributors.ContainsKey(user))
@@ -146,18 +84,12 @@ namespace CountersPlus.UI.ViewControllers
             else contributors.Add(user, "For enjoying this mod!"); //Teehee :)
 
             ClearScreen();
-            TextMeshProUGUI contributorLabel, donatorLabel;
+            TextMeshProUGUI contributorLabel;
             contributorLabel = BeatSaberUI.CreateText(rect, "Thanks to these contributors for, directly or indirectly, helping make Counters+ what it is!", Vector2.zero);
             contributorLabel.fontSize = 3;
             contributorLabel.alignment = TextAlignmentOptions.Center;
             setPositioning(contributorLabel.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
             loadedElements.Add(contributorLabel.gameObject);
-
-            donatorLabel = BeatSaberUI.CreateText(rect, "Thanks to the <color=#FF0048>Ko-fi</color> donators who support me! <i>DM me on Discord for any corrections to these names.</i>", Vector2.zero);
-            donatorLabel.fontSize = 3;
-            donatorLabel.alignment = TextAlignmentOptions.Center;
-            setPositioning(donatorLabel.rectTransform, 0, 0.25f, 1, 0.166f, 0.5f);
-            loadedElements.Add(donatorLabel.gameObject);
 
             foreach (var kvp in contributors)
             {
@@ -168,6 +100,18 @@ namespace CountersPlus.UI.ViewControllers
                     0.8f - (contributors.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
                 loadedElements.Add(contributor.gameObject);
             }
+        }
+
+        internal static void ShowDonators()
+        {
+            Dictionary<string, string> donators = new Dictionary<string, string>(ContributorsAndDonators.Donators);
+            TextMeshProUGUI donatorLabel = BeatSaberUI.CreateText(rect, "Thanks to the <color=#FF0048>Ko-fi</color> donators who support me! <i>DM me on Discord for any corrections to these names.</i>", Vector2.zero);
+
+            ClearScreen();
+            donatorLabel.fontSize = 3;
+            donatorLabel.alignment = TextAlignmentOptions.Center;
+            setPositioning(donatorLabel.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
+            loadedElements.Add(donatorLabel.gameObject);
 
             foreach (var kvp in donators)
             {
@@ -175,7 +119,7 @@ namespace CountersPlus.UI.ViewControllers
                 donator.fontSize = 3;
                 donator.alignment = TextAlignmentOptions.Left;
                 setPositioning(donator.rectTransform, 0.15f,
-                    0.2f - (donators.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
+                    0.8f - (donators.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
                 loadedElements.Add(donator.gameObject);
             }
         }

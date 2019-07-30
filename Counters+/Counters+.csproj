@@ -90,9 +90,11 @@
     <Compile Include="UI\Images\Images.cs" />
     <Compile Include="UI\ViewControllers\BackButton.cs" />
     <Compile Include="UI\ViewControllers\ContributorsAndDonators.cs" />
+    <Compile Include="UI\ViewControllers\CountersPlusCreditsViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusEditViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusFillerForMainViewController.cs" />
     <Compile Include="UI\CountersPlusSettingsFlowCoordinator.cs" />
+    <Compile Include="UI\ViewControllers\CountersPlusHorizontalSettingsListViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusSettingsListViewController.cs" />
     <Compile Include="UI\MenuUI.cs" />
     <Compile Include="UI\MockCounter.cs" />
@@ -165,6 +167,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="About.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Images\Donators.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

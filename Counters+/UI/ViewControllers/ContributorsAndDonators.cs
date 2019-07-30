@@ -18,6 +18,7 @@ namespace CountersPlus.UI.ViewControllers
             { "Assistant", "Stole some Custom Avatars UI code to help with settings" },
             { "Kyle1413", "Beat Saber Utils and for Progress/Score Counter code" },
             { "Ragesaq", "Speed Counter and Spinometer idea <i>(and some bug fixing on stream)</i>" },
+            { "monkeymanboy", "Custom Campaign's UI code for the bottom screen" },
             { "SkyKiwiTV", "Original version checking code" },
             { "Dracrius", "Bug fixing and beta testing" },
         };
@@ -26,6 +27,7 @@ namespace CountersPlus.UI.ViewControllers
         {
             { "altrewin", "Thanks for the love, and coffee. <3" },
             { "Latest", "Sorry I was late on thanking you, here you go!" },
+            { "Jackz", "C# is better." },
             { "Someone", "To all the people who remain anonymous, I thank you." },
         };
 

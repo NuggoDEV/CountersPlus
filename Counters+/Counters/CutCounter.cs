@@ -2,7 +2,6 @@
 using UnityEngine;
 using TMPro;
 using CountersPlus.Config;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace CountersPlus.Counters
