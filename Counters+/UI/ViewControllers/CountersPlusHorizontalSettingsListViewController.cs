@@ -23,6 +23,8 @@ namespace CountersPlus.UI.ViewControllers
      * Might as well make it from scratch, with CustomListController as a starting point.
      *
      * In the end, though, I'm really happy with how this turned out.
+     * 
+     * I've left comments on whether or not you should keep or remove certain segments of code. Happy code yoinking!
      */
     class CountersPlusHorizontalSettingsListViewController : CustomViewController, TableView.IDataSource
     {
@@ -49,7 +51,7 @@ namespace CountersPlus.UI.ViewControllers
                     RectTransform container = new GameObject("HorizontalListContainer", typeof(RectTransform)).transform as RectTransform;
                     container.SetParent(rectTransform, false);
                     container.sizeDelta = new Vector2(0, 0);
-                    container.anchorMin = new Vector2(0.1f, 0); //Squish the list container a little bit inside
+                    container.anchorMin = new Vector2(0.1f, 0); //Squish the list container a little bit
                     container.anchorMax = new Vector2(0.9f, 1); //To make room for the forward/backward buttons
 
                     var go = new GameObject("CustomListTableView");
@@ -100,7 +102,7 @@ namespace CountersPlus.UI.ViewControllers
                     });
 
                     //Now load my Counter settings and data. The rest from here on out is mainly copied from
-                    //the old CountersPlusSettingsViewController.
+                    //the old CountersPlusSettingsViewController, and can be safely removed.
                     foreach (var kvp in AdvancedCounterSettings.counterUIItems) counterInfos.Add(CreateFromModel(kvp.Key));
                     FileIniDataParser parser = new FileIniDataParser();
                     IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
@@ -123,17 +125,18 @@ namespace CountersPlus.UI.ViewControllers
                         }
                     }
 
+                    //Reload the data, and select the first cell in the list.
                     CustomListTableView.didSelectCellWithIdxEvent += OnCellSelect;
                     CustomListTableView.ReloadData();
                     CustomListTableView.SelectCellWithIdx(0, false);
                 }
             } catch (Exception e)
-            {
+            {  //Edit this with your logging system of choice, or delete it altogether (As this shouldn't really cause Exceptions)
                 Plugin.Log(e.ToString(), Plugin.LogInfo.Error, "Report this as an issue on the Counters+ GitHub.");
             }
         }
 
-        private SettingsInfo CreateFromModel<T>(T settings) where T : ConfigModel
+        private SettingsInfo CreateFromModel<T>(T settings) where T : ConfigModel //Counters+ stuff, OK to remove.
         {
             SettingsInfo info = new SettingsInfo()
             {
@@ -144,7 +147,7 @@ namespace CountersPlus.UI.ViewControllers
             return info;
         }
 
-        private string DescriptionForModel<T>(T settings) where T : ConfigModel
+        private string DescriptionForModel<T>(T settings) where T : ConfigModel //Counters+ stuff, OK to remove.
         {
             switch (settings.DisplayName)
             {   //Dont mind me just compressing some code.
@@ -162,9 +165,9 @@ namespace CountersPlus.UI.ViewControllers
             }
         }
 
-        public float CellSize() { return 30f; }
+        public float CellSize() { return 30f; } //I'd recommend keeping this as is (5 cells shown), unless you want more spread out cells (40 = 4 cells shown).
 
-        public int NumberOfCells() { return counterInfos.Count + 3; }
+        public int NumberOfCells() { return counterInfos.Count + 3; } //Tune this to the amount of cells you'll have, whether dynamic or static.
 
         public TableCell CellForIdx(int row)
         {
@@ -174,12 +177,12 @@ namespace CountersPlus.UI.ViewControllers
                 cell = Instantiate(levelPackTableCellInstance);
                 cell.reuseIdentifier = ReuseIdentifier;
             }
-            cell.showNewRibbon = false;
+            cell.showNewRibbon = false; //Dequeued cells will keep NEW ribbon value. Always change it to false.
             TextMeshProUGUI packNameText = cell.GetPrivateField<TextMeshProUGUI>("_packNameText");
             TextMeshProUGUI packInfoText = cell.GetPrivateField<TextMeshProUGUI>("_infoText");
             packInfoText.richText = true; //Enable rich text for info text.
             UnityEngine.UI.Image packCoverImage = cell.GetPrivateField<UnityEngine.UI.Image>("_coverImage");
-            if (row == 0)
+            if (row == 0) //From here on out is mainly Counters+ things, so you can safely remove them.
             {
                 packNameText.text = "Main Settings";
                 packInfoText.text = "Configure basic Counters+ settings.";
@@ -221,7 +224,7 @@ namespace CountersPlus.UI.ViewControllers
             return cell;
         }
 
-        private void OnCellSelect(TableView view, int row)
+        private void OnCellSelect(TableView view, int row) //Change what happens on cell select.
         {
             SettingsInfo info = null;
             if (row > 0 && row < NumberOfCells() - 2) info = counterInfos[row - 1];
