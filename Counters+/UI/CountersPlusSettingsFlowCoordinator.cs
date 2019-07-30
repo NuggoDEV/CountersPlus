@@ -17,8 +17,9 @@ namespace CountersPlus.UI
         private BackButton navigationController;
         private CountersPlusFillerForMainViewController placeholder;
         private CountersPlusEditViewController editSettings;
-        private CountersPlusSettingsListViewController settingsList;
-        private CountersPlusHorizontalSettingsListViewController test;
+        //private CountersPlusSettingsListViewController settingsList;
+        private CountersPlusCreditsViewController credits;
+        private CountersPlusHorizontalSettingsListViewController horizSettingsList;
         internal static CountersPlusSettingsFlowCoordinator Instance;
 
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
@@ -35,11 +36,12 @@ namespace CountersPlus.UI
                 
                 editSettings = BeatSaberUI.CreateViewController<CountersPlusEditViewController>();
                 placeholder = BeatSaberUI.CreateViewController<CountersPlusFillerForMainViewController>();
-                settingsList = BeatSaberUI.CreateViewController<CountersPlusSettingsListViewController>();
-                test = BeatSaberUI.CreateViewController<CountersPlusHorizontalSettingsListViewController>();
+                //settingsList = BeatSaberUI.CreateViewController<CountersPlusSettingsListViewController>();
+                horizSettingsList = BeatSaberUI.CreateViewController<CountersPlusHorizontalSettingsListViewController>();
+                credits = BeatSaberUI.CreateViewController<CountersPlusCreditsViewController>();
             }
-            SetViewControllersToNavigationConctroller(navigationController, new VRUIViewController[] { settingsList });
-            ProvideInitialViewControllers(placeholder, navigationController, editSettings, test);
+            SetViewControllersToNavigationConctroller(navigationController, new VRUIViewController[] { credits });
+            ProvideInitialViewControllers(placeholder, navigationController, editSettings, horizSettingsList);
             MainScreen.transform.position = new Vector3(0, -100, 0); //"If it works it's not stupid"
             
             CounterWarning.CreateWarning("Due to limitations, some counters may not reflect their true appearance in-game.", 7.5f);
@@ -73,7 +75,7 @@ namespace CountersPlus.UI
             while (!allCountersActive)
             {
                 int loaded = 0;
-                foreach (SettingsInfo counter in CountersPlusSettingsListViewController.Instance.counterInfos)
+                foreach (SettingsInfo counter in CountersPlusHorizontalSettingsListViewController.Instance.counterInfos)
                 {
                     try
                     {
@@ -82,7 +84,7 @@ namespace CountersPlus.UI
                     }
                     catch { } //Mainly from custom counters, no biggie.
                 }
-                if (loaded == CountersPlusSettingsListViewController.Instance.counterInfos.Count) allCountersActive = true;
+                if (loaded == CountersPlusHorizontalSettingsListViewController.Instance.counterInfos.Count) allCountersActive = true;
                 yield return new WaitForEndOfFrame();
             }
         }

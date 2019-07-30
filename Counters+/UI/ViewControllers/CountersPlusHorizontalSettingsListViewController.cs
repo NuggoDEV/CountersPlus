@@ -187,9 +187,10 @@ namespace CountersPlus.UI.ViewControllers
             }
             else if (row == NumberOfCells() - 2)
             {
-                packNameText.text = "Credits";
-                packInfoText.text = "View credits for Counters+.";
+                packNameText.text = "Donators";
+                packInfoText.text = "See who supported me on Ko-fi!";
                 packCoverImage.sprite = Images.Images.LoadSprite("Credits");
+                cell.showNewRibbon = true;
             }
             else if (row == NumberOfCells() - 1)
             {
@@ -225,7 +226,7 @@ namespace CountersPlus.UI.ViewControllers
             SettingsInfo info = null;
             if (row > 0 && row < NumberOfCells() - 2) info = counterInfos[row - 1];
             if (row == 0) CountersPlusEditViewController.ShowMainSettings();
-            else if (row == NumberOfCells() - 2) CountersPlusEditViewController.CreateCredits();
+            else if (row == NumberOfCells() - 2) CountersPlusEditViewController.ShowDonators();
             else if (row == NumberOfCells() - 1) CountersPlusEditViewController.ShowContributors();
             else CountersPlusEditViewController.UpdateSettings(info.Model, info);
         }

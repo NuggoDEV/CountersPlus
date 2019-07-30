@@ -149,7 +149,7 @@ namespace CountersPlus.UI.ViewControllers
             SettingsInfo info = null;
             if (row > 0 && row < NumberOfCells() - 2) info = counterInfos[row - 1];
             if (row == 0) CountersPlusEditViewController.ShowMainSettings();
-            else if (row == NumberOfCells() - 2) CountersPlusEditViewController.CreateCredits();
+            else if (row == NumberOfCells() - 2) CountersPlusEditViewController.CreateFiller();
             else if (row == NumberOfCells() - 1) CountersPlusEditViewController.ShowContributors();
             else CountersPlusEditViewController.UpdateSettings(info.Model, info);
         }
