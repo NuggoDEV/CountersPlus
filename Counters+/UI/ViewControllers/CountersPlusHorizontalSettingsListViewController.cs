@@ -185,14 +185,14 @@ namespace CountersPlus.UI.ViewControllers
                 packInfoText.text = "Configure basic Counters+ settings.";
                 packCoverImage.sprite = Images.Images.LoadSprite("MainSettings");
             }
-            else if (row == NumberOfCells() - 2)
+            else if (row == NumberOfCells() - 1)
             {
                 packNameText.text = "Donators";
                 packInfoText.text = "See who supported me on Ko-fi!";
-                packCoverImage.sprite = Images.Images.LoadSprite("Credits");
+                packCoverImage.sprite = Images.Images.LoadSprite("Donators");
                 cell.showNewRibbon = true;
             }
-            else if (row == NumberOfCells() - 1)
+            else if (row == NumberOfCells() - 2)
             {
                 packNameText.text = "Contributors";
                 packInfoText.text = "See who helped with Counters+!";
@@ -226,8 +226,8 @@ namespace CountersPlus.UI.ViewControllers
             SettingsInfo info = null;
             if (row > 0 && row < NumberOfCells() - 2) info = counterInfos[row - 1];
             if (row == 0) CountersPlusEditViewController.ShowMainSettings();
-            else if (row == NumberOfCells() - 2) CountersPlusEditViewController.ShowDonators();
-            else if (row == NumberOfCells() - 1) CountersPlusEditViewController.ShowContributors();
+            else if (row == NumberOfCells() - 1) CountersPlusEditViewController.ShowDonators();
+            else if (row == NumberOfCells() - 2) CountersPlusEditViewController.ShowContributors();
             else CountersPlusEditViewController.UpdateSettings(info.Model, info);
         }
     }

@@ -105,7 +105,7 @@ namespace CountersPlus.Config
 
     public abstract class ConfigModel {
         public string DisplayName { get; internal set; }
-        public SemVer.Version VersionAdded { get; internal set; } = null;
+        internal SemVer.Version VersionAdded { get; set; } = null;
         public bool Enabled;
         public ICounterPositions Position;
         public int Index;
@@ -182,7 +182,7 @@ namespace CountersPlus.Config
 
     public sealed class FailConfigModel : ConfigModel
     {
-        public FailConfigModel() { DisplayName = "Fail"; VersionAdded = new SemVer.Version("1.5.10"); }
+        public FailConfigModel() { DisplayName = "Fail"; VersionAdded = new SemVer.Version("1.5.8"); }
         public bool ShowRestartsInstead;
     }
     
