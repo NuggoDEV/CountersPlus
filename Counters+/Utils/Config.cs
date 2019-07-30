@@ -105,7 +105,7 @@ namespace CountersPlus.Config
 
     public abstract class ConfigModel {
         public string DisplayName { get; internal set; }
-        public SemVer.Version VersionAdded { get; internal set; }
+        public SemVer.Version VersionAdded { get; internal set; } = null;
         public bool Enabled;
         public ICounterPositions Position;
         public int Index;
@@ -129,13 +129,13 @@ namespace CountersPlus.Config
     }
 
     public sealed class NoteConfigModel : ConfigModel {
-        public NoteConfigModel() { DisplayName = "Notes"; }
+        public NoteConfigModel() { DisplayName = "Notes"; VersionAdded = new SemVer.Version("1.0.0"); }
         public bool ShowPercentage;
         public int DecimalPrecision;
     }
 
     public sealed class ProgressConfigModel : ConfigModel {
-        public ProgressConfigModel() { DisplayName = "Progress"; }
+        public ProgressConfigModel() { DisplayName = "Progress"; VersionAdded = new SemVer.Version("1.0.0"); }
         public ICounterMode Mode;
         public bool ProgressTimeLeft;
         public bool IncludeRing;
@@ -143,14 +143,14 @@ namespace CountersPlus.Config
 
     public sealed class ScoreConfigModel : ConfigModel
     {
-        public ScoreConfigModel() { DisplayName = "Score"; }
+        public ScoreConfigModel() { DisplayName = "Score"; VersionAdded = new SemVer.Version("1.0.0"); }
         public ICounterMode Mode;
         public int DecimalPrecision;
         public bool DisplayRank;
     }
 
     public sealed class PBConfigModel : ConfigModel{
-        public PBConfigModel() { DisplayName = "Personal Best"; }
+        public PBConfigModel() { DisplayName = "Personal Best"; VersionAdded = new SemVer.Version("1.5.5"); }
         public int DecimalPrecision;
         public int TextSize;
         public bool UnderScore;
@@ -159,30 +159,30 @@ namespace CountersPlus.Config
 
     public sealed class SpeedConfigModel : ConfigModel
     {
-        public SpeedConfigModel() { DisplayName = "Speed"; }
+        public SpeedConfigModel() { DisplayName = "Speed"; VersionAdded = new SemVer.Version("1.1.0"); }
         public int DecimalPrecision;
         public ICounterMode Mode;
     }
 
     public sealed class SpinometerConfigModel : ConfigModel
     {
-        public SpinometerConfigModel() { DisplayName = "Spinometer"; }
+        public SpinometerConfigModel() { DisplayName = "Spinometer"; VersionAdded = new SemVer.Version("1.4.1"); }
         public ICounterMode Mode;
     }
 
     public sealed class CutConfigModel : ConfigModel {
-        public CutConfigModel() { DisplayName = "Cut"; }
+        public CutConfigModel() { DisplayName = "Cut"; VersionAdded = new SemVer.Version("1.1.0"); }
     }
 
     public sealed class NotesLeftConfigModel : ConfigModel
     {
-        public NotesLeftConfigModel() { DisplayName = "Notes Left"; }
+        public NotesLeftConfigModel() { DisplayName = "Notes Left"; VersionAdded = new SemVer.Version("1.5.8"); }
         public bool LabelAboveCount;
     }
 
     public sealed class FailConfigModel : ConfigModel
     {
-        public FailConfigModel() { DisplayName = "Fail"; }
+        public FailConfigModel() { DisplayName = "Fail"; VersionAdded = new SemVer.Version("1.5.10"); }
         public bool ShowRestartsInstead;
     }
     

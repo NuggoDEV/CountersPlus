@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CountersPlus.Config;
 using CountersPlus.Custom;
 using CustomUI.BeatSaber;
@@ -14,7 +12,6 @@ using IPA.Old;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using VRUI;
 
 namespace CountersPlus.UI.ViewControllers
 {
@@ -172,12 +169,12 @@ namespace CountersPlus.UI.ViewControllers
         public TableCell CellForIdx(int row)
         {
             LevelPackTableCell cell = CustomListTableView.DequeueReusableCellForIdentifier(ReuseIdentifier) as LevelPackTableCell;
-            cell.showNewRibbon = false;
             if (cell == null)
             {
                 cell = Instantiate(levelPackTableCellInstance);
                 cell.reuseIdentifier = ReuseIdentifier;
             }
+            cell.showNewRibbon = false;
             TextMeshProUGUI packNameText = cell.GetPrivateField<TextMeshProUGUI>("_packNameText");
             TextMeshProUGUI packInfoText = cell.GetPrivateField<TextMeshProUGUI>("_infoText");
             packInfoText.richText = true; //Enable rich text for info text.
@@ -205,11 +202,18 @@ namespace CountersPlus.UI.ViewControllers
                 SettingsInfo info = counterInfos[row - 1];
                 packNameText.text = info.Name;
                 packInfoText.text = info.Description;
-                cell.showNewRibbon = true;
                 try
                 {
                     if (info.IsCustom) packCoverImage.sprite = Images.Images.LoadSprite("Custom");
-                    else packCoverImage.sprite = Images.Images.LoadSprite(info.Name);
+                    else
+                    {
+                        packCoverImage.sprite = Images.Images.LoadSprite(info.Name);
+                        if (info.Model.VersionAdded != null)
+                        {
+                            cell.showNewRibbon = PluginManager.GetPlugin("Counters+").Metadata.Version == info.Model.VersionAdded;
+                            packInfoText.text += $"\n\n<i>Version added: {info.Model.VersionAdded.ToString()}</i>";
+                        }
+                    }
                 }
                 catch { packCoverImage.sprite = Images.Images.LoadSprite("Bug"); }
             }

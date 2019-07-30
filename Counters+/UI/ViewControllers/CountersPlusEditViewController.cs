@@ -156,7 +156,7 @@ namespace CountersPlus.UI.ViewControllers
             donatorLabel = BeatSaberUI.CreateText(rect, "Thanks to the <color=#FF0048>Ko-fi</color> donators who support me! <i>DM me on Discord for any corrections to these names.</i>", Vector2.zero);
             donatorLabel.fontSize = 3;
             donatorLabel.alignment = TextAlignmentOptions.Center;
-            setPositioning(donatorLabel.rectTransform, 0, 0.25f, 1, 0.166f, 0.5f);
+            setPositioning(donatorLabel.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
             loadedElements.Add(donatorLabel.gameObject);
 
             foreach (var kvp in contributors)
@@ -175,7 +175,7 @@ namespace CountersPlus.UI.ViewControllers
                 donator.fontSize = 3;
                 donator.alignment = TextAlignmentOptions.Left;
                 setPositioning(donator.rectTransform, 0.15f,
-                    0.15f - (donators.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
+                    0.8f - (donators.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
                 loadedElements.Add(donator.gameObject);
             }
         }
