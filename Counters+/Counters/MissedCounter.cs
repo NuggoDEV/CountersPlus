@@ -23,7 +23,7 @@ namespace CountersPlus.Counters
         private void Init(CountersData data)
         {
             scoreController = data.ScoreController;
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
+            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out missedText, position - new Vector3(0, 0.4f, 0));
             missedText.text = "0";
             missedText.fontSize = 4;

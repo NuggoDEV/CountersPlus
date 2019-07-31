@@ -32,7 +32,7 @@ namespace CountersPlus.Counters
 
         private void Init(CountersData data)
         {
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
+            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             pc = data.PlayerController;
             right = data.PlayerController.rightSaber;
             left = data.PlayerController.leftSaber;

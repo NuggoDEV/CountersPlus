@@ -46,7 +46,7 @@ namespace CountersPlus.Counters
             _maxPossibleScore = Mathf.RoundToInt(maxRawScore * modifier);
             beginningPB = stats.highScore / (float)_maxPossibleScore;
 
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
+            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out _PbTrackerText, position);
             _PbTrackerText.fontSize = settings.TextSize;
             _PbTrackerText.color = Color.white;

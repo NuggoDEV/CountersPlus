@@ -54,7 +54,7 @@ namespace CountersPlus
         {
             if (!settings.Enabled || GameObject.Find("Counters+ | " + name + " Counter")) return;
             GameObject counter = new GameObject("Counters+ | " + name + " Counter");
-            counter.transform.position = DeterminePosition(counter, settings.Position, settings.Index);
+            counter.transform.position = DeterminePosition(counter, settings.Position, settings.Distance);
             counter.AddComponent(typeof(R));
             Plugin.Log("Loaded Counter: " + name);
             LoadedCounters.Add(counter);

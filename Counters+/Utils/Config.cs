@@ -108,7 +108,9 @@ namespace CountersPlus.Config
         internal SemVer.Version VersionAdded { get; set; } = null;
         public bool Enabled;
         public ICounterPositions Position;
-        public int Index;
+        [Obsolete("Index is a bad name, and thats my bad. Use Distance instead.")]
+        public int Index { get { return Distance; } set { Distance = value; } }
+        public int Distance;
 
         public void Save()
         {

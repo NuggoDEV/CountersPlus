@@ -28,7 +28,7 @@ namespace CountersPlus.UI
             if (!settings.Enabled) return;
             GameObject counter = new GameObject($"Counters+ | Mock {counterName} Counter");
             GameObject nameGO = new GameObject($"Counters+ | Mock {counterName} Label");
-            Vector3 position = (CountersController.DeterminePosition(counter, settings.Position, settings.Index) - new Vector3(0, 0.4f, 0));
+            Vector3 position = (CountersController.DeterminePosition(counter, settings.Position, settings.Distance) - new Vector3(0, 0.4f, 0));
             nameGO.transform.parent = counter.transform;
             //TextMeshPro name = nameGO.AddComponent<TextMeshPro>();
             TextHelper.CreateText(out TMP_Text name, position);

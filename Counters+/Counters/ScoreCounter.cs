@@ -55,7 +55,7 @@ namespace CountersPlus.Counters
                 CreateText();
             }
             else
-                transform.position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
+                transform.position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
         }
 
         private void CreateText()
@@ -64,7 +64,7 @@ namespace CountersPlus.Counters
             transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().fontSize = 0.325f;
             GameObject scoreMesh = new GameObject("Counters+ | Score Percent");
             scoreMesh.transform.SetParent(transform, false);
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
+            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out ScoreMesh, position);
             ScoreMesh.text = "100.0%";
             ScoreMesh.fontSize = 3;

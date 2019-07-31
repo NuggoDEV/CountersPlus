@@ -82,7 +82,7 @@ namespace CountersPlus.Custom
                 SectionName = model.SectionName,
                 Enabled = (defaults == null ? true : defaults.Enabled),
                 Position = (defaults == null ? ICounterPositions.BelowCombo : defaults.Position),
-                Index = (defaults == null ? 2 : defaults.Index),
+                Distance = (defaults == null ? 2 : defaults.Distance),
                 Counter = model.Counter,
                 ModCreator = modCreator,
                 RestrictedPositions = (restrictedPositions?.Count() == 0 || restrictedPositions == null) ? new ICounterPositions[] { } : restrictedPositions, //Thanks Viscoci for this

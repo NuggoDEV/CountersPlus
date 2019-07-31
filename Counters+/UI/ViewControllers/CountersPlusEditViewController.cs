@@ -241,8 +241,8 @@ namespace CountersPlus.UI.ViewControllers
 
             var index = AddList(ref sub, settings, "Distance", "How far from the position the counter will be. A higher number means farther way.", 7);
             index.GetTextForValue = (v) => Mathf.RoundToInt(v - 1).ToString();
-            index.GetValue = () => settings.Index + 1;
-            index.SetValue += (v) => settings.Index = Mathf.RoundToInt(v - 1);
+            index.GetValue = () => settings.Distance + 1;
+            index.SetValue += (v) => settings.Distance = Mathf.RoundToInt(v - 1);
             return sub;
         }
 

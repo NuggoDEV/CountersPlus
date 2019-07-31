@@ -23,7 +23,7 @@ namespace CountersPlus.Counters
             SC.noteWasCutEvent += OnNoteCut;
             SC.noteWasMissedEvent += OnNoteMiss;
             notesLeft = data.GCSSD.difficultyBeatmap.beatmapData.notesCount;
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
+            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out counter, position - new Vector3(0, 0.4f, 0));
             counter.text = $"Notes Remaining {notesLeft}";
             counter.fontSize = 3f;

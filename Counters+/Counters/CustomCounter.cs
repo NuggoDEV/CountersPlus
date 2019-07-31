@@ -76,7 +76,7 @@ namespace CountersPlus.Counters
                     child.transform.localPosition = ((child.transform.position - firstPosition) * TextHelper.ScaleFactor) - new Vector3(0, 0.4f, 0);
                 }
             }
-            transform.position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
+            transform.position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
         }
     }
 }

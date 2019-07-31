@@ -26,7 +26,7 @@ namespace CountersPlus.Counters
         private void Init(CountersData data)
         {
             _scoreController = data.ScoreController;
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Index);
+            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out cutLabel, position);
             cutLabel.text = "Average Cut";
             cutLabel.fontSize = 3;
