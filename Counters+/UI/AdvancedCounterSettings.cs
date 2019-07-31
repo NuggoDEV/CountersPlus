@@ -167,7 +167,12 @@ namespace CountersPlus.UI
                     speedHover.text = DetermineModeText(CC.settings.speedConfig.Mode);
                 };
             } },
-            { CC.settings.cutConfig, (sub, config) => { } },
+            { CC.settings.cutConfig, (sub, config) => {
+                var label = CPEVC.AddList(ref sub, CC.settings.cutConfig, "Separate Saber Counts", "Shows the average cut for the left and right sabers separately", 2);
+                label.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+                label.GetValue = () => CC.settings.cutConfig.SeparateSaberCounts ? 1f : 0f;
+                label.SetValue += (v) => CC.settings.cutConfig.SeparateSaberCounts = v != 0f;
+            } },
             { CC.settings.spinometerConfig, (sub, config) => {
                 var spinometerMode = CPEVC.AddList(ref sub, config, "Mode", "", spinometerSettings.Count());
                 spinometerMode.GetTextForValue = (v) => {
