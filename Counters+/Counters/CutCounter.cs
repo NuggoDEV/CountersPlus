@@ -13,8 +13,11 @@ namespace CountersPlus.Counters
         private GameObject _RankObject;
         private TMP_Text cutCounter;
         private CutConfigModel settings;
-        private int totalCutCount = 0;
-        private int totalScore = 0; // MaxScoreForNumberOfNotes() is an int. Don't expect scores over 2 billion.
+        private int totalCutCountLeft = 0;
+        private int totalCutCountRight = 0;
+        private int totalScoreLeft = 0; // MaxScoreForNumberOfNotes() is an int. Don't expect scores over 2 billion.
+        private int totalScoreRight = 0;
+
         private Dictionary<SaberAfterCutSwingRatingCounter, NoteCutInfo> noteCutInfos = new Dictionary<SaberAfterCutSwingRatingCounter, NoteCutInfo>();
 
         void Awake()
@@ -36,7 +39,7 @@ namespace CountersPlus.Counters
             _RankObject = new GameObject("Counters+ | Cut Label");
             _RankObject.transform.parent = transform;
             TextHelper.CreateText(out cutCounter, position - new Vector3(0, 0.4f, 0));
-            cutCounter.text = "0";
+            cutCounter.text = settings.SeparateSaberCounts ? "0  0" : "0";
             cutCounter.fontSize = 4;
             cutCounter.color = Color.white;
             cutCounter.alignment = TextAlignmentOptions.Center;
@@ -62,9 +65,30 @@ namespace CountersPlus.Counters
         private void AfterCutSwingRatingCounter_didFinishEvent(SaberAfterCutSwingRatingCounter v)
         {
             ScoreController.RawScoreWithoutMultiplier(noteCutInfos[v], v, out int beforeCut, out int afterCut, out int why);
-            totalScore += beforeCut + afterCut;
-            ++totalCutCount; // Should always be non-zero.
-            cutCounter.text = $"{Math.Round( ((double)totalScore) / totalCutCount )}";
+
+            if (noteCutInfos[v].saberType == Saber.SaberType.SaberA)
+            {
+                totalScoreLeft += beforeCut + afterCut;
+                ++totalCutCountLeft;
+            }
+            else
+            {
+                totalScoreRight += beforeCut + afterCut;
+                ++totalCutCountRight;
+            }
+
+            if (settings.SeparateSaberCounts)
+            {
+                double leftAverage = Math.Round(((double)(totalScoreLeft)) / (totalCutCountLeft));
+                double rightAverage = Math.Round(((double)(totalScoreRight)) / (totalCutCountRight));
+                leftAverage = Double.IsNaN(leftAverage) ? 0 : leftAverage;
+                rightAverage = Double.IsNaN(rightAverage) ? 0 : rightAverage;
+                cutCounter.text = $"{leftAverage}";
+                cutCounter.text += $"  {rightAverage}";
+            }
+            else
+                cutCounter.text = $"{Math.Round(((double)(totalScoreRight + totalScoreLeft)) / (totalCutCountRight + totalCutCountLeft))}";
+
             noteCutInfos.Remove(v);
         }
     }

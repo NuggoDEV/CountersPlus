@@ -135,7 +135,12 @@ namespace CountersPlus.UI
                         Create(settings, "Top Speed (5 Sec.)", $"{Math.Round(info.leftSpeedAverage + 10, (settings as SpeedConfigModel).DecimalPrecision)}");
                 }
                 else if (settings is CutConfigModel)
-                    Create(settings, "Average Cut", $"{Mathf.RoundToInt(info.averageCutScore)}");
+                {
+                    if ((settings as CutConfigModel).SeparateSaberCounts)
+                        Create(settings, "Average Cut", $"{Mathf.RoundToInt(info.averageCutScore) - 10}  {Mathf.RoundToInt(info.averageCutScore)}");
+                    else
+                        Create(settings, "Average Cut", $"{Mathf.RoundToInt(info.averageCutScore)}");
+                }
                 else if (settings is ProgressConfigModel)
                     Create(settings,
                                 $"{(settings as ProgressConfigModel).Mode.ToString()} Progress",

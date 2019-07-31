@@ -11,7 +11,7 @@ namespace CountersPlus.Config
             { "Progress", new ProgressConfigModel() { Enabled = true, Position = ICounterPositions.BelowEnergy, Distance = 0, Mode = ICounterMode.Original, ProgressTimeLeft = false, IncludeRing = false } },
             { "Score", new ScoreConfigModel() { Enabled = true, Position = ICounterPositions.BelowMultiplier, Distance = 0, DecimalPrecision = 2, DisplayRank = true, Mode = ICounterMode.Original } },
             { "Speed", new SpeedConfigModel() { Enabled = false, Position = ICounterPositions.BelowMultiplier, Distance = 1, DecimalPrecision = 2, Mode = ICounterMode.Average } },
-            { "Cut", new CutConfigModel() { Enabled = false, Position = ICounterPositions.AboveHighway, Distance = 0 } },
+            { "Cut", new CutConfigModel() { Enabled = false, Position = ICounterPositions.AboveHighway, Distance = 0, SeparateSaberCounts = false} },
             { "Spinometer", new SpinometerConfigModel() { Enabled = false, Position = ICounterPositions.AboveMultiplier, Distance = 0, Mode = ICounterMode.Highest } },
             { "Personal Best", new PBConfigModel() { Enabled = true, Position = ICounterPositions.BelowMultiplier, Distance = 1, DecimalPrecision = 2, TextSize = 2, UnderScore = true, HideFirstScore = false } },
             { "Notes Left", new NotesLeftConfigModel() { Enabled = false, Position = ICounterPositions.AboveHighway, Distance = -1, LabelAboveCount = false, } },

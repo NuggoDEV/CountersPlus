@@ -174,6 +174,7 @@ namespace CountersPlus.Config
 
     public sealed class CutConfigModel : ConfigModel {
         public CutConfigModel() { DisplayName = "Cut"; VersionAdded = new SemVer.Version("1.1.0"); }
+        public bool SeparateSaberCounts;
     }
 
     public sealed class NotesLeftConfigModel : ConfigModel
