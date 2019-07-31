@@ -19,16 +19,19 @@ A combination of widely-used counters, all configurable in one mod.
 |***Fail***|`1.5.8`|Display how many times you've failed across every song, or how many times you've restarted the same song!|
 
 ### Custom Counters
-Counters+ also supports the addition of Custom Counters. Other mods can input their counters into the Counters+ system and it will work just like any other Counters+ counter!
+Counters+ also supports the addition of Custom Counters. Other mods can input their counters into the Counters+ system and allow the user to edit the position through the Counters+ UI.
 
 #### Supported Custom Counters
 If you wish to add your mod to this list, please DM me on Discord: *Caeden117#0117*
 
 |Mod|Description|
 |-|-|
-|***YURFit***|Displays a calorie counter while you play a song.|
+|***FPS Counter***|Frames per second. Easy!|
+|***Deviation Counter***|How early or late were you on cutting a block|
 
 ## Configuration
+
+These are currently being moved over to the [Counters+ Wiki](https://github.com/Caeden117/CountersPlus/wiki).
 
 ### Plugin-wide settings
 |Setting|Description|
@@ -45,7 +48,7 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
 |-|-|
 |***Enabled***|Toggles the counter on or off.|
 |***Position***|Sets the position of a counter relative to commonly used UI elements (Combo, Multiplier, Highway, etc.)|
-|***Distance***|How far away from the Position a counter will be. A higher Distance would set the Counter farther away.|
+|***Distance***|How far away from the Position a counter will be. A higher Distance would set the Counter farther away from the UI element defined in *Position*.|
 
 ### Advanced Options
 |Setting|Counters|Description
@@ -61,6 +64,7 @@ If you wish to add your mod to this list, please DM me on Discord: *Caeden117#01
 |***Custom Miss Text Integration***|*Miss*|When Custom Miss Text is installed, replace the "Misses" label with one of the various insults.|
 |***Track Restarts***|*Fail*|Instead of showing global fail count, instead show the times you've restarted the same song.|
 |***Label Above Count***|*Notes Left*|Changes the Notes Left counter to look similarly with other Counters+ counters, with the label above the number.|
+|***Hide First Score***|*Personal Best*|Hides your personal best if the song you are playing has not yet been completed.|
 
 ### Some Notes
 
