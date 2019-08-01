@@ -21,6 +21,7 @@ namespace CountersPlus.UI.ViewControllers
             { "monkeymanboy", "Custom Campaign's UI code for the bottom screen" },
             { "SkyKiwiTV", "Original version checking code" },
             { "Dracrius", "Bug fixing and beta testing" },
+            { "guyyst", "Cut Counter's \"Separate Saber Counts\" option, and making me realize I need to comment more." },
         };
 
         internal static Dictionary<string, string> Donators = new Dictionary<string, string>()

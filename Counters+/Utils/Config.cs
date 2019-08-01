@@ -6,6 +6,10 @@ namespace CountersPlus.Config
 {
     public class ConfigLoader
     {
+        /// <summary>
+        /// Load Counters+ settings from config.
+        /// Automatically generates any missing settings with their defaults found in the ConfigDefaults class.
+        /// </summary>
         public static MainConfigModel LoadSettings()
         {
             if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini"))
@@ -13,7 +17,7 @@ namespace CountersPlus.Config
             MainConfigModel model = new MainConfigModel();
             model = (MainConfigModel)DeserializeFromConfig(model, model.DisplayName);
             try
-            {
+            {   //For adding new Counters, assign your ConfigModel here, using the DeserializeFromConfig function.
                 model.missedConfig = DeserializeFromConfig(model.missedConfig, model.missedConfig.DisplayName) as MissedConfigModel;
                 model.noteConfig = DeserializeFromConfig(model.noteConfig, model.noteConfig.DisplayName) as NoteConfigModel;
                 model.progressConfig = DeserializeFromConfig(model.progressConfig, model.progressConfig.DisplayName) as ProgressConfigModel;
@@ -33,6 +37,10 @@ namespace CountersPlus.Config
             return model;
         }
 
+        /// <summary>
+        /// Automatically assigns fields of an input from the Config file, and attempts to assign defaults if they do not exist.
+        /// While this might work for objects outside of Counters+, it is recommended to yoink this code from GitHub and modify it yourself.
+        /// </summary>
         public static object DeserializeFromConfig(object input, string DisplayName)
         {
             bool resetToDefaults = false;
@@ -68,6 +76,10 @@ namespace CountersPlus.Config
         }
     }
     
+    /// <summary>
+    /// Main class for Counters+ config.
+    /// For adding new Counters, add their ConfigModels as a field in this class, making sure that "Config" is in the name (like "fpsConfig").
+    /// </summary>
     public class MainConfigModel {
         public string DisplayName { get { return "Main"; } }
         public bool Enabled;
@@ -103,8 +115,14 @@ namespace CountersPlus.Config
         }
     }
 
+    /// <summary>
+    /// The base config class for every single Counter in Counters+.
+    /// As part of creating a new Counter, you will need to make a class that inherits ConfigModel.
+    /// For adding new options to an existing Counter, add them to their respective ConfigModel.
+    /// Add defaults to ConfigModels in the ConfigDefaults class.
+    /// </summary>
     public abstract class ConfigModel {
-        public string DisplayName { get; internal set; }
+        public string DisplayName { get; internal set; } //DisplayName and VersionAdded should not be changed once set.
         internal SemVer.Version VersionAdded { get; set; } = null;
         public bool Enabled;
         public ICounterPositions Position;

@@ -108,7 +108,13 @@ namespace CountersPlus.UI
                 }
             }
 
-            //Mock Counter creation is here instead of CountersPlusSettingsFlowCoordinator.
+            /*Mock Counter creation is here instead of CountersPlusSettingsFlowCoordinator.
+            Holy shit this code is messy, I'm not proud of it.
+            
+            If you want your new Counters+ option to be visible in the Settings UI, go ahead and throw it somewhere in here.
+            If you want to add your new Counter to the Settings UI, like copy MissedConfigModel's mock counter code and use it as a base.
+            Until I rewrite this, god help you.
+             */
             if (CountersController.settings.AdvancedCounterInfo)
             {
                 if (settings is MissedConfigModel)

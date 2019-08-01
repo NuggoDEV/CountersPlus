@@ -2,8 +2,12 @@
 
 namespace CountersPlus.Config
 {
+    //Class for defaults to ConfigModels
     internal class ConfigDefaults
     {
+        //Dictionary of default ConfigModel options mapped by their DisplayName.
+        //For new options, add their default value (Generated if it doesn't exist in CountersPlus.ini) here.
+        //For new counters, create a new key/value pair with the DisplayName as your key, and the ConfigModel as the value.
         internal static Dictionary<string, ConfigModel> Defaults = new Dictionary<string, ConfigModel>()
         {
             { "Missed", new MissedConfigModel(){ Enabled = true, Position = ICounterPositions.BelowCombo, Distance = 0, CustomMissTextIntegration = false } },
@@ -18,6 +22,7 @@ namespace CountersPlus.Config
             { "Fail", new FailConfigModel() { Enabled = false, Position = ICounterPositions.AboveCombo, Distance = 0, ShowRestartsInstead = false, } },
         };
 
+        //Defaults for the main config model, used if options in MainConfigModel aren't present in CountersPlus.ini.
         internal static MainConfigModel MainDefaults { get
             {
                 return new MainConfigModel

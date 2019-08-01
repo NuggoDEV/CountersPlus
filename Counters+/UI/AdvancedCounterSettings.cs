@@ -46,6 +46,16 @@ namespace CountersPlus.UI
         private static HoverHint scoreHover;
         private static HoverHint spinometerHover;
 
+        /// <summary>
+        /// A dictionary of Actions mapped by ConfigModels.
+        /// 
+        /// This giant blob of lamda expressions is housing options for the Counters+ UI outside of the basic Enabled, Position, and Distance.
+        /// 
+        /// If you're wondering why I'm not using a void and a switch case statement, good question. I should probably rewrite this.
+        /// 
+        /// If you want to add more options to the Counters+ Settings UI, simply copy pre-existing code and paste it in the config model of your choice.
+        /// If you want to add a new counter, make a new key/value pair using your ConfigModel from MainConfigModel, and make a lambda expression.
+        /// </summary>
         internal static Dictionary<ConfigModel, Action<SubMenu, ConfigModel>> counterUIItems = new Dictionary<ConfigModel, Action<SubMenu, ConfigModel>>()
         {
             { CC.settings.missedConfig, (sub, config) => {
