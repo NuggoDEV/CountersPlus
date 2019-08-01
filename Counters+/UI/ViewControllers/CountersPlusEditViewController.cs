@@ -96,7 +96,7 @@ namespace CountersPlus.UI.ViewControllers
                 TextMeshProUGUI contributor = BeatSaberUI.CreateText(rect, $"<color=#00c0ff>{kvp.Key}</color> | {kvp.Value}", Vector2.zero);
                 contributor.fontSize = 3;
                 contributor.alignment = TextAlignmentOptions.Left;
-                setPositioning(contributor.rectTransform, 0.15f,
+                setPositioning(contributor.rectTransform, 0.05f,
                     0.8f - (contributors.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
                 loadedElements.Add(contributor.gameObject);
             }
@@ -118,7 +118,7 @@ namespace CountersPlus.UI.ViewControllers
                 TextMeshProUGUI donator = BeatSaberUI.CreateText(rect, $"<color=#FF0048>{kvp.Key}</color> | {kvp.Value}", Vector2.zero);
                 donator.fontSize = 3;
                 donator.alignment = TextAlignmentOptions.Left;
-                setPositioning(donator.rectTransform, 0.15f,
+                setPositioning(donator.rectTransform, 0.05f,
                     0.8f - (donators.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
                 loadedElements.Add(donator.gameObject);
             }

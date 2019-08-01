@@ -12,16 +12,17 @@ namespace CountersPlus.UI.ViewControllers
         {
             { "Moon", "Bug fixing and code optimization" },
             { "Shoko84", "Bug fixing" },
-            { "xhuytox", "Big helper in bug hunting - thanks man!" },
-            { "Brian", "Saving Beat Saber Modding with CustomUI" },
-            { "Viscoci", "Helper code that fixed displaying text and saved my bacon" },
-            { "Assistant", "Stole some Custom Avatars UI code to help with settings" },
-            { "Kyle1413", "Beat Saber Utils and for Progress/Score Counter code" },
-            { "Ragesaq", "Speed Counter and Spinometer idea <i>(and some bug fixing on stream)</i>" },
-            { "monkeymanboy", "Custom Campaign's UI code for the bottom screen" },
+            { "xhuytox", "Big early bug hunter - thanks man!" },
+            { "Brian", "CustomUI which makes this all possible" },
+            { "Viscoci", "Text helper code, YURFit UI code" },
+            { "monkeymanboy", "Custom Campaign's UI code" },
+            { "Assistant", "Custom Avatars UI code" },
+            { "Kyle1413", "BS Utils, Progress/Score/Notes Left code" },
+            { "Ragesaq", "Speed Counter and Spinometer idea" },
             { "SkyKiwiTV", "Original version checking code" },
             { "Dracrius", "Bug fixing and beta testing" },
-            { "guyyst", "Cut Counter's \"Separate Saber Counts\" option, and making me realize I need to comment more." },
+            { "guyyst", "Cut's \"Separate Saber Counts\" option." },
+            { "Steven", "Revitalized Custom Counters" },
         };
 
         internal static Dictionary<string, string> Donators = new Dictionary<string, string>()
