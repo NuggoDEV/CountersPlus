@@ -6,11 +6,7 @@ using CountersPlus.Config;
 using CountersPlus.Counters;
 using CountersPlus.Custom;
 using UnityEngine.SceneManagement;
-using IPA.Loader;
-using IniParser;
-using IniParser.Model;
 using System.Collections;
-using IPA.Old;
 
 namespace CountersPlus
 {
@@ -35,7 +31,7 @@ namespace CountersPlus
             }
         }
 
-        private void Awake()
+        private void Start()
         {
             SceneManager.activeSceneChanged += ActiveSceneChanged;
         }
@@ -50,13 +46,19 @@ namespace CountersPlus
             LoadedCounters.Clear();
         }
 
-        static void LoadCounter<T, R>(string name, T settings) where T : ConfigModel
+        /// <summary>
+        /// Loads a counter given a ConfigModel and a MonoBehaviour. If enabled, a new GameObject will be created and the provided MonoBehaviour will be attached.
+        /// </summary>
+        /// <typeparam name="T">ConfigModel to use for settings.</typeparam>
+        /// <typeparam name="R">MonoBehaviour to attach to the new GameObject.</typeparam>
+        /// <param name="settings">ConfigModel settings reference.</param>
+        internal static void LoadCounter<T, R>(T settings) where T : ConfigModel where R : MonoBehaviour
         {
-            if (!settings.Enabled || GameObject.Find("Counters+ | " + name + " Counter")) return;
-            GameObject counter = new GameObject("Counters+ | " + name + " Counter");
-            counter.transform.position = DeterminePosition(counter, settings.Position, settings.Distance);
+            string name = (settings is CustomConfigModel) ? (settings as CustomConfigModel).SectionName : settings.DisplayName;
+            if (!settings.Enabled || GameObject.Find($"Counters+ | {name} Counter")) return;
+            GameObject counter = new GameObject($"Counters+ | {name} Counter");
             counter.AddComponent(typeof(R));
-            Plugin.Log("Loaded Counter: " + name);
+            Plugin.Log($"Loaded Counter: {name}");
             LoadedCounters.Add(counter);
         }
 
@@ -89,38 +91,20 @@ namespace CountersPlus
         public static void LoadCounters()
         {
             Plugin.Log("Loading Counters...", Plugin.LogInfo.Notice);
-            LoadCounter<MissedConfigModel, MissedCounter>("Missed", settings.missedConfig);
-            LoadCounter<NoteConfigModel, AccuracyCounter>("Notes", settings.noteConfig);
-            LoadCounter<ScoreConfigModel, ScoreCounter>("Score", settings.scoreConfig);
-            LoadCounter<PBConfigModel, PBCounter>("Personal Best", settings.pbConfig);
-            LoadCounter<ProgressConfigModel, ProgressCounter>("Progress", settings.progressConfig);
-            LoadCounter<SpeedConfigModel, SpeedCounter>("Speed", settings.speedConfig);
-            LoadCounter<CutConfigModel, CutCounter>("Cut", settings.cutConfig);
-            LoadCounter<SpinometerConfigModel, Spinometer>("Spinometer", settings.spinometerConfig);
-            LoadCounter<NotesLeftConfigModel, NotesLeftCounter>("Notes Left", settings.notesLeftConfig);
-            LoadCounter<FailConfigModel, FailCounter>("Fail", settings.failsConfig);
-            LoadCustomCounters();
+            LoadCounter<MissedConfigModel, MissedCounter>(settings.missedConfig);
+            LoadCounter<NoteConfigModel, AccuracyCounter>(settings.noteConfig);
+            LoadCounter<ScoreConfigModel, ScoreCounter>(settings.scoreConfig);
+            LoadCounter<PBConfigModel, PBCounter>(settings.pbConfig);
+            LoadCounter<ProgressConfigModel, ProgressCounter>(settings.progressConfig);
+            LoadCounter<SpeedConfigModel, SpeedCounter>(settings.speedConfig);
+            LoadCounter<CutConfigModel, CutCounter>(settings.cutConfig);
+            LoadCounter<SpinometerConfigModel, Spinometer>(settings.spinometerConfig);
+            LoadCounter<NotesLeftConfigModel, NotesLeftCounter>(settings.notesLeftConfig);
+            LoadCounter<FailConfigModel, FailCounter>(settings.failsConfig);
+            foreach (CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
+                LoadCounter<CustomConfigModel, CustomCounterHook>(potential);
             Plugin.Log("Counters loaded!", Plugin.LogInfo.Notice);
             Instance.StartCoroutine(Instance.ObtainRequiredData());
-        }
-
-        private static void LoadCustomCounters()
-        {
-            Plugin.Log("Loading Custom Counters...", Plugin.LogInfo.Notice);
-            FileIniDataParser parser = new FileIniDataParser();
-            IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
-            foreach (SectionData section in data.Sections)
-            {
-                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
-                {
-                    if (PluginManager.GetPlugin(section.Keys["ModCreator"]) == null &&
-                        #pragma warning disable CS0618 //Fuck off DaNike
-                        PluginManager.Plugins.Where((IPlugin x) => x.Name == section.Keys["ModCreator"]).FirstOrDefault() == null) continue;
-                    CustomConfigModel potential = new CustomConfigModel(section.SectionName);
-                    potential = ConfigLoader.DeserializeFromConfig(potential, section.SectionName) as CustomConfigModel;
-                    LoadCounter<CustomConfigModel, CustomCounterHook>(section.Keys["SectionName"], potential);
-                }
-            }
         }
 
         public static Vector3 DeterminePosition(GameObject counter, ICounterPositions position, int index)
@@ -128,8 +112,8 @@ namespace CountersPlus
             float X = 3.2f;
             Vector3 pos = new Vector3(); //Base position
             Vector3 offset = new Vector3(0, -0.75f * (index), 0); //Offset for any overlapping, indexes, etc.
-            bool nextToProgress = settings.progressConfig.Position == position && settings.progressConfig.Index < index && settings.progressConfig.Mode == ICounterMode.Original;
-            bool nextToScore = settings.scoreConfig.Position == position && settings.scoreConfig.Index < index;
+            bool nextToProgress = settings.progressConfig.Position == position && settings.progressConfig.Distance < index && settings.progressConfig.Mode == ICounterMode.Original;
+            bool nextToScore = settings.scoreConfig.Position == position && settings.scoreConfig.Distance < index;
             bool baseScore = settings.scoreConfig.Mode == ICounterMode.BaseGame;
             switch (position)
             {

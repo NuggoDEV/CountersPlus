@@ -1,6 +1,13 @@
-﻿using System;
+﻿using CountersPlus.Custom;
+using System;
 using System.IO;
 using System.Reflection;
+using System.Collections.Generic;
+using IniParser;
+using IniParser.Model;
+using IPA.Loader;
+using System.Linq;
+using IPA.Old;
 
 namespace CountersPlus.Config
 {
@@ -35,6 +42,29 @@ namespace CountersPlus.Config
             }
             Plugin.Log("Config loaded!", Plugin.LogInfo.Notice);
             return model;
+        }
+
+        /// <summary>
+        /// Grabs a list of all Custom Counter references in CountersPlus.ini, if their mod is loaded by BSIPA.
+        /// </summary>
+        public static List<CustomConfigModel> LoadCustomCounters()
+        {
+            List<CustomConfigModel> counters = new List<CustomConfigModel>();
+            FileIniDataParser parser = new FileIniDataParser();
+            IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
+            foreach (SectionData section in data.Sections)
+            {
+                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
+                {
+                    if (PluginManager.GetPlugin(section.Keys["ModCreator"]) == null &&
+#pragma warning disable CS0618 //Fuck off DaNike
+                        PluginManager.Plugins.Where((IPlugin x) => x.Name == section.Keys["ModCreator"]).FirstOrDefault() == null) continue;
+                    CustomConfigModel unloadedModel = new CustomConfigModel(section.SectionName);
+                    CustomConfigModel loadedModel = DeserializeFromConfig(unloadedModel, section.SectionName) as CustomConfigModel;
+                    counters.Add(loadedModel);
+                }
+            }
+            return counters;
         }
 
         /// <summary>
@@ -136,7 +166,7 @@ namespace CountersPlus.Config
             MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
             foreach (MemberInfo info in infos)
             {
-                if (info.MemberType != MemberTypes.Field || info.Name.ToLower() == "restrictedpositions") continue;
+                if (info.MemberType != MemberTypes.Field || info.Name.ToLower() == "restrictedpositions" || info.Name.ToLower() == "index") continue;
                 FieldInfo finfo = (FieldInfo)info;
                 Plugin.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
             }

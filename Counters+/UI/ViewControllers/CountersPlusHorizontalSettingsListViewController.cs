@@ -43,7 +43,7 @@ namespace CountersPlus.UI.ViewControllers
             {
                 if (firstActivation)
                 {
-                    //Largely unchanged from CustomListController.
+                    //Largely unchanged from CustomListController. Keep all of this.
                     Instance = this;
                     levelPackTableCellInstance = Resources.FindObjectsOfTypeAll<LevelPackTableCell>().First(x => x.name == "LevelPackTableCell");
                     levelPackTableCellInstance.reuseIdentifier = ReuseIdentifier;
@@ -71,7 +71,7 @@ namespace CountersPlus.UI.ViewControllers
                     CustomListTableView.dataSource = this;
                     go.SetActive(true);
 
-                    //Code copied from monkeymanboy's Beat Saber Custom Campaigns mod.
+                    //Code copied from monkeymanboy's Beat Saber Custom Campaigns mod. Keep these too.
                     PageLeftButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => (x.name == "PageLeftButton")), transform);
                     RectTransform buttonTransform = PageLeftButton.transform.Find("BG") as RectTransform;
                     RectTransform glow = Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Last(x => (x.name == "GlowContainer")), PageLeftButton.transform).transform as RectTransform;
@@ -82,10 +82,7 @@ namespace CountersPlus.UI.ViewControllers
                     glow.sizeDelta = buttonTransform.sizeDelta;
                     PageLeftButton.transform.localPosition = new Vector3(-80, 2.5f, -5);
                     PageLeftButton.interactable = true;
-                    PageLeftButton.onClick.AddListener(delegate ()
-                    {
-                        CustomListTableView.PageScrollUp();
-                    });
+                    PageLeftButton.onClick.AddListener(() => CustomListTableView.PageScrollUp());
                     PageRightButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => (x.name == "PageRightButton")), transform);
                     buttonTransform = PageRightButton.transform.Find("BG") as RectTransform;
                     glow = Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Last(x => (x.name == "GlowContainer")), PageRightButton.transform).transform as RectTransform;
@@ -96,33 +93,20 @@ namespace CountersPlus.UI.ViewControllers
                     glow.sizeDelta = buttonTransform.sizeDelta;
                     PageRightButton.transform.localPosition = new Vector3(80, 2.5f, -5);
                     PageRightButton.interactable = true;
-                    PageRightButton.onClick.AddListener(delegate ()
-                    {
-                        CustomListTableView.PageScrollDown();
-                    });
+                    PageRightButton.onClick.AddListener(() => CustomListTableView.PageScrollDown());
 
                     //Now load my Counter settings and data. The rest from here on out is mainly copied from
                     //the old CountersPlusSettingsViewController, and can be safely removed.
                     foreach (var kvp in AdvancedCounterSettings.counterUIItems) counterInfos.Add(CreateFromModel(kvp.Key));
-                    FileIniDataParser parser = new FileIniDataParser();
-                    IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
-                    foreach (SectionData section in data.Sections)
+                    foreach(CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
                     {
-                        if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
+                        counterInfos.Add(new SettingsInfo()
                         {
-                            CustomConfigModel potential = new CustomConfigModel(section.SectionName);
-                            potential = ConfigLoader.DeserializeFromConfig(potential, section.SectionName) as CustomConfigModel;
-                            if (PluginManager.GetPlugin(section.Keys["ModCreator"]) == null &&
-                            #pragma warning disable CS0618 //Fuck off DaNike
-                            PluginManager.Plugins.Where((IPlugin x) => x.Name == section.Keys["ModCreator"]).FirstOrDefault() == null) continue;
-                            counterInfos.Add(new SettingsInfo()
-                            {
-                                Name = potential.DisplayName,
-                                Description = $"A custom counter added by {potential.ModCreator}!",
-                                Model = potential,
-                                IsCustom = true,
-                            });
-                        }
+                            Name = potential.DisplayName,
+                            Description = $"A custom counter added by {potential.ModCreator}!",
+                            Model = potential,
+                            IsCustom = true,
+                        });
                     }
 
                     //Reload the data, and select the first cell in the list.
@@ -165,23 +149,25 @@ namespace CountersPlus.UI.ViewControllers
             }
         }
 
-        public float CellSize() { return 30f; } //I'd recommend keeping this as is (5 cells shown), unless you want more spread out cells (40 = 4 cells shown).
+        //I'd recommend keeping this as is (5 cells shown), unless you want more spread out cells (40 = 4 cells shown).
+        public float CellSize() { return 30f; }
 
         public int NumberOfCells() { return counterInfos.Count + 3; } //Tune this to the amount of cells you'll have, whether dynamic or static.
 
-        public TableCell CellForIdx(int row)
+        public TableCell CellForIdx(int row) //Here is where you customize your TableCell.
         {
             LevelPackTableCell cell = CustomListTableView.DequeueReusableCellForIdentifier(ReuseIdentifier) as LevelPackTableCell;
-            if (cell == null)
+            if (cell == null) //Dequeue the cell, and make an instance if it doesn't exist.
             {
                 cell = Instantiate(levelPackTableCellInstance);
                 cell.reuseIdentifier = ReuseIdentifier;
             }
             cell.showNewRibbon = false; //Dequeued cells will keep NEW ribbon value. Always change it to false.
-            TextMeshProUGUI packNameText = cell.GetPrivateField<TextMeshProUGUI>("_packNameText");
+            TextMeshProUGUI packNameText = cell.GetPrivateField<TextMeshProUGUI>("_packNameText"); //Grab some TMP references.
             TextMeshProUGUI packInfoText = cell.GetPrivateField<TextMeshProUGUI>("_infoText");
-            packInfoText.richText = true; //Enable rich text for info text.
+            packInfoText.richText = true; //Enable rich text for info text. Optional, but I use it for Counters+.
             UnityEngine.UI.Image packCoverImage = cell.GetPrivateField<UnityEngine.UI.Image>("_coverImage");
+            packCoverImage.mainTexture.wrapMode = TextureWrapMode.Clamp; //Fixes bordering on images (especially transparent ones)
             if (row == 0) //From here on out is mainly Counters+ things, so you can safely remove them.
             {
                 packNameText.text = "Main Settings";
@@ -208,7 +194,11 @@ namespace CountersPlus.UI.ViewControllers
                 packInfoText.text = info.Description;
                 try
                 {
-                    if (info.IsCustom) packCoverImage.sprite = Images.Images.LoadSprite("Custom");
+                    if (info.IsCustom)
+                    {
+                        packCoverImage.sprite = Images.Images.LoadSprite("Custom");
+                        cell.showNewRibbon = (info.Model as CustomConfigModel).IsNew;
+                    }
                     else
                     {
                         packCoverImage.sprite = Images.Images.LoadSprite(info.Name);

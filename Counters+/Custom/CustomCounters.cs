@@ -4,9 +4,6 @@ using System.Linq;
 using CountersPlus.Config;
 using IPA.Loader;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using IniParser.Model;
-using IniParser;
 using IPA;
 using IPA.Old;
 
@@ -54,10 +51,6 @@ namespace CountersPlus.Custom
         /// </summary>
         public static void Create<T>(T model, CustomConfigModel defaults = null, params ICounterPositions[] restrictedPositions) where T : CustomCounter
         {
-            FileIniDataParser parser = new FileIniDataParser();
-            IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
-            Scene scene = SceneManager.GetActiveScene();
-
             string modCreator = "";
             if (model.Mod != null) modCreator = model.Mod.Name;
             if (model.BSIPAMod != null)
@@ -67,15 +60,18 @@ namespace CountersPlus.Custom
             }
             Plugin.Log($"Custom Counter ({model.Name}) added!", Plugin.LogInfo.Notice);
 
-            foreach (SectionData section in data.Sections)
+            foreach (CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
             {
-                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
-                    if (section.SectionName == model.Name) return;
+                if (potential.DisplayName == model.Name) {
+                    if (potential.IsNew)
+                    {
+                        potential.IsNew = false;
+                        potential.Save();
+                    }
+                    return;
+                }
             }
 
-            if (!(scene.name == "" || scene.name == "Init" || scene.name == "EmptyTransition" || scene.name == "HealthWarning"))
-                Plugin.Log("Custom Counter is being created after the recommended scenes. It might take a relaunch or a scene reload to appear!", Plugin.LogInfo.Warning);
-            
             CustomConfigModel counter = new CustomConfigModel(model.Name)
             {
                 DisplayName = model.Name,
@@ -85,12 +81,12 @@ namespace CountersPlus.Custom
                 Distance = (defaults == null ? 2 : defaults.Distance),
                 Counter = model.Counter,
                 ModCreator = modCreator,
+                IsNew = true,
                 RestrictedPositions = (restrictedPositions?.Count() == 0 || restrictedPositions == null) ? new ICounterPositions[] { } : restrictedPositions, //Thanks Viscoci for this
             };
-            counter.Save();
-
             if (string.IsNullOrEmpty(counter.SectionName) || string.IsNullOrEmpty(counter.DisplayName))
                 throw new CustomCounterException("Custom Counter properties invalid. Please make sure SectionName and DisplayName are properly assigned.");
+            counter.Save();
         }
     }
 
@@ -103,8 +99,6 @@ namespace CountersPlus.Custom
 
     public class CustomCounter
     {
-        [Obsolete("Counters+ no longer uses JSON for configuration. Consider using SectionName instead.")]
-        public string JSONName { get { return SectionName; } set { SectionName = value; } }
         /// <summary>
         /// The name in CountersPlus.ini that'll store variables. Try and keep to one name and not change it. It cannot conflict with other loaded counters.
         /// </summary>
@@ -137,15 +131,13 @@ namespace CountersPlus.Custom
         internal string SectionName;
         internal string Counter;
         internal string ModCreator;
+        internal bool IsNew = false;
         internal ICounterPositions[] RestrictedPositions { get {
                 string doodads = Plugin.config.GetString(DisplayName, "RestrictedPositions", "All", true);
                 if (doodads == "All") return new ICounterPositions[] { };
-                string[] split = doodads.Split(',');
                 List<ICounterPositions> restricted = new List<ICounterPositions>();
-                foreach(string position in split)
-                {
+                foreach(string position in doodads.Split(','))
                     restricted.Add((ICounterPositions)Enum.Parse(typeof(ICounterPositions), position));
-                }
                 return restricted.ToArray();
             } set {
                 try

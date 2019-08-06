@@ -5,8 +5,6 @@ using UnityEngine;
 using TMPro;
 using CountersPlus.Config;
 using CountersPlus.Custom;
-using IniParser;
-using IniParser.Model;
 
 namespace CountersPlus.Counters
 {
@@ -17,18 +15,13 @@ namespace CountersPlus.Counters
         private CustomConfigModel settings = null;
         private string Name;
 
-        void Awake()
+        void Start()
         {
             Name = name.Split('|').Last().Substring(1).Split(' ').First();
-            FileIniDataParser parser = new FileIniDataParser();
-            IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
-            foreach (SectionData section in data.Sections)
+            foreach(CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
             {
-                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
-                {
-                    CustomConfigModel potential = new CustomConfigModel(section.SectionName);
-                    if (section.Keys["SectionName"] == Name) settings = ConfigLoader.DeserializeFromConfig(potential, section.SectionName) as CustomConfigModel;
-                }
+                if (potential.SectionName == Name) settings = potential;
+                break;
             }
             if (settings == null)
             {
