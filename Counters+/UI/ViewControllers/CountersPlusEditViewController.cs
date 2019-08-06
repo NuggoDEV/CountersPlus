@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.UI;
 using VRUI;
 using CountersPlus.Config;
 using UnityEngine;
@@ -11,7 +10,6 @@ using CustomUI.Settings;
 using CountersPlus.Custom;
 using BS_Utils.Gameplay;
 using System.Collections;
-using IPA.Loader;
 
 namespace CountersPlus.UI.ViewControllers
 {
