@@ -83,9 +83,8 @@ namespace CountersPlus.Config
                 string value = Plugin.config.GetString(DisplayName, info.Name, null);
                 if (value == null)
                 {
-                    object defaults = null;
                     if (type.Name.Contains("Main")) value = finfo.GetValue(ConfigDefaults.MainDefaults).ToString();
-                    else if (!type.Name.Contains("Custom")) defaults = finfo.GetValue(ConfigDefaults.Defaults[DisplayName]).ToString();
+                    else if (!type.Name.Contains("Custom")) value = finfo.GetValue(ConfigDefaults.Defaults[DisplayName]).ToString();
                     if (value == null) continue;
                     Plugin.Log($"Failed to load variable {info.Name} in {type.Name}. Resetting to defaults...", Plugin.LogInfo.Info);
                     resetToDefaults = true;

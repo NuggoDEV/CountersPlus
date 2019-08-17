@@ -19,10 +19,7 @@ namespace CountersPlus.Counters
         {
             Name = name.Split('|').Last().Substring(1).Split(' ').First();
             foreach(CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
-            {
                 if (potential.SectionName == Name) settings = potential;
-                break;
-            }
             if (settings == null)
             {
                 Plugin.Log($"Custom Counter ({Name}) could not find its attached config model. Destroying...", Plugin.LogInfo.Notice);
