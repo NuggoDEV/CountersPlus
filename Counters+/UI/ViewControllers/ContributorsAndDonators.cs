@@ -30,6 +30,7 @@ namespace CountersPlus.UI.ViewControllers
             { "altrewin", "Thanks for the love, and coffee. <3" },
             { "Latest", "Sorry I was late on thanking you, here you go!" },
             { "Jackz", "C# is better." },
+            { "Cade", "Thanks for the donation! I'm always here if you have issues." },
             { "Someone", "To all the people who remain anonymous, I thank you." },
         };
 

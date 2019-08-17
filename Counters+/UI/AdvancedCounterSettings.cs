@@ -14,28 +14,26 @@ namespace CountersPlus.UI
 {
     public class AdvancedCounterSettings
     {
-        static List<Tuple<ICounterMode, string>> speedSettings = new List<Tuple<ICounterMode, string>> {
+        static Dictionary<ICounterMode, string> speedSettings = new Dictionary<ICounterMode, string> {
             {ICounterMode.Average, "Mean Speed" },
             {ICounterMode.Top5Sec, "Top (5 Sec.)" },
             {ICounterMode.Both, "Both" },
             {ICounterMode.SplitAverage, "Split Mean" },
             {ICounterMode.SplitBoth, "Both w/Split" }
         };
-        static List<Tuple<ICounterMode, string>> progressSettings = new List<Tuple<ICounterMode, string>> {
+        static Dictionary<ICounterMode, string> progressSettings = new Dictionary<ICounterMode, string> {
             {ICounterMode.BaseGame, "Base Game" },
             {ICounterMode.Original, "Original" },
             {ICounterMode.Percent, "Percentage" }
         };
-        static List<Tuple<ICounterMode, string>> scoreSettings = new List<Tuple<ICounterMode, string>>
-        {
+        static Dictionary<ICounterMode, string> scoreSettings = new Dictionary<ICounterMode, string> {
             {ICounterMode.Original, "Original" }, //Counters+ Counter w/ Points
             {ICounterMode.BaseGame, "Base Game" }, //Base Game w/ Points
             //{ICounterMode.BaseWithOutPoints, "Base No Points" }, //Base Game w/ Points Under Combo
             {ICounterMode.LeavePoints, "No Points" }, //Counters+ Counter w/ Points Under Combo
             {ICounterMode.ScoreOnly, "Score Only" }, //Counters+ Counter w/ Points Removed Entirely
         };
-        static List<Tuple<ICounterMode, string>> spinometerSettings = new List<Tuple<ICounterMode, string>>
-        {
+        static Dictionary<ICounterMode, string> spinometerSettings = new Dictionary<ICounterMode, string> {
             {ICounterMode.Original, "Original" },
             {ICounterMode.SplitAverage, "Split" },
             {ICounterMode.Highest, "Highest" },
@@ -87,16 +85,16 @@ namespace CountersPlus.UI
 
                 var scoreMode = CPEVC.AddList(ref sub, config, "Mode", "", scoreSettings.Count());
                 scoreMode.GetTextForValue = (v) => {
-                    return scoreSettings[Mathf.RoundToInt(v)].Item2;
+                    return scoreSettings.Values.ToList()[Mathf.RoundToInt(v)];
                 };
                 scoreMode.GetValue = () => {
                     if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, DetermineModeText(CC.settings.scoreConfig.Mode, false));
                     if (CC.settings.scoreConfig.Mode == ICounterMode.Both) CC.settings.scoreConfig.Mode = ICounterMode.Original;
-                    return scoreSettings.ToList().IndexOf(scoreSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CC.settings.scoreConfig.Mode)).First());
+                    return scoreSettings.Keys.ToList().IndexOf(CC.settings.scoreConfig.Mode);
                 };
                 scoreMode.SetValue += (v) => {
                     if (scoreHover == null) scoreHover = BeatSaberUI.AddHintText(scoreMode.transform as RectTransform, DetermineModeText(CC.settings.scoreConfig.Mode, false));
-                    CC.settings.scoreConfig.Mode = scoreSettings[Mathf.RoundToInt(v)].Item1;
+                    CC.settings.scoreConfig.Mode = scoreSettings.Keys.ToList()[Mathf.RoundToInt(v)];
                     scoreHover.text = DetermineModeText(CC.settings.scoreConfig.Mode, false);
                 };
 
@@ -145,15 +143,15 @@ namespace CountersPlus.UI
 
                 var progressMode = CPEVC.AddList(ref sub, config, "Mode", "", progressSettings.Count());
                 progressMode.GetTextForValue = (v) => {
-                    return progressSettings[Mathf.RoundToInt(v)].Item2;
+                    return progressSettings.Values.ToList()[Mathf.RoundToInt(v)];
                 };
                 progressMode.GetValue = () => {
                     if (progressHover == null) progressHover = BeatSaberUI.AddHintText(progressMode.transform as RectTransform, DetermineModeText(CC.settings.progressConfig.Mode));
-                    return progressSettings.ToList().IndexOf(progressSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CC.settings.progressConfig.Mode)).First());
+                    return progressSettings.Keys.ToList().IndexOf(CC.settings.progressConfig.Mode);
                 };
                 progressMode.SetValue += (v) => {
                     if (progressHover == null) progressHover = BeatSaberUI.AddHintText(progressMode.transform as RectTransform, DetermineModeText(CC.settings.progressConfig.Mode));
-                    CC.settings.progressConfig.Mode = progressSettings[Mathf.RoundToInt(v)].Item1;
+                    CC.settings.progressConfig.Mode = progressSettings.Keys.ToList()[Mathf.RoundToInt(v)];
                     progressHover.text = DetermineModeText(CC.settings.progressConfig.Mode);
                 };
             } },
@@ -165,15 +163,15 @@ namespace CountersPlus.UI
 
                 var speedMode = CPEVC.AddList(ref sub, config, "Mode", "", speedSettings.Count());
                 speedMode.GetTextForValue = (v) => {
-                    return speedSettings[Mathf.RoundToInt(v)].Item2;
+                    return speedSettings.Values.ToList()[Mathf.RoundToInt(v)];
                 };
                 speedMode.GetValue = () => {
                     if (speedHover == null) speedHover = BeatSaberUI.AddHintText(speedMode.transform as RectTransform, DetermineModeText(CC.settings.speedConfig.Mode));
-                    return speedSettings.ToList().IndexOf(speedSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CC.settings.speedConfig.Mode)).First());
+                    return speedSettings.Keys.ToList().IndexOf(CC.settings.speedConfig.Mode);
                 };
                 speedMode.SetValue += (v) => {
                     if (speedHover == null) speedHover = BeatSaberUI.AddHintText(speedMode.transform as RectTransform, DetermineModeText(CC.settings.speedConfig.Mode));
-                    CC.settings.speedConfig.Mode = speedSettings[Mathf.RoundToInt(v)].Item1;
+                    CC.settings.speedConfig.Mode = speedSettings.Keys.ToList()[Mathf.RoundToInt(v)];
                     speedHover.text = DetermineModeText(CC.settings.speedConfig.Mode);
                 };
             } },
@@ -186,15 +184,15 @@ namespace CountersPlus.UI
             { CC.settings.spinometerConfig, (sub, config) => {
                 var spinometerMode = CPEVC.AddList(ref sub, config, "Mode", "", spinometerSettings.Count());
                 spinometerMode.GetTextForValue = (v) => {
-                    return spinometerSettings[Mathf.RoundToInt(v)].Item2;
+                    return spinometerSettings.Values.ToList()[Mathf.RoundToInt(v)];
                 };
                 spinometerMode.GetValue = () => {
                     if (spinometerHover == null) spinometerHover = BeatSaberUI.AddHintText(spinometerMode.transform as RectTransform, DetermineModeText(CC.settings.spinometerConfig.Mode, true));
-                    return spinometerSettings.ToList().IndexOf(spinometerSettings.Where((Tuple<ICounterMode, string> x) => (x.Item1 == CC.settings.spinometerConfig.Mode)).First());
+                    return spinometerSettings.Keys.ToList().IndexOf(CC.settings.spinometerConfig.Mode);
                 };
                 spinometerMode.SetValue += (v) => {
                     if (spinometerHover == null) spinometerHover = BeatSaberUI.AddHintText(spinometerMode.transform as RectTransform, DetermineModeText(CC.settings.spinometerConfig.Mode, true));
-                    CC.settings.spinometerConfig.Mode = spinometerSettings[Mathf.RoundToInt(v)].Item1;
+                    CC.settings.spinometerConfig.Mode = spinometerSettings.Keys.ToList()[Mathf.RoundToInt(v)];
                     spinometerHover.text = DetermineModeText(CC.settings.spinometerConfig.Mode, true);
                 };
             } },

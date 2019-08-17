@@ -184,9 +184,7 @@ namespace CountersPlus.UI.ViewControllers
                     else
                     {
                         SubMenu sub = CreateBase(settings);
-                        AdvancedCounterSettings.counterUIItems.Where(
-                            (KeyValuePair<ConfigModel, Action<SubMenu, ConfigModel>> x) => (x.Key.DisplayName == settings.DisplayName)
-                            ).First().Value(sub, settings);
+                        AdvancedCounterSettings.counterUIItems[settings](sub, settings);
                     }
                 }
                 Instance.SelectedSettingsInfo = info;
@@ -252,19 +250,20 @@ namespace CountersPlus.UI.ViewControllers
             list.applyImmediately = true;
             PositionElement(list.gameObject);
             loadedSettings.Add(list);
-            if (!(settings is null)) list.SetValue = (v) => Instance.StartCoroutine(DelayedMockCounterUpdate(settings));
+            if (!(settings is null)) list.SetValue = (v) => Instance?.StartCoroutine(DelayedMockCounterUpdate(settings));
             return list;
         }
 
         private static IEnumerator DelayedMockCounterUpdate<T>(T settings) where T : ConfigModel
         {
             yield return new WaitForEndOfFrame();
-            settings.Save();
+            settings?.Save();
             MockCounter.Update(settings);
         }
 
         internal static void ClearScreen()
         {
+            foreach (ListViewController list in loadedSettings) list.InvokePrivateMethod("OnDisable", new object[] { });
             foreach (GameObject element in loadedElements) Destroy(element);
             loadedElements.Clear();
             loadedSettings.Clear();
