@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CountersPlus</RootNamespace>
     <AssemblyName>Counters+</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -34,25 +34,31 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony.1.2.0.1">
-      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Libs\0Harmony.1.2.0.1.dll</HintPath>
+      <HintPath>$(BeatSaberDir)\Libs\0Harmony.1.2.0.1.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp" />
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="BeatSaberCustomUI, Version=1.5.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Plugins\BeatSaberCustomUI.dll</HintPath>
+      <HintPath>$(BeatSaberDir)\Plugins\BeatSaberCustomUI.dll</HintPath>
     </Reference>
-    <Reference Include="BS_Utils" />
-    <Reference Include="CustomMissText, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="BS_Utils">
+      <HintPath>$(BeatSaberDir)\Plugins\BS_Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="CustomMissText">
+      <HintPath>$(BeatSaberDir)\Plugins\CustomMissText.dll</HintPath>
+    </Reference>
+    <Reference Include="INIFileParser.2.5.2.0, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Plugins\CustomMissText.dll</HintPath>
+      <HintPath>$(BeatSaberDir)\Libs\INIFileParser.2.5.2.0.dll</HintPath>
     </Reference>
-    <Reference Include="INIFileParser" />
     <Reference Include="IPA.Loader, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Beat Saber_Data\Managed\IPA.Loader.dll</HintPath>
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\IPA.Loader.dll</HintPath>
     </Reference>
     <Reference Include="SemVer.1.2.0.0">
-      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Libs\SemVer.1.2.0.0.dll</HintPath>
+      <HintPath>$(BeatSaberDir)\Libs\SemVer.1.2.0.0.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -60,20 +66,23 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Beat Saber_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Unity.TextMeshPro.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine" />
-    <Reference Include="UnityEngine.CoreModule" />
-    <Reference Include="UnityEngine.UI" />
-    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Beat Saber_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+    <Reference Include="UnityEngine">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Beat Saber_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -84,7 +93,8 @@
     <Compile Include="Counters\NotesLeftCounter.cs" />
     <Compile Include="Counters\Spinometer.cs" />
     <Compile Include="Custom\CustomCounters.cs" />
-    <Compile Include="Harmony\ScoreCounterHook.cs" />
+    <Compile Include="Harmony\HarmonyPatcehs.cs" />
+    <Compile Include="Harmony\Patches\ScoreCounterHook.cs" />
     <Compile Include="UI\AdvancedCounterSettings.cs" />
     <Compile Include="UI\CounterWarning.cs" />
     <Compile Include="UI\Images\Images.cs" />
@@ -106,6 +116,7 @@
     <Compile Include="Counters\ProgressCounter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\ConfigDefaults.cs" />
+    <Compile Include="Utils\PluginUtility.cs" />
     <Compile Include="Utils\ReflectionUtil.cs" />
     <Compile Include="Counters\ScoreCounter.cs" />
     <Compile Include="Counters\SpeedCounter.cs" />
@@ -171,8 +182,9 @@
   <ItemGroup>
     <EmbeddedResource Include="UI\Images\Donators.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy /Y "$(TargetPath)" "D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Plugins\CountersPlus.dll"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "$(BeatSaberDir)\Plugins\CountersPlus.dll"</PostBuildEvent>
   </PropertyGroup>
 </Project>

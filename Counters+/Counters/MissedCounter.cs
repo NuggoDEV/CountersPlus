@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
 using UnityEngine;
 using TMPro;
 using CountersPlus.Config;
+using CountersPlus.Utils;
 
 namespace CountersPlus.Counters
 {
@@ -72,8 +72,7 @@ namespace CountersPlus.Counters
         {
             try
             {
-                #pragma warning disable CS0618 //Fuck off DaNike
-                if (IPA.Loader.PluginManager.Plugins.Where((IPA.Old.IPlugin x) => x.Name == "CustomMissText").Any())
+                if (PluginUtility.IsPluginPresent("CustomMissText"))
                     label.text = String.Join(" ", CustomMissText.Plugin.allEntries[UnityEngine.Random.Range(0, CustomMissText.Plugin.allEntries.Count)]);
             }
             catch { }

@@ -1,5 +1,4 @@
 ﻿using CustomUI.BeatSaber;
-using IPA.Loader;
 using System;
 using System.Collections;
 using TMPro;
@@ -36,7 +35,7 @@ namespace CountersPlus.UI.ViewControllers
             setPositioning(name.rectTransform, 0, 0.7f, 1, 0.166f, 0.5f);
 
             version = BeatSaberUI.CreateText(rectTransform,
-                $"Version <color={(Plugin.upToDate ? "#00FF00" : "#FF0000")}>{PluginManager.GetPlugin("Counters+").Metadata.Version.ToString()}</color>", Vector2.zero);
+                $"Version <color={(Plugin.upToDate ? "#00FF00" : "#FF0000")}>{Plugin.PluginVersion}</color>", Vector2.zero);
             version.fontSize = 3;
             version.alignment = TextAlignmentOptions.Center;
             setPositioning(version.rectTransform, 0, 0.5f, 1, 0.166f, 0.5f);

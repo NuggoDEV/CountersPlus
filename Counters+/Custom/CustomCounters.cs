@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CountersPlus.Config;
-using IPA.Loader;
 using UnityEngine;
 using IPA;
+using IPA.Loader;
 using IPA.Old;
+using CountersPlus.Config;
+using CountersPlus.Utils;
 
 namespace CountersPlus.Custom
 {
@@ -42,7 +43,6 @@ namespace CountersPlus.Custom
             Create(model, defaults, null);
         }
 
-
         /// <summary>
         /// Adds an outside MonoBehaviour into the Counters+ system.
         /// <param name="model"/>The CustomCounter object.</param>
@@ -53,11 +53,13 @@ namespace CountersPlus.Custom
         {
             string modCreator = "";
             if (model.Mod != null) modCreator = model.Mod.Name;
+
             if (model.BSIPAMod != null)
-            {   //Fucking hell DaNike can't you expose the IBeatSaberPlugins so it would be easier for stuff like this!?!?
-                PluginLoader.PluginInfo info = PluginManager.AllPlugins.Where((PluginLoader.PluginInfo x) => x != null && model.BSIPAMod == x.GetPrivateProperty<IBeatSaberPlugin>("Plugin")).FirstOrDefault() ?? null;
-                if (info != null) modCreator = info.Metadata.Name;
+            {
+                PluginLoader.PluginMetadata pluginMetadata = PluginUtility.GetPluginMetadata(model.BSIPAMod);
+                if (pluginMetadata != null) modCreator = pluginMetadata.Name;
             }
+
             Plugin.Log($"Custom Counter ({model.Name}) added!", Plugin.LogInfo.Notice);
 
             foreach (CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
@@ -84,8 +86,10 @@ namespace CountersPlus.Custom
                 IsNew = true,
                 RestrictedPositions = (restrictedPositions?.Count() == 0 || restrictedPositions == null) ? new ICounterPositions[] { } : restrictedPositions, //Thanks Viscoci for this
             };
+
             if (string.IsNullOrEmpty(counter.SectionName) || string.IsNullOrEmpty(counter.DisplayName))
                 throw new CustomCounterException("Custom Counter properties invalid. Please make sure SectionName and DisplayName are properly assigned.");
+
             counter.Save();
         }
     }
@@ -107,11 +111,12 @@ namespace CountersPlus.Custom
         /// The name of the counter. Will be shown in the submenu title.
         /// </summary>
         public string Name { get; set; }
+        #pragma warning disable CS0618 // IPA is obsolete
         /// <summary>
         /// The plugin that created this custom counter. Will be displayed in the Settings UI.
         /// </summary>
-        #pragma warning disable CS0618 //Fuck off DaNike
         public IPlugin Mod { get; set; }
+        #pragma warning restore CS0618 // IPA is obsolete
         /// <summary>
         /// The plugin that created this custom counter. Will be displayed in the Settings UI.
         /// </summary>
