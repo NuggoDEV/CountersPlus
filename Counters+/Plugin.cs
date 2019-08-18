@@ -1,12 +1,12 @@
-﻿using System;
-using UnityEngine.SceneManagement;
-using UnityEngine;
-using System.Linq;
+﻿using CountersPlus.UI;
+using Harmony;
 using IPA;
 using IPA.Loader;
+using System;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using IPALogger = IPA.Logging.Logger;
-using CountersPlus.UI;
-using CountersPlus.Harmony;
 
 namespace CountersPlus
 {
@@ -15,6 +15,7 @@ namespace CountersPlus
         public static string PluginName => "CountersPlus";
         public static SemVer.Version PluginVersion { get; private set; } = new SemVer.Version("0.0.0"); // Default. Actual version number set on Init()
 
+        internal static Plugin Instance;
         internal static IPALogger Logger; //Conflicts with UnityEngine.Logger POG
 
         public enum LogInfo { Info, Warning, Notice, Error, Fatal };
@@ -22,19 +23,46 @@ namespace CountersPlus
         internal static bool upToDate = true;
         internal static string webVersion;
 
+        private static HarmonyInstance harmonyInstance;
+        public const string harmonyId = "com.caeden117.beatsaber.countersplus";
+
         public void Init(IPALogger log, PluginLoader.PluginMetadata metadata)
         {
             Logger = log;
-            Log("Logger prepared");
 
             if (metadata != null)
             {
                 PluginVersion = metadata.Version;
+                Log("Version number set");
             }
         }
 
-        public void OnApplicationStart() => Load();
-        public void OnApplicationQuit() { }
+        public void OnApplicationStart()
+        {
+            Instance = this;
+
+            try
+            {
+                harmonyInstance = HarmonyInstance.Create(harmonyId);
+                harmonyInstance.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
+            }
+            catch (Exception ex)
+            {
+                Log($"{ex.Message}\n{ex.StackTrace}", LogInfo.Fatal, "Unable to apply Harmony patches. Are you missing a dependency?");
+            }
+
+            CountersController.OnLoad();
+
+            Log($"{PluginName} v.{PluginVersion} has started.", LogInfo.Notice);
+        }
+
+        public void OnApplicationQuit()
+        {
+            if (harmonyInstance != null)
+            {
+                harmonyInstance.UnpatchAll(harmonyId);
+            }
+        }
 
         public void OnActiveSceneChanged(Scene arg0, Scene arg1)
         {
@@ -61,19 +89,6 @@ namespace CountersPlus
         public void OnSceneUnloaded(Scene scene) { }
         public void OnUpdate() { }
         public void OnFixedUpdate() { }
-
-        private void Load(string msg = "started")
-        {
-            CountersPlusPatcehs.ApplyHarmonyPatches();
-            CountersController.OnLoad();
-
-            Log($"{PluginName} v.{PluginVersion} has {msg}.", LogInfo.Notice);
-        }
-
-        private void Unload()
-        {
-            CountersPlusPatcehs.RemoveHarmonyPatches();
-        }
 
         public static void Log(string m) => Log(m, LogInfo.Info);
         public static void Log(string m, LogInfo l) => Log(m, l, null);

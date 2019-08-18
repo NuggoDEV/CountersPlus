@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CountersPlus</RootNamespace>
     <AssemblyName>Counters+</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -93,8 +93,7 @@
     <Compile Include="Counters\NotesLeftCounter.cs" />
     <Compile Include="Counters\Spinometer.cs" />
     <Compile Include="Custom\CustomCounters.cs" />
-    <Compile Include="Harmony\HarmonyPatcehs.cs" />
-    <Compile Include="Harmony\Patches\ScoreCounterHook.cs" />
+    <Compile Include="Harmony\ScoreCounterHook.cs" />
     <Compile Include="UI\AdvancedCounterSettings.cs" />
     <Compile Include="UI\CounterWarning.cs" />
     <Compile Include="UI\Images\Images.cs" />

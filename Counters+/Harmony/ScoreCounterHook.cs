@@ -5,7 +5,7 @@ using TMPro;
 using CountersPlus.Counters;
 using CountersPlus.Config;
 
-namespace CountersPlus.Harmony.Patches
+namespace CountersPlus.Harmony
 {
     [HarmonyPatch(typeof(ImmediateRankUIPanel))]
     [HarmonyPatch("Start", MethodType.Normal)]
