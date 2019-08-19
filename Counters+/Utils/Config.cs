@@ -8,6 +8,8 @@ using IniParser.Model;
 using IPA.Loader;
 using System.Linq;
 using IPA.Old;
+using CountersPlus.Utils;
+using IPA.Utilities;
 
 namespace CountersPlus.Config
 {
@@ -19,8 +21,8 @@ namespace CountersPlus.Config
         /// </summary>
         public static MainConfigModel LoadSettings()
         {
-            if (!File.Exists(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini"))
-                File.Create(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
+            if (!File.Exists(Path.Combine(BeatSaber.UserDataPath, "CountersPlus.ini")))
+                File.Create(Path.Combine(BeatSaber.UserDataPath, "CountersPlus.ini"));
             MainConfigModel model = new MainConfigModel();
             model = (MainConfigModel)DeserializeFromConfig(model, model.DisplayName);
             try
@@ -51,14 +53,12 @@ namespace CountersPlus.Config
         {
             List<CustomConfigModel> counters = new List<CustomConfigModel>();
             FileIniDataParser parser = new FileIniDataParser();
-            IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
+            IniData data = parser.ReadFile(Path.Combine(BeatSaber.UserDataPath, "CountersPlus.ini"));
             foreach (SectionData section in data.Sections)
             {
-                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
+                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName") &&
+                    PluginUtility.IsPluginPresent(section.Keys["ModCreator"]))
                 {
-                    if (PluginManager.GetPlugin(section.Keys["ModCreator"]) == null &&
-#pragma warning disable CS0618 //Fuck off DaNike
-                        PluginManager.Plugins.Where((IPlugin x) => x.Name == section.Keys["ModCreator"]).FirstOrDefault() == null) continue;
                     CustomConfigModel unloadedModel = new CustomConfigModel(section.SectionName);
                     CustomConfigModel loadedModel = DeserializeFromConfig(unloadedModel, section.SectionName) as CustomConfigModel;
                     counters.Add(loadedModel);

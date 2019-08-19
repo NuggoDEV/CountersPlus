@@ -1,31 +1,67 @@
-﻿using System;
-using UnityEngine.SceneManagement;
-using UnityEngine;
-using System.Linq;
-using CountersPlus.UI;
-using IPA;
-using IPA.Logging;
+﻿using CountersPlus.UI;
 using Harmony;
+using IPA;
+using IPA.Loader;
+using System;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using IPALogger = IPA.Logging.Logger;
 
 namespace CountersPlus
 {
     public class Plugin : IBeatSaberPlugin
     {
+        public static string PluginName => "CountersPlus";
+        public static SemVer.Version PluginVersion { get; private set; } = new SemVer.Version("0.0.0"); // Default. Actual version number set on Init()
+
         internal static Plugin Instance;
-        internal static IPA.Logging.Logger Logger; //Conflicts with UnityEngine.Logger POG
+        internal static IPALogger Logger; //Conflicts with UnityEngine.Logger POG
+
         public enum LogInfo { Info, Warning, Notice, Error, Fatal };
         internal static BS_Utils.Utilities.Config config = new BS_Utils.Utilities.Config("CountersPlus"); //Conflicts with CountersPlus.Config POG
         internal static bool upToDate = true;
         internal static string webVersion;
-        internal static HarmonyInstance HarmonyInstance;
 
-        public void Init(object thisIsNull, IPA.Logging.Logger log)
+        private static HarmonyInstance harmonyInstance;
+        public const string harmonyId = "com.caeden117.beatsaber.countersplus";
+
+        public void Init(IPALogger log, PluginLoader.PluginMetadata metadata)
         {
-            HarmonyInstance = HarmonyInstance.Create("com.Caeden117.CountersPlus");
-            HarmonyInstance.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
             Logger = log;
+
+            if (metadata != null)
+            {
+                PluginVersion = metadata.Version;
+                Log("Version number set");
+            }
+        }
+
+        public void OnApplicationStart()
+        {
             Instance = this;
+
+            try
+            {
+                harmonyInstance = HarmonyInstance.Create(harmonyId);
+                harmonyInstance.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
+            }
+            catch (Exception ex)
+            {
+                Log($"{ex.Message}\n{ex.StackTrace}", LogInfo.Fatal, "Unable to apply Harmony patches. Are you missing a dependency?");
+            }
+
             CountersController.OnLoad();
+
+            Log($"{PluginName} v.{PluginVersion} has started.", LogInfo.Notice);
+        }
+
+        public void OnApplicationQuit()
+        {
+            if (harmonyInstance != null)
+            {
+                harmonyInstance.UnpatchAll(harmonyId);
+            }
         }
 
         public void OnActiveSceneChanged(Scene arg0, Scene arg1)
@@ -50,32 +86,23 @@ namespace CountersPlus
             }
         }
 
-        public void OnApplicationStart() { }
-        public void OnApplicationQuit() { }
         public void OnSceneUnloaded(Scene scene) { }
         public void OnUpdate() { }
         public void OnFixedUpdate() { }
 
-        public static void Log(string m)
-        {
-            Log(m, LogInfo.Info);
-        }
-
-        public static void Log(string m, LogInfo l)
-        {
-            Log(m, l, null);
-        }
+        public static void Log(string m) => Log(m, LogInfo.Info);
+        public static void Log(string m, LogInfo l) => Log(m, l, null);
 
         public static void Log(string m, LogInfo l, string suggestedAction)
         {
-            IPA.Logging.Logger.Level level = IPA.Logging.Logger.Level.Debug;
+            IPALogger.Level level = IPALogger.Level.Debug;
             switch (l)
             {
-                case LogInfo.Info: level = IPA.Logging.Logger.Level.Debug; break;
-                case LogInfo.Notice: level = IPA.Logging.Logger.Level.Notice; break;
-                case LogInfo.Warning: level = IPA.Logging.Logger.Level.Warning; break;
-                case LogInfo.Error: level = IPA.Logging.Logger.Level.Error; break;
-                case LogInfo.Fatal: level = IPA.Logging.Logger.Level.Critical; break;
+                case LogInfo.Info: level = IPALogger.Level.Debug; break;
+                case LogInfo.Notice: level = IPALogger.Level.Notice; break;
+                case LogInfo.Warning: level = IPALogger.Level.Warning; break;
+                case LogInfo.Error: level = IPALogger.Level.Error; break;
+                case LogInfo.Fatal: level = IPALogger.Level.Critical; break;
             }
             Logger.Log(level, m);
             if (suggestedAction != null)

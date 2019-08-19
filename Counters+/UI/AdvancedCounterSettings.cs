@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CountersPlus.Config;
 using CustomUI.BeatSaber;
 using CustomUI.Settings;
 using UnityEngine;
 using CPEVC = CountersPlus.UI.ViewControllers.CountersPlusEditViewController;
 using CC = CountersPlus.CountersController;
+using CountersPlus.Utils;
 
 namespace CountersPlus.UI
 {
@@ -57,8 +56,7 @@ namespace CountersPlus.UI
         internal static Dictionary<ConfigModel, Action<SubMenu, ConfigModel>> counterUIItems = new Dictionary<ConfigModel, Action<SubMenu, ConfigModel>>()
         {
             { CC.settings.missedConfig, (sub, config) => {
-                #pragma warning disable CS0618 //Fuck off DaNike
-                if (IPA.Loader.PluginManager.Plugins.Where((IPA.Old.IPlugin x) => x.Name == "CustomMissText").Any())
+                if (PluginUtility.IsPluginPresent("CustomMissText"))
                 {
                     var cmt = CPEVC.AddList(ref sub, config, "Custom Miss Text Integration", "Replaces the \"Misses\" label with one of the Custom Miss Text insults.\nAlso changes when you miss a note.", 2);
                     cmt.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";

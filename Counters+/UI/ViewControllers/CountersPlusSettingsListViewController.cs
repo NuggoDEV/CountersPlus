@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using CustomUI.BeatSaber;
 using HMUI;
-using CountersPlus.Config;
 using IniParser.Model;
 using IniParser;
-using CountersPlus.Custom;
+using IPA.Utilities;
 using TMPro;
-using IPA.Loader;
-using IPA.Old;
+using CountersPlus.Config;
+using CountersPlus.Custom;
+using CountersPlus.Utils;
 
 namespace CountersPlus.UI.ViewControllers
 {
@@ -38,16 +39,15 @@ namespace CountersPlus.UI.ViewControllers
 
                     foreach (var kvp in AdvancedCounterSettings.counterUIItems) counterInfos.Add(CreateFromModel(kvp.Key));
                     FileIniDataParser parser = new FileIniDataParser();
-                    IniData data = parser.ReadFile(Environment.CurrentDirectory.Replace('\\', '/') + "/UserData/CountersPlus.ini");
+                    IniData data = parser.ReadFile(Path.Combine(BeatSaber.UserDataPath, "CountersPlus.ini"));
                     foreach (SectionData section in data.Sections)
                     {
-                        if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
+                        if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName") &&
+                            PluginUtility.IsPluginPresent(section.Keys["ModCreator"]))
                         {
                             CustomConfigModel potential = new CustomConfigModel(section.SectionName);
                             potential = ConfigLoader.DeserializeFromConfig(potential, section.SectionName) as CustomConfigModel;
-                            if (PluginManager.GetPlugin(section.Keys["ModCreator"]) == null &&
-                            #pragma warning disable CS0618 //Fuck off DaNike
-                            PluginManager.Plugins.Where((IPlugin x) => x.Name == section.Keys["ModCreator"]).FirstOrDefault() == null) continue;
+
                             counterInfos.Add(new SettingsInfo()
                             {
                                 Name = potential.DisplayName,

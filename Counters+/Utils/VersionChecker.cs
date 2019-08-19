@@ -40,7 +40,7 @@ namespace CountersPlus
 
         private static bool IsLatestVersion(string downloadedVersion)
         {
-            Version client = PluginManager.GetPlugin("Counters+").Metadata.Version;
+            Version client = Plugin.PluginVersion;
             Version server = new Version(downloadedVersion);
             return client >= server;
         }

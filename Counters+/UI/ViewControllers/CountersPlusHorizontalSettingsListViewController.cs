@@ -5,7 +5,6 @@ using CountersPlus.Config;
 using CountersPlus.Custom;
 using CustomUI.BeatSaber;
 using HMUI;
-using IPA.Loader;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -201,7 +200,7 @@ namespace CountersPlus.UI.ViewControllers
                         packCoverImage.sprite = Images.Images.LoadSprite(info.Name);
                         if (info.Model.VersionAdded != null)
                         {
-                            cell.showNewRibbon = PluginManager.GetPlugin("Counters+").Metadata.Version == info.Model.VersionAdded;
+                            cell.showNewRibbon = Plugin.PluginVersion == info.Model.VersionAdded;
                             packInfoText.text += $"\n\n<i>Version added: {info.Model.VersionAdded.ToString()}</i>";
                         }
                     }
