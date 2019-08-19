@@ -22,7 +22,7 @@ namespace CountersPlus.Counters
                 if (potential.SectionName == Name) settings = potential;
             if (settings == null)
             {
-                Plugin.Log($"Custom Counter ({Name}) could not find its attached config model. Destroying...", Plugin.LogInfo.Notice);
+                Plugin.Log($"Custom Counter ({Name}) could not find its attached config model. Destroying...", LogInfo.Notice);
                 Destroy(this);
             }
             StartCoroutine(GetRequired());
@@ -40,7 +40,7 @@ namespace CountersPlus.Counters
                     tries++;
                     if (tries > 10)
                     {
-                        Plugin.Log($"Custom Counter ({Name}) could not find its referenced GameObject in 10 tries. Destroying...", Plugin.LogInfo.Notice);
+                        Plugin.Log($"Custom Counter ({Name}) could not find its referenced GameObject in 10 tries. Destroying...", LogInfo.Notice);
                         Destroy(this);
                         break;
                     }

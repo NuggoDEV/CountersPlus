@@ -43,7 +43,7 @@ namespace CountersPlus.UI.ViewControllers
             if (!Plugin.upToDate)
             {
                 TextMeshProUGUI warning = BeatSaberUI.CreateText(rectTransform,
-                $"<color=#FF0000>Version {Plugin.webVersion} available for download!</color>", Vector2.zero);
+                $"<color=#FF0000>Version {Plugin.WebVersion} available for download!</color>", Vector2.zero);
                 warning.fontSize = 3;
                 warning.alignment = TextAlignmentOptions.Center;
                 setPositioning(warning.rectTransform, 0, 0.47f, 1, 0.166f, 0.5f);

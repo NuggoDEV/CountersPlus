@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using CountersPlus.Utils;
 using CountersPlus.Config;
 using CountersPlus.Counters;
 using CountersPlus.Custom;
@@ -27,7 +28,7 @@ namespace CountersPlus
                 DontDestroyOnLoad(controller);
                 Instance = controller.AddComponent<CountersController>();
                 controller.AddComponent<VersionChecker>();
-                Plugin.Log("Counters Controller created.", Plugin.LogInfo.Notice);
+                Plugin.Log("Counters Controller created.", LogInfo.Notice);
             }
         }
 
@@ -85,12 +86,12 @@ namespace CountersPlus
                     if (child.name != "BG") child.SetActive(false);
                 }
             }
-            catch { Plugin.Log($"Can't remove the {Name} counter!", Plugin.LogInfo.Warning); }
+            catch { Plugin.Log($"Can't remove the {Name} counter!", LogInfo.Warning); }
         }
 
         public static void LoadCounters()
         {
-            Plugin.Log("Loading Counters...", Plugin.LogInfo.Notice);
+            Plugin.Log("Loading Counters...", LogInfo.Notice);
             LoadCounter<MissedConfigModel, MissedCounter>(settings.missedConfig);
             LoadCounter<NoteConfigModel, AccuracyCounter>(settings.noteConfig);
             LoadCounter<ScoreConfigModel, ScoreCounter>(settings.scoreConfig);
@@ -103,7 +104,7 @@ namespace CountersPlus
             LoadCounter<FailConfigModel, FailCounter>(settings.failsConfig);
             foreach (CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
                 LoadCounter<CustomConfigModel, CustomCounterHook>(potential);
-            Plugin.Log("Counters loaded!", Plugin.LogInfo.Notice);
+            Plugin.Log("Counters loaded!", LogInfo.Notice);
             Instance.StartCoroutine(Instance.ObtainRequiredData());
         }
 
@@ -112,45 +113,28 @@ namespace CountersPlus
             float X = 3.2f;
             Vector3 pos = new Vector3(); //Base position
             Vector3 offset = new Vector3(0, -0.75f * (index), 0); //Offset for any overlapping, indexes, etc.
-            bool nextToProgress = settings.progressConfig.Position == position && settings.progressConfig.Distance < index && settings.progressConfig.Mode == ICounterMode.Original;
-            bool nextToScore = settings.scoreConfig.Position == position && settings.scoreConfig.Distance < index;
-            bool baseScore = settings.scoreConfig.Mode == ICounterMode.BaseGame;
             switch (position)
             {
                 case ICounterPositions.BelowCombo:
                     pos = new Vector3(-X, 0.85f - settings.ComboOffset, 7);
-                    if (nextToProgress) offset += new Vector3(0, -0.25f, 0);
-                    if (nextToScore) offset += new Vector3(0, -0.25f, 0);
-                    if (nextToScore && baseScore) offset += new Vector3(0, -0.15f, 0);
                     break;
                 case ICounterPositions.AboveCombo:
                     pos = new Vector3(-X, 1.7f + settings.ComboOffset, 7);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
-                    if (nextToProgress) offset -= new Vector3(0, -0.5f, 0);
                     break;
                 case ICounterPositions.BelowMultiplier:
                     pos = new Vector3(X, 0.75f - settings.MultiplierOffset, 7);
-                    if (GameObject.Find("FCDisplay")) offset += new Vector3(0, -0.25f, 0);
-                    if (nextToProgress) offset += new Vector3(0, -0.25f, 0);
-                    if (nextToScore) offset += new Vector3(0, -0.25f, 0);
-                    if (nextToScore && baseScore) offset += new Vector3(0, -0.15f, 0);
                     break;
                 case ICounterPositions.AboveMultiplier:
                     pos = new Vector3(X, 1.7f + settings.MultiplierOffset, 7);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
-                    if (GameObject.Find("FCDisplay")) offset += new Vector3(0, -0.25f, 0);
-                    if (nextToProgress) offset -= new Vector3(0, -0.5f, 0);
                     break;
                 case ICounterPositions.BelowEnergy:
                     pos = new Vector3(0, -1.5f, 7);
-                    if (nextToProgress) offset += new Vector3(0, -0.25f, 0);
-                    if (nextToScore) offset += new Vector3(0, -0.25f, 0);
-                    if (nextToScore && baseScore) offset += new Vector3(0, -0.15f, 0);
                     break;
                 case ICounterPositions.AboveHighway:
                     pos = new Vector3(0, 2.5f, 7);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
-                    if (nextToProgress) offset -= new Vector3(0, -0.5f, 0);
                     break;
             }
             if (counter.GetComponent<ProgressCounter>() != null)

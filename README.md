@@ -80,7 +80,7 @@ These are currently being moved over to the [Counters+ Wiki](https://github.com/
 If you wish to add your own custom counter to Counters+, or see how it can be used in your plugin, see the [Wiki page.](https://github.com/Caeden117/CountersPlus/wiki/For-Developers)
 
 ### Contributing to Counters+
-In order to build this project, please add your Beat Saber directory path to the `Counters+.csproj.user` file located in the project directory like for example this:
+In order to build this project, please add your Beat Saber directory path to the `Counters+.csproj.user` file located in the project directory.
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>

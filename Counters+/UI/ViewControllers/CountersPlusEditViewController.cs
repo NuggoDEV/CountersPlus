@@ -20,8 +20,8 @@ namespace CountersPlus.UI.ViewControllers
         private static TextMeshProUGUI settingsTitle;
         private static SubMenu container;
         
-        internal static List<GameObject> loadedElements = new List<GameObject>(); //Mass clearing
-        private static List<ListSettingsController> loadedSettings = new List<ListSettingsController>(); //Mass initialization
+        internal static List<GameObject> LoadedElements = new List<GameObject>(); //Mass clearing
+        internal static List<ListViewController> LoadedSettings = new List<ListViewController>(); //Mass initialization
         internal static int settingsCount = 0; //Spacing
 
         internal class PositionSettingsViewController : TupleViewController<Tuple<ICounterPositions, string>> { }
@@ -69,7 +69,7 @@ namespace CountersPlus.UI.ViewControllers
             filler.alignment = TextAlignmentOptions.Center;
             filler.characterSpacing = 2;
             setPositioning(filler.rectTransform, 0, 0.6f, 1, 0.166f, 0.5f);
-            loadedElements.Add(filler.gameObject);
+            LoadedElements.Add(filler.gameObject);
         }
 
         internal static void ShowContributors()
@@ -87,7 +87,7 @@ namespace CountersPlus.UI.ViewControllers
             contributorLabel.fontSize = 3;
             contributorLabel.alignment = TextAlignmentOptions.Center;
             setPositioning(contributorLabel.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
-            loadedElements.Add(contributorLabel.gameObject);
+            LoadedElements.Add(contributorLabel.gameObject);
 
             foreach (var kvp in contributors)
             {
@@ -96,7 +96,7 @@ namespace CountersPlus.UI.ViewControllers
                 contributor.alignment = TextAlignmentOptions.Left;
                 setPositioning(contributor.rectTransform, 0.05f,
                     0.8f - (contributors.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
-                loadedElements.Add(contributor.gameObject);
+                LoadedElements.Add(contributor.gameObject);
             }
         }
 
@@ -109,7 +109,7 @@ namespace CountersPlus.UI.ViewControllers
             donatorLabel.fontSize = 3;
             donatorLabel.alignment = TextAlignmentOptions.Center;
             setPositioning(donatorLabel.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
-            loadedElements.Add(donatorLabel.gameObject);
+            LoadedElements.Add(donatorLabel.gameObject);
 
             foreach (var kvp in donators)
             {
@@ -118,7 +118,7 @@ namespace CountersPlus.UI.ViewControllers
                 donator.alignment = TextAlignmentOptions.Left;
                 setPositioning(donator.rectTransform, 0.05f,
                     0.8f - (donators.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
-                loadedElements.Add(donator.gameObject);
+                LoadedElements.Add(donator.gameObject);
             }
         }
 
@@ -129,7 +129,7 @@ namespace CountersPlus.UI.ViewControllers
             settingsTitle.fontSize = 6;
             settingsTitle.alignment = TextAlignmentOptions.Center;
             setPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
-            loadedElements.Add(settingsTitle.gameObject);
+            LoadedElements.Add(settingsTitle.gameObject);
 
             SubMenu sub = new SubMenu(rect);
             var enabled = AddList(ref sub, null as ConfigModel, "Enabled", "Toggles Counters+ on or off.", 2);
@@ -166,7 +166,7 @@ namespace CountersPlus.UI.ViewControllers
             comboOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
             multiOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
 
-            foreach (ListViewController list in loadedSettings) //Should be cleared from the ClearScreen function.
+            foreach (ListViewController list in LoadedSettings) //Should be cleared from the ClearScreen function.
                 list.SetValue += (v) => CountersController.settings.Save();
 
             InitSettings();
@@ -193,10 +193,10 @@ namespace CountersPlus.UI.ViewControllers
                 settingsTitle.fontSize = 6;
                 settingsTitle.alignment = TextAlignmentOptions.Center;
                 setPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
-                loadedElements.Add(settingsTitle.gameObject);
+                LoadedElements.Add(settingsTitle.gameObject);
                 InitSettings();
             }
-            catch(Exception e) { Plugin.Log(e.ToString(), Plugin.LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue. This shouldn't happen!"); }
+            catch(Exception e) { Plugin.Log(e.ToString(), LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue. This shouldn't happen!"); }
         }
 
         private static SubMenu CreateBase<T>(T settings, params ICounterPositions[] restricted) where T : ConfigModel
@@ -249,7 +249,7 @@ namespace CountersPlus.UI.ViewControllers
             var list = sub.AddList(Label, values.ToArray(), HintText);
             list.applyImmediately = true;
             PositionElement(list.gameObject);
-            loadedSettings.Add(list);
+            LoadedSettings.Add(list);
             if (!(settings is null)) list.SetValue = (v) => Instance?.StartCoroutine(DelayedMockCounterUpdate(settings));
             return list;
         }
@@ -263,23 +263,23 @@ namespace CountersPlus.UI.ViewControllers
 
         internal static void ClearScreen()
         {
-            foreach (ListViewController list in loadedSettings) list.InvokePrivateMethod("OnDisable", new object[] { });
-            foreach (GameObject element in loadedElements) Destroy(element);
-            loadedElements.Clear();
-            loadedSettings.Clear();
+            foreach (ListViewController list in LoadedSettings) list.InvokePrivateMethod("OnDisable", new object[] { });
+            foreach (GameObject element in LoadedElements) Destroy(element);
+            LoadedElements.Clear();
+            LoadedSettings.Clear();
             settingsCount = 0;
         }
 
         private static void PositionElement(GameObject element)
         {
-            loadedElements.Add(element);
+            LoadedElements.Add(element);
             setPositioning(element.transform as RectTransform, 0.05f, 0.75f - (settingsCount * 0.1f), 0.9f, 0.166f, 0f);
             settingsCount++;
         }
 
         private static void InitSettings()
         {
-            foreach (ListViewController list in loadedSettings) list.Init();
+            foreach (ListViewController list in LoadedSettings) list.Init();
         }
     }
 }

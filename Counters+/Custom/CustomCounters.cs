@@ -13,17 +13,6 @@ namespace CountersPlus.Custom
     public class CustomCounterCreator : MonoBehaviour
     {
         /// <summary>
-        /// Adds an outside MonoBehaviour into the Counters+ system. If it already exists in the system, it will be ignored.
-        /// <param name="model"/>The CustomCounter object.</param>
-        /// <param name="restrictedPositions">Restrict your Custom Counter to any of these positions.</param>
-        /// </summary>
-        [Obsolete("Use the simpler CustomCounterCreator.Create() function for creating custom counters.")]
-        public static void CreateCustomCounter<T>(T model, params ICounterPositions[] restrictedPositions) where T : CustomCounter
-        {
-            Create(model, null, restrictedPositions);
-        }
-
-        /// <summary>
         /// Adds an outside MonoBehaviour into the Counters+ system.
         /// <param name="model"/>The CustomCounter object.</param>
         /// <param name="restrictedPositions">Restrict your Custom Counter to any of these positions. Inputting no parameters would allow the Counter to use all that are available.</param>
@@ -60,7 +49,7 @@ namespace CountersPlus.Custom
                 if (pluginMetadata != null) modCreator = pluginMetadata.Name;
             }
 
-            Plugin.Log($"Custom Counter ({model.Name}) added!", Plugin.LogInfo.Notice);
+            Plugin.Log($"Custom Counter ({model.Name}) added!", LogInfo.Notice);
 
             foreach (CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
             {
@@ -97,7 +86,7 @@ namespace CountersPlus.Custom
     internal class CustomCounterException : Exception
     {
         public CustomCounterException(String msg) : base("Counters+ | " + msg) {
-            Plugin.Log(msg, Plugin.LogInfo.Error, "Contact the developer of the infringing mod to check their Custom Counter creation code.");
+            Plugin.Log(msg, LogInfo.Error, "Contact the developer of the infringing mod to check their Custom Counter creation code.");
         }
     }
 

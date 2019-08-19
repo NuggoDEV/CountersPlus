@@ -104,7 +104,6 @@
     <Compile Include="UI\ViewControllers\CountersPlusFillerForMainViewController.cs" />
     <Compile Include="UI\CountersPlusSettingsFlowCoordinator.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusHorizontalSettingsListViewController.cs" />
-    <Compile Include="UI\ViewControllers\CountersPlusSettingsListViewController.cs" />
     <Compile Include="UI\MenuUI.cs" />
     <Compile Include="UI\MockCounter.cs" />
     <Compile Include="Utils\Config.cs" />
@@ -115,6 +114,7 @@
     <Compile Include="Counters\ProgressCounter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\ConfigDefaults.cs" />
+    <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\PluginUtility.cs" />
     <Compile Include="Utils\ReflectionUtil.cs" />
     <Compile Include="Counters\ScoreCounter.cs" />

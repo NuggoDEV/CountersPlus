@@ -112,7 +112,7 @@ namespace CountersPlus.UI.ViewControllers
                 }
             } catch (Exception e)
             {  //Edit this with your logging system of choice, or delete it altogether (As this shouldn't really cause Exceptions)
-                Plugin.Log(e.ToString(), Plugin.LogInfo.Error, "Report this as an issue on the Counters+ GitHub.");
+                Plugin.Log(e.ToString(), LogInfo.Error, "Report this as an issue on the Counters+ GitHub.");
             }
         }
 
@@ -219,5 +219,13 @@ namespace CountersPlus.UI.ViewControllers
             else if (row == NumberOfCells() - 2) CountersPlusEditViewController.ShowContributors();
             else CountersPlusEditViewController.UpdateSettings(info.Model, info);
         }
+    }
+
+    class SettingsInfo
+    {
+        public string Name;
+        public string Description;
+        public ConfigModel Model;
+        public bool IsCustom = false;
     }
 }

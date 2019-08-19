@@ -5,9 +5,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using IniParser;
 using IniParser.Model;
-using IPA.Loader;
 using System.Linq;
-using IPA.Old;
 using CountersPlus.Utils;
 using IPA.Utilities;
 
@@ -15,6 +13,7 @@ namespace CountersPlus.Config
 {
     public class ConfigLoader
     {
+        internal static BS_Utils.Utilities.Config config = new BS_Utils.Utilities.Config("CountersPlus"); //Conflicts with CountersPlus.Config POG
         /// <summary>
         /// Load Counters+ settings from config.
         /// Automatically generates any missing settings with their defaults found in the ConfigDefaults class.
@@ -40,9 +39,9 @@ namespace CountersPlus.Config
             }
             catch (Exception e)
             {
-                if (e.GetType() != typeof(NullReferenceException)) Plugin.Log(e.ToString(), Plugin.LogInfo.Error);
+                if (e.GetType() != typeof(NullReferenceException)) Plugin.Log(e.ToString(), LogInfo.Error);
             }
-            Plugin.Log("Config loaded!", Plugin.LogInfo.Notice);
+            Plugin.Log("Config loaded!", LogInfo.Notice);
             return model;
         }
 
@@ -80,13 +79,13 @@ namespace CountersPlus.Config
             {
                 if (info.MemberType != MemberTypes.Field || info.Name.ToLower().Contains("config")) continue;
                 FieldInfo finfo = (FieldInfo)info;
-                string value = Plugin.config.GetString(DisplayName, info.Name, null);
+                string value = config.GetString(DisplayName, info.Name, null);
                 if (value == null)
                 {
                     if (type.Name.Contains("Main")) value = finfo.GetValue(ConfigDefaults.MainDefaults).ToString();
                     else if (!type.Name.Contains("Custom")) value = finfo.GetValue(ConfigDefaults.Defaults[DisplayName]).ToString();
                     if (value == null) continue;
-                    Plugin.Log($"Failed to load variable {info.Name} in {type.Name}. Resetting to defaults...", Plugin.LogInfo.Info);
+                    Plugin.Log($"Failed to load variable {info.Name} in {type.Name}. Resetting to defaults...", LogInfo.Info);
                     resetToDefaults = true;
                 }
                 if (finfo.FieldType == typeof(ICounterMode))
@@ -138,7 +137,7 @@ namespace CountersPlus.Config
                 {
                     FieldInfo finfo = (FieldInfo)info;
                     if (finfo.Name.ToLower().Contains("config")) continue;
-                    Plugin.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
+                    ConfigLoader.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
                 }
             }
         }
@@ -167,7 +166,7 @@ namespace CountersPlus.Config
             {
                 if (info.MemberType != MemberTypes.Field || info.Name.ToLower() == "restrictedpositions") continue;
                 FieldInfo finfo = (FieldInfo)info;
-                Plugin.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
+                ConfigLoader.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
             }
         }
     }

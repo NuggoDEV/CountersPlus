@@ -4,43 +4,34 @@ using IPA;
 using IPA.Loader;
 using System;
 using System.Linq;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 using IPALogger = IPA.Logging.Logger;
+using CountersPlus.Utils;
 
 namespace CountersPlus
 {
+    public enum LogInfo { Info, Warning, Notice, Error, Fatal };
     public class Plugin : IBeatSaberPlugin
     {
-        public static string PluginName => "CountersPlus";
-        public static SemVer.Version PluginVersion { get; private set; } = new SemVer.Version("0.0.0"); // Default. Actual version number set on Init()
+        public static SemVer.Version PluginVersion { get; private set; } = new SemVer.Version("0.0.0"); // Default.
+        public static SemVer.Version WebVersion { get; internal set; } = new SemVer.Version("0.0.0"); //Default.
 
-        internal static Plugin Instance;
-        internal static IPALogger Logger; //Conflicts with UnityEngine.Logger POG
-
-        public enum LogInfo { Info, Warning, Notice, Error, Fatal };
-        internal static BS_Utils.Utilities.Config config = new BS_Utils.Utilities.Config("CountersPlus"); //Conflicts with CountersPlus.Config POG
-        internal static bool upToDate = true;
-        internal static string webVersion;
+        internal static bool upToDate
+        {
+            get { return PluginVersion >= WebVersion; }
+        }
 
         private static HarmonyInstance harmonyInstance;
         public const string harmonyId = "com.caeden117.beatsaber.countersplus";
 
         public void Init(IPALogger log, PluginLoader.PluginMetadata metadata)
         {
-            Logger = log;
-
-            if (metadata != null)
-            {
-                PluginVersion = metadata.Version;
-                Log("Version number set");
-            }
+            Logger.Init(log);   
+            PluginVersion = metadata?.Version;
         }
 
         public void OnApplicationStart()
         {
-            Instance = this;
-
             try
             {
                 harmonyInstance = HarmonyInstance.Create(harmonyId);
@@ -48,28 +39,22 @@ namespace CountersPlus
             }
             catch (Exception ex)
             {
-                Log($"{ex.Message}\n{ex.StackTrace}", LogInfo.Fatal, "Unable to apply Harmony patches. Are you missing a dependency?");
+                Log($"{ex.Message}", LogInfo.Fatal, "Unable to apply Harmony patches. Did you even install BSIPA correctly?");
             }
 
             CountersController.OnLoad();
-
-            Log($"{PluginName} v.{PluginVersion} has started.", LogInfo.Notice);
         }
 
         public void OnApplicationQuit()
         {
-            if (harmonyInstance != null)
-            {
-                harmonyInstance.UnpatchAll(harmonyId);
-            }
+            if (harmonyInstance != null) harmonyInstance?.UnpatchAll(harmonyId);
         }
 
         public void OnActiveSceneChanged(Scene arg0, Scene arg1)
         {
-            //if (CountersController.settings.Enabled) CountersController.OnLoad();
             if (arg1.name == "GameCore" &&
                 CountersController.settings.Enabled &&
-                (!Resources.FindObjectsOfTypeAll<PlayerDataModelSO>()
+                (!UnityEngine.Resources.FindObjectsOfTypeAll<PlayerDataModelSO>()
                     .FirstOrDefault()?
                     .currentLocalPlayer.playerSpecificSettings.noTextsAndHuds ?? true)
                 ) CountersController.LoadCounters();
@@ -89,24 +74,9 @@ namespace CountersPlus
         public void OnSceneUnloaded(Scene scene) { }
         public void OnUpdate() { }
         public void OnFixedUpdate() { }
-
-        public static void Log(string m) => Log(m, LogInfo.Info);
-        public static void Log(string m, LogInfo l) => Log(m, l, null);
-
-        public static void Log(string m, LogInfo l, string suggestedAction)
+        public static void Log(string m, LogInfo l = LogInfo.Info, string suggestedAction = null)
         {
-            IPALogger.Level level = IPALogger.Level.Debug;
-            switch (l)
-            {
-                case LogInfo.Info: level = IPALogger.Level.Debug; break;
-                case LogInfo.Notice: level = IPALogger.Level.Notice; break;
-                case LogInfo.Warning: level = IPALogger.Level.Warning; break;
-                case LogInfo.Error: level = IPALogger.Level.Error; break;
-                case LogInfo.Fatal: level = IPALogger.Level.Critical; break;
-            }
-            Logger.Log(level, m);
-            if (suggestedAction != null)
-                Logger.Log(level, $"Suggested Action: {suggestedAction}");
+            Logger.Log(m, l, suggestedAction);
         }
     }
 }

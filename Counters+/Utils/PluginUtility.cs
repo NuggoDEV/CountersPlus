@@ -2,6 +2,7 @@
 using IPA.Loader;
 using IPA.Old;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CountersPlus.Utils
 {
@@ -12,15 +13,9 @@ namespace CountersPlus.Utils
         /// </summary>
         public static bool IsPluginEnabled(string PluginName)
         {
-            if (IsPluginPresent(PluginName))
-            {
-                PluginLoader.PluginInfo pluginInfo = PluginManager.GetPluginFromId(PluginName);
-                if (pluginInfo?.Metadata != null)
-                {
-                    return PluginManager.IsEnabled(pluginInfo.Metadata);
-                }
-            }
-
+            if (!IsPluginPresent(PluginName)) return false;
+            PluginLoader.PluginInfo pluginInfo = PluginManager.GetPluginFromId(PluginName);
+            if (pluginInfo?.Metadata != null) return PluginManager.IsEnabled(pluginInfo.Metadata);
             return false;
         }
 
@@ -30,24 +25,10 @@ namespace CountersPlus.Utils
         public static bool IsPluginPresent(string PluginName)
         {
             // Check in BSIPA
-            if (PluginManager.GetPlugin(PluginName) != null ||
-                PluginManager.GetPluginFromId(PluginName) != null)
-            {
-                return true;
-            }
-
-#pragma warning disable CS0618 // IPA is obsolete
-            // Check in old IPA
-            foreach (IPlugin plugin in PluginManager.Plugins)
-            {
-                if (plugin.Name == PluginName)
-                {
-                    return true;
-                }
-            }
-#pragma warning restore CS0618 // IPA is obsolete
-
-            return false;
+            if (PluginManager.GetPlugin(PluginName) != null || PluginManager.GetPluginFromId(PluginName) != null) return true;
+            #pragma warning disable CS0618 // IPA is obsolete
+            return PluginManager.Plugins.Any(x => x.Name == PluginName);
+            #pragma warning restore CS0618 // IPA is obsolete
         }
 
         /// <summary>
@@ -60,16 +41,9 @@ namespace CountersPlus.Utils
                 PluginLoader.PluginMetadata metadataFromName = PluginManager.GetPlugin(pluginName).Metadata;
                 PluginLoader.PluginMetadata metadataFromId = PluginManager.GetPluginFromId(pluginName).Metadata;
 
-                if (metadataFromName != null)
-                {
-                    return metadataFromName;
-                }
-                else if (metadataFromId != null)
-                {
-                    return metadataFromId;
-                }
+                if (metadataFromName != null) return metadataFromName;
+                else if (metadataFromId != null) return metadataFromId;
             }
-
             return null;
         }
 
@@ -78,16 +52,11 @@ namespace CountersPlus.Utils
         /// </summary>
         public static PluginLoader.PluginMetadata GetPluginMetadata(IBeatSaberPlugin plugin)
         {
-            IEnumerable<PluginLoader.PluginInfo> pluginInfos = PluginManager.AllPlugins;
-            foreach (PluginLoader.PluginInfo pluginInfo in pluginInfos)
+            foreach (PluginLoader.PluginInfo pluginInfo in PluginManager.AllPlugins)
             {
-                if (pluginInfo != null &&
-                    plugin == pluginInfo.GetPrivateProperty<IBeatSaberPlugin>("Plugin"))
-                {
-                    return pluginInfo.Metadata;
-                }
+                if (pluginInfo != null && plugin == pluginInfo.GetPrivateProperty<IBeatSaberPlugin>("Plugin"))
+                    return pluginInfo.Metadata ?? null;
             }
-
             return null;
         }
     }
