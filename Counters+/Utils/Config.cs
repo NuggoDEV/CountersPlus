@@ -164,7 +164,7 @@ namespace CountersPlus.Config
             MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
             foreach (MemberInfo info in infos)
             {
-                if (info.MemberType != MemberTypes.Field || info.Name.ToLower() == "restrictedpositions") continue;
+                if (info.MemberType != MemberTypes.Field) continue;
                 FieldInfo finfo = (FieldInfo)info;
                 ConfigLoader.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
             }
