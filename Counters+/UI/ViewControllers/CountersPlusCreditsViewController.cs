@@ -35,12 +35,12 @@ namespace CountersPlus.UI.ViewControllers
             setPositioning(name.rectTransform, 0, 0.7f, 1, 0.166f, 0.5f);
 
             version = BeatSaberUI.CreateText(rectTransform,
-                $"Version <color={(Plugin.upToDate ? "#00FF00" : "#FF0000")}>{Plugin.PluginVersion}</color>", Vector2.zero);
+                $"Version <color={(Plugin.UpToDate ? "#00FF00" : "#FF0000")}>{Plugin.PluginVersion}</color>", Vector2.zero);
             version.fontSize = 3;
             version.alignment = TextAlignmentOptions.Center;
             setPositioning(version.rectTransform, 0, 0.5f, 1, 0.166f, 0.5f);
 
-            if (!Plugin.upToDate)
+            if (!Plugin.UpToDate)
             {
                 TextMeshProUGUI warning = BeatSaberUI.CreateText(rectTransform,
                 $"<color=#FF0000>Version {Plugin.WebVersion} available for download!</color>", Vector2.zero);

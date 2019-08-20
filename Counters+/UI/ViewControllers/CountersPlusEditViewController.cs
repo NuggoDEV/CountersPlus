@@ -25,7 +25,7 @@ namespace CountersPlus.UI.ViewControllers
         internal static int settingsCount = 0; //Spacing
 
         internal class PositionSettingsViewController : TupleViewController<Tuple<ICounterPositions, string>> { }
-        static List<Tuple<ICounterPositions, string>> positions = new List<Tuple<ICounterPositions, string>> {
+        static Dictionary<ICounterPositions, string> positions = new Dictionary<ICounterPositions, string> {
             {ICounterPositions.BelowCombo, "Below Combo" },
             {ICounterPositions.AboveCombo, "Above Combo" },
             {ICounterPositions.BelowMultiplier, "Below Multi." },
@@ -37,14 +37,14 @@ namespace CountersPlus.UI.ViewControllers
         private ConfigModel SelectedConfigModel = null;
         private SettingsInfo SelectedSettingsInfo = null;
 
-        static Action<RectTransform, float, float, float, float, float> setPositioning = delegate (RectTransform r, float x, float y, float w, float h, float pivotX)
+        private static void SetPositioning(RectTransform r, float x, float y, float w, float h, float pivotX)
         {
             r.anchorMin = new Vector2(x, y);
             r.anchorMax = new Vector2(x + w, y + h);
             r.pivot = new Vector2(pivotX, 1);
             r.sizeDelta = Vector2.zero;
             r.anchoredPosition = Vector2.zero;
-        };
+        }
 
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
@@ -68,7 +68,7 @@ namespace CountersPlus.UI.ViewControllers
             filler.fontSize = 11;
             filler.alignment = TextAlignmentOptions.Center;
             filler.characterSpacing = 2;
-            setPositioning(filler.rectTransform, 0, 0.6f, 1, 0.166f, 0.5f);
+            SetPositioning(filler.rectTransform, 0, 0.6f, 1, 0.166f, 0.5f);
             LoadedElements.Add(filler.gameObject);
         }
 
@@ -86,7 +86,7 @@ namespace CountersPlus.UI.ViewControllers
             contributorLabel = BeatSaberUI.CreateText(rect, "Thanks to these contributors for, directly or indirectly, helping make Counters+ what it is!", Vector2.zero);
             contributorLabel.fontSize = 3;
             contributorLabel.alignment = TextAlignmentOptions.Center;
-            setPositioning(contributorLabel.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
+            SetPositioning(contributorLabel.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
             LoadedElements.Add(contributorLabel.gameObject);
 
             foreach (var kvp in contributors)
@@ -94,7 +94,7 @@ namespace CountersPlus.UI.ViewControllers
                 TextMeshProUGUI contributor = BeatSaberUI.CreateText(rect, $"<color=#00c0ff>{kvp.Key}</color> | {kvp.Value}", Vector2.zero);
                 contributor.fontSize = 3;
                 contributor.alignment = TextAlignmentOptions.Left;
-                setPositioning(contributor.rectTransform, 0.05f,
+                SetPositioning(contributor.rectTransform, 0.05f,
                     0.8f - (contributors.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
                 LoadedElements.Add(contributor.gameObject);
             }
@@ -108,7 +108,7 @@ namespace CountersPlus.UI.ViewControllers
             ClearScreen();
             donatorLabel.fontSize = 3;
             donatorLabel.alignment = TextAlignmentOptions.Center;
-            setPositioning(donatorLabel.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
+            SetPositioning(donatorLabel.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
             LoadedElements.Add(donatorLabel.gameObject);
 
             foreach (var kvp in donators)
@@ -116,7 +116,7 @@ namespace CountersPlus.UI.ViewControllers
                 TextMeshProUGUI donator = BeatSaberUI.CreateText(rect, $"<color=#FF0048>{kvp.Key}</color> | {kvp.Value}", Vector2.zero);
                 donator.fontSize = 3;
                 donator.alignment = TextAlignmentOptions.Left;
-                setPositioning(donator.rectTransform, 0.05f,
+                SetPositioning(donator.rectTransform, 0.05f,
                     0.8f - (donators.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
                 LoadedElements.Add(donator.gameObject);
             }
@@ -128,7 +128,7 @@ namespace CountersPlus.UI.ViewControllers
             settingsTitle = BeatSaberUI.CreateText(rect, "Main Settings", Vector2.zero);
             settingsTitle.fontSize = 6;
             settingsTitle.alignment = TextAlignmentOptions.Center;
-            setPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
+            SetPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
             LoadedElements.Add(settingsTitle.gameObject);
 
             SubMenu sub = new SubMenu(rect);
@@ -192,7 +192,7 @@ namespace CountersPlus.UI.ViewControllers
                 settingsTitle = BeatSaberUI.CreateText(rect, $"{settings.DisplayName} Settings", Vector2.zero);
                 settingsTitle.fontSize = 6;
                 settingsTitle.alignment = TextAlignmentOptions.Center;
-                setPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
+                SetPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
                 LoadedElements.Add(settingsTitle.gameObject);
                 InitSettings();
             }
@@ -202,11 +202,11 @@ namespace CountersPlus.UI.ViewControllers
         private static SubMenu CreateBase<T>(T settings, params ICounterPositions[] restricted) where T : ConfigModel
         {
             SubMenu sub = new SubMenu(rect);
-            List<Tuple<ICounterPositions, string>> restrictedList = new List<Tuple<ICounterPositions, string>>();
+            Dictionary<ICounterPositions, string> restrictedList = new Dictionary<ICounterPositions, string>();
             try
             {
                 foreach (ICounterPositions pos in restricted)
-                    restrictedList.Add(Tuple.Create(pos, positions.Where((Tuple<ICounterPositions, string> x) => x.Item1 == pos).First().Item2));
+                    restrictedList.Add(pos, positions.Where(x => x.Key == pos).First().Value);
             }
             catch { } //It most likely errors here. If it does, well no problem.
 
@@ -218,21 +218,21 @@ namespace CountersPlus.UI.ViewControllers
             var position = AddList(ref sub, settings, "Position", "The relative position of common UI elements.", (restrictedList.Count() == 0) ? positions.Count() : restrictedList.Count());
             position.GetTextForValue = (v) => {
                 if (restrictedList.Count() == 0)
-                    return positions[Mathf.RoundToInt(v)].Item2;
+                    return positions.ElementAt(Mathf.RoundToInt(v)).Value;
                 else
-                    return restrictedList[Mathf.RoundToInt(v)].Item2;
+                    return restrictedList.ElementAt(Mathf.RoundToInt(v)).Value;
             };
             position.GetValue = () => {
                 if (restrictedList.Count() == 0)
-                    return positions.ToList().IndexOf(positions.Where((Tuple<ICounterPositions, string> x) => (x.Item1 == settings.Position)).First());
+                    return positions.ToList().IndexOf(positions.Where(x => x.Key == settings.Position).First());
                 else
-                    return restrictedList.ToList().IndexOf(positions.Where((Tuple<ICounterPositions, string> x) => (x.Item1 == settings.Position)).First());
+                    return restrictedList.ToList().IndexOf(positions.Where(x => x.Key == settings.Position).First());
             };
             position.SetValue += (v) => {
                 if (restrictedList.Count() == 0)
-                    settings.Position = positions[Mathf.RoundToInt(v)].Item1;
+                    settings.Position = positions.ElementAt(Mathf.RoundToInt(v)).Key;
                 else
-                    settings.Position = restrictedList[Mathf.RoundToInt(v)].Item1;
+                    settings.Position = restrictedList.ElementAt(Mathf.RoundToInt(v)).Key;
             };
 
             var index = AddList(ref sub, settings, "Distance", "How far from the position the counter will be. A higher number means farther way.", 7);
@@ -263,7 +263,7 @@ namespace CountersPlus.UI.ViewControllers
 
         internal static void ClearScreen()
         {
-            foreach (ListViewController list in LoadedSettings) list.InvokePrivateMethod("OnDisable", new object[] { });
+            foreach (ListViewController list in LoadedSettings) list.SetPrivateProperty("IsInitialized", false);
             foreach (GameObject element in LoadedElements) Destroy(element);
             LoadedElements.Clear();
             LoadedSettings.Clear();
@@ -273,7 +273,7 @@ namespace CountersPlus.UI.ViewControllers
         private static void PositionElement(GameObject element)
         {
             LoadedElements.Add(element);
-            setPositioning(element.transform as RectTransform, 0.05f, 0.75f - (settingsCount * 0.1f), 0.9f, 0.166f, 0f);
+            SetPositioning(element.transform as RectTransform, 0.05f, 0.75f - (settingsCount * 0.1f), 0.9f, 0.166f, 0f);
             settingsCount++;
         }
 

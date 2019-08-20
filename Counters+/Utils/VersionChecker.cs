@@ -34,7 +34,7 @@ namespace CountersPlus.Utils
                     break;
                 }
             }
-            if (!Plugin.upToDate) Plugin.Log("Uh oh! We aren't up to date!", LogInfo.Warning);
+            if (!Plugin.UpToDate) Plugin.Log("Uh oh! We aren't up to date!", LogInfo.Warning);
         }
     }
 }

@@ -13,10 +13,10 @@ namespace CountersPlus
     public enum LogInfo { Info, Warning, Notice, Error, Fatal };
     public class Plugin : IBeatSaberPlugin
     {
-        public static SemVer.Version PluginVersion { get; private set; } = new SemVer.Version("0.0.0"); // Default.
+        public static SemVer.Version PluginVersion { get; private set; } = new SemVer.Version("0.0.0"); //Default.
         public static SemVer.Version WebVersion { get; internal set; } = new SemVer.Version("0.0.0"); //Default.
 
-        internal static bool upToDate
+        internal static bool UpToDate
         {
             get { return PluginVersion >= WebVersion; }
         }

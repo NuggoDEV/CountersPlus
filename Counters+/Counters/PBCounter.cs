@@ -12,17 +12,18 @@ namespace CountersPlus.Counters
         private ScoreController _scoreController;
 
         private PBConfigModel settings;
-        private GameplayModifiersModelSO gameplayMods;
-        private GameplayCoreSceneSetupData gcssd;
-        private GameplayModifiers modifiers;
+        private GameplayModifiersModelSO gameplayModsModel;
+        private GameplayModifiers gameplayMods;
         private PlayerLevelStatsData stats;
 
         private Color orange;
         private TMP_Text _PbTrackerText;
-        private int _maxPossibleScore = 0;
         private int decimalPrecision = 2;
         private float beginningPB = 0;
-        
+
+        private int _maxPossibleScore = 0;
+        private int highScore;
+
         void Awake()
         {
             settings = CountersController.settings.pbConfig;
@@ -34,17 +35,16 @@ namespace CountersPlus.Counters
         private void Init(CountersData data)
         {
             _scoreController = data.ScoreController;
-            gcssd = data.GCSSD;
             PlayerDataModelSO player = data.PlayerData;
-            gameplayMods = data.ModifiersData;
-            modifiers = data.PlayerData.sharedGameplayModifiers;
+            gameplayModsModel = data.ModifiersData;
+            gameplayMods = data.PlayerData.sharedGameplayModifiers;
             IDifficultyBeatmap beatmap = data.GCSSD.difficultyBeatmap;
             stats = player.currentLocalPlayer.GetPlayerLevelStatsData(
                 beatmap.level.levelID, beatmap.difficulty, beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic);
             int maxRawScore = ScoreController.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
-            float modifier = gameplayMods.GetTotalMultiplier(modifiers);
-            _maxPossibleScore = Mathf.RoundToInt(maxRawScore * modifier);
+            _maxPossibleScore = Mathf.RoundToInt(maxRawScore * gameplayModsModel.GetTotalMultiplier(gameplayMods));
             beginningPB = stats.highScore / (float)_maxPossibleScore;
+            highScore = stats.highScore;
 
             Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out _PbTrackerText, position);
@@ -95,13 +95,13 @@ namespace CountersPlus.Counters
         {
             if (_maxPossibleScore != 0)
             {
-                float ratio = ScoreController.MaxModifiedScoreForMaxRawScore(score, modifiers, gameplayMods) / (float)_maxPossibleScore;
-                if (ratio > beginningPB)
+                float ratio = modifiedScore / (float)_maxPossibleScore;
+                if (modifiedScore > highScore)
                 {
                     SetPersonalBest(ratio);
                     if (!(settings.HideFirstScore && stats.highScore == 0)) _PbTrackerText.color = Color.red;
                 }
-                else _PbTrackerText.color = Color.Lerp(Color.white, orange, ratio / beginningPB);
+                else _PbTrackerText.color = Color.Lerp(Color.white, orange, modifiedScore / (float)highScore);
             }
         }
     }

@@ -45,7 +45,7 @@ namespace CountersPlus.UI
             MainScreen.transform.position = new Vector3(0, -100, 0); //"If it works it's not stupid"
             
             CounterWarning.CreateWarning("Due to limitations, some counters may not reflect their true appearance in-game.", 7.5f);
-            if (!Plugin.upToDate) CounterWarning.CreateWarning("A new Counters+ update is available to download!", 5);
+            if (!Plugin.UpToDate) CounterWarning.CreateWarning("A new Counters+ update is available to download!", 5);
             StartCoroutine(InitMockCounters());
         }
 

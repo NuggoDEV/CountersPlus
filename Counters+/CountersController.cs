@@ -158,7 +158,7 @@ namespace CountersPlus
             PlayerController = Resources.FindObjectsOfTypeAll<PlayerController>().First();
             AudioTimeSyncController = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().First();
             PlayerData = Resources.FindObjectsOfTypeAll<PlayerDataModelSO>().First();
-            ModifiersData = Resources.FindObjectsOfTypeAll<GameplayModifiersModelSO>().First();
+            ModifiersData = ScoreController.GetPrivateField<GameplayModifiersModelSO>("_gameplayModifiersModelSO");
             GCSSD = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData; //By the time all of these load, so should GCSSD.
         }
     }
