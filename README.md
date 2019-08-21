@@ -78,29 +78,3 @@ These are currently being moved over to the [Counters+ Wiki](https://github.com/
 
 ## For Developers
 If you wish to add your own custom counter to Counters+, or see how it can be used in your plugin, see the [Wiki page.](https://github.com/Caeden117/CountersPlus/wiki/For-Developers)
-
-### Contributing to Counters+
-In order to build this project, please add your Beat Saber directory path to the `Counters+.csproj.user` file located in the project directory.
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <!-- Set "YOUR OWN" Beat Saber folder here to resolve most of the dependency paths! -->
-    <BeatSaberDir>E:\Program Files (x86)\Steam\steamapps\common\Beat Saber</BeatSaberDir>
-  </PropertyGroup>
-</Project>
-```
-
-If you plan on adding any new dependencies which are located in the Beat Saber directory, it would be nice if you edited the paths to use `$(BeatSaberDir)` in `Counters+.csproj` like so to keep some consistency
-
-```xml
-...
-<Reference Include="BS_Utils">
-  <HintPath>$(BeatSaberDir)\Plugins\BS_Utils.dll</HintPath>
-</Reference>
-<Reference Include="IPA.Loader">
-  <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\IPA.Loader.dll</HintPath>
-</Reference>
-...
-```
