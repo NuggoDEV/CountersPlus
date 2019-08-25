@@ -18,14 +18,12 @@ namespace CountersPlus.UI.ViewControllers
         public static CountersPlusEditViewController Instance;
         private static RectTransform rect;
         private static TextMeshProUGUI settingsTitle;
-        private static SubMenu container;
         
         internal static List<GameObject> LoadedElements = new List<GameObject>(); //Mass clearing
         internal static List<ListViewController> LoadedSettings = new List<ListViewController>(); //Mass initialization
         internal static int settingsCount = 0; //Spacing
 
-        internal class PositionSettingsViewController : TupleViewController<Tuple<ICounterPositions, string>> { }
-        static Dictionary<ICounterPositions, string> positions = new Dictionary<ICounterPositions, string> {
+        static readonly Dictionary<ICounterPositions, string> positions = new Dictionary<ICounterPositions, string> {
             {ICounterPositions.BelowCombo, "Below Combo" },
             {ICounterPositions.AboveCombo, "Above Combo" },
             {ICounterPositions.BelowMultiplier, "Below Multi." },
@@ -180,7 +178,7 @@ namespace CountersPlus.UI.ViewControllers
                 ClearScreen();
                 if (!(info is null))
                 {
-                    if (info.IsCustom) container = CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
+                    if (info.IsCustom) CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
                     else
                     {
                         SubMenu sub = CreateBase(settings);

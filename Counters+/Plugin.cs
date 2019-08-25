@@ -56,8 +56,9 @@ namespace CountersPlus
                 CountersController.settings.Enabled &&
                 (!UnityEngine.Resources.FindObjectsOfTypeAll<PlayerDataModelSO>()
                     .FirstOrDefault()?
-                    .currentLocalPlayer.playerSpecificSettings.noTextsAndHuds ?? true)
+                    .playerData.playerSpecificSettings.noTextsAndHuds ?? true)
                 ) CountersController.LoadCounters();
+            CountersController.LoadedCounters.Clear();
         }
 
         public void OnSceneLoaded(Scene arg, LoadSceneMode hiBrian)

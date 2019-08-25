@@ -30,7 +30,7 @@ namespace CountersPlus.UI.ViewControllers
         private Button PageLeftButton;
         private Button PageRightButton;
         private TableView CustomListTableView;
-        private string ReuseIdentifier = "CountersPlusSettingsListTableCell"; //Change this if you plan on yoinking my code.
+        private readonly string ReuseIdentifier = "CountersPlusSettingsListTableCell"; //Change this if you plan on yoinking my code.
         private LevelPackTableCell levelPackTableCellInstance;
 
         protected override void DidActivate(bool firstActivation, ActivationType type)
@@ -39,6 +39,20 @@ namespace CountersPlus.UI.ViewControllers
             {
                 if (firstActivation)
                 {
+                    //Firstly, load my Counter settings and data, as its necessary for the NumberOfCells function.
+                    //These two foreach loops can be safely removed.
+                    foreach (var kvp in AdvancedCounterSettings.counterUIItems) counterInfos.Add(CreateFromModel(kvp.Key));
+                    foreach (CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
+                    {
+                        counterInfos.Add(new SettingsInfo()
+                        {
+                            Name = potential.DisplayName,
+                            Description = $"A custom counter added by {potential.ModCreator}!",
+                            Model = potential,
+                            IsCustom = true,
+                        });
+                    }
+
                     //Largely unchanged from CustomListController. Keep all of this.
                     Instance = this;
                     levelPackTableCellInstance = Resources.FindObjectsOfTypeAll<LevelPackTableCell>().First(x => x.name == "LevelPackTableCell");
@@ -46,26 +60,24 @@ namespace CountersPlus.UI.ViewControllers
 
                     RectTransform container = new GameObject("HorizontalListContainer", typeof(RectTransform)).transform as RectTransform;
                     container.SetParent(rectTransform, false);
-                    container.sizeDelta = new Vector2(0, 0);
+                    container.sizeDelta = Vector2.zero;
                     container.anchorMin = new Vector2(0.1f, 0); //Squish the list container a little bit
                     container.anchorMax = new Vector2(0.9f, 1); //To make room for the forward/backward buttons
 
                     var go = new GameObject("CustomListTableView");
-                    go.SetActive(false);
-                    CustomListTableView = go.AddComponent<TableView>();
-                    CustomListTableView.gameObject.AddComponent<RectMask2D>();
+                    go.SetActive(false); //Disable GameObject to not have scripts run.
+                    CustomListTableView = go.AddComponent<TableView>(); //Add TableView
+                    CustomListTableView.gameObject.AddComponent<RectMask2D>(); //Add Mask
                     CustomListTableView.transform.SetParent(container, false);
                     CustomListTableView.SetPrivateField("_tableType", TableView.TableType.Horizontal);
 
-                    (CustomListTableView.transform as RectTransform).anchorMin = new Vector2(0, 0);
-                    (CustomListTableView.transform as RectTransform).anchorMax = new Vector2(1, 1);
-                    (CustomListTableView.transform as RectTransform).sizeDelta = new Vector2(0, 0);
-                    (CustomListTableView.transform as RectTransform).anchoredPosition = new Vector2(0, 0);
+                    (CustomListTableView.transform as RectTransform).anchorMin = Vector2.zero;
+                    (CustomListTableView.transform as RectTransform).anchorMax = Vector2.one;
+                    (CustomListTableView.transform as RectTransform).sizeDelta = Vector2.zero;
+                    (CustomListTableView.transform as RectTransform).anchoredPosition = Vector2.zero;
 
                     CustomListTableView.SetPrivateField("_preallocatedCells", new TableView.CellsGroup[0]);
                     CustomListTableView.SetPrivateField("_isInitialized", false);
-                    CustomListTableView.dataSource = this;
-                    go.SetActive(true);
 
                     //Code copied from monkeymanboy's Beat Saber Custom Campaigns mod. Keep these too.
                     PageLeftButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => (x.name == "PageLeftButton")), transform);
@@ -78,7 +90,6 @@ namespace CountersPlus.UI.ViewControllers
                     glow.sizeDelta = buttonTransform.sizeDelta;
                     PageLeftButton.transform.localPosition = new Vector3(-80, 2.5f, -5);
                     PageLeftButton.interactable = true;
-                    PageLeftButton.onClick.AddListener(() => CustomListTableView.PageScrollUp());
                     PageRightButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => (x.name == "PageRightButton")), transform);
                     buttonTransform = PageRightButton.transform.Find("BG") as RectTransform;
                     glow = Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Last(x => (x.name == "GlowContainer")), PageRightButton.transform).transform as RectTransform;
@@ -89,20 +100,24 @@ namespace CountersPlus.UI.ViewControllers
                     glow.sizeDelta = buttonTransform.sizeDelta;
                     PageRightButton.transform.localPosition = new Vector3(80, 2.5f, -5);
                     PageRightButton.interactable = true;
-                    PageRightButton.onClick.AddListener(() => CustomListTableView.PageScrollDown());
 
-                    //Now load my Counter settings and data. The rest from here on out is mainly copied from
-                    //the old CountersPlusSettingsViewController, and can be safely removed.
-                    foreach (var kvp in AdvancedCounterSettings.counterUIItems) counterInfos.Add(CreateFromModel(kvp.Key));
-                    foreach(CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
+                    RectTransform viewport = new GameObject("Viewport").AddComponent<RectTransform>(); //Make a Viewport RectTransform
+                    viewport.SetParent(CustomListTableView.transform as RectTransform, false); //It expects one from a ScrollRect, so we have to make one ourselves.
+                    viewport.sizeDelta = Vector2.zero; //Important to set this to zero so the TableView can scroll through all available cells.
+
+                    CustomListTableView.SetPrivateField("_pageUpButton", PageLeftButton); //Set Up button to Left
+                    CustomListTableView.SetPrivateField("_pageDownButton", PageRightButton); //Set down button to Right
+                    CustomListTableView.Init(); //Init, have "_scrollRectTransform" be null.
+                    CustomListTableView.SetPrivateField("_scrollRectTransform", viewport); //Set it with our hot-out-of-the-oven Viewport.
+                    CustomListTableView.dataSource = this; //Add data source
+                    go.SetActive(true);
+
+                    //Finally, reset some anchors of each child so that all of the available cells are shown.
+                    for (int i = 0; i < CustomListTableView.transform.childCount; i++)
                     {
-                        counterInfos.Add(new SettingsInfo()
-                        {
-                            Name = potential.DisplayName,
-                            Description = $"A custom counter added by {potential.ModCreator}!",
-                            Model = potential,
-                            IsCustom = true,
-                        });
+                        (CustomListTableView.transform.GetChild(i).transform as RectTransform).anchoredPosition = Vector3.zero;
+                        (CustomListTableView.transform.GetChild(i).transform as RectTransform).anchorMin = Vector3.zero;
+                        (CustomListTableView.transform.GetChild(i).transform as RectTransform).anchorMax = Vector3.one;
                     }
 
                     //Reload the data, and select the first cell in the list.
@@ -150,7 +165,7 @@ namespace CountersPlus.UI.ViewControllers
 
         public int NumberOfCells() { return counterInfos.Count + 3; } //Tune this to the amount of cells you'll have, whether dynamic or static.
 
-        public TableCell CellForIdx(int row) //Here is where you customize your TableCell.
+        public TableCell CellForIdx(TableView view, int row) //Here is where you customize your TableCell.
         {
             LevelPackTableCell cell = CustomListTableView.DequeueReusableCellForIdentifier(ReuseIdentifier) as LevelPackTableCell;
             if (cell == null) //Dequeue the cell, and make an instance if it doesn't exist.
