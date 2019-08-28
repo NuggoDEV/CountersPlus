@@ -123,6 +123,7 @@ namespace CountersPlus.UI.ViewControllers
         internal static void ShowMainSettings()
         {
             ClearScreen();
+            MockCounter.Highlight<ConfigModel>(null);
             settingsTitle = BeatSaberUI.CreateText(rect, "Main Settings", Vector2.zero);
             settingsTitle.fontSize = 6;
             settingsTitle.alignment = TextAlignmentOptions.Center;
@@ -208,10 +209,10 @@ namespace CountersPlus.UI.ViewControllers
             }
             catch { } //It most likely errors here. If it does, well no problem.
 
-            var enabled = AddList(ref sub, settings, "Enabled", "Toggles this counter on or off.", 2);
+            var enabled = AddList(ref sub, settings, "Enabled", "Toggle this counter on or off.", 2);
             enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
             enabled.GetValue = () => settings.Enabled ? 1f : 0f;
-            enabled.SetValue += (v) => settings.Enabled = v != 0f;
+            enabled.SetValue = (v) => settings.Enabled = v != 0f;
 
             var position = AddList(ref sub, settings, "Position", "The relative position of common UI elements.", (restrictedList.Count() == 0) ? positions.Count() : restrictedList.Count());
             position.GetTextForValue = (v) => {

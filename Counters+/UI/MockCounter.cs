@@ -19,11 +19,11 @@ namespace CountersPlus.UI
     {
 
         public static Dictionary<MockCounterGroup, ConfigModel> loadedMockCounters = new Dictionary<MockCounterGroup, ConfigModel>();
-        private static MockCounterInfo info = new MockCounterInfo();
+        private static readonly MockCounterInfo info = new MockCounterInfo();
         public static string HighlightedObject { get; private set; } = null;
 
         #region MockCounter Creation
-        public static void Create<T>(T settings, string counterName, string counterData, bool UseCounterPositioning = true) where T : ConfigModel
+        public static void Create<T>(T settings, string counterName, string counterData) where T : ConfigModel
         {
             if (!settings.Enabled) return;
             GameObject counter = new GameObject($"Counters+ | Mock {counterName} Counter");
@@ -52,12 +52,8 @@ namespace CountersPlus.UI
                 UnityEngine.Object.Destroy(group.CounterData);
                 loadedMockCounters.Remove(group);
             }
-            if (settings.DisplayName == HighlightedObject)
-            {
-                name.color = Color.yellow;
-                data.color = Color.yellow;
-            }
-            loadedMockCounters.Add(new MockCounterGroup(name, data), settings);
+            if (settings.DisplayName == HighlightedObject) name.color = data.color = Color.yellow;
+            loadedMockCounters.Add(new MockCounterGroup(name, data, false), settings);
         }
 
         public static void CreateStatic(string counterName, string counterData)
@@ -88,7 +84,7 @@ namespace CountersPlus.UI
 
             name.color = new Color(0.35f, 0.35f, 0.35f);
             data.color = new Color(0.35f, 0.35f, 0.35f);
-            loadedMockCounters.Add(new MockCounterGroup(name, data), null as ConfigModel);
+            loadedMockCounters.Add(new MockCounterGroup(name, data, true), null as ConfigModel);
         }
         #endregion
 
@@ -178,12 +174,23 @@ namespace CountersPlus.UI
 
         public static void Highlight<T>(T settings) where T : ConfigModel
         {
-            foreach (KeyValuePair<MockCounterGroup, ConfigModel> kvp in loadedMockCounters)
+            if (settings != null)
             {
-                if (kvp.Value is null) continue;
-                if (settings.DisplayName == kvp.Value.DisplayName) HighlightedObject = settings.DisplayName;
-                kvp.Key.CounterName.color = (settings.DisplayName == kvp.Value.DisplayName) ? Color.yellow : Color.white;
-                kvp.Key.CounterData.color = (settings.DisplayName == kvp.Value.DisplayName) ? Color.yellow : Color.white;
+                foreach (KeyValuePair<MockCounterGroup, ConfigModel> kvp in loadedMockCounters)
+                {
+                    if (kvp.Value is null) continue;
+                    if (settings.DisplayName == kvp.Value.DisplayName) HighlightedObject = settings.DisplayName;
+                    kvp.Key.CounterName.color = (settings.DisplayName == kvp.Value.DisplayName) ? Color.yellow : Color.white;
+                    kvp.Key.CounterData.color = (settings.DisplayName == kvp.Value.DisplayName) ? Color.yellow : Color.white;
+                }
+            }
+            else
+            {
+                HighlightedObject = null;
+                //Welcome to Python.
+                foreach (KeyValuePair<MockCounterGroup, ConfigModel> kvp in loadedMockCounters)
+                    if (!kvp.Key.IsStatic)
+                        kvp.Key.CounterName.color = kvp.Key.CounterData.color = Color.white;
             }
         }
         #endregion
@@ -205,7 +212,7 @@ namespace CountersPlus.UI
         public float leftSpinAverage;
         public float rightSpinAverage;
 
-        private string[] failInsults = new string[] { "A lot", "Embarrasing large", "Still a lot", "MonkaS", "One, two, skip a few...", "99999", "Yikes!", "Zoinks!", "Uhhh..." };
+        private readonly string[] failInsults = new string[] { "A lot", "Embarrasing large", "Still a lot", "MonkaS", "One, two, skip a few...", "99999", "Yikes!", "Zoinks!", "Uhhh..." };
 
         public MockCounterInfo()
         {
@@ -237,13 +244,15 @@ namespace CountersPlus.UI
 
     public class MockCounterGroup
     {
+        public bool IsStatic { get; private set; }
         public TMP_Text CounterName;
         public TMP_Text CounterData;
 
-        public MockCounterGroup(TMP_Text name, TMP_Text data)
+        public MockCounterGroup(TMP_Text name, TMP_Text data, bool isStatic)
         {
             CounterName = name;
             CounterData = data;
+            IsStatic = isStatic;
         }
     }
 }
