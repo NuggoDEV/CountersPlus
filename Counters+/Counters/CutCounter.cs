@@ -18,7 +18,7 @@ namespace CountersPlus.Counters
         private int totalScoreLeft = 0; // MaxScoreForNumberOfNotes() is an int. Don't expect scores over 2 billion.
         private int totalScoreRight = 0;
 
-        private Dictionary<SaberAfterCutSwingRatingCounter, NoteCutInfo> noteCutInfos = new Dictionary<SaberAfterCutSwingRatingCounter, NoteCutInfo>();
+        private Dictionary<SaberSwingRatingCounter, NoteCutInfo> noteCutInfos = new Dictionary<SaberSwingRatingCounter, NoteCutInfo>();
 
         void Awake()
         {
@@ -57,15 +57,15 @@ namespace CountersPlus.Counters
         private void UpdateScore(NoteData data, NoteCutInfo info, int score)
         {
             if (data.noteType == NoteType.Bomb || !info.allIsOK) return;
-            noteCutInfos.Add(info.afterCutSwingRatingCounter, info);
-            info.afterCutSwingRatingCounter.didFinishEvent -= AfterCutSwingRatingCounter_didFinishEvent;
-            info.afterCutSwingRatingCounter.didFinishEvent += AfterCutSwingRatingCounter_didFinishEvent;
+            noteCutInfos.Add(info.swingRatingCounter, info);
+            info.swingRatingCounter.didFinishEvent -= SaberSwingRatingCounter_didFinishEvent;
+            info.swingRatingCounter.didFinishEvent += SaberSwingRatingCounter_didFinishEvent;
         }
 
-        private void AfterCutSwingRatingCounter_didFinishEvent(SaberAfterCutSwingRatingCounter v)
+        private void SaberSwingRatingCounter_didFinishEvent(SaberSwingRatingCounter v)
         {
-            ScoreController.RawScoreWithoutMultiplier(noteCutInfos[v], v, out int beforeCut, out int afterCut, out int why);
-
+            ScoreController.RawScoreWithoutMultiplier(noteCutInfos[v], out int beforeCut, out int afterCut, out _);
+            //"cutDistanceRawScore" is already calculated into "beforeCutRawScore"
             if (noteCutInfos[v].saberType == Saber.SaberType.SaberA)
             {
                 totalScoreLeft += beforeCut + afterCut;

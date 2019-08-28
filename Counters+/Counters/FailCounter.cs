@@ -27,7 +27,7 @@ namespace CountersPlus.Counters
             //Because CountersController.ReadyToInit relies on finding other objects via Resources.FindObjectsOfTypeAll<>()
             //before invoking, it is safe to assume that the objects we find do indeed exist.
             energy = Resources.FindObjectsOfTypeAll<GameEnergyCounter>().First();
-            fails = data.PlayerData.currentLocalPlayer.playerAllOverallStatsData.allOverallStatsData.failedLevelsCount;
+            fails = data.PlayerData.playerData.playerAllOverallStatsData.allOverallStatsData.failedLevelsCount;
 
             if (settings.ShowRestartsInstead)
             {

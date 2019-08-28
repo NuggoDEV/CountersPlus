@@ -13,26 +13,26 @@ namespace CountersPlus.UI
 {
     public class AdvancedCounterSettings
     {
-        static Dictionary<ICounterMode, string> speedSettings = new Dictionary<ICounterMode, string> {
+        static readonly Dictionary<ICounterMode, string> speedSettings = new Dictionary<ICounterMode, string> {
             {ICounterMode.Average, "Mean Speed" },
             {ICounterMode.Top5Sec, "Top (5 Sec.)" },
             {ICounterMode.Both, "Both" },
             {ICounterMode.SplitAverage, "Split Mean" },
             {ICounterMode.SplitBoth, "Both w/Split" }
         };
-        static Dictionary<ICounterMode, string> progressSettings = new Dictionary<ICounterMode, string> {
+        static readonly Dictionary<ICounterMode, string> progressSettings = new Dictionary<ICounterMode, string> {
             {ICounterMode.BaseGame, "Base Game" },
             {ICounterMode.Original, "Original" },
             {ICounterMode.Percent, "Percentage" }
         };
-        static Dictionary<ICounterMode, string> scoreSettings = new Dictionary<ICounterMode, string> {
+        static readonly Dictionary<ICounterMode, string> scoreSettings = new Dictionary<ICounterMode, string> {
             {ICounterMode.Original, "Original" }, //Counters+ Counter w/ Points
             {ICounterMode.BaseGame, "Base Game" }, //Base Game w/ Points
             //{ICounterMode.BaseWithOutPoints, "Base No Points" }, //Base Game w/ Points Under Combo
-            {ICounterMode.LeavePoints, "No Points" }, //Counters+ Counter w/ Points Under Combo
-            {ICounterMode.ScoreOnly, "Score Only" }, //Counters+ Counter w/ Points Removed Entirely
+            {ICounterMode.LeavePoints, "Leave Points" }, //Counters+ Counter w/ Points Under Combo
+            {ICounterMode.ScoreOnly, "Percent Only" }, //Counters+ Counter w/ Points Removed Entirely
         };
-        static Dictionary<ICounterMode, string> spinometerSettings = new Dictionary<ICounterMode, string> {
+        static readonly Dictionary<ICounterMode, string> spinometerSettings = new Dictionary<ICounterMode, string> {
             {ICounterMode.Original, "Original" },
             {ICounterMode.SplitAverage, "Split" },
             {ICounterMode.Highest, "Highest" },

@@ -32,21 +32,6 @@ namespace CountersPlus
             }
         }
 
-        private void Start()
-        {
-            SceneManager.activeSceneChanged += ActiveSceneChanged;
-        }
-
-        private void OnDestroy()
-        {
-            SceneManager.activeSceneChanged -= ActiveSceneChanged;
-        }
-
-        private void ActiveSceneChanged(Scene arg, Scene arg1)
-        {
-            LoadedCounters.Clear();
-        }
-
         /// <summary>
         /// Loads a counter given a ConfigModel and a MonoBehaviour. If enabled, a new GameObject will be created and the provided MonoBehaviour will be attached.
         /// </summary>
@@ -158,7 +143,7 @@ namespace CountersPlus
             PlayerController = Resources.FindObjectsOfTypeAll<PlayerController>().First();
             AudioTimeSyncController = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().First();
             PlayerData = Resources.FindObjectsOfTypeAll<PlayerDataModelSO>().First();
-            ModifiersData = ScoreController.GetPrivateField<GameplayModifiersModelSO>("_gameplayModifiersModelSO");
+            ModifiersData = Resources.FindObjectsOfTypeAll<GameplayModifiersModelSO>().First();
             GCSSD = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData; //By the time all of these load, so should GCSSD.
         }
     }

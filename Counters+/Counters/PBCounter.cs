@@ -37,9 +37,9 @@ namespace CountersPlus.Counters
             _scoreController = data.ScoreController;
             PlayerDataModelSO player = data.PlayerData;
             gameplayModsModel = data.ModifiersData;
-            gameplayMods = data.PlayerData.sharedGameplayModifiers;
+            gameplayMods = data.PlayerData.playerData.gameplayModifiers;
             IDifficultyBeatmap beatmap = data.GCSSD.difficultyBeatmap;
-            stats = player.currentLocalPlayer.GetPlayerLevelStatsData(
+            stats = player.playerData.GetPlayerLevelStatsData(
                 beatmap.level.levelID, beatmap.difficulty, beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic);
             int maxRawScore = ScoreController.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
             _maxPossibleScore = Mathf.RoundToInt(maxRawScore * gameplayModsModel.GetTotalMultiplier(gameplayMods));

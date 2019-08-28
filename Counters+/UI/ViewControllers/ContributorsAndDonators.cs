@@ -23,7 +23,7 @@ namespace CountersPlus.UI.ViewControllers
             { "Dracrius", "Bug fixing and beta testing" },
             { "guyyst", "Cut's \"Separate Saber Counts\" option." },
             { "Steven", "Revitalized Custom Counters" },
-            { "Prspiri", "Internal code refactoring" },
+            { "Pespiri", "Internal code refactoring" },
         };
 
         internal static Dictionary<string, string> Donators = new Dictionary<string, string>()

@@ -18,14 +18,12 @@ namespace CountersPlus.UI.ViewControllers
         public static CountersPlusEditViewController Instance;
         private static RectTransform rect;
         private static TextMeshProUGUI settingsTitle;
-        private static SubMenu container;
         
         internal static List<GameObject> LoadedElements = new List<GameObject>(); //Mass clearing
         internal static List<ListViewController> LoadedSettings = new List<ListViewController>(); //Mass initialization
         internal static int settingsCount = 0; //Spacing
 
-        internal class PositionSettingsViewController : TupleViewController<Tuple<ICounterPositions, string>> { }
-        static Dictionary<ICounterPositions, string> positions = new Dictionary<ICounterPositions, string> {
+        static readonly Dictionary<ICounterPositions, string> positions = new Dictionary<ICounterPositions, string> {
             {ICounterPositions.BelowCombo, "Below Combo" },
             {ICounterPositions.AboveCombo, "Above Combo" },
             {ICounterPositions.BelowMultiplier, "Below Multi." },
@@ -125,6 +123,7 @@ namespace CountersPlus.UI.ViewControllers
         internal static void ShowMainSettings()
         {
             ClearScreen();
+            MockCounter.Highlight<ConfigModel>(null);
             settingsTitle = BeatSaberUI.CreateText(rect, "Main Settings", Vector2.zero);
             settingsTitle.fontSize = 6;
             settingsTitle.alignment = TextAlignmentOptions.Center;
@@ -180,7 +179,7 @@ namespace CountersPlus.UI.ViewControllers
                 ClearScreen();
                 if (!(info is null))
                 {
-                    if (info.IsCustom) container = CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
+                    if (info.IsCustom) CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
                     else
                     {
                         SubMenu sub = CreateBase(settings);
@@ -210,10 +209,10 @@ namespace CountersPlus.UI.ViewControllers
             }
             catch { } //It most likely errors here. If it does, well no problem.
 
-            var enabled = AddList(ref sub, settings, "Enabled", "Toggles this counter on or off.", 2);
+            var enabled = AddList(ref sub, settings, "Enabled", "Toggle this counter on or off.", 2);
             enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
             enabled.GetValue = () => settings.Enabled ? 1f : 0f;
-            enabled.SetValue += (v) => settings.Enabled = v != 0f;
+            enabled.SetValue = (v) => settings.Enabled = v != 0f;
 
             var position = AddList(ref sub, settings, "Position", "The relative position of common UI elements.", (restrictedList.Count() == 0) ? positions.Count() : restrictedList.Count());
             position.GetTextForValue = (v) => {
