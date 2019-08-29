@@ -54,7 +54,11 @@ namespace CountersPlus.UI.ViewControllers
             creator.alignment = TextAlignmentOptions.Center;
             setPositioning(creator.rectTransform, 0, 0.35f, 1, 0.166f, 0.5f);
 
-            github = BeatSaberUI.CreateUIButton(rectTransform, "SettingsButton", Vector2.left, null, "GitHub");
+            try //attempt to load BSML's button cuz it messes with layout
+            {
+                github = BeatSaberUI.CreateUIButton(rectTransform, "SettingsButton(Clone)", Vector2.left, null, "GitHub");
+            }
+            catch { github = BeatSaberUI.CreateUIButton(rectTransform, "SettingsButton", Vector2.left, null, "GitHub"); }
             github.onClick.AddListener(() => { GoTo("https://github.com/Caeden117/CountersPlus", github); });
             setPositioning(github.transform as RectTransform, 0f, 0f, 0.39f, 0.125f, 0.5f);
             BeatSaberUI.AddHintText(github.transform as RectTransform, "Opens in a new browser tab on your desktop. Feel free to explore the source code! Maybe try out experimental versions?");
