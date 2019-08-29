@@ -43,6 +43,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(BeatSaberDir)\Plugins\BeatSaberCustomUI.dll</HintPath>
     </Reference>
+    <Reference Include="BSML">
+      <HintPath>$(BeatSaberDir)\Plugins\BSML.dll</HintPath>
+    </Reference>
     <Reference Include="BS_Utils">
       <HintPath>$(BeatSaberDir)\Plugins\BS_Utils.dll</HintPath>
     </Reference>
@@ -125,63 +128,29 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\Images\MainSettings.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Missed.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Notes.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Score.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Progress.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Speed.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Cut.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Spinometer.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Custom.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Credits.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Contributors.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\WotAreYeDoin.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="manifest.json" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Logo.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Personal Best.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Bug.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Fail.png" />
     <EmbeddedResource Include="UI\Images\Notes Left.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="About.md" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Donators.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\credits.bsml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(BeatSaberDir)\Plugins\CountersPlus.dll"</PostBuildEvent>
