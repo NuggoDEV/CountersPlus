@@ -30,15 +30,12 @@ namespace CountersPlus.UI
             GameObject nameGO = new GameObject($"Counters+ | Mock {counterName} Label");
             Vector3 position = (CountersController.DeterminePosition(counter, settings.Position, settings.Distance) - new Vector3(0, 0.4f, 0));
             nameGO.transform.parent = counter.transform;
-            //TextMeshPro name = nameGO.AddComponent<TextMeshPro>();
             TextHelper.CreateText(out TMP_Text name, position);
             name.text = counterName;
             name.fontSize = 3;
             name.color = Color.white;
             name.alignment = TextAlignmentOptions.Center;
-            //name.rectTransform.localPosition = new Vector3(0, 0.4f, 0);
 
-            //TextMeshPro data = counter.AddComponent<TextMeshPro>();
             TextHelper.CreateText(out TMP_Text data, position - new Vector3(0, 0.4f, 0));
             data.text = counterData;
             data.fontSize = 4;
