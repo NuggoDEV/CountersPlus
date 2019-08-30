@@ -64,16 +64,16 @@ namespace CountersPlus.Counters
 
         private void SaberSwingRatingCounter_didFinishEvent(SaberSwingRatingCounter v)
         {
-            ScoreController.RawScoreWithoutMultiplier(noteCutInfos[v], out int beforeCut, out int afterCut, out _);
+            ScoreController.RawScoreWithoutMultiplier(noteCutInfos[v], out int beforeCut, out int afterCut, out int cutDistance);
             //"cutDistanceRawScore" is already calculated into "beforeCutRawScore"
             if (noteCutInfos[v].saberType == Saber.SaberType.SaberA)
             {
-                totalScoreLeft += beforeCut + afterCut;
+                totalScoreLeft += beforeCut + afterCut + cutDistance;
                 ++totalCutCountLeft;
             }
             else
             {
-                totalScoreRight += beforeCut + afterCut;
+                totalScoreRight += beforeCut + afterCut + cutDistance;
                 ++totalCutCountRight;
             }
 

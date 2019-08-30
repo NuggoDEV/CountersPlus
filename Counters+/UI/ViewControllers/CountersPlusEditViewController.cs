@@ -212,7 +212,7 @@ namespace CountersPlus.UI.ViewControllers
             var enabled = AddList(ref sub, settings, "Enabled", "Toggle this counter on or off.", 2);
             enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
             enabled.GetValue = () => settings.Enabled ? 1f : 0f;
-            enabled.SetValue = (v) => settings.Enabled = v != 0f;
+            enabled.SetValue += (v) => settings.Enabled = v != 0f;
 
             var position = AddList(ref sub, settings, "Position", "The relative position of common UI elements.", (restrictedList.Count() == 0) ? positions.Count() : restrictedList.Count());
             position.GetTextForValue = (v) => {
