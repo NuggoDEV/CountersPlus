@@ -5,26 +5,24 @@ using CountersPlus.Config;
 
 namespace CountersPlus.Counters
 {
-    public class ScoreCounter : MonoBehaviour
+    public class ScoreCounter : Counter<ScoreConfigModel>
     {
         internal TMP_Text ScoreMesh;
         internal TMP_Text RankText;
         internal TMP_Text PointsText;
 
-        private ScoreConfigModel settings;
-
         GameObject _RankObject;
-        int decimalPrecision;
 
-        void Awake()
+        internal override void Counter_Start()
         {
             settings = CountersController.settings.scoreConfig;
-            decimalPrecision = settings.DecimalPrecision;
             if (gameObject.name == "ScorePanel")
                 PreInit();
             else
                 StartCoroutine(YeetToBaseCounter());
         }
+        internal override void Counter_Destroy() { }
+        internal override void Init(CountersData data) { }
 
         IEnumerator YeetToBaseCounter()
         {
@@ -71,7 +69,6 @@ namespace CountersPlus.Counters
             ScoreMesh.color = Color.white;
             ScoreMesh.alignment = TextAlignmentOptions.Center;
 
-            //transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = position + new Vector3(-6.425f, 7.67f, 0);
             transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = position + new Vector3(-0.01f, 7.77f, 0);
             if (settings.DisplayRank)
             {

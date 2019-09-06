@@ -7,9 +7,8 @@ using CountersPlus.Config;
 
 namespace CountersPlus.Counters
 {
-    class SpeedCounter : MonoBehaviour
+    class SpeedCounter : Counter<SpeedConfigModel>
     {
-        private SpeedConfigModel settings;
         private TMP_Text counterText;
         private TMP_Text altCounterText;
         private PlayerController pc = null;
@@ -18,19 +17,11 @@ namespace CountersPlus.Counters
         private List<float> rSpeedList = new List<float>();
         private List<float> lSpeedList = new List<float>();
         private List<float> fastest = new List<float>();
-        private string precision = "00.";
 
-        private int settingsMode;
+        internal override void Counter_Start() { }
+        internal override void Counter_Destroy() { }
 
-        void Awake()
-        {
-            settings = CountersController.settings.speedConfig;
-            settingsMode = (int)settings.Mode;
-            for (var i = 0; i < settings.DecimalPrecision; i++) precision += "0";
-            CountersController.ReadyToInit += Init;
-        }
-
-        private void Init(CountersData data)
+        internal override void Init(CountersData data)
         {
             Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             pc = data.PlayerController;
@@ -91,8 +82,6 @@ namespace CountersPlus.Counters
                 altCounterText.color = Color.white;
                 altCounterText.alignment = TextAlignmentOptions.Center;
 
-                GameObject altLabelGO = new GameObject("Counters+ | Highest Speed Label");
-                altLabelGO.transform.parent = altGO.transform;
                 TextHelper.CreateText(out TMP_Text altLabel, position - new Vector3(0, 0.7f, 0));
                 altLabel.text = "Top Speed (5 Sec.)";
                 altLabel.fontSize = 3;
@@ -117,44 +106,42 @@ namespace CountersPlus.Counters
             while (true)
             {
                 yield return new WaitForSeconds(5);
-                fastest.Add((this.right.bladeSpeed + this.left.bladeSpeed) / 2f);
-                float top = 0;
-                foreach (float speed in fastest) if (speed > top) top = speed;
+                float top = fastest.Max();
                 fastest.Clear();
                 if (settings.Mode == ICounterMode.Both || settings.Mode == ICounterMode.SplitBoth)
-                    altCounterText.text = top.ToString(precision);
+                    altCounterText.text = top.ToString($"F{settings.DecimalPrecision}");
                 else
-                    counterText.text = top.ToString(precision);
+                    counterText.text = top.ToString($"F{settings.DecimalPrecision}");
             }
         }
 
         void Update()
         {
             if (pc == null) return;
-            switch (settingsMode)
+            switch (settings.Mode)
             {
-                case (int)ICounterMode.Average:
+                case ICounterMode.Average:
                     rSpeedList.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
-                    counterText.text = rSpeedList.Average().ToString(precision);
+                    counterText.text = rSpeedList.Average().ToString($"F{settings.DecimalPrecision}");
                     break;
-                case (int)ICounterMode.Top5Sec:
+                case ICounterMode.Top5Sec:
                     fastest.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
                     break;
-                case (int)ICounterMode.Both:
+                case ICounterMode.Both:
                     fastest.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
                     rSpeedList.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
-                    counterText.text = rSpeedList.Average().ToString(precision);
+                    counterText.text = rSpeedList.Average().ToString($"F{settings.DecimalPrecision}");
                     break;
-                case (int)ICounterMode.SplitAverage:
+                case ICounterMode.SplitAverage:
                     rSpeedList.Add(right.bladeSpeed);
                     lSpeedList.Add(left.bladeSpeed);
-                    counterText.text = string.Format("{0} | {1}", lSpeedList.Average().ToString(precision), rSpeedList.Average().ToString(precision));
+                    counterText.text = string.Format("{0} | {1}", lSpeedList.Average().ToString($"F{settings.DecimalPrecision}"), rSpeedList.Average().ToString($"F{settings.DecimalPrecision}"));
                     break;
-                case (int)ICounterMode.SplitBoth:
+                case ICounterMode.SplitBoth:
                     fastest.Add((right.bladeSpeed + left.bladeSpeed) / 2f);
                     rSpeedList.Add(right.bladeSpeed);
                     lSpeedList.Add(left.bladeSpeed);
-                    counterText.text = string.Format("{0} | {1}", lSpeedList.Average().ToString(precision), rSpeedList.Average().ToString(precision));
+                    counterText.text = string.Format("{0} | {1}", lSpeedList.Average().ToString($"F{settings.DecimalPrecision}"), rSpeedList.Average().ToString($"F{settings.DecimalPrecision}"));
                     break;
             }
         }

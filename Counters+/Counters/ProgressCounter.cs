@@ -8,27 +8,24 @@ using CountersPlus.Config;
 
 namespace CountersPlus.Counters
 {
-    public class ProgressCounter : MonoBehaviour
+    public class ProgressCounter : Counter<ProgressConfigModel>
     {
 
         TMP_Text _timeMesh;
         AudioTimeSyncController _audioTimeSync;
         Image _image;
-        private ProgressConfigModel settings;
 
         bool useTimeLeft = false;
         float t = 0;
         float length = 0;
-        void Awake()
+        internal override void Counter_Start()
         {
-            settings = CountersController.settings.progressConfig;
-            transform.position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             useTimeLeft = settings.ProgressTimeLeft;
             if (settings.Mode == ICounterMode.BaseGame && gameObject.name != "SongProgressPanel")
                 StartCoroutine(YeetToBaseCounter());
-            else if (settings.Mode != ICounterMode.BaseGame)
-                CountersController.ReadyToInit += Init;
+            else if (settings.Mode == ICounterMode.BaseGame) OnDestroy();
         }
+        internal override void Counter_Destroy() { }
 
         IEnumerator YeetToBaseCounter()
         {
@@ -37,7 +34,7 @@ namespace CountersPlus.Counters
             Destroy(gameObject);
         }
 
-        void Init(CountersData data)
+        internal override void Init(CountersData data)
         {
             _audioTimeSync = data.AudioTimeSyncController;
             length = _audioTimeSync.songLength;
@@ -104,11 +101,6 @@ namespace CountersPlus.Counters
             transform.position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             if (GameObject.Find("SongProgressPanel") != null && settings.Mode != ICounterMode.BaseGame) Destroy(GameObject.Find("SongProgressPanel"));
             StartCoroutine(SecondTick());
-        }
-
-        void OnDestroy()
-        {
-            CountersController.ReadyToInit -= Init;
         }
 
         IEnumerator SecondTick()

@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Counters\AccuracyCounter.cs" />
+    <Compile Include="Counters\Counter.cs" />
     <Compile Include="Counters\CustomCounter.cs" />
     <Compile Include="Counters\CutCounter.cs" />
     <Compile Include="Counters\FailCounter.cs" />

@@ -8,14 +8,13 @@ using CountersPlus.Custom;
 
 namespace CountersPlus.Counters
 {
-    class CustomCounterHook : MonoBehaviour
+    class CustomCounterHook : Counter<CustomConfigModel>
     {
 
         private GameObject counter;
-        private CustomConfigModel settings = null;
         private string Name;
 
-        void Start()
+        internal override void Counter_Start()
         {
             Name = name.Split('|').Last().Substring(1).Split(' ').First();
             foreach(CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
@@ -27,6 +26,9 @@ namespace CountersPlus.Counters
             }
             StartCoroutine(GetRequired());
         }
+
+        internal override void Init(CountersData data) { }
+        internal override void Counter_Destroy() { }
 
         IEnumerator GetRequired()
         {

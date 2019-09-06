@@ -5,22 +5,17 @@ using CountersPlus.Config;
 
 namespace CountersPlus.Counters
 {
-    class AccuracyCounter : MonoBehaviour
+    class AccuracyCounter : Counter<NoteConfigModel>
     {
 
         private ScoreController scoreController;
-        private NoteConfigModel settings;
         private TMP_Text counterText;
         private int counter;
         private int total;
 
-        void Awake()
-        {
-            settings = CountersController.settings.noteConfig;
-            CountersController.ReadyToInit += Init;
-        }
+        internal override void Counter_Start() { }
 
-        private void Init(CountersData data)
+        internal override void Init(CountersData data)
         {
             scoreController = data.ScoreController;
             Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
@@ -45,11 +40,10 @@ namespace CountersPlus.Counters
             }
         }
 
-        void OnDestroy()
+        internal override void Counter_Destroy()
         {
             scoreController.noteWasCutEvent -= OnNoteCut;
             scoreController.noteWasMissedEvent -= OnNoteMiss;
-            CountersController.ReadyToInit -= Init;
         }
 
         private void OnNoteCut(NoteData data, NoteCutInfo info, int c)

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace CountersPlus.Counters
 {
-    class Spinometer : MonoBehaviour
+    class Spinometer : Counter<SpinometerConfigModel>
     {
         private Saber leftSaber;
         private Saber rightSaber;
@@ -17,27 +17,17 @@ namespace CountersPlus.Counters
         private List<Quaternion> leftQuaternions = new List<Quaternion>();
         private float highestSpin;
         private TMP_Text spinometer;
-        private SpinometerConfigModel settings;
-        private int settingsMode; //Prevents calls to config
 
-        void Awake()
-        {
-            settings = CountersController.settings.spinometerConfig;
-            settingsMode = (int)settings.Mode;
-            StartCoroutine(GetRequired());
-        }
+        internal override void Counter_Start() { }
+        
+        internal override void Counter_Destroy() {}
 
-        IEnumerator GetRequired()
+        internal override void Init(CountersData data)
         {
-            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<Saber>().Any());
             Saber[] sabers = Resources.FindObjectsOfTypeAll<Saber>();
             leftSaber = sabers.Where((Saber x) => x.name.ToLower().Contains("left")).First();
             rightSaber = sabers.Where((Saber x) => x.name.ToLower().Contains("right")).First();
-            Init();
-        }
 
-        void Init()
-        {
             Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out spinometer, position - new Vector3(0, 0.4f, 0));
             spinometer.text = settings.Mode == ICounterMode.SplitAverage ? "0 | 0" : "0";
@@ -77,34 +67,26 @@ namespace CountersPlus.Counters
                 yield return new WaitForSecondsRealtime(1);
                 leftQuaternions.Clear();
                 rightQuaternions.Clear();
-                float leftSpeed = TotalSpeed(leftAngles);
-                float rightSpeed = TotalSpeed(rightAngles);
+                float leftSpeed = leftAngles.Sum();
+                float rightSpeed = rightAngles.Sum();
                 float averageSpeed = (leftSpeed + rightSpeed) / 2;
                 if (leftSpeed > highestSpin) highestSpin = leftSpeed;
                 if (rightSpeed > highestSpin) highestSpin = rightSpeed;
-                if (settingsMode == (int)ICounterMode.Original)
+                if (settings.Mode == ICounterMode.Original)
                     spinometer.text = $"<color=#{DetermineColor(averageSpeed)}>{Mathf.RoundToInt(averageSpeed)}</color>";
-                else if (settingsMode == (int)ICounterMode.Highest)
+                else if (settings.Mode == ICounterMode.Highest)
                     spinometer.text = $"<color=#{DetermineColor(highestSpin)}>{Mathf.RoundToInt(highestSpin)}</color>";
-                else if (settingsMode == (int)ICounterMode.SplitAverage)
+                else if (settings.Mode == ICounterMode.SplitAverage)
                     spinometer.text = $"<color=#{DetermineColor(leftSpeed)}>{Mathf.RoundToInt(leftSpeed)}</color> | <color=#{DetermineColor(rightSpeed)}>{Mathf.RoundToInt(rightSpeed)}</color>";
                 leftAngles.Clear();
                 rightAngles.Clear();
             }
         }
 
-        private float TotalSpeed(List<float> speeds)
-        {
-            float speed = 0;
-            foreach (float f in speeds) speed += f;
-            return speed;
-        }
-
         private string DetermineColor(float speed)
         {
-            Color color = Color.white;
             ColorUtility.TryParseHtmlString("#FFA500", out Color orange);
-            color = Color.Lerp(Color.white, orange, speed / 3600);
+            Color color = Color.Lerp(Color.white, orange, speed / 3600);
             if (speed >= 3600) color = Color.red;
             return ColorUtility.ToHtmlStringRGB(color);
         }

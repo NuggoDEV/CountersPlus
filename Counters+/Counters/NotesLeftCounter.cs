@@ -4,20 +4,15 @@ using CountersPlus.Config;
 
 namespace CountersPlus.Counters
 {
-    class NotesLeftCounter : MonoBehaviour
+    class NotesLeftCounter : Counter<NotesLeftConfigModel>
     {
         private int notesLeft = 0;
         private TMP_Text counter;
-        private NotesLeftConfigModel settings;
         private ScoreController SC;
 
-        void Awake()
-        {
-            settings = CountersController.settings.notesLeftConfig;
-            CountersController.ReadyToInit += Init;
-        }
+        internal override void Counter_Start() { }
 
-        private void Init(CountersData data)
+        internal override void Init(CountersData data)
         {
             SC = data.ScoreController;
             SC.noteWasCutEvent += OnNoteCut;
@@ -61,9 +56,8 @@ namespace CountersPlus.Counters
             else counter.text = $"Notes Remaining {notesLeft}";
         }
 
-        void OnDestroy()
+        internal override void Counter_Destroy()
         {
-            CountersController.ReadyToInit -= Init;
             SC.noteWasCutEvent -= OnNoteCut;
             SC.noteWasMissedEvent -= OnNoteMiss;
         }
