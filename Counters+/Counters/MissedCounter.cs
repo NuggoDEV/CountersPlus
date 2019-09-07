@@ -33,7 +33,13 @@ namespace CountersPlus.Counters
             label.color = Color.white;
             label.alignment = TextAlignmentOptions.Center;
 
-            if (settings.CustomMissTextIntegration) UpdateCustomMissText();
+            if (settings.CustomMissTextIntegration && PluginUtility.IsPluginPresent("CustomMissText"))
+                UpdateCustomMissText();
+            else if (!PluginUtility.IsPluginPresent("CustomMissText"))
+            {
+                settings.CustomMissTextIntegration = false;
+                settings.Save();
+            }
 
             if (scoreController != null)
             {

@@ -10,9 +10,9 @@
     </vertical>
   </vertical>
   <text id='linkOpenedText' align ='Center' font-size='4' text='Link opened in your browser!'></text>
-  <horizontal bg='round-rect-panel' anchor-min-x='0' anchor-max-x ='1' size-delta-x='35' anchor-min-y='0' anchor-max-y='0.3'>
+  <bottom-button-panel>
     <button id='github' text='GitHub' hint-text='Opens in a new browser tab on your desktop. Feel free to explore the source code! Maybe try out experimental versions?'></button>
-    <button id='donate' text='&lt;3' hint-text='Buy me a coffee if you feel like I%apos;m deserving of one.'></button>
+    <button id='donate' pref-width='0' text='&lt;3' hint-text='Buy me a coffee if you feel like I%apos;m deserving of one.'></button>
     <button id='issues' text='Report an Issue' hint-text='Opens in a new browser tab on your desktop. Be sure to read the Issue template thoroughly!'></button>
-  </horizontal>
+  </bottom-button-panel>
 </bg>

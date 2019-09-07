@@ -96,11 +96,6 @@ namespace CountersPlus.Counters
             }
         }
 
-        void OnDestroy()
-        {
-            CountersController.ReadyToInit -= Init;
-        }
-
         IEnumerator FastestSpeed()
         {
             while (true)
