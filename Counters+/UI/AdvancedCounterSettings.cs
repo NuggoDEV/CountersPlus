@@ -100,6 +100,11 @@ namespace CountersPlus.UI
                 scorePrecision.GetTextForValue = (v) => Mathf.RoundToInt(v).ToString();
                 scorePrecision.GetValue = () => CC.settings.scoreConfig.DecimalPrecision;
                 scorePrecision.SetValue += (v) => CC.settings.scoreConfig.DecimalPrecision = Mathf.RoundToInt(v);
+
+                var customRankColors = CPEVC.AddList(ref sub, config, "Custom Rank Colors", "Allows the changing of each rank's color, to easily see what rank you are currently on in a song.\nColors can be in the config file.", 2);
+                customRankColors.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
+                customRankColors.GetValue = () => CC.settings.scoreConfig.CustomRankColors ? 1f : 0f;
+                customRankColors.SetValue += (v) => CC.settings.scoreConfig.CustomRankColors = v != 0f;
             } },
             { CC.settings.pbConfig, (sub, config) =>
             {
