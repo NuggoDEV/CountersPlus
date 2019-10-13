@@ -13,7 +13,7 @@ namespace CountersPlus.Config
             { "Missed", new MissedConfigModel(){ Enabled = true, Position = ICounterPositions.BelowCombo, Distance = 0, CustomMissTextIntegration = false } },
             { "Notes", new NoteConfigModel() { Enabled = false, Position = ICounterPositions.BelowCombo, Distance = 1, DecimalPrecision = 2, ShowPercentage = false} },
             { "Progress", new ProgressConfigModel() { Enabled = true, Position = ICounterPositions.BelowEnergy, Distance = 0, Mode = ICounterMode.Original, ProgressTimeLeft = false, IncludeRing = false } },
-            { "Score", new ScoreConfigModel() { Enabled = true, Position = ICounterPositions.BelowMultiplier, Distance = 0, DecimalPrecision = 2, DisplayRank = true, Mode = ICounterMode.Original } },
+            { "Score", new ScoreConfigModel() { Enabled = true, Position = ICounterPositions.BelowMultiplier, Distance = 0, DecimalPrecision = 2, DisplayRank = true, Mode = ICounterMode.Original, CustomRankColors = true, SSColor = "#00FFFF", SColor = "#FFFFFF", AColor = "#00FF00", BColor = "#FFFF00", CColor = "#FFA700", DColor = "#FF0000", EColor = "#FF0000" } },
             { "Speed", new SpeedConfigModel() { Enabled = false, Position = ICounterPositions.BelowMultiplier, Distance = 1, DecimalPrecision = 2, Mode = ICounterMode.Average } },
             { "Cut", new CutConfigModel() { Enabled = false, Position = ICounterPositions.AboveHighway, Distance = 0, SeparateSaberCounts = false} },
             { "Spinometer", new SpinometerConfigModel() { Enabled = false, Position = ICounterPositions.AboveMultiplier, Distance = 0, Mode = ICounterMode.Highest } },

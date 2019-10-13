@@ -8,6 +8,7 @@ using IniParser.Model;
 using System.Linq;
 using CountersPlus.Utils;
 using IPA.Utilities;
+using UnityEngine;
 
 namespace CountersPlus.Config
 {
@@ -94,6 +95,7 @@ namespace CountersPlus.Config
                     input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterPositions), value));
                 else input.SetPrivateField(info.Name, Convert.ChangeType(value, finfo.FieldType));
                 if (finfo.GetValue(input) == null) throw new Exception();
+                
             }
             if (resetToDefaults)
             {
@@ -195,8 +197,16 @@ namespace CountersPlus.Config
         public ICounterMode Mode;
         public int DecimalPrecision;
         public bool DisplayRank;
+        public bool CustomRankColors;
+        public string SSColor;
+        public string SColor;
+        public string AColor;
+        public string BColor;
+        public string CColor;
+        public string DColor;
+        public string EColor;
     }
-
+    
     public sealed class PBConfigModel : ConfigModel{
         public PBConfigModel() { DisplayName = "Personal Best"; VersionAdded = new SemVer.Version("1.5.5"); }
         public int DecimalPrecision;

@@ -2,6 +2,7 @@
 using UnityEngine;
 using TMPro;
 using CountersPlus.Config;
+using System;
 
 namespace CountersPlus.Counters
 {
@@ -10,8 +11,9 @@ namespace CountersPlus.Counters
         internal TMP_Text ScoreMesh;
         internal TMP_Text RankText;
         internal TMP_Text PointsText;
+        
+        private static ScoreConfigModel settings;
 
-        private ScoreConfigModel settings;
 
         GameObject _RankObject;
         int decimalPrecision;
@@ -70,7 +72,7 @@ namespace CountersPlus.Counters
             ScoreMesh.fontSize = 3;
             ScoreMesh.color = Color.white;
             ScoreMesh.alignment = TextAlignmentOptions.Center;
-
+                
             //transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = position + new Vector3(-6.425f, 7.67f, 0);
             transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = position + new Vector3(-0.01f, 7.77f, 0);
             if (settings.DisplayRank)
@@ -80,7 +82,13 @@ namespace CountersPlus.Counters
                 TextHelper.CreateText(out RankText, position);
                 RankText.text = "\nSS";
                 RankText.fontSize = 4;
-                RankText.color = Color.white;
+                if (!settings.CustomRankColors)
+                    RankText.color = Color.white; //if custom rank colors is disabled, just set color to white
+                if (settings.CustomRankColors)
+                {
+                    ColorUtility.TryParseHtmlString(settings.SSColor, out Color defaultColor);
+                    RankText.color = defaultColor;
+                }
                 RankText.alignment = TextAlignmentOptions.Center;
             }
             if (settings.Mode == ICounterMode.LeavePoints || settings.Mode == ICounterMode.BaseWithOutPoints)
@@ -90,5 +98,46 @@ namespace CountersPlus.Counters
             }
             GetComponent<ImmediateRankUIPanel>().Start(); //BS way of getting Harmony patch to function but "if it works its not stupid" ~Caeden117
         }
+        /*public void SetColor()
+        {
+            if (RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "SS" | RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "SSS")
+            {
+                ColorUtility.TryParseHtmlString(settings.SSColor, out Color RankColor);
+                RankText.color = RankColor;
+            }
+            if (RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "S")
+            {
+                ColorUtility.TryParseHtmlString(settings.SColor, out Color RankColor);
+                RankText.color = RankColor;
+            }
+            if (RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "A")
+            {
+                ColorUtility.TryParseHtmlString(settings.AColor, out Color RankColor);
+                RankText.color = RankColor;
+            }
+            if (RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "B")
+            {
+                ColorUtility.TryParseHtmlString(settings.BColor, out Color RankColor);
+                RankText.color = RankColor;
+            }
+            if (RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "C")
+            {
+                ColorUtility.TryParseHtmlString(settings.CColor, out Color RankColor);
+                RankText.color = RankColor;
+            }
+            if (RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "D")
+            {
+                ColorUtility.TryParseHtmlString(settings.DColor, out Color RankColor);
+                RankText.color = RankColor;
+            }
+            if (RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "E")
+            {
+                ColorUtility.TryParseHtmlString(settings.EColor, out Color RankColor);
+                RankText.color = RankColor;
+            }
+            else
+                RankText.color = Color.white;
+            
+        }*/
     }
 }
