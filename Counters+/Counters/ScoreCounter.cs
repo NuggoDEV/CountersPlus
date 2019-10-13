@@ -2,7 +2,6 @@
 using UnityEngine;
 using TMPro;
 using CountersPlus.Config;
-using System;
 
 namespace CountersPlus.Counters
 {
@@ -12,8 +11,7 @@ namespace CountersPlus.Counters
         internal TMP_Text RankText;
         internal TMP_Text PointsText;
         
-        private static ScoreConfigModel settings;
-
+        private ScoreConfigModel settings;
 
         GameObject _RankObject;
         int decimalPrecision;
@@ -98,46 +96,5 @@ namespace CountersPlus.Counters
             }
             GetComponent<ImmediateRankUIPanel>().Start(); //BS way of getting Harmony patch to function but "if it works its not stupid" ~Caeden117
         }
-        /*public void SetColor()
-        {
-            if (RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "SS" | RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "SSS")
-            {
-                ColorUtility.TryParseHtmlString(settings.SSColor, out Color RankColor);
-                RankText.color = RankColor;
-            }
-            if (RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "S")
-            {
-                ColorUtility.TryParseHtmlString(settings.SColor, out Color RankColor);
-                RankText.color = RankColor;
-            }
-            if (RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "A")
-            {
-                ColorUtility.TryParseHtmlString(settings.AColor, out Color RankColor);
-                RankText.color = RankColor;
-            }
-            if (RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "B")
-            {
-                ColorUtility.TryParseHtmlString(settings.BColor, out Color RankColor);
-                RankText.color = RankColor;
-            }
-            if (RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "C")
-            {
-                ColorUtility.TryParseHtmlString(settings.CColor, out Color RankColor);
-                RankText.color = RankColor;
-            }
-            if (RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "D")
-            {
-                ColorUtility.TryParseHtmlString(settings.DColor, out Color RankColor);
-                RankText.color = RankColor;
-            }
-            if (RankModel.GetRankName(relativeScoreAndImmediateRankCounter.immediateRank) == "E")
-            {
-                ColorUtility.TryParseHtmlString(settings.EColor, out Color RankColor);
-                RankText.color = RankColor;
-            }
-            else
-                RankText.color = Color.white;
-            
-        }*/
     }
 }

@@ -8,7 +8,6 @@ using IniParser.Model;
 using System.Linq;
 using CountersPlus.Utils;
 using IPA.Utilities;
-using UnityEngine;
 
 namespace CountersPlus.Config
 {
@@ -95,7 +94,6 @@ namespace CountersPlus.Config
                     input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterPositions), value));
                 else input.SetPrivateField(info.Name, Convert.ChangeType(value, finfo.FieldType));
                 if (finfo.GetValue(input) == null) throw new Exception();
-                
             }
             if (resetToDefaults)
             {

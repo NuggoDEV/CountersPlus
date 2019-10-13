@@ -7,7 +7,6 @@ using CountersPlus.Config;
 
 namespace CountersPlus.Harmony
 {
-
     [HarmonyPatch(typeof(ImmediateRankUIPanel))]
     [HarmonyPatch("Start", MethodType.Normal)]
     class ScoreCounterStartHook
@@ -27,7 +26,6 @@ namespace CountersPlus.Harmony
     class ScoreCounterRefreshUIHook
     {
         static ScoreConfigModel model = null;
-        
         static bool Prefix(ref ImmediateRankUIPanel __instance, ref RelativeScoreAndImmediateRankCounter ____relativeScoreAndImmediateRankCounter,
             ref RankModel.Rank ____prevImmediateRank, ref float ____prevRelativeScore, ref TextMeshProUGUI ____rankText,
             ref TextMeshProUGUI ____relativeScoreText)
