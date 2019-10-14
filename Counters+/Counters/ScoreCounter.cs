@@ -10,7 +10,7 @@ namespace CountersPlus.Counters
         internal TMP_Text ScoreMesh;
         internal TMP_Text RankText;
         internal TMP_Text PointsText;
-
+        
         private ScoreConfigModel settings;
 
         GameObject _RankObject;
@@ -70,7 +70,7 @@ namespace CountersPlus.Counters
             ScoreMesh.fontSize = 3;
             ScoreMesh.color = Color.white;
             ScoreMesh.alignment = TextAlignmentOptions.Center;
-
+                
             //transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = position + new Vector3(-6.425f, 7.67f, 0);
             transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = position + new Vector3(-0.01f, 7.77f, 0);
             if (settings.DisplayRank)
@@ -80,7 +80,13 @@ namespace CountersPlus.Counters
                 TextHelper.CreateText(out RankText, position);
                 RankText.text = "\nSS";
                 RankText.fontSize = 4;
-                RankText.color = Color.white;
+                if (!settings.CustomRankColors)
+                    RankText.color = Color.white; //if custom rank colors is disabled, just set color to white
+                if (settings.CustomRankColors)
+                {
+                    ColorUtility.TryParseHtmlString(settings.SSColor, out Color defaultColor);
+                    RankText.color = defaultColor;
+                }
                 RankText.alignment = TextAlignmentOptions.Center;
             }
             if (settings.Mode == ICounterMode.LeavePoints || settings.Mode == ICounterMode.BaseWithOutPoints)

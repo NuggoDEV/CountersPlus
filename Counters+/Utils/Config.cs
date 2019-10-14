@@ -195,8 +195,16 @@ namespace CountersPlus.Config
         public ICounterMode Mode;
         public int DecimalPrecision;
         public bool DisplayRank;
+        public bool CustomRankColors;
+        public string SSColor;
+        public string SColor;
+        public string AColor;
+        public string BColor;
+        public string CColor;
+        public string DColor;
+        public string EColor;
     }
-
+    
     public sealed class PBConfigModel : ConfigModel{
         public PBConfigModel() { DisplayName = "Personal Best"; VersionAdded = new SemVer.Version("1.5.5"); }
         public int DecimalPrecision;

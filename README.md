@@ -56,6 +56,7 @@ These are currently being moved over to the [Counters+ Wiki](https://github.com/
 |***Percentage Precision***|*Notes*, *Score*, *Speed*, and *Personal Best*|How precise do the decimals go?|
 |***Show Precentage***|*Notes*|Displays the percentage of notes hit over notes in total.|
 |***Display Rank***|*Score*|Displays the Rank you get during a song (SS, S, A, B, C, D, E.)|
+|***Custom Rank Colors***|*Score*|Changes color of the rank, depending on which rank you're at, according to the config.|
 |***Progress From End***|*Progress*|The counter starts at full, and decreases as you progress though a song.|
 |***Include Progress Ring***|*Progress*|Whether or not the *Progress From End* option will also effect the Progress Ring. Only available in *Original* mode.|
 |***Mode***|*Speed*, *Progress*, *Spinometer*, and *Score*|Changes the display mode for the Counter (See Hint Text in-game for more detail.)|
