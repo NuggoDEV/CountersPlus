@@ -1,0 +1,9 @@
+﻿<bg>
+  <vertical child-control-height='false'>
+    <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
+      <text id='name' text='Select an Option' align='Center' font-size='11'></text>
+    </horizontal>
+    <vertical id='body' bg='round-rect-panel' pad='5' vertical-fit='PreferredSize'>
+    </vertical>
+  </vertical>
+</bg>

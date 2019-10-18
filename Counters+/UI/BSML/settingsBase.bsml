@@ -1,0 +1,11 @@
+﻿<vertical spacing='1'>
+  <horizontal horizontal-fit='PreferredSize'>
+    <checkbox-setting id='enabled' text='Enabled' on-change='update_model' apply-on-change='true' value='enabled_value' hover-hint='Toggle this counter on or off.'></checkbox-setting>
+  </horizontal>
+  <horizontal horizontal-fit='PreferredSize'>
+    <dropdown-list-setting id='position' text='Position' on-change='update_model' apply-on-change='true' value='position_value' options='position_options' formatter='position_formatter' hover-hint='The relative position of common UI elements.'></dropdown-list-setting>
+  </horizontal>
+  <horizontal horizontal-fit='PreferredSize'>
+    <list-setting id='distance' text='Distance' on-change='update_model' apply-on-change='true' value='distance_value' options='distance_options' hover-hint='How far from the position the counter will be. A higher number means farther way.'></list-setting>
+  </horizontal>
+</vertical>

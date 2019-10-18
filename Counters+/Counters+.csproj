@@ -102,6 +102,8 @@
     <Compile Include="UI\CounterWarning.cs" />
     <Compile Include="UI\Images\Images.cs" />
     <Compile Include="UI\ViewControllers\BackButton.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\ConfigModelController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\MissedController.cs" />
     <Compile Include="UI\ViewControllers\ContributorsAndDonators.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusCreditsViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusEditViewController.cs" />
@@ -151,6 +153,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\BSML\credits.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Missed.bsml" />
+    <EmbeddedResource Include="UI\BSML\editBase.bsml" />
+    <EmbeddedResource Include="UI\BSML\settingsBase.bsml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

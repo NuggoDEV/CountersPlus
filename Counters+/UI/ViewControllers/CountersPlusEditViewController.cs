@@ -10,11 +10,16 @@ using CustomUI.Settings;
 using CountersPlus.Custom;
 using BS_Utils.Gameplay;
 using System.Collections;
+using BeatSaberMarkupLanguage.ViewControllers;
+using BeatSaberMarkupLanguage.Attributes;
+using CountersPlus.UI.ViewControllers.ConfigModelControllers;
+using System.Reflection;
 
 namespace CountersPlus.UI.ViewControllers
 {
-    class CountersPlusEditViewController : VRUIViewController
+    class CountersPlusEditViewController : BSMLResourceViewController
     {
+        public override string ResourceName => "CountersPlus.UI.BSML.editBase.bsml";
         public static CountersPlusEditViewController Instance;
         private static RectTransform rect;
         private static TextMeshProUGUI settingsTitle;
@@ -32,6 +37,9 @@ namespace CountersPlus.UI.ViewControllers
             {ICounterPositions.AboveHighway, "Over Highway" }
         };
 
+        [UIObject("body")] private GameObject SettingsContainer;
+        [UIComponent("name")] private TextMeshProUGUI SettingsName;
+
         private ConfigModel SelectedConfigModel = null;
         private SettingsInfo SelectedSettingsInfo = null;
 
@@ -46,28 +54,11 @@ namespace CountersPlus.UI.ViewControllers
 
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
+            base.DidActivate(firstActivation, activationType);
+            Instance = this;
             rect = rectTransform;
-            if (firstActivation)
-            {
-                Instance = this;
-                CreateFiller();
-            }
-            else
-            {
-                if (SelectedConfigModel != null) UpdateSettings(SelectedConfigModel, SelectedSettingsInfo);
-                else CreateFiller();
-            }
-        }
-
-        internal static void CreateFiller()
-        {
-            ClearScreen();
-            TextMeshProUGUI filler = BeatSaberUI.CreateText(rect, "Select an option, and\nsettings will appear here!", Vector2.zero);
-            filler.fontSize = 11;
-            filler.alignment = TextAlignmentOptions.Center;
-            filler.characterSpacing = 2;
-            SetPositioning(filler.rectTransform, 0, 0.6f, 1, 0.166f, 0.5f);
-            LoadedElements.Add(filler.gameObject);
+            //if (!firstActivation && SelectedConfigModel != null)
+            //    UpdateSettings(SelectedConfigModel, SelectedSettingsInfo);
         }
 
         internal static void ShowContributors()
@@ -175,7 +166,13 @@ namespace CountersPlus.UI.ViewControllers
         {
             try
             {
-                if (!(settings is null)) MockCounter.Highlight(settings);
+                if (settings != null) MockCounter.Highlight(settings);
+                for (int i = 0; i < Instance.SettingsContainer.transform.childCount; i++)
+                    Destroy(Instance.SettingsContainer.transform.GetChild(i).gameObject);
+                Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.{settings.DisplayName}Controller");
+                ConfigModelController controller = ConfigModelController.GenerateController(settings, controllerType, Instance.SettingsContainer);
+                Instance.SettingsName.text = $"{(settings is null ? "Oops!" : $"{settings.DisplayName} Settings")}";
+                /*
                 ClearScreen();
                 if (!(info is null))
                 {
@@ -193,7 +190,7 @@ namespace CountersPlus.UI.ViewControllers
                 settingsTitle.alignment = TextAlignmentOptions.Center;
                 SetPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
                 LoadedElements.Add(settingsTitle.gameObject);
-                InitSettings();
+                InitSettings();*/
             }
             catch(Exception e) { Plugin.Log(e.ToString(), LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue. This shouldn't happen!"); }
         }
