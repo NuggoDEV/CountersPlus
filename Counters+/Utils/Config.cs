@@ -72,7 +72,6 @@ namespace CountersPlus.Config
         /// </summary>
         public static object DeserializeFromConfig(object input, string DisplayName)
         {
-            bool resetToDefaults = false;
             Type type = input.GetType();
             MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
             foreach (MemberInfo info in infos)
@@ -82,11 +81,8 @@ namespace CountersPlus.Config
                 string value = config.GetString(DisplayName, info.Name, null);
                 if (value == null)
                 {
-                    if (type.Name.Contains("Main")) value = finfo.GetValue(ConfigDefaults.MainDefaults).ToString();
-                    else if (!type.Name.Contains("Custom")) value = finfo.GetValue(ConfigDefaults.Defaults[DisplayName]).ToString();
-                    if (value == null) continue;
-                    Plugin.Log($"Failed to load variable {info.Name} in {type.Name}. Resetting to defaults...", LogInfo.Info);
-                    resetToDefaults = true;
+                    Plugin.Log($"Failed to load variable {info.Name} in {type.Name}. Using defaults...", LogInfo.Info);
+                    continue;
                 }
                 if (finfo.FieldType == typeof(ICounterMode))
                     input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterMode), value));
@@ -94,11 +90,6 @@ namespace CountersPlus.Config
                     input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterPositions), value));
                 else input.SetPrivateField(info.Name, Convert.ChangeType(value, finfo.FieldType));
                 if (finfo.GetValue(input) == null) throw new Exception();
-            }
-            if (resetToDefaults)
-            {
-                if (type.Name.Contains("Main")) (input as MainConfigModel).Save();
-                else if (!type.Name.Contains("Custom")) (input as ConfigModel).Save();
             }
             return input;
         }
@@ -172,67 +163,77 @@ namespace CountersPlus.Config
     }
 
     public sealed class MissedConfigModel : ConfigModel {
-        public MissedConfigModel() { DisplayName = "Missed"; VersionAdded = new SemVer.Version("1.0.0"); }
-        public bool CustomMissTextIntegration;
+        public MissedConfigModel() { DisplayName = "Missed"; VersionAdded = new SemVer.Version("1.0.0");
+            Enabled = true; Position = ICounterPositions.BelowCombo; Distance = 0; } //Default values
+        public bool CustomMissTextIntegration = false;
     }
 
     public sealed class NoteConfigModel : ConfigModel {
-        public NoteConfigModel() { DisplayName = "Notes"; VersionAdded = new SemVer.Version("1.0.0"); }
-        public bool ShowPercentage;
-        public int DecimalPrecision;
+        public NoteConfigModel() { DisplayName = "Notes"; VersionAdded = new SemVer.Version("1.0.0");
+            Enabled = false; Position = ICounterPositions.BelowCombo; Distance = 1; } //Default values
+        public bool ShowPercentage = false;
+        public int DecimalPrecision = 2;
     }
 
     public sealed class ProgressConfigModel : ConfigModel {
-        public ProgressConfigModel() { DisplayName = "Progress"; VersionAdded = new SemVer.Version("1.0.0"); }
-        public ICounterMode Mode;
-        public bool ProgressTimeLeft;
-        public bool IncludeRing;
+        public ProgressConfigModel() { DisplayName = "Progress"; VersionAdded = new SemVer.Version("1.0.0");
+            Enabled = true; Position = ICounterPositions.BelowEnergy; Distance = 0; } //Default values
+        public ICounterMode Mode = ICounterMode.Original;
+        public bool ProgressTimeLeft = false;
+        public bool IncludeRing = false;
     }
 
     public sealed class ScoreConfigModel : ConfigModel
     {
-        public ScoreConfigModel() { DisplayName = "Score"; VersionAdded = new SemVer.Version("1.0.0"); }
-        public ICounterMode Mode;
-        public int DecimalPrecision;
-        public bool DisplayRank;
+        public ScoreConfigModel() { DisplayName = "Score"; VersionAdded = new SemVer.Version("1.0.0");
+            Enabled = true; Position = ICounterPositions.BelowMultiplier; Distance = 0; } //Default values
+        public ICounterMode Mode = ICounterMode.Original;
+        public int DecimalPrecision = 2;
+        public bool DisplayRank = true;
     }
 
     public sealed class PBConfigModel : ConfigModel{
-        public PBConfigModel() { DisplayName = "Personal Best"; VersionAdded = new SemVer.Version("1.5.5"); }
-        public int DecimalPrecision;
-        public int TextSize;
-        public bool UnderScore;
-        public bool HideFirstScore;
+        public PBConfigModel() { DisplayName = "Personal Best"; VersionAdded = new SemVer.Version("1.5.5");
+            Enabled = true; Position = ICounterPositions.BelowMultiplier; Distance = 1; } //Default values
+        public int DecimalPrecision = 2;
+        public int TextSize = 2;
+        public bool UnderScore = true;
+        public bool HideFirstScore = false;
     }
 
     public sealed class SpeedConfigModel : ConfigModel
     {
-        public SpeedConfigModel() { DisplayName = "Speed"; VersionAdded = new SemVer.Version("1.1.0"); }
-        public int DecimalPrecision;
-        public ICounterMode Mode;
+        public SpeedConfigModel() { DisplayName = "Speed"; VersionAdded = new SemVer.Version("1.1.0");
+            Enabled = false; Position = ICounterPositions.BelowMultiplier; Distance = 2; } //Default values
+        public int DecimalPrecision = 2;
+        public ICounterMode Mode = ICounterMode.Average;
     }
 
     public sealed class SpinometerConfigModel : ConfigModel
     {
-        public SpinometerConfigModel() { DisplayName = "Spinometer"; VersionAdded = new SemVer.Version("1.4.1"); }
-        public ICounterMode Mode;
+        public SpinometerConfigModel() { DisplayName = "Spinometer"; VersionAdded = new SemVer.Version("1.4.1");
+            Enabled = false; Position = ICounterPositions.AboveMultiplier; Distance = 0; } //Default values
+        public ICounterMode Mode = ICounterMode.Highest;
     }
 
     public sealed class CutConfigModel : ConfigModel {
-        public CutConfigModel() { DisplayName = "Cut"; VersionAdded = new SemVer.Version("1.1.0"); }
-        public bool SeparateSaberCounts;
+        public CutConfigModel() { DisplayName = "Cut"; VersionAdded = new SemVer.Version("1.1.0");
+            Enabled = false; Position = ICounterPositions.AboveHighway; Distance = 1; } //Default values
+        public bool SeparateSaberCounts = false;
     }
 
     public sealed class NotesLeftConfigModel : ConfigModel
     {
-        public NotesLeftConfigModel() { DisplayName = "Notes Left"; VersionAdded = new SemVer.Version("1.5.8"); }
-        public bool LabelAboveCount;
+        public NotesLeftConfigModel() { DisplayName = "Notes Left"; VersionAdded = new SemVer.Version("1.5.8");
+            Enabled = false; Position = ICounterPositions.AboveHighway; Distance = -1; } //Default values
+        public bool LabelAboveCount = false;
     }
 
     public sealed class FailConfigModel : ConfigModel
     {
-        public FailConfigModel() { DisplayName = "Fail"; VersionAdded = new SemVer.Version("1.5.8"); }
-        public bool ShowRestartsInstead;
+        public FailConfigModel() { DisplayName = "Fail"; VersionAdded = new SemVer.Version("1.5.8");
+            Enabled = false; Position = ICounterPositions.AboveCombo; Distance = 0; } //Default values
+        public bool ShowRestartsInstead = false;
     }
     
     public enum ICounterPositions { BelowCombo, AboveCombo, BelowMultiplier, AboveMultiplier, BelowEnergy, AboveHighway }

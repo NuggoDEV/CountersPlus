@@ -119,7 +119,6 @@
     <Compile Include="Plugin.cs" />
     <Compile Include="Counters\ProgressCounter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\ConfigDefaults.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\PluginUtility.cs" />
     <Compile Include="Utils\ReflectionUtil.cs" />
@@ -127,6 +126,7 @@
     <Compile Include="Counters\SpeedCounter.cs" />
     <Compile Include="Utils\SimpleJSON.cs" />
     <Compile Include="Utils\TextHelper.cs" />
+    <Compile Include="Utils\TypesUtility.cs" />
     <Compile Include="Utils\VersionChecker.cs" />
   </ItemGroup>
   <ItemGroup>
