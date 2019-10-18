@@ -38,6 +38,7 @@ namespace CountersPlus.UI.ViewControllers
         };
 
         [UIObject("body")] private GameObject SettingsContainer;
+        [UIObject("settings_parent")] private GameObject SettingsParent;
         [UIComponent("name")] private TextMeshProUGUI SettingsName;
 
         private ConfigModel SelectedConfigModel = null;
@@ -172,70 +173,8 @@ namespace CountersPlus.UI.ViewControllers
                 Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.{settings.DisplayName}Controller");
                 ConfigModelController controller = ConfigModelController.GenerateController(settings, controllerType, Instance.SettingsContainer);
                 Instance.SettingsName.text = $"{(settings is null ? "Oops!" : $"{settings.DisplayName} Settings")}";
-                /*
-                ClearScreen();
-                if (!(info is null))
-                {
-                    if (info.IsCustom) CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
-                    else
-                    {
-                        SubMenu sub = CreateBase(settings);
-                        AdvancedCounterSettings.counterUIItems[settings](sub, settings);
-                    }
-                }
-                Instance.SelectedSettingsInfo = info;
-                Instance.SelectedConfigModel = settings;
-                settingsTitle = BeatSaberUI.CreateText(rect, $"{settings.DisplayName} Settings", Vector2.zero);
-                settingsTitle.fontSize = 6;
-                settingsTitle.alignment = TextAlignmentOptions.Center;
-                SetPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
-                LoadedElements.Add(settingsTitle.gameObject);
-                InitSettings();*/
             }
             catch(Exception e) { Plugin.Log(e.ToString(), LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue. This shouldn't happen!"); }
-        }
-
-        private static SubMenu CreateBase<T>(T settings, params ICounterPositions[] restricted) where T : ConfigModel
-        {
-            SubMenu sub = new SubMenu(rect);
-            Dictionary<ICounterPositions, string> restrictedList = new Dictionary<ICounterPositions, string>();
-            try
-            {
-                foreach (ICounterPositions pos in restricted)
-                    restrictedList.Add(pos, positions.Where(x => x.Key == pos).First().Value);
-            }
-            catch { } //It most likely errors here. If it does, well no problem.
-
-            var enabled = AddList(ref sub, settings, "Enabled", "Toggle this counter on or off.", 2);
-            enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
-            enabled.GetValue = () => settings.Enabled ? 1f : 0f;
-            enabled.SetValue += (v) => settings.Enabled = v != 0f;
-
-            var position = AddList(ref sub, settings, "Position", "The relative position of common UI elements.", (restrictedList.Count() == 0) ? positions.Count() : restrictedList.Count());
-            position.GetTextForValue = (v) => {
-                if (restrictedList.Count() == 0)
-                    return positions.ElementAt(Mathf.RoundToInt(v)).Value;
-                else
-                    return restrictedList.ElementAt(Mathf.RoundToInt(v)).Value;
-            };
-            position.GetValue = () => {
-                if (restrictedList.Count() == 0)
-                    return positions.ToList().IndexOf(positions.Where(x => x.Key == settings.Position).First());
-                else
-                    return restrictedList.ToList().IndexOf(positions.Where(x => x.Key == settings.Position).First());
-            };
-            position.SetValue += (v) => {
-                if (restrictedList.Count() == 0)
-                    settings.Position = positions.ElementAt(Mathf.RoundToInt(v)).Key;
-                else
-                    settings.Position = restrictedList.ElementAt(Mathf.RoundToInt(v)).Key;
-            };
-
-            var index = AddList(ref sub, settings, "Distance", "How far from the position the counter will be. A higher number means farther way.", 7);
-            index.GetTextForValue = (v) => Mathf.RoundToInt(v - 1).ToString();
-            index.GetValue = () => settings.Distance + 1;
-            index.SetValue += (v) => settings.Distance = Mathf.RoundToInt(v - 1);
-            return sub;
         }
 
         internal static ListViewController AddList<T>(ref SubMenu sub, T settings, string Label, string HintText, int sizeCount) where T : ConfigModel

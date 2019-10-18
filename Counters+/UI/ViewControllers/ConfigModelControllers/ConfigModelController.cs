@@ -22,6 +22,7 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             $"CountersPlus.UI.BSML.Config.{ConfigModel?.DisplayName ?? "Error"}.bsml");
         public virtual bool UseBaseSettings { get; set; } = true;
         public ConfigModel ConfigModel = null;
+        public Component ModelSpecificController = null;
 
         [UIValue("enabled_value")]
         public bool Enabled { get => ConfigModel.Enabled; set => ConfigModel.Enabled = value; }
@@ -46,7 +47,8 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             GameObject controllerGO = new GameObject($"Counters+ | {model.DisplayName} Settings Controller");
             controllerGO.transform.parent = baseTransform.transform;
             ConfigModelController controller = controllerGO.AddComponent<ConfigModelController>();
-            //Component modelSpecificController = controllerGO.AddComponent(controllerType);
+            if (controllerType != null)
+                controller.ModelSpecificController = controllerGO.AddComponent(controllerType);
             controller.UseBaseSettings = useBaseSettings;
             controller.ConfigModel = model;
             controller.editControllerBase = baseTransform;
@@ -57,7 +59,11 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
         private void Apply()
         {
             if (UseBaseSettings && ConfigModel != null)
+            {
                 BSMLParser.instance.Parse(baseConfigLocation, editControllerBase, this);
+                if (ModelSpecificController != null)
+                    BSMLParser.instance.Parse(Content, editControllerBase, ModelSpecificController);
+            }
             else if (ConfigModel is null) Plugin.Log("ConfigModel does not exist!", LogInfo.Warning);
         }
 
