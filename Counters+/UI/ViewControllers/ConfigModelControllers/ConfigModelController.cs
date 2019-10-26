@@ -16,7 +16,7 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
     public class ConfigModelController : MonoBehaviour
     {
         private string baseConfigLocation => Utilities.GetResourceContent(Assembly.GetAssembly(GetType()),
-            "CountersPlus.UI.BSML.settingsBase.bsml");
+            "CountersPlus.UI.BSML.SettingsBase.bsml");
 
         public string Content => Utilities.GetResourceContent(Assembly.GetAssembly(GetType()),
             $"CountersPlus.UI.BSML.Config.{string.Join("", ConfigModel?.DisplayName.Split(' ')) ?? "Error"}.bsml");
@@ -41,13 +41,12 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
 
         private GameObject editControllerBase;
 
-        public static ConfigModelController GenerateController(ConfigModel model,
-            Type controllerType, GameObject baseTransform, bool useBaseSettings = true)
+        public static ConfigModelController GenerateController(ConfigModel model, Type controllerType, GameObject baseTransform)
         {
             GameObject controllerGO = new GameObject($"Counters+ | {model.DisplayName} Settings Controller");
             controllerGO.transform.parent = baseTransform.transform;
             ConfigModelController controller = controllerGO.AddComponent<ConfigModelController>();
-            controller.UseBaseSettings = useBaseSettings;
+            controller.UseBaseSettings = true;
             controller.ConfigModel = model;
             controller.editControllerBase = baseTransform;
             if (controllerType != null)
@@ -59,20 +58,33 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             return controller;
         }
 
+        public static ConfigModelController GenerateController(string bsmlFileName, Type controllerType, GameObject baseTransform)
+        {
+            GameObject controllerGO = new GameObject($"Counters+ | {bsmlFileName} Settings Controller");
+            controllerGO.transform.parent = baseTransform.transform;
+            ConfigModelController controller = controllerGO.AddComponent<ConfigModelController>();
+            controller.UseBaseSettings = false;
+            controller.ConfigModel = null;
+            controller.editControllerBase = baseTransform;
+            if (controllerType != null)
+                controller.ModelSpecificController = controllerGO.AddComponent(controllerType);
+            BSMLParser.instance.Parse(Utilities.GetResourceContent(controllerType.Assembly,//CountersPlus.UI.BSML.MainSettings.bsml
+                $"CountersPlus.UI.BSML.{bsmlFileName}.bsml"), baseTransform, controller.ModelSpecificController);
+            return controller;
+        }
+
         private void Apply()
         {
             if (UseBaseSettings && ConfigModel != null)
-            {
                 BSMLParser.instance.Parse(baseConfigLocation, editControllerBase, this);
-                if (ModelSpecificController != null)
-                    BSMLParser.instance.Parse(Content, editControllerBase, ModelSpecificController);
-            }
+            if ((ConfigModel != null || !UseBaseSettings) && ModelSpecificController != null)
+                BSMLParser.instance.Parse(Content, editControllerBase, ModelSpecificController);
             else if (ConfigModel is null) Plugin.Log("ConfigModel does not exist!", LogInfo.Warning);
         }
 
         private void OnDestroy()
         {
-            ConfigModel.Save();
+            ConfigModel?.Save();
         }
 
         [UIAction("update_model")]

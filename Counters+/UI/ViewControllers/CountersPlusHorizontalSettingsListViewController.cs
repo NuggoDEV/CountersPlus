@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CountersPlus.Config;
 using CountersPlus.Custom;
+using CountersPlus.Utils;
 using CustomUI.BeatSaber;
 using HMUI;
 using TMPro;
@@ -41,7 +42,7 @@ namespace CountersPlus.UI.ViewControllers
                 {
                     //Firstly, load my Counter settings and data, as its necessary for the NumberOfCells function.
                     //These two foreach loops can be safely removed.
-                    foreach (var kvp in AdvancedCounterSettings.counterUIItems) counterInfos.Add(CreateFromModel(kvp.Key));
+                    foreach (ConfigModel model in TypesUtility.GetListOfType<ConfigModel>()) counterInfos.Add(CreateFromModel(model));
                     foreach (CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
                     {
                         counterInfos.Add(new SettingsInfo()
@@ -52,6 +53,7 @@ namespace CountersPlus.UI.ViewControllers
                             IsCustom = true,
                         });
                     }
+                    counterInfos.RemoveAll(x => x is null);
 
                     //Largely unchanged from CustomListController. Keep all of this.
                     Instance = this;
@@ -133,6 +135,7 @@ namespace CountersPlus.UI.ViewControllers
 
         private SettingsInfo CreateFromModel<T>(T settings) where T : ConfigModel //Counters+ stuff, OK to remove.
         {
+            if (settings is CustomConfigModel) return null;
             SettingsInfo info = new SettingsInfo()
             {
                 Name = settings.DisplayName,

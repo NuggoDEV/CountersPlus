@@ -11,7 +11,7 @@ namespace CountersPlus.UI.ViewControllers
 {
     class CountersPlusCreditsViewController : BSMLResourceViewController
     {
-        public override string ResourceName => "CountersPlus.UI.BSML.credits.bsml";
+        public override string ResourceName => "CountersPlus.UI.BSML.Credits.bsml";
 
         [UIComponent("versionText")] private TextMeshProUGUI version = null;
         [UIComponent("creatorText")] private TextMeshProUGUI creator = null;

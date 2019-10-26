@@ -122,6 +122,7 @@ namespace CountersPlus.Custom
         {
             DisplayName = name;
         }
+        public CustomConfigModel() { }
         internal string SectionName;
         internal string Counter;
         internal string ModCreator;
