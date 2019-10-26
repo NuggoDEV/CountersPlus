@@ -1,0 +1,5 @@
+﻿<vertical spacing='1'>
+  <horizontal horizontal-fit='PreferredSize'>
+    <dropdown-list-setting text='Mode' on-change='update_model' apply-on-change='true' value='mode' options='mode_values' formatter='mode_formatter' hover-hint='How should this Counter display data?'></dropdown-list-setting>
+  </horizontal>
+</vertical>

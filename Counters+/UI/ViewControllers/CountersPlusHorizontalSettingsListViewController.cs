@@ -232,7 +232,7 @@ namespace CountersPlus.UI.ViewControllers
             if (row == 0) CountersPlusEditViewController.ShowMainSettings();
             else if (row == NumberOfCells() - 1) CountersPlusEditViewController.ShowDonators();
             else if (row == NumberOfCells() - 2) CountersPlusEditViewController.ShowContributors();
-            else CountersPlusEditViewController.UpdateSettings(info.Model, info);
+            else CountersPlusEditViewController.UpdateSettings(info.Model);
         }
     }
 

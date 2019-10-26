@@ -22,6 +22,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <NoWarn>CS0649</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -103,7 +105,16 @@
     <Compile Include="UI\Images\Images.cs" />
     <Compile Include="UI\ViewControllers\BackButton.cs" />
     <Compile Include="UI\ViewControllers\ConfigModelControllers\ConfigModelController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\CutController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\FailController.cs" />
     <Compile Include="UI\ViewControllers\ConfigModelControllers\MissedController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\NotesController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\NotesLeftController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\PersonalBestController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\ProgressController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\ScoreController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\SpeedController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\SpinometerController.cs" />
     <Compile Include="UI\ViewControllers\ContributorsAndDonators.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusCreditsViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusEditViewController.cs" />
@@ -158,6 +169,31 @@
     <EmbeddedResource Include="UI\BSML\Config\Missed.bsml" />
     <EmbeddedResource Include="UI\BSML\editBase.bsml" />
     <EmbeddedResource Include="UI\BSML\settingsBase.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Notes.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Progress.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Score.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\PersonalBest.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Speed.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Spinometer.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Cut.bsml" />
+    <EmbeddedResource Include="UI\BSML\Config\NotesLeft.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Fail.bsml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

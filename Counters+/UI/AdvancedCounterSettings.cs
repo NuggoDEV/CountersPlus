@@ -40,15 +40,14 @@ namespace CountersPlus.UI
         public static readonly Dictionary<ICounterPositions, string> Positions = new Dictionary<ICounterPositions, string> {
             {ICounterPositions.BelowCombo, "Below Combo" },
             {ICounterPositions.AboveCombo, "Above Combo" },
-            {ICounterPositions.BelowMultiplier, "Below Multi." },
-            {ICounterPositions.AboveMultiplier, "Above Multi." },
+            {ICounterPositions.BelowMultiplier, "Below Multiplier" },
+            {ICounterPositions.AboveMultiplier, "Above Multiplier" },
             {ICounterPositions.BelowEnergy, "Below Energy" },
             {ICounterPositions.AboveHighway, "Over Highway" }
         };
-        public static readonly List<int> Distances = new List<int>
-        {
-            -1, 0, 1, 2, 3, 4
-        };
+        public static readonly List<int> Distances = new List<int> { -1, 0, 1, 2, 3, 4 };
+        public static readonly List<int> PercentagePrecision = new List<int> { 0, 1, 2, 3, 4, 5 };
+        public static readonly List<int> TextSize = new List<int> { 2, 3, 4 };
 
         private static HoverHint progressHover;
         private static HoverHint speedHover;

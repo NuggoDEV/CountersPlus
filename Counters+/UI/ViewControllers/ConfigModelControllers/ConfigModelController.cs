@@ -19,21 +19,21 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             "CountersPlus.UI.BSML.settingsBase.bsml");
 
         public string Content => Utilities.GetResourceContent(Assembly.GetAssembly(GetType()),
-            $"CountersPlus.UI.BSML.Config.{ConfigModel?.DisplayName ?? "Error"}.bsml");
+            $"CountersPlus.UI.BSML.Config.{string.Join("", ConfigModel?.DisplayName.Split(' ')) ?? "Error"}.bsml");
         public virtual bool UseBaseSettings { get; set; } = true;
         public ConfigModel ConfigModel = null;
         public Component ModelSpecificController = null;
 
         [UIValue("enabled_value")]
         public bool Enabled { get => ConfigModel.Enabled; set => ConfigModel.Enabled = value; }
+
         [UIValue("position_value")]
         public ICounterPositions Position { get => ConfigModel.Position; set => ConfigModel.Position = value; }
-
         [UIValue("position_options")]
         public List<object> PosOptions => AdvancedCounterSettings.Positions.Keys.Cast<object>().ToList();
-
         [UIAction("position_formatter")]
         public string Format(ICounterPositions pos) => AdvancedCounterSettings.Positions[pos];
+
         [UIValue("distance_value")]
         public int Distance { get => ConfigModel.Distance; set => ConfigModel.Distance = value; }
         [UIValue("distance_options")]
@@ -47,11 +47,14 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             GameObject controllerGO = new GameObject($"Counters+ | {model.DisplayName} Settings Controller");
             controllerGO.transform.parent = baseTransform.transform;
             ConfigModelController controller = controllerGO.AddComponent<ConfigModelController>();
-            if (controllerType != null)
-                controller.ModelSpecificController = controllerGO.AddComponent(controllerType);
             controller.UseBaseSettings = useBaseSettings;
             controller.ConfigModel = model;
             controller.editControllerBase = baseTransform;
+            if (controllerType != null)
+            {
+                controller.ModelSpecificController = controllerGO.AddComponent(controllerType);
+                controller.ModelSpecificController.SetPrivateField("parentController", controller);
+            }
             controller.Apply();
             return controller;
         }
@@ -73,7 +76,7 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
         }
 
         [UIAction("update_model")]
-        private void ConfigChanged(object obj)
+        internal void ConfigChanged(object obj)
         {
             StartCoroutine(DelayedMockCounterUpdate(ConfigModel));
         }

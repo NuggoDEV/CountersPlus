@@ -9,14 +9,15 @@ using BeatSaberMarkupLanguage.Attributes;
 
 namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
 {
-    class MissedController : MonoBehaviour
+    class CutController : MonoBehaviour
     {
         public ConfigModelController parentController;
 
-        [UIValue("custommisstext")]
-        public bool CustomMissTextIntegration {
-            get => (parentController?.ConfigModel as MissedConfigModel).CustomMissTextIntegration;
-            set => (parentController?.ConfigModel as MissedConfigModel).CustomMissTextIntegration = value;
+        [UIValue("separate")]
+        public bool SeparateSaberCuts
+        {
+            get => (parentController?.ConfigModel as CutConfigModel).SeparateSaberCounts;
+            set => (parentController?.ConfigModel as CutConfigModel).SeparateSaberCounts = value;
         }
 
         [UIAction("update_model")]

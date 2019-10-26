@@ -1,9 +1,9 @@
 ﻿<bg id='settings_parent'>
   <vertical child-control-height='false'>
     <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
-      <text id='name' text='Select an Option' align='Center' font-size='11'></text>
+      <text id='name' text='Select an Option' align='Center' font-size='8'></text>
     </horizontal>
-    <vertical id='body' bg='round-rect-panel' pad='5' vertical-fit='PreferredSize'>
+    <vertical id='body' bg='round-rect-panel' pad='5' vertical-fit='PreferredSize' spacing='1'>
     </vertical>
   </vertical>
 </bg>

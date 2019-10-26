@@ -9,14 +9,15 @@ using BeatSaberMarkupLanguage.Attributes;
 
 namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
 {
-    class MissedController : MonoBehaviour
+    class NotesLeftController : MonoBehaviour
     {
         public ConfigModelController parentController;
 
-        [UIValue("custommisstext")]
-        public bool CustomMissTextIntegration {
-            get => (parentController?.ConfigModel as MissedConfigModel).CustomMissTextIntegration;
-            set => (parentController?.ConfigModel as MissedConfigModel).CustomMissTextIntegration = value;
+        [UIValue("label_above")]
+        public bool LabelAboveCounter
+        {
+            get => (parentController?.ConfigModel as NotesLeftConfigModel).LabelAboveCount;
+            set => (parentController?.ConfigModel as NotesLeftConfigModel).LabelAboveCount = value;
         }
 
         [UIAction("update_model")]

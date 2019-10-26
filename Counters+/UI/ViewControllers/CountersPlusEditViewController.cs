@@ -28,21 +28,11 @@ namespace CountersPlus.UI.ViewControllers
         internal static List<ListViewController> LoadedSettings = new List<ListViewController>(); //Mass initialization
         internal static int settingsCount = 0; //Spacing
 
-        static readonly Dictionary<ICounterPositions, string> positions = new Dictionary<ICounterPositions, string> {
-            {ICounterPositions.BelowCombo, "Below Combo" },
-            {ICounterPositions.AboveCombo, "Above Combo" },
-            {ICounterPositions.BelowMultiplier, "Below Multi." },
-            {ICounterPositions.AboveMultiplier, "Above Multi." },
-            {ICounterPositions.BelowEnergy, "Below Energy" },
-            {ICounterPositions.AboveHighway, "Over Highway" }
-        };
-
         [UIObject("body")] private GameObject SettingsContainer;
         [UIObject("settings_parent")] private GameObject SettingsParent;
         [UIComponent("name")] private TextMeshProUGUI SettingsName;
 
         private ConfigModel SelectedConfigModel = null;
-        private SettingsInfo SelectedSettingsInfo = null;
 
         private static void SetPositioning(RectTransform r, float x, float y, float w, float h, float pivotX)
         {
@@ -58,8 +48,8 @@ namespace CountersPlus.UI.ViewControllers
             base.DidActivate(firstActivation, activationType);
             Instance = this;
             rect = rectTransform;
-            //if (!firstActivation && SelectedConfigModel != null)
-            //    UpdateSettings(SelectedConfigModel, SelectedSettingsInfo);
+            if (!firstActivation && SelectedConfigModel != null)
+                UpdateSettings(SelectedConfigModel);
         }
 
         internal static void ShowContributors()
@@ -163,14 +153,17 @@ namespace CountersPlus.UI.ViewControllers
             InitSettings();
         }
 
-        public static void UpdateSettings<T>(T settings, SettingsInfo info) where T : ConfigModel
+        public static void UpdateSettings<T>(T settings) where T : ConfigModel
         {
             try
             {
-                if (settings != null) MockCounter.Highlight(settings);
+                if (settings is null) return;
+                ClearScreen(true);
+                MockCounter.Highlight(settings);
                 for (int i = 0; i < Instance.SettingsContainer.transform.childCount; i++)
                     Destroy(Instance.SettingsContainer.transform.GetChild(i).gameObject);
-                Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.{settings.DisplayName}Controller");
+                string name = string.Join("", settings.DisplayName.Split(' '));
+                Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.{name}Controller");
                 ConfigModelController controller = ConfigModelController.GenerateController(settings, controllerType, Instance.SettingsContainer);
                 Instance.SettingsName.text = $"{(settings is null ? "Oops!" : $"{settings.DisplayName} Settings")}";
             }
@@ -196,13 +189,14 @@ namespace CountersPlus.UI.ViewControllers
             MockCounter.Update(settings);
         }
 
-        internal static void ClearScreen()
+        internal static void ClearScreen(bool enableSettings = false)
         {
             foreach (ListViewController list in LoadedSettings) list.SetPrivateProperty("IsInitialized", false);
             foreach (GameObject element in LoadedElements) Destroy(element);
             LoadedElements.Clear();
             LoadedSettings.Clear();
             settingsCount = 0;
+            Instance.SettingsParent.SetActive(enableSettings);
         }
 
         private static void PositionElement(GameObject element)
