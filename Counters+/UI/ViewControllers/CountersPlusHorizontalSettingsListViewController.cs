@@ -90,7 +90,7 @@ namespace CountersPlus.UI.ViewControllers
                     glow.anchorMin = buttonTransform.anchorMin;
                     glow.anchorMax = buttonTransform.anchorMax;
                     glow.sizeDelta = buttonTransform.sizeDelta;
-                    PageLeftButton.transform.localPosition = new Vector3(-80, 2.5f, -5);
+                    PageLeftButton.transform.localPosition = new Vector3(-110, 2.5f, -5);
                     PageLeftButton.interactable = true;
                     PageRightButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => (x.name == "PageRightButton")), transform);
                     buttonTransform = PageRightButton.transform.Find("BG") as RectTransform;
@@ -100,7 +100,7 @@ namespace CountersPlus.UI.ViewControllers
                     glow.anchorMin = buttonTransform.anchorMin;
                     glow.anchorMax = buttonTransform.anchorMax;
                     glow.sizeDelta = buttonTransform.sizeDelta;
-                    PageRightButton.transform.localPosition = new Vector3(80, 2.5f, -5);
+                    PageRightButton.transform.localPosition = new Vector3(110, 2.5f, -5);
                     PageRightButton.interactable = true;
 
                     RectTransform viewport = new GameObject("Viewport").AddComponent<RectTransform>(); //Make a Viewport RectTransform
@@ -164,7 +164,7 @@ namespace CountersPlus.UI.ViewControllers
         }
 
         //I'd recommend keeping this as is (5 cells shown), unless you want more spread out cells (40 = 4 cells shown).
-        public float CellSize() { return 30f; }
+        public float CellSize() { return 27.5f; }
 
         public int NumberOfCells() { return counterInfos.Count + 3; } //Tune this to the amount of cells you'll have, whether dynamic or static.
 

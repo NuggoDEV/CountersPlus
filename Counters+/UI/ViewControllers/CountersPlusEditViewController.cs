@@ -127,6 +127,7 @@ namespace CountersPlus.UI.ViewControllers
 
         internal static void ClearScreen(bool enableSettings = false)
         {
+            foreach (GameObject go in LoadedElements) Destroy(go);
             for (int i = 0; i < Instance.SettingsContainer.transform.childCount; i++) Destroy(Instance.SettingsContainer.transform.GetChild(i).gameObject);
             Instance.SettingsParent.SetActive(enableSettings);
         }
