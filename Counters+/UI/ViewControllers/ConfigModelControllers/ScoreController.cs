@@ -44,6 +44,13 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
         [UIValue("precision_values")]
         public List<object> PrecisionValues => AdvancedCounterSettings.PercentagePrecision.Cast<object>().ToList();
 
+        [UIValue("rank_colors")]
+        public bool RankColors
+        {
+            get => (parentController?.ConfigModel as ScoreConfigModel).CustomRankColors;
+            set => (parentController?.ConfigModel as ScoreConfigModel).CustomRankColors = value;
+        }
+
         [UIAction("update_model")]
         internal void ConfigChanged(object obj)
         {

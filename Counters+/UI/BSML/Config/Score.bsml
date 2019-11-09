@@ -8,4 +8,7 @@
   <horizontal horizontal-fit='PreferredSize'>
     <list-setting text='Percentage Precision' on-change='update_model' apply-on-change='true' value='precision' options='precision_values' hover-hint='How precise should the precentage be?'></list-setting>
   </horizontal>
+  <horizontal horizontal-fit='PreferredSize'>
+    <checkbox-setting text='Custom Rank Colors' on-change='update_model' apply-on-change='true' value='rank_colors' hover-hint='Colors your Score Counter depending on the rank you have in a song. Colors can be edited manually in the config file.'></checkbox-setting>
+  </horizontal>
 </vertical>
