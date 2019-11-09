@@ -57,6 +57,13 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             set => CountersController.settings.HideMultiplier = value;
         }
 
+        [UIValue("floating_hud")]
+        public bool FloatingHUD
+        {
+            get => CountersController.settings.FloatingHUD;
+            set => CountersController.settings.FloatingHUD = value;
+        }
+
         [UIAction("update_mocks_and_model")]
         internal void UpdateMocksAndSaveModel(object obj)
         {

@@ -24,6 +24,18 @@ namespace CountersPlus
 
             if (floatingHUD)
             {
+                GameObject coreGameHUD = GameObject.Find("CoreGameHUD");
+                if (coreGameHUD != null)
+                {
+                    coreGameHUD.transform.SetParent(CanvasGO.transform, true);
+                    foreach(Transform children in coreGameHUD.transform)
+                    {
+                        if (children.Find("BG")) children.Find("BG").gameObject.SetActive(false);
+                        if (children.Find("Top")) children.Find("Top").gameObject.SetActive(false);
+                    }
+                    coreGameHUD.transform.localScale = Vector3.one * ScaleFactor;
+                    coreGameHUD.transform.localPosition = Vector3.back * 70;
+                }
                 CanvasGO.AddComponent<FloatingOverlayWindow>();
                 CanvasGO.AddComponent<Utils.ResetCameraOnDestroy>();
             }

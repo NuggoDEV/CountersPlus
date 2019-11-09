@@ -42,7 +42,10 @@ namespace CountersPlus.UI.ViewControllers
                 {
                     //Firstly, load my Counter settings and data, as its necessary for the NumberOfCells function.
                     //These two foreach loops can be safely removed.
-                    foreach (ConfigModel model in TypesUtility.GetListOfType<ConfigModel>()) counterInfos.Add(CreateFromModel(model));
+                    List<ConfigModel> loadedModels = TypesUtility.GetListOfType<ConfigModel>();
+                    loadedModels.ForEach(x => x = ConfigLoader.DeserializeFromConfig(x, x.DisplayName) as ConfigModel);
+                    foreach (ConfigModel model in loadedModels)
+                        counterInfos.Add(CreateFromModel(model));
                     foreach (CustomCounter potential in CustomCounterCreator.LoadedCustomCounters)
                     {
                         counterInfos.Add(new SettingsInfo()

@@ -70,8 +70,8 @@ namespace CountersPlus.Counters
             ScoreMesh.color = Color.white;
             ScoreMesh.alignment = TextAlignmentOptions.Center;
             PointsText.rectTransform.SetParent(ScoreMesh.rectTransform, false);
-            PointsText.rectTransform.localPosition = position + new Vector3(-0.01f, 7.77f, 0);
-            PointsText.rectTransform.localScale = PointsText.rectTransform.localScale / TextHelper.ScaleFactor;
+            PointsText.rectTransform.localScale = PointsText.rectTransform.localScale * TextHelper.ScaleFactor;
+            PointsText.rectTransform.localPosition = new Vector3(0, 77.7f, 0);
             if (settings.DisplayRank)
             {
                 _RankObject = new GameObject("Counters+ | Score Rank");

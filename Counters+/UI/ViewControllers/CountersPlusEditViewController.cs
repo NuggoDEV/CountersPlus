@@ -24,14 +24,12 @@ namespace CountersPlus.UI.ViewControllers
         private static RectTransform rect;
 
         internal static List<GameObject> LoadedElements = new List<GameObject>(); //Mass clearing
-        internal static List<ListViewController> LoadedSettings = new List<ListViewController>(); //Mass initialization
-        internal static int settingsCount = 0; //Spacing
 
         [UIObject("body")] private GameObject SettingsContainer;
         [UIObject("settings_parent")] private GameObject SettingsParent;
         [UIComponent("name")] private TextMeshProUGUI SettingsName;
 
-        private ConfigModel SelectedConfigModel = null;
+        private static ConfigModel SelectedConfigModel = null;
 
         private static void SetPositioning(RectTransform r, float x, float y, float w, float h, float pivotX)
         {
@@ -115,6 +113,7 @@ namespace CountersPlus.UI.ViewControllers
             try
             {
                 if (settings is null) return;
+                SelectedConfigModel = settings;
                 ClearScreen(true);
                 MockCounter.Highlight(settings);
                 string name = string.Join("", settings.DisplayName.Split(' '));

@@ -17,4 +17,7 @@
   <horizontal horizontal-fit='PreferredSize'>
     <checkbox-setting text='Hide Multiplier In-Game' on-change='update_model' apply-on-change='true' value='hide_mult' hover-hint='Hide the multiplier from play.'></checkbox-setting>
   </horizontal>
+  <horizontal horizontal-fit='PreferredSize'>
+    <checkbox-setting text='Floating HUD' on-change='update_model' apply-on-change='true' value='floating_hud' hover-hint='Detach Counters+ from the map, and instead have it follow the Smooth Camera. This setting is effected by your options for Smooth Camera, not CameraPlus.'></checkbox-setting>
+  </horizontal>
 </vertical>
