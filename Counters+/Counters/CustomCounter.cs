@@ -8,18 +8,17 @@ using CountersPlus.Custom;
 
 namespace CountersPlus.Counters
 {
-    class CustomCounterHook : MonoBehaviour
+    class CustomCounterHook : Counter<CustomConfigModel>
     {
 
         private GameObject counter;
-        private CustomConfigModel settings = null;
         private string Name;
 
-        void Start()
+        internal override void Counter_Start()
         {
             Name = name.Split('|').Last().Substring(1).Split(' ').First();
-            foreach(CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
-                if (potential.SectionName == Name) settings = potential;
+            foreach(CustomCounter potential in CustomCounterCreator.LoadedCustomCounters)
+                if (potential.SectionName == Name) settings = potential.ConfigModel;
             if (settings == null)
             {
                 Plugin.Log($"Custom Counter ({Name}) could not find its attached config model. Destroying...", LogInfo.Notice);
@@ -28,6 +27,9 @@ namespace CountersPlus.Counters
             StartCoroutine(GetRequired());
         }
 
+        internal override void Init(CountersData data) { }
+        internal override void Counter_Destroy() { }
+
         IEnumerator GetRequired()
         {
             int tries = 1;
@@ -35,7 +37,7 @@ namespace CountersPlus.Counters
             {
                 try
                 {
-                    counter = GameObject.Find(settings.Counter);
+                    counter = GameObject.Find(settings.CustomCounter.GameObject_Name);
                     if (counter != null) break;
                     tries++;
                     if (tries > 10)

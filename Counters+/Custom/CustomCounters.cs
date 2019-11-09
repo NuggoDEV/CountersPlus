@@ -12,6 +12,8 @@ namespace CountersPlus.Custom
 {
     public class CustomCounterCreator : MonoBehaviour
     {
+        internal static List<CustomCounter> LoadedCustomCounters = new List<CustomCounter>();
+
         /// <summary>
         /// Adds an outside MonoBehaviour into the Counters+ system.
         /// <param name="model"/>The CustomCounter object.</param>
@@ -48,45 +50,26 @@ namespace CountersPlus.Custom
                 PluginLoader.PluginMetadata pluginMetadata = PluginUtility.GetPluginMetadata(model.BSIPAMod);
                 if (pluginMetadata != null) modCreator = pluginMetadata.Name;
             }
+            model.ModName = modCreator;
 
             Plugin.Log($"Custom Counter ({model.Name}) added!", LogInfo.Notice);
 
-            foreach (CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
-            {
-                if (potential.DisplayName == model.Name) {
-                    if (potential.IsNew)
-                    {
-                        potential.IsNew = false;
-                        potential.Save();
-                    }
-                    return;
-                }
+            List<CustomConfigModel> existingModels = ConfigLoader.LoadCustomCounters();
+
+            if (existingModels.Any(x => x.DisplayName == model.SectionName))
+            { //It exists, wahoo!
+                model.ConfigModel = existingModels.First(x => x.DisplayName == model.SectionName);
+                model.ConfigModel.CustomCounter = model;
             }
-
-            CustomConfigModel counter = new CustomConfigModel(model.Name)
+            else //This is a new counter!
             {
-                DisplayName = model.Name,
-                SectionName = model.SectionName,
-                Enabled = (defaults == null ? true : defaults.Enabled),
-                Position = (defaults == null ? ICounterPositions.BelowCombo : defaults.Position),
-                Distance = (defaults == null ? 2 : defaults.Distance),
-                Counter = model.Counter,
-                ModCreator = modCreator,
-                IsNew = true,
-                RestrictedPositions = (restrictedPositions?.Count() == 0 || restrictedPositions == null) ? new ICounterPositions[] { } : restrictedPositions, //Thanks Viscoci for this
-            };
+                model.ConfigModel = defaults;
+                model.ConfigModel.CustomCounter = model;
+                model.IsNew = true;
+                defaults.Save();
+            }
+            LoadedCustomCounters.Add(model);
 
-            if (string.IsNullOrEmpty(counter.SectionName) || string.IsNullOrEmpty(counter.DisplayName))
-                throw new CustomCounterException("Custom Counter properties invalid. Please make sure SectionName and DisplayName are properly assigned.");
-
-            counter.Save();
-        }
-    }
-
-    internal class CustomCounterException : Exception
-    {
-        public CustomCounterException(String msg) : base("Counters+ | " + msg) {
-            Plugin.Log(msg, LogInfo.Error, "Contact the developer of the infringing mod to check their Custom Counter creation code.");
         }
     }
 
@@ -95,54 +78,62 @@ namespace CountersPlus.Custom
         /// <summary>
         /// The name in CountersPlus.ini that'll store variables. Try and keep to one name and not change it. It cannot conflict with other loaded counters.
         /// </summary>
-        public string SectionName { get; set; }
+        public string SectionName;
         /// <summary>
         /// The name of the counter. Will be shown in the submenu title.
         /// </summary>
-        public string Name { get; set; }
-        #pragma warning disable CS0618 // IPA is obsolete
+        public string Name;
+#pragma warning disable CS0618 // IPA is obsolete
         /// <summary>
         /// The plugin that created this custom counter. Will be displayed in the Settings UI.
         /// </summary>
-        public IPlugin Mod { get; set; }
-        #pragma warning restore CS0618 // IPA is obsolete
+        public IPlugin Mod;
+#pragma warning restore CS0618 // IPA is obsolete
         /// <summary>
         /// The plugin that created this custom counter. Will be displayed in the Settings UI.
         /// </summary>
-        public IBeatSaberPlugin BSIPAMod { get; set; }
+        public IBeatSaberPlugin BSIPAMod;
         /// <summary>
         /// The name of the counter (as a GameObject) that will be added when it gets created.
         /// </summary>
-        public string Counter { get; set; }
+        public string Counter;
+        /// <summary>
+        /// Description of the counter that will be put onto its cell in the Counters+ settings menu.
+        /// </summary>
+        public string Description;
+        /// <summary>
+        /// Name of the GameObject that holds the Canvas of the counter.
+        /// </summary>
+        public string GameObject_Name;
+        /// <summary>
+        /// Namespace location to an icon that will be used to represent your counter in the settings menu.
+        /// </summary>
+        public string Icon_ResourceName;
+
+        /// <summary>
+        /// Local name of the mod from BSIPA or IPA.
+        /// </summary>
+        internal string ModName;
+        /// <summary>
+        /// Local config model.
+        /// </summary>
+        internal CustomConfigModel ConfigModel;
+        /// <summary>
+        /// Whether or not this Custom Counter has been newly added.
+        /// </summary>
+        internal bool IsNew = false;
+        /// <summary>
+        /// Positions that are restricted for this counter. By default, it is open to every position.
+        /// </summary>
+        internal ICounterPositions[] RestrictedPositions = Enum.GetValues(typeof(ICounterPositions)) as ICounterPositions[];
     }
 
     public class CustomConfigModel : ConfigModel
     {
-        public CustomConfigModel(string name)
-        {
-            DisplayName = name;
-        }
-        internal string SectionName;
-        internal string Counter;
-        internal string ModCreator;
-        internal bool IsNew = false;
-        internal ICounterPositions[] RestrictedPositions { get {
-                string doodads = ConfigLoader.config.GetString(DisplayName, "RestrictedPositions", "All", true);
-                if (doodads == "All") return new ICounterPositions[] { };
-                List<ICounterPositions> restricted = new List<ICounterPositions>();
-                foreach(string position in doodads.Split(','))
-                    restricted.Add((ICounterPositions)Enum.Parse(typeof(ICounterPositions), position));
-                return restricted.ToArray();
-            } set {
-                try
-                {
-                    string combined = string.Join(",", value);
-                    if (combined.Length == 0) combined = "All";
-                    ConfigLoader.config.SetString(DisplayName, "RestrictedPositions", combined);
-                }
-                catch {
-                    ConfigLoader.config.SetString(DisplayName, "RestrictedPositions", "All");
-                }
-            } }
+        public CustomConfigModel(CustomCounter counter) { DisplayName = counter.SectionName; }
+        public CustomConfigModel(string name) { DisplayName = name; }
+        public CustomConfigModel() { DisplayName = "NewCustomConfigModel"; }
+
+        internal CustomCounter CustomCounter;
     }
 }

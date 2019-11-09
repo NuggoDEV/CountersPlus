@@ -22,6 +22,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <NoWarn>CS0649</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,6 +44,9 @@
     <Reference Include="BeatSaberCustomUI, Version=1.5.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(BeatSaberDir)\Plugins\BeatSaberCustomUI.dll</HintPath>
+    </Reference>
+    <Reference Include="BSML">
+      <HintPath>$(BeatSaberDir)\Plugins\BSML.dll</HintPath>
     </Reference>
     <Reference Include="BS_Utils">
       <HintPath>$(BeatSaberDir)\Plugins\BS_Utils.dll</HintPath>
@@ -87,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Counters\AccuracyCounter.cs" />
+    <Compile Include="Counters\Counter.cs" />
     <Compile Include="Counters\CustomCounter.cs" />
     <Compile Include="Counters\CutCounter.cs" />
     <Compile Include="Counters\FailCounter.cs" />
@@ -98,6 +104,18 @@
     <Compile Include="UI\CounterWarning.cs" />
     <Compile Include="UI\Images\Images.cs" />
     <Compile Include="UI\ViewControllers\BackButton.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\ConfigModelController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\CutController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\FailController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\MainSettingsController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\MissedController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\NotesController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\NotesLeftController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\PersonalBestController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\ProgressController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\ScoreController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\SpeedController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\SpinometerController.cs" />
     <Compile Include="UI\ViewControllers\ContributorsAndDonators.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusCreditsViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusEditViewController.cs" />
@@ -113,7 +131,6 @@
     <Compile Include="Plugin.cs" />
     <Compile Include="Counters\ProgressCounter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\ConfigDefaults.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="Utils\PluginUtility.cs" />
     <Compile Include="Utils\ReflectionUtil.cs" />
@@ -121,67 +138,68 @@
     <Compile Include="Counters\SpeedCounter.cs" />
     <Compile Include="Utils\SimpleJSON.cs" />
     <Compile Include="Utils\TextHelper.cs" />
+    <Compile Include="Utils\TypesUtility.cs" />
     <Compile Include="Utils\VersionChecker.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\Images\MainSettings.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Missed.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Notes.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Score.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Progress.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Speed.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Cut.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Spinometer.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Custom.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Credits.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Contributors.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\WotAreYeDoin.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="manifest.json" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Logo.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Personal Best.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Bug.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Fail.png" />
     <EmbeddedResource Include="UI\Images\Notes Left.png" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="About.md" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="UI\Images\Donators.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Credits.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Missed.bsml" />
+    <EmbeddedResource Include="UI\BSML\EditBase.bsml" />
+    <EmbeddedResource Include="UI\BSML\SettingsBase.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Notes.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Progress.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Score.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\PersonalBest.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Speed.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Spinometer.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Cut.bsml" />
+    <EmbeddedResource Include="UI\BSML\Config\NotesLeft.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\Config\Fail.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="UI\BSML\Config\Error.bsml" />
+    <EmbeddedResource Include="UI\BSML\MainSettings.bsml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(BeatSaberDir)\Plugins\CountersPlus.dll"</PostBuildEvent>

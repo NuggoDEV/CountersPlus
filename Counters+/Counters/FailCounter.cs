@@ -6,23 +6,18 @@ using System.Collections;
 
 namespace CountersPlus.Counters
 {
-    class FailCounter : MonoBehaviour
+    class FailCounter : Counter<FailConfigModel>
     {
         private static int Restarts = 0;
         private static IBeatmapLevel CurrentLevel = null;
         private static IDifficultyBeatmap BeatmapDiff = null;
-        private FailConfigModel settings;
         private TMP_Text failText;
         private GameEnergyCounter energy;
         private int fails = 0;
 
-        private void Awake()
-        {
-            settings = CountersController.settings.failsConfig;
-            CountersController.ReadyToInit += Init;
-        }
+        internal override void Counter_Start() { }
 
-        private void Init(CountersData data)
+        internal override void Init(CountersData data)
         {
             //Because CountersController.ReadyToInit relies on finding other objects via Resources.FindObjectsOfTypeAll<>()
             //before invoking, it is safe to assume that the objects we find do indeed exist.
@@ -85,10 +80,9 @@ namespace CountersPlus.Counters
             failText.color = Color.red;
         }
 
-        private void OnDestroy()
+        internal override void Counter_Destroy()
         {
             if (!settings.ShowRestartsInstead) energy.gameEnergyDidReach0Event -= SlowlyAnnoyThePlayerBecauseTheyFailed;
-            CountersController.ReadyToInit -= Init;
         }
     }
 }

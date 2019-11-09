@@ -7,32 +7,27 @@ using CountersPlus.Config;
 
 namespace CountersPlus.Counters
 {
-    public class PBCounter : MonoBehaviour
+    public class PBCounter : Counter<PBConfigModel>
     {
         private ScoreController _scoreController;
 
-        private PBConfigModel settings;
         private GameplayModifiersModelSO gameplayModsModel;
         private GameplayModifiers gameplayMods;
         private PlayerLevelStatsData stats;
 
         private Color orange;
         private TMP_Text _PbTrackerText;
-        private int decimalPrecision = 2;
         private float beginningPB = 0;
 
         private int _maxPossibleScore = 0;
         private int highScore;
 
-        void Awake()
+        internal override void Counter_Start()
         {
-            settings = CountersController.settings.pbConfig;
-            decimalPrecision = settings.DecimalPrecision;
-            CountersController.ReadyToInit += Init;
             ColorUtility.TryParseHtmlString("#FFA500", out orange);
         }
 
-        private void Init(CountersData data)
+        internal override void Init(CountersData data)
         {
             _scoreController = data.ScoreController;
             PlayerDataModelSO player = data.PlayerData;
@@ -77,16 +72,19 @@ namespace CountersPlus.Counters
             _PbTrackerText.rectTransform.localPosition = new Vector2(0, (TextHelper.ScaleFactor / 2) + (settings.TextSize / 10) + offset) * -1;
         }
 
-        void OnDestroy()
+        internal override void Counter_Destroy()
         {
             _scoreController.scoreDidChangeEvent -= UpdateScore;
-            CountersController.ReadyToInit -= Init;
         }
         
         public void SetPersonalBest(float pb)
         {
-            //Force personal best percent to round down to decimal precision
-            pb = (float)Math.Round((decimal)pb * 100, decimalPrecision);
+            //Force personal best percent to round down to decimal precision'
+            try
+            {
+                pb = (float)Math.Round((decimal)pb * 100, settings.DecimalPrecision);
+            }
+            catch { pb = 0; } //yea something can go wrong here, like if you have all of the negative modifiers
             if (settings.HideFirstScore && stats.highScore == 0) _PbTrackerText.text = "PB: --";
             else _PbTrackerText.text = $"PB: {pb.ToString($"F{settings.DecimalPrecision}")}%";
         }

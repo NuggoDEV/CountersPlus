@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CountersPlus.Config;
 using CountersPlus.Custom;
+using CountersPlus.Utils;
 using CustomUI.BeatSaber;
 using HMUI;
 using TMPro;
@@ -41,17 +42,18 @@ namespace CountersPlus.UI.ViewControllers
                 {
                     //Firstly, load my Counter settings and data, as its necessary for the NumberOfCells function.
                     //These two foreach loops can be safely removed.
-                    foreach (var kvp in AdvancedCounterSettings.counterUIItems) counterInfos.Add(CreateFromModel(kvp.Key));
-                    foreach (CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
+                    foreach (ConfigModel model in TypesUtility.GetListOfType<ConfigModel>()) counterInfos.Add(CreateFromModel(model));
+                    foreach (CustomCounter potential in CustomCounterCreator.LoadedCustomCounters)
                     {
                         counterInfos.Add(new SettingsInfo()
                         {
-                            Name = potential.DisplayName,
-                            Description = $"A custom counter added by {potential.ModCreator}!",
-                            Model = potential,
+                            Name = potential.Name,
+                            Description = string.IsNullOrEmpty(potential.Description) ? $"A custom counter added by {potential.ModName}!" : potential.Description,
+                            Model = potential.ConfigModel,
                             IsCustom = true,
                         });
                     }
+                    counterInfos.RemoveAll(x => x is null);
 
                     //Largely unchanged from CustomListController. Keep all of this.
                     Instance = this;
@@ -88,7 +90,7 @@ namespace CountersPlus.UI.ViewControllers
                     glow.anchorMin = buttonTransform.anchorMin;
                     glow.anchorMax = buttonTransform.anchorMax;
                     glow.sizeDelta = buttonTransform.sizeDelta;
-                    PageLeftButton.transform.localPosition = new Vector3(-80, 2.5f, -5);
+                    PageLeftButton.transform.localPosition = new Vector3(-110, 2.5f, -5);
                     PageLeftButton.interactable = true;
                     PageRightButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => (x.name == "PageRightButton")), transform);
                     buttonTransform = PageRightButton.transform.Find("BG") as RectTransform;
@@ -98,7 +100,7 @@ namespace CountersPlus.UI.ViewControllers
                     glow.anchorMin = buttonTransform.anchorMin;
                     glow.anchorMax = buttonTransform.anchorMax;
                     glow.sizeDelta = buttonTransform.sizeDelta;
-                    PageRightButton.transform.localPosition = new Vector3(80, 2.5f, -5);
+                    PageRightButton.transform.localPosition = new Vector3(110, 2.5f, -5);
                     PageRightButton.interactable = true;
 
                     RectTransform viewport = new GameObject("Viewport").AddComponent<RectTransform>(); //Make a Viewport RectTransform
@@ -133,6 +135,7 @@ namespace CountersPlus.UI.ViewControllers
 
         private SettingsInfo CreateFromModel<T>(T settings) where T : ConfigModel //Counters+ stuff, OK to remove.
         {
+            if (settings is CustomConfigModel) return null;
             SettingsInfo info = new SettingsInfo()
             {
                 Name = settings.DisplayName,
@@ -161,7 +164,7 @@ namespace CountersPlus.UI.ViewControllers
         }
 
         //I'd recommend keeping this as is (5 cells shown), unless you want more spread out cells (40 = 4 cells shown).
-        public float CellSize() { return 30f; }
+        public float CellSize() { return 27.5f; }
 
         public int NumberOfCells() { return counterInfos.Count + 3; } //Tune this to the amount of cells you'll have, whether dynamic or static.
 
@@ -207,8 +210,10 @@ namespace CountersPlus.UI.ViewControllers
                 {
                     if (info.IsCustom)
                     {
-                        packCoverImage.sprite = Images.Images.LoadSprite("Custom");
-                        cell.showNewRibbon = (info.Model as CustomConfigModel).IsNew;
+                        if (string.IsNullOrEmpty((info.Model as CustomConfigModel).CustomCounter.Icon_ResourceName))
+                            packCoverImage.sprite = CustomUI.Utilities.UIUtilities.LoadSpriteFromResources((info.Model as CustomConfigModel).CustomCounter.Icon_ResourceName);
+                        else packCoverImage.sprite = Images.Images.LoadSprite("Custom");
+                        cell.showNewRibbon = (info.Model as CustomConfigModel).CustomCounter.IsNew;
                     }
                     else
                     {
@@ -232,7 +237,7 @@ namespace CountersPlus.UI.ViewControllers
             if (row == 0) CountersPlusEditViewController.ShowMainSettings();
             else if (row == NumberOfCells() - 1) CountersPlusEditViewController.ShowDonators();
             else if (row == NumberOfCells() - 2) CountersPlusEditViewController.ShowContributors();
-            else CountersPlusEditViewController.UpdateSettings(info.Model, info);
+            else CountersPlusEditViewController.UpdateSettings(info.Model);
         }
     }
 

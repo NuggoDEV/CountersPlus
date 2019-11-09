@@ -38,14 +38,13 @@ namespace CountersPlus
         /// <typeparam name="T">ConfigModel to use for settings.</typeparam>
         /// <typeparam name="R">MonoBehaviour to attach to the new GameObject.</typeparam>
         /// <param name="settings">ConfigModel settings reference.</param>
-        internal static void LoadCounter<T, R>(T settings) where T : ConfigModel where R : MonoBehaviour
+        internal static void LoadCounter<T, R>(T settings) where T : ConfigModel where R : Counter<T>
         {
-            string name = (settings is CustomConfigModel) ? (settings as CustomConfigModel).SectionName : settings.DisplayName;
-            if (!settings.Enabled || GameObject.Find($"Counters+ | {name} Counter")) return;
-            GameObject counter = new GameObject($"Counters+ | {name} Counter");
-            counter.AddComponent(typeof(R));
-            Plugin.Log($"Loaded Counter: {name}");
-            LoadedCounters.Add(counter);
+            if (!settings.Enabled || GameObject.Find($"Counters+ | {settings.DisplayName} Counter")) return;
+            R counter = new GameObject($"Counters+ | {settings.DisplayName} Counter").AddComponent(typeof(R)) as R;
+            counter.settings = settings;
+            Plugin.Log($"Loaded Counter: {settings.DisplayName}");
+            LoadedCounters.Add(counter.gameObject);
         }
 
         private IEnumerator ObtainRequiredData()
@@ -87,8 +86,8 @@ namespace CountersPlus
             LoadCounter<SpinometerConfigModel, Spinometer>(settings.spinometerConfig);
             LoadCounter<NotesLeftConfigModel, NotesLeftCounter>(settings.notesLeftConfig);
             LoadCounter<FailConfigModel, FailCounter>(settings.failsConfig);
-            foreach (CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
-                LoadCounter<CustomConfigModel, CustomCounterHook>(potential);
+            foreach (CustomCounter potential in CustomCounterCreator.LoadedCustomCounters)
+                LoadCounter<CustomConfigModel, CustomCounterHook>(potential.ConfigModel);
             Plugin.Log("Counters loaded!", LogInfo.Notice);
             Instance.StartCoroutine(Instance.ObtainRequiredData());
         }

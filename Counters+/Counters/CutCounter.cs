@@ -6,13 +6,12 @@ using System.Collections.Generic;
 
 namespace CountersPlus.Counters
 {
-    public class CutCounter : MonoBehaviour
+    public class CutCounter : Counter<CutConfigModel>
     {
         private TMP_Text cutLabel;
         private ScoreController _scoreController;
         private GameObject _RankObject;
         private TMP_Text cutCounter;
-        private CutConfigModel settings;
         private int totalCutCountLeft = 0;
         private int totalCutCountRight = 0;
         private int totalScoreLeft = 0; // MaxScoreForNumberOfNotes() is an int. Don't expect scores over 2 billion.
@@ -20,13 +19,9 @@ namespace CountersPlus.Counters
 
         private Dictionary<SaberSwingRatingCounter, NoteCutInfo> noteCutInfos = new Dictionary<SaberSwingRatingCounter, NoteCutInfo>();
 
-        void Awake()
-        {
-            settings = CountersController.settings.cutConfig;
-            CountersController.ReadyToInit += Init;
-        }
+        internal override void Counter_Start() { }
 
-        private void Init(CountersData data)
+        internal override void Init(CountersData data)
         {
             _scoreController = data.ScoreController;
             Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
@@ -48,10 +43,9 @@ namespace CountersPlus.Counters
                 _scoreController.noteWasCutEvent += UpdateScore;
         }
 
-        void OnDestroy()
+        internal override void Counter_Destroy()
         {
             _scoreController.noteWasCutEvent -= UpdateScore;
-            CountersController.ReadyToInit -= Init;
         }
 
         private void UpdateScore(NoteData data, NoteCutInfo info, int score)

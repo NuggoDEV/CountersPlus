@@ -6,21 +6,16 @@ using CountersPlus.Utils;
 
 namespace CountersPlus.Counters
 {
-    class MissedCounter : MonoBehaviour
+    class MissedCounter : Counter<MissedConfigModel>
     {
         private ScoreController scoreController;
-        private MissedConfigModel settings;
         private TMP_Text missedText;
         private TMP_Text label;
         private int counter;
 
-        void Awake()
-        {
-            settings = CountersController.settings.missedConfig;
-            CountersController.ReadyToInit += Init;
-        }
+        internal override void Counter_Start() { }
 
-        private void Init(CountersData data)
+        internal override void Init(CountersData data)
         {
             scoreController = data.ScoreController;
             Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
@@ -38,7 +33,13 @@ namespace CountersPlus.Counters
             label.color = Color.white;
             label.alignment = TextAlignmentOptions.Center;
 
-            if (settings.CustomMissTextIntegration) UpdateCustomMissText();
+            if (settings.CustomMissTextIntegration && PluginUtility.IsPluginPresent("CustomMissText"))
+                UpdateCustomMissText();
+            else if (!PluginUtility.IsPluginPresent("CustomMissText"))
+            {
+                settings.CustomMissTextIntegration = false;
+                settings.Save();
+            }
 
             if (scoreController != null)
             {
@@ -47,11 +48,10 @@ namespace CountersPlus.Counters
             }
         }
 
-        void OnDestroy()
+        internal override void Counter_Destroy()
         {
             scoreController.noteWasCutEvent -= OnNoteCut;
             scoreController.noteWasMissedEvent -= OnNoteMiss;
-            CountersController.ReadyToInit -= Init;
         }
 
         private void OnNoteCut(NoteData data, NoteCutInfo info, int c)

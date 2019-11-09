@@ -10,30 +10,28 @@ using CustomUI.Settings;
 using CountersPlus.Custom;
 using BS_Utils.Gameplay;
 using System.Collections;
+using BeatSaberMarkupLanguage.ViewControllers;
+using BeatSaberMarkupLanguage.Attributes;
+using CountersPlus.UI.ViewControllers.ConfigModelControllers;
+using System.Reflection;
 
 namespace CountersPlus.UI.ViewControllers
 {
-    class CountersPlusEditViewController : VRUIViewController
+    class CountersPlusEditViewController : BSMLResourceViewController
     {
+        public override string ResourceName => "CountersPlus.UI.BSML.EditBase.bsml";
         public static CountersPlusEditViewController Instance;
         private static RectTransform rect;
-        private static TextMeshProUGUI settingsTitle;
-        
+
         internal static List<GameObject> LoadedElements = new List<GameObject>(); //Mass clearing
         internal static List<ListViewController> LoadedSettings = new List<ListViewController>(); //Mass initialization
         internal static int settingsCount = 0; //Spacing
 
-        static readonly Dictionary<ICounterPositions, string> positions = new Dictionary<ICounterPositions, string> {
-            {ICounterPositions.BelowCombo, "Below Combo" },
-            {ICounterPositions.AboveCombo, "Above Combo" },
-            {ICounterPositions.BelowMultiplier, "Below Multi." },
-            {ICounterPositions.AboveMultiplier, "Above Multi." },
-            {ICounterPositions.BelowEnergy, "Below Energy" },
-            {ICounterPositions.AboveHighway, "Over Highway" }
-        };
+        [UIObject("body")] private GameObject SettingsContainer;
+        [UIObject("settings_parent")] private GameObject SettingsParent;
+        [UIComponent("name")] private TextMeshProUGUI SettingsName;
 
         private ConfigModel SelectedConfigModel = null;
-        private SettingsInfo SelectedSettingsInfo = null;
 
         private static void SetPositioning(RectTransform r, float x, float y, float w, float h, float pivotX)
         {
@@ -46,28 +44,11 @@ namespace CountersPlus.UI.ViewControllers
 
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
+            base.DidActivate(firstActivation, activationType);
+            Instance = this;
             rect = rectTransform;
-            if (firstActivation)
-            {
-                Instance = this;
-                CreateFiller();
-            }
-            else
-            {
-                if (SelectedConfigModel != null) UpdateSettings(SelectedConfigModel, SelectedSettingsInfo);
-                else CreateFiller();
-            }
-        }
-
-        internal static void CreateFiller()
-        {
-            ClearScreen();
-            TextMeshProUGUI filler = BeatSaberUI.CreateText(rect, "Select an option, and\nsettings will appear here!", Vector2.zero);
-            filler.fontSize = 11;
-            filler.alignment = TextAlignmentOptions.Center;
-            filler.characterSpacing = 2;
-            SetPositioning(filler.rectTransform, 0, 0.6f, 1, 0.166f, 0.5f);
-            LoadedElements.Add(filler.gameObject);
+            if (!firstActivation && SelectedConfigModel != null)
+                UpdateSettings(SelectedConfigModel);
         }
 
         internal static void ShowContributors()
@@ -122,163 +103,33 @@ namespace CountersPlus.UI.ViewControllers
 
         internal static void ShowMainSettings()
         {
-            ClearScreen();
+            ClearScreen(true);
+            Instance.SettingsName.text = "Main Settings";
+            Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.MainSettingsController");
+            ConfigModelController.GenerateController("MainSettings", controllerType, Instance.SettingsContainer);
             MockCounter.Highlight<ConfigModel>(null);
-            settingsTitle = BeatSaberUI.CreateText(rect, "Main Settings", Vector2.zero);
-            settingsTitle.fontSize = 6;
-            settingsTitle.alignment = TextAlignmentOptions.Center;
-            SetPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
-            LoadedElements.Add(settingsTitle.gameObject);
-
-            SubMenu sub = new SubMenu(rect);
-            var enabled = AddList(ref sub, null as ConfigModel, "Enabled", "Toggles Counters+ on or off.", 2);
-            enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
-            enabled.GetValue = () => CountersController.settings.Enabled ? 1f : 0f;
-            enabled.SetValue = (v) => CountersController.settings.Enabled = v != 0f;
-
-            var toggleCounters = AddList(ref sub, null as ConfigModel, "Advanced Mock Counters", "Allows the mock counters to display more settings. To increase preformance, and reduce chances of bugs, disable this option.", 2);
-            toggleCounters.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
-            toggleCounters.GetValue = () => CountersController.settings.AdvancedCounterInfo ? 1f : 0f;
-            toggleCounters.SetValue = (v) => CountersController.settings.AdvancedCounterInfo = v != 0f;
-
-            var comboOffset = AddList(ref sub, null as ConfigModel, "Combo Offset", "How far from the Combo counters should be before Distance is taken into account.", 20);
-            comboOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
-            comboOffset.GetValue = () => (CountersController.settings.ComboOffset * 10) + 10;
-            comboOffset.SetValue = (v) => CountersController.settings.ComboOffset = ((v - 10) / 10);
-
-            var multiOffset = AddList(ref sub, null as ConfigModel, "Multiplier Offset", "How far from the Multiplier counters should be before Distance is taken into account.", 20);
-            multiOffset.GetTextForValue = (v) => ((v - 10) / 10).ToString();
-            multiOffset.GetValue = () => (CountersController.settings.MultiplierOffset * 10) + 10;
-            multiOffset.SetValue = (v) => CountersController.settings.MultiplierOffset = ((v - 10) / 10);
-
-            var hideCombo = AddList(ref sub, null as ConfigModel, "Hide Combo In-Game", "The combo counter wasn't good enough anyways.", 2);
-            hideCombo.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
-            hideCombo.GetValue = () => CountersController.settings.HideCombo ? 1f : 0f;
-            hideCombo.SetValue = (v) => CountersController.settings.HideCombo = v != 0f;
-
-            var hideMultiplier = AddList(ref sub, null as ConfigModel, "Hide Multiplier In-Game", "The multiplier wasn't good enough anyways.", 2);
-            hideMultiplier.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
-            hideMultiplier.GetValue = () => CountersController.settings.HideMultiplier ? 1f : 0f;
-            hideMultiplier.SetValue = (v) => CountersController.settings.HideMultiplier = v != 0f;
-
-            toggleCounters.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
-            comboOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
-            multiOffset.SetValue += (v) => CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
-
-            foreach (ListViewController list in LoadedSettings) //Should be cleared from the ClearScreen function.
-                list.SetValue += (v) => CountersController.settings.Save();
-
-            InitSettings();
         }
 
-        public static void UpdateSettings<T>(T settings, SettingsInfo info) where T : ConfigModel
+        public static void UpdateSettings<T>(T settings) where T : ConfigModel
         {
             try
             {
-                if (!(settings is null)) MockCounter.Highlight(settings);
-                ClearScreen();
-                if (!(info is null))
-                {
-                    if (info.IsCustom) CreateBase(settings, (settings as CustomConfigModel).RestrictedPositions);
-                    else
-                    {
-                        SubMenu sub = CreateBase(settings);
-                        AdvancedCounterSettings.counterUIItems[settings](sub, settings);
-                    }
-                }
-                Instance.SelectedSettingsInfo = info;
-                Instance.SelectedConfigModel = settings;
-                settingsTitle = BeatSaberUI.CreateText(rect, $"{settings.DisplayName} Settings", Vector2.zero);
-                settingsTitle.fontSize = 6;
-                settingsTitle.alignment = TextAlignmentOptions.Center;
-                SetPositioning(settingsTitle.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
-                LoadedElements.Add(settingsTitle.gameObject);
-                InitSettings();
+                if (settings is null) return;
+                ClearScreen(true);
+                MockCounter.Highlight(settings);
+                string name = string.Join("", settings.DisplayName.Split(' '));
+                Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.{name}Controller");
+                ConfigModelController controller = ConfigModelController.GenerateController(settings, controllerType, Instance.SettingsContainer);
+                Instance.SettingsName.text = $"{(settings is null ? "Oops!" : $"{settings.DisplayName} Settings")}";
             }
-            catch(Exception e) { Plugin.Log(e.ToString(), LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue. This shouldn't happen!"); }
+            catch (Exception e) { Plugin.Log(e.ToString(), LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue. This shouldn't happen!"); }
         }
 
-        private static SubMenu CreateBase<T>(T settings, params ICounterPositions[] restricted) where T : ConfigModel
+        internal static void ClearScreen(bool enableSettings = false)
         {
-            SubMenu sub = new SubMenu(rect);
-            Dictionary<ICounterPositions, string> restrictedList = new Dictionary<ICounterPositions, string>();
-            try
-            {
-                foreach (ICounterPositions pos in restricted)
-                    restrictedList.Add(pos, positions.Where(x => x.Key == pos).First().Value);
-            }
-            catch { } //It most likely errors here. If it does, well no problem.
-
-            var enabled = AddList(ref sub, settings, "Enabled", "Toggle this counter on or off.", 2);
-            enabled.GetTextForValue = (v) => (v != 0f) ? "ON" : "OFF";
-            enabled.GetValue = () => settings.Enabled ? 1f : 0f;
-            enabled.SetValue += (v) => settings.Enabled = v != 0f;
-
-            var position = AddList(ref sub, settings, "Position", "The relative position of common UI elements.", (restrictedList.Count() == 0) ? positions.Count() : restrictedList.Count());
-            position.GetTextForValue = (v) => {
-                if (restrictedList.Count() == 0)
-                    return positions.ElementAt(Mathf.RoundToInt(v)).Value;
-                else
-                    return restrictedList.ElementAt(Mathf.RoundToInt(v)).Value;
-            };
-            position.GetValue = () => {
-                if (restrictedList.Count() == 0)
-                    return positions.ToList().IndexOf(positions.Where(x => x.Key == settings.Position).First());
-                else
-                    return restrictedList.ToList().IndexOf(positions.Where(x => x.Key == settings.Position).First());
-            };
-            position.SetValue += (v) => {
-                if (restrictedList.Count() == 0)
-                    settings.Position = positions.ElementAt(Mathf.RoundToInt(v)).Key;
-                else
-                    settings.Position = restrictedList.ElementAt(Mathf.RoundToInt(v)).Key;
-            };
-
-            var index = AddList(ref sub, settings, "Distance", "How far from the position the counter will be. A higher number means farther way.", 7);
-            index.GetTextForValue = (v) => Mathf.RoundToInt(v - 1).ToString();
-            index.GetValue = () => settings.Distance + 1;
-            index.SetValue += (v) => settings.Distance = Mathf.RoundToInt(v - 1);
-            return sub;
-        }
-
-        internal static ListViewController AddList<T>(ref SubMenu sub, T settings, string Label, string HintText, int sizeCount) where T : ConfigModel
-        {
-            List<float> values = new List<float>() { };
-            for (var i = 0; i < sizeCount; i++) values.Add(i);
-            var list = sub.AddList(Label, values.ToArray(), HintText);
-            list.applyImmediately = true;
-            PositionElement(list.gameObject);
-            LoadedSettings.Add(list);
-            if (!(settings is null)) list.SetValue = (v) => Instance?.StartCoroutine(DelayedMockCounterUpdate(settings));
-            return list;
-        }
-
-        private static IEnumerator DelayedMockCounterUpdate<T>(T settings) where T : ConfigModel
-        {
-            yield return new WaitForEndOfFrame();
-            settings?.Save();
-            MockCounter.Update(settings);
-        }
-
-        internal static void ClearScreen()
-        {
-            foreach (ListViewController list in LoadedSettings) list.SetPrivateProperty("IsInitialized", false);
-            foreach (GameObject element in LoadedElements) Destroy(element);
-            LoadedElements.Clear();
-            LoadedSettings.Clear();
-            settingsCount = 0;
-        }
-
-        private static void PositionElement(GameObject element)
-        {
-            LoadedElements.Add(element);
-            SetPositioning(element.transform as RectTransform, 0.05f, 0.75f - (settingsCount * 0.1f), 0.9f, 0.166f, 0f);
-            settingsCount++;
-        }
-
-        private static void InitSettings()
-        {
-            foreach (ListViewController list in LoadedSettings) list.Init();
+            foreach (GameObject go in LoadedElements) Destroy(go);
+            for (int i = 0; i < Instance.SettingsContainer.transform.childCount; i++) Destroy(Instance.SettingsContainer.transform.GetChild(i).gameObject);
+            Instance.SettingsParent.SetActive(enableSettings);
         }
     }
 }

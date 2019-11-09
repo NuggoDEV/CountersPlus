@@ -1,0 +1,11 @@
+﻿<bg id='settings_parent'>
+  <vertical child-control-height='false'>
+    <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
+      <text id='name' text='Select an Option' align='Center' font-size='8'></text>
+    </horizontal>
+    <vertical id='body' bg='round-rect-panel' pad='5' vertical-fit='PreferredSize' spacing='1'>
+      <text text='Welcome to the Counters+ settings menu.'></text>
+      <text text='Please select an option below to refresh this screen.'></text>
+    </vertical>
+  </vertical>
+</bg>
