@@ -43,13 +43,13 @@ namespace CountersPlus.UI.ViewControllers
                     //Firstly, load my Counter settings and data, as its necessary for the NumberOfCells function.
                     //These two foreach loops can be safely removed.
                     foreach (ConfigModel model in TypesUtility.GetListOfType<ConfigModel>()) counterInfos.Add(CreateFromModel(model));
-                    foreach (CustomConfigModel potential in ConfigLoader.LoadCustomCounters())
+                    foreach (CustomCounter potential in CustomCounterCreator.LoadedCustomCounters)
                     {
                         counterInfos.Add(new SettingsInfo()
                         {
-                            Name = potential.DisplayName,
-                            Description = $"A custom counter added by {potential.ModCreator}!",
-                            Model = potential,
+                            Name = potential.Name,
+                            Description = string.IsNullOrEmpty(potential.Description) ? $"A custom counter added by {potential.ModName}!" : potential.Description,
+                            Model = potential.ConfigModel,
                             IsCustom = true,
                         });
                     }
@@ -210,8 +210,10 @@ namespace CountersPlus.UI.ViewControllers
                 {
                     if (info.IsCustom)
                     {
-                        packCoverImage.sprite = Images.Images.LoadSprite("Custom");
-                        cell.showNewRibbon = (info.Model as CustomConfigModel).IsNew;
+                        if (string.IsNullOrEmpty((info.Model as CustomConfigModel).CustomCounter.Icon_ResourceName))
+                            packCoverImage.sprite = CustomUI.Utilities.UIUtilities.LoadSpriteFromResources((info.Model as CustomConfigModel).CustomCounter.Icon_ResourceName);
+                        else packCoverImage.sprite = Images.Images.LoadSprite("Custom");
+                        cell.showNewRibbon = (info.Model as CustomConfigModel).CustomCounter.IsNew;
                     }
                     else
                     {

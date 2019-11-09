@@ -55,8 +55,7 @@ namespace CountersPlus.Config
             IniData data = parser.ReadFile(Path.Combine(BeatSaber.UserDataPath, "CountersPlus.ini"));
             foreach (SectionData section in data.Sections)
             {
-                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName") &&
-                    PluginUtility.IsPluginPresent(section.Keys["ModCreator"]))
+                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
                 {
                     CustomConfigModel unloadedModel = new CustomConfigModel(section.SectionName);
                     CustomConfigModel loadedModel = DeserializeFromConfig(unloadedModel, section.SectionName) as CustomConfigModel;
@@ -73,7 +72,7 @@ namespace CountersPlus.Config
         public static object DeserializeFromConfig(object input, string DisplayName)
         {
             Type type = input.GetType();
-            MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+            MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
             foreach (MemberInfo info in infos)
             {
                 if (info.MemberType != MemberTypes.Field || info.Name.ToLower().Contains("config")) continue;
@@ -150,7 +149,7 @@ namespace CountersPlus.Config
         public void Save()
         {
             Type type = GetType();
-            MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic);
+            MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
             foreach (MemberInfo info in infos)
             {
                 if (info.MemberType != MemberTypes.Field) continue;
