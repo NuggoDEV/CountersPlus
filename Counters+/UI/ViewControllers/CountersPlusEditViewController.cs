@@ -22,7 +22,7 @@ namespace CountersPlus.UI.ViewControllers
         public override string ResourceName => "CountersPlus.UI.BSML.EditBase.bsml";
         public static CountersPlusEditViewController Instance;
         private static RectTransform rect;
-        
+
         internal static List<GameObject> LoadedElements = new List<GameObject>(); //Mass clearing
         internal static List<ListViewController> LoadedSettings = new List<ListViewController>(); //Mass initialization
         internal static int settingsCount = 0; //Spacing
@@ -122,7 +122,7 @@ namespace CountersPlus.UI.ViewControllers
                 ConfigModelController controller = ConfigModelController.GenerateController(settings, controllerType, Instance.SettingsContainer);
                 Instance.SettingsName.text = $"{(settings is null ? "Oops!" : $"{settings.DisplayName} Settings")}";
             }
-            catch(Exception e) { Plugin.Log(e.ToString(), LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue. This shouldn't happen!"); }
+            catch (Exception e) { Plugin.Log(e.ToString(), LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue. This shouldn't happen!"); }
         }
 
         internal static void ClearScreen(bool enableSettings = false)

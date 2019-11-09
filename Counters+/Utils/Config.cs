@@ -182,11 +182,22 @@ namespace CountersPlus.Config
 
     public sealed class ScoreConfigModel : ConfigModel
     {
-        public ScoreConfigModel() { DisplayName = "Score"; VersionAdded = new SemVer.Version("1.0.0");
-            Enabled = true; Position = ICounterPositions.BelowMultiplier; Distance = 0; } //Default values
+        public ScoreConfigModel()
+        {
+            DisplayName = "Score"; VersionAdded = new SemVer.Version("1.0.0");
+            Enabled = true; Position = ICounterPositions.BelowMultiplier; Distance = 0;
+        } //Default values
         public ICounterMode Mode = ICounterMode.Original;
         public int DecimalPrecision = 2;
         public bool DisplayRank = true;
+        public bool CustomRankColors = true;
+        public string SSColor = "#00FFFF";
+        public string SColor = "#FFFFFF";
+        public string AColor = "#00FF00";
+        public string BColor = "#FFFF00";
+        public string CColor = "#FFA700";
+        public string DColor = "#FF0000";
+        public string EColor = "#FF0000";
     }
 
     public sealed class PBConfigModel : ConfigModel{
