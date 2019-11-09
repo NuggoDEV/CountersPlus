@@ -37,7 +37,7 @@ namespace CountersPlus.Counters
             {
                 try
                 {
-                    counter = GameObject.Find(settings.CustomCounter.GameObject_Name);
+                    counter = GameObject.Find(settings.CustomCounter.Counter);
                     if (counter != null) break;
                     tries++;
                     if (tries > 10)

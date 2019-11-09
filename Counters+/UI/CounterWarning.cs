@@ -38,7 +38,7 @@ namespace CountersPlus.UI
 
         void Start()
         {
-            if (warningsCanvas == null) warningsCanvas = TextHelper.CreateCanvas(new Vector3(0, 0, 2.25f));
+            if (warningsCanvas == null) warningsCanvas = TextHelper.CreateCanvas(Vector3.forward * 2.25f);
             Vector3 position = new Vector3(0, 2.1f - (warningOrder * 0.1f), 0);
             TextHelper.CreateText(out tmpro, warningsCanvas, position);
             tmpro.fontSize = 1;

@@ -56,14 +56,12 @@ namespace CountersPlus.Custom
 
             List<CustomConfigModel> existingModels = ConfigLoader.LoadCustomCounters();
 
-            if (existingModels.Any(x => x.DisplayName == model.SectionName))
-            { //It exists, wahoo!
+            model.ConfigModel.CustomCounter = model;
+            if (restrictedPositions != null && restrictedPositions.Count() >= 1) model.RestrictedPositions = restrictedPositions;
+            if (existingModels.Any(x => x.DisplayName == model.SectionName)) //It exists, wahoo!
                 model.ConfigModel = existingModels.First(x => x.DisplayName == model.SectionName);
-                model.ConfigModel.CustomCounter = model;
-            }
             else //This is a new counter!
             {
-                model.ConfigModel = defaults;
                 model.ConfigModel.CustomCounter = model;
                 model.IsNew = true;
                 defaults.Save();
@@ -94,7 +92,7 @@ namespace CountersPlus.Custom
         /// </summary>
         public IBeatSaberPlugin BSIPAMod;
         /// <summary>
-        /// The name of the counter (as a GameObject) that will be added when it gets created.
+        /// The name of the GAmeObject that holds the Canvas of the counter.
         /// </summary>
         public string Counter;
         /// <summary>
@@ -102,13 +100,13 @@ namespace CountersPlus.Custom
         /// </summary>
         public string Description;
         /// <summary>
-        /// Name of the GameObject that holds the Canvas of the counter.
-        /// </summary>
-        public string GameObject_Name;
-        /// <summary>
         /// Namespace location to an icon that will be used to represent your counter in the settings menu.
         /// </summary>
         public string Icon_ResourceName;
+        /// <summary>
+        /// Positions that are restricted for this counter. By default, it is open to every position.
+        /// </summary>
+        public ICounterPositions[] RestrictedPositions = Enum.GetValues(typeof(ICounterPositions)) as ICounterPositions[];
 
         /// <summary>
         /// Local name of the mod from BSIPA or IPA.
@@ -122,10 +120,6 @@ namespace CountersPlus.Custom
         /// Whether or not this Custom Counter has been newly added.
         /// </summary>
         internal bool IsNew = false;
-        /// <summary>
-        /// Positions that are restricted for this counter. By default, it is open to every position.
-        /// </summary>
-        internal ICounterPositions[] RestrictedPositions = Enum.GetValues(typeof(ICounterPositions)) as ICounterPositions[];
     }
 
     public class CustomConfigModel : ConfigModel

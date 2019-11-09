@@ -59,16 +59,16 @@ namespace CountersPlus.Counters
             ScoreCounter counter = CountersController.LoadedCounters.Where((GameObject x) => x?.GetComponent<ScoreCounter>() != null).FirstOrDefault()?.GetComponent<ScoreCounter>();
             if (counter == null) yield break;
             float offset = 0;
-            yield return new WaitUntil(() => counter.PointsText != null);
+            yield return new WaitUntil(() => counter.RankText != null);
             if (!(CountersController.settings.scoreConfig.Mode == ICounterMode.BaseGame || CountersController.settings.scoreConfig.Mode == ICounterMode.BaseWithOutPoints))
             {
                 if (CountersController.settings.scoreConfig.DisplayRank)
-                    offset = 3.35f;
+                    offset = 0.35f;
                 else
-                    offset = 3.1f;
+                    offset = 0.1f;
             }
 
-            _PbTrackerText.rectTransform.SetParent(counter.PointsText.rectTransform);
+            _PbTrackerText.rectTransform.SetParent(counter.RankText.rectTransform);
             _PbTrackerText.rectTransform.localPosition = new Vector2(0, (TextHelper.ScaleFactor / 2) + (settings.TextSize / 10) + offset) * -1;
         }
 

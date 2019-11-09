@@ -89,6 +89,10 @@
     <Reference Include="UnityEngine.UnityWebRequestModule">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.XRModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Beat Saber_Data\Managed\UnityEngine.XRModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Counters\AccuracyCounter.cs" />
@@ -99,6 +103,7 @@
     <Compile Include="Counters\NotesLeftCounter.cs" />
     <Compile Include="Counters\Spinometer.cs" />
     <Compile Include="Custom\CustomCounters.cs" />
+    <Compile Include="Harmony\FloatingOverlayWindowUpdate.cs" />
     <Compile Include="Harmony\ScoreCounterHook.cs" />
     <Compile Include="UI\AdvancedCounterSettings.cs" />
     <Compile Include="UI\CounterWarning.cs" />
@@ -136,6 +141,7 @@
     <Compile Include="Utils\ReflectionUtil.cs" />
     <Compile Include="Counters\ScoreCounter.cs" />
     <Compile Include="Counters\SpeedCounter.cs" />
+    <Compile Include="Utils\ResetCameraOnDestroy.cs" />
     <Compile Include="Utils\SimpleJSON.cs" />
     <Compile Include="Utils\TextHelper.cs" />
     <Compile Include="Utils\TypesUtility.cs" />

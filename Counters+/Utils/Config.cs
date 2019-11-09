@@ -100,12 +100,13 @@ namespace CountersPlus.Config
     /// </summary>
     public class MainConfigModel {
         public string DisplayName { get { return "Main"; } }
-        public bool Enabled;
-        public bool AdvancedCounterInfo;
-        public bool HideCombo;
-        public bool HideMultiplier;
-        public float ComboOffset;
-        public float MultiplierOffset;
+        public bool Enabled = true;
+        public bool AdvancedCounterInfo = true;
+        public bool HideCombo = false;
+        public bool HideMultiplier = false;
+        public float ComboOffset = 0.2f;
+        public float MultiplierOffset = 0.4f;
+        public bool FloatingHUD = false;
         public MissedConfigModel missedConfig = new MissedConfigModel();
         public NoteConfigModel noteConfig = new NoteConfigModel();
         public ProgressConfigModel progressConfig = new ProgressConfigModel();

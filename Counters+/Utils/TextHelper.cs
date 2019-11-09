@@ -11,22 +11,31 @@ namespace CountersPlus
          * I cannot thank him enough.
          */
         public static Canvas CounterCanvas;
-        internal static float ScaleFactor = 10;
+        internal static readonly float ScaleFactor = 10;
 
-        public static Canvas CreateCanvas(Vector3 Position)
+        public static Canvas CreateCanvas(Vector3 Position, bool floatingHUD = false, float CanvasScaleFactor = 10)
         {
             Canvas canvas;
             GameObject CanvasGO = new GameObject("Counters+ | Counters Canvas");
             canvas = CanvasGO.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.WorldSpace;
-            CanvasGO.transform.localScale = Vector3.one / ScaleFactor;
+            CanvasGO.transform.localScale = Vector3.one / CanvasScaleFactor;
             CanvasGO.transform.position = Position;
+
+            if (floatingHUD)
+            {
+                CanvasGO.AddComponent<FloatingOverlayWindow>();
+                CanvasGO.AddComponent<Utils.ResetCameraOnDestroy>();
+            }
+            
             return canvas;
         }
 
         public static void CreateText(out TMP_Text tmp_text, Vector3 anchoredPosition)
         {
-            if (CounterCanvas == null) CounterCanvas = CreateCanvas(new Vector3(0, 0, 7));
+            float scaleFactor = CountersController.settings.FloatingHUD ? 50 : ScaleFactor;
+            if (CounterCanvas == null)
+                CounterCanvas = CreateCanvas(Vector3.forward * 7, CountersController.settings.FloatingHUD, scaleFactor);
             CreateText(out tmp_text, CounterCanvas, anchoredPosition);
         }
 

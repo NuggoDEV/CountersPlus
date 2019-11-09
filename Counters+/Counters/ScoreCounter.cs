@@ -53,22 +53,25 @@ namespace CountersPlus.Counters
                 CreateText();
             }
             else
+            {
                 transform.position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
+                transform.SetParent(TextHelper.CounterCanvas.transform, true);
+            }
         }
 
         private void CreateText()
         {
             transform.localScale = Vector3.one;
-            transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().fontSize = 0.325f;
-            GameObject scoreMesh = new GameObject("Counters+ | Score Percent");
-            scoreMesh.transform.SetParent(transform, false);
+            PointsText.fontSize = 0.325f;
             Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out ScoreMesh, position);
             ScoreMesh.text = "100.0%";
             ScoreMesh.fontSize = 3;
             ScoreMesh.color = Color.white;
             ScoreMesh.alignment = TextAlignmentOptions.Center;
-            transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = position + new Vector3(-0.01f, 7.77f, 0);
+            PointsText.rectTransform.SetParent(ScoreMesh.rectTransform, false);
+            PointsText.rectTransform.localPosition = position + new Vector3(-0.01f, 7.77f, 0);
+            PointsText.rectTransform.localScale = PointsText.rectTransform.localScale / TextHelper.ScaleFactor;
             if (settings.DisplayRank)
             {
                 _RankObject = new GameObject("Counters+ | Score Rank");
