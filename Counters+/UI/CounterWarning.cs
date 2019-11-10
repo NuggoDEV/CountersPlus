@@ -14,26 +14,28 @@ namespace CountersPlus.UI
         private string warningText = "";
         private static int warnings = 0;
         private static Canvas warningsCanvas;
-        internal static List<CounterWarning> existing = new List<CounterWarning>();
+        internal static Dictionary<CounterWarning, TMP_Text> existing = new Dictionary<CounterWarning, TMP_Text>();
         private int warningOrder = 0;
         private float persistTime;
         TMP_Text tmpro;
 
-        public static void CreateWarning(string text, float persistTimeInSeconds)
+        public static void Create(string text, float persistTimeInSeconds = 5)
         {
             CounterWarning newWarning = new GameObject("Counters+ | Warning").AddComponent<CounterWarning>();
             newWarning.warningText = text;
             newWarning.persistTime = persistTimeInSeconds - 0.5f;
             newWarning.warningOrder = warnings;
-            existing.Add(newWarning);
             warnings++;
         }
 
         public static void ClearAllWarnings()
         {
-            foreach (CounterWarning warning in existing) Destroy(warning.gameObject);
+            foreach (TMP_Text warning in existing.Values) Destroy(warning.gameObject);
+            foreach (CounterWarning warning in existing.Keys) Destroy(warning.gameObject);
             warnings = 0;
             existing.Clear();
+            if (warningsCanvas != null) Destroy(warningsCanvas.gameObject);
+            warningsCanvas = null;
         }
 
         void Start()
@@ -45,6 +47,7 @@ namespace CountersPlus.UI
             tmpro.color = Color.white;
             tmpro.alignment = TextAlignmentOptions.Center;
             tmpro.text = $"<u>{warningText}</u>";
+            existing.Add(this, tmpro);
             StartCoroutine(PersistALittleBit());
         }
 

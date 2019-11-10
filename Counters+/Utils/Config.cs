@@ -120,16 +120,13 @@ namespace CountersPlus.Config
 
         public void Save()
         {
-            Type type = GetType();
-            MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
+            MemberInfo[] infos = GetType().GetMembers(BindingFlags.Public | BindingFlags.Instance);
             foreach (MemberInfo info in infos)
             {
-                if (info.MemberType == MemberTypes.Field)
-                {
-                    FieldInfo finfo = (FieldInfo)info;
-                    if (finfo.Name.ToLower().Contains("config")) continue;
-                    ConfigLoader.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
-                }
+                if (info.MemberType != MemberTypes.Field) continue;
+                FieldInfo finfo = (FieldInfo)info;
+                if (finfo.Name.ToLower().Contains("config")) continue;
+                ConfigLoader.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
             }
         }
     }
@@ -149,8 +146,7 @@ namespace CountersPlus.Config
 
         public void Save()
         {
-            Type type = GetType();
-            MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
+            MemberInfo[] infos = GetType().GetMembers(BindingFlags.Public | BindingFlags.Instance);
             foreach (MemberInfo info in infos)
             {
                 if (info.MemberType != MemberTypes.Field) continue;

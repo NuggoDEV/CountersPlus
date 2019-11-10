@@ -44,8 +44,8 @@ namespace CountersPlus.UI
             ProvideInitialViewControllers(placeholder, navigationController, editSettings, horizSettingsList);
             MainScreen.transform.position = new Vector3(0, -100, 0); //"If it works it's not stupid"
             
-            CounterWarning.CreateWarning("Due to limitations, some counters may not reflect their true appearance in-game.", 7.5f);
-            if (!Plugin.UpToDate) CounterWarning.CreateWarning("A new Counters+ update is available to download!", 5);
+            CounterWarning.Create("Due to limitations, some counters may not reflect their true appearance in-game.", 7.5f);
+            if (!Plugin.UpToDate) CounterWarning.Create("A new Counters+ update is available to download!", 5);
             StartCoroutine(InitMockCounters());
         }
 
@@ -104,7 +104,9 @@ namespace CountersPlus.UI
             MainScreen.transform.position = MainScreenPosition;
             MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
             mainFlow.InvokeMethod("DismissFlowCoordinator", this, null, false);
-            foreach (CounterWarning warning in CounterWarning.existing) DestroyImmediate(warning.gameObject);
+
+            //Reload settings from config
+            CountersController.settings = ConfigLoader.LoadSettings();
         }
     }
 }

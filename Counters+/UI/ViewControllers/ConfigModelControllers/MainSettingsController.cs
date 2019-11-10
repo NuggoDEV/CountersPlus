@@ -64,7 +64,7 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             set => CountersController.settings.FloatingHUD = value;
         }
 
-        [UIAction("update_mocks_and_model")]
+        [UIAction("update_model")]
         internal void UpdateMocksAndSaveModel(object obj)
         {
             StartCoroutine(WaitThenUpdate());
@@ -74,12 +74,6 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
         {
             yield return new WaitForSeconds(0.1f);
             CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
-            CountersController.settings.Save();
-        }
-
-        [UIAction("update_model")]
-        internal void ConfigChanged(object obj)
-        {
             CountersController.settings.Save();
         }
     }

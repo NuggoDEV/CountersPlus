@@ -41,11 +41,10 @@ namespace CountersPlus.UI.ViewControllers
                 if (firstActivation)
                 {
                     //Firstly, load my Counter settings and data, as its necessary for the NumberOfCells function.
-                    //These two foreach loops can be safely removed.
+                    //This segment of code can be removed.
                     List<ConfigModel> loadedModels = TypesUtility.GetListOfType<ConfigModel>();
                     loadedModels.ForEach(x => x = ConfigLoader.DeserializeFromConfig(x, x.DisplayName) as ConfigModel);
-                    foreach (ConfigModel model in loadedModels)
-                        counterInfos.Add(CreateFromModel(model));
+                    foreach (ConfigModel model in loadedModels) counterInfos.Add(CreateFromModel(model));
                     foreach (CustomCounter potential in CustomCounterCreator.LoadedCustomCounters)
                     {
                         counterInfos.Add(new SettingsInfo()
@@ -166,7 +165,7 @@ namespace CountersPlus.UI.ViewControllers
             }
         }
 
-        //I'd recommend keeping this as is (5 cells shown), unless you want more spread out cells (40 = 4 cells shown).
+        //I'd recommend keeping this as is (6 cells shown), unless you want more spread out cells.
         public float CellSize() { return 27.5f; }
 
         public int NumberOfCells() { return counterInfos.Count + 3; } //Tune this to the amount of cells you'll have, whether dynamic or static.
