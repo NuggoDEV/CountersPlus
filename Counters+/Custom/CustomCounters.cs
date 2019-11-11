@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,6 +8,7 @@ using IPA.Loader;
 using IPA.Old;
 using CountersPlus.Config;
 using CountersPlus.Utils;
+using CustomUI.Utilities;
 
 namespace CountersPlus.Custom
 {
@@ -21,7 +23,7 @@ namespace CountersPlus.Custom
         /// </summary>
         public static void Create<T>(T model, params ICounterPositions[] restrictedPositions) where T : CustomCounter
         {
-            Create(model, null, restrictedPositions);
+            Create(model, null, Assembly.GetCallingAssembly(), restrictedPositions);
         }
 
         /// <summary>
@@ -31,7 +33,7 @@ namespace CountersPlus.Custom
         /// </summary>
         public static void Create<T>(T model, CustomConfigModel defaults = null) where T : CustomCounter
         {
-            Create(model, defaults, null);
+            Create(model, defaults, Assembly.GetCallingAssembly(), null);
         }
 
         /// <summary>
@@ -41,6 +43,11 @@ namespace CountersPlus.Custom
         /// <param name="restrictedPositions">Restrict your Custom Counter to any of these positions. Inputting no parameters would allow the Counter to use all that are available.</param>
         /// </summary>
         public static void Create<T>(T model, CustomConfigModel defaults = null, params ICounterPositions[] restrictedPositions) where T : CustomCounter
+        {
+            Create(model, defaults, Assembly.GetCallingAssembly(), restrictedPositions);
+        }
+
+        private static void Create<T>(T model, CustomConfigModel defaults, Assembly callingAssembly, params ICounterPositions[] restrictedPositions) where T : CustomCounter
         {
             string modCreator = "";
             if (model.Mod != null) modCreator = model.Mod.Name;
@@ -54,20 +61,29 @@ namespace CountersPlus.Custom
 
             Plugin.Log($"Custom Counter ({model.Name}) added!", LogInfo.Notice);
 
+            if (!string.IsNullOrEmpty(model.Icon_ResourceName))
+                model.LoadedIcon = UIUtilities.LoadSpriteRaw(UIUtilities.GetResource(callingAssembly, model.Icon_ResourceName));
+
             List<CustomConfigModel> existingModels = ConfigLoader.LoadCustomCounters();
 
-            model.ConfigModel.CustomCounter = model;
             if (restrictedPositions != null && restrictedPositions.Count() >= 1) model.RestrictedPositions = restrictedPositions;
-            if (existingModels.Any(x => x.DisplayName == model.SectionName)) //It exists, wahoo!
+            if (existingModels.Any(x => x.DisplayName == model.SectionName))
                 model.ConfigModel = existingModels.First(x => x.DisplayName == model.SectionName);
             else //This is a new counter!
             {
-                model.ConfigModel.CustomCounter = model;
+                if (defaults is null)
+                {
+                    defaults = new CustomConfigModel(model);
+                    defaults.Enabled = true;
+                    defaults.Position = ICounterPositions.BelowCombo;
+                    defaults.Distance = 2;
+                }
+                model.ConfigModel = defaults;
                 model.IsNew = true;
                 defaults.Save();
             }
+            model.ConfigModel.CustomCounter = model;
             LoadedCustomCounters.Add(model);
-
         }
     }
 
@@ -120,6 +136,10 @@ namespace CountersPlus.Custom
         /// Whether or not this Custom Counter has been newly added.
         /// </summary>
         internal bool IsNew = false;
+        /// <summary>
+        /// Loaded icon from "Icon_ResourcesName".
+        /// </summary>
+        internal Sprite LoadedIcon = null;
     }
 
     public class CustomConfigModel : ConfigModel

@@ -55,7 +55,7 @@ namespace CountersPlus.Config
             IniData data = parser.ReadFile(Path.Combine(BeatSaber.UserDataPath, "CountersPlus.ini"));
             foreach (SectionData section in data.Sections)
             {
-                if (section.Keys.Any((KeyData x) => x.KeyName == "SectionName"))
+                if (!TypesUtility.GetListOfType<ConfigModel>().Any(y => y.DisplayName == section.SectionName))
                 {
                     CustomConfigModel unloadedModel = new CustomConfigModel(section.SectionName);
                     CustomConfigModel loadedModel = DeserializeFromConfig(unloadedModel, section.SectionName) as CustomConfigModel;

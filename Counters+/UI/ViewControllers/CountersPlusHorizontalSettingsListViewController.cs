@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using CountersPlus.Config;
 using CountersPlus.Custom;
 using CountersPlus.Utils;
@@ -43,6 +43,7 @@ namespace CountersPlus.UI.ViewControllers
                     //Firstly, load my Counter settings and data, as its necessary for the NumberOfCells function.
                     //This segment of code can be removed.
                     List<ConfigModel> loadedModels = TypesUtility.GetListOfType<ConfigModel>();
+                    loadedModels = loadedModels.Where(x => !(x is CustomConfigModel)).ToList();
                     loadedModels.ForEach(x => x = ConfigLoader.DeserializeFromConfig(x, x.DisplayName) as ConfigModel);
                     foreach (ConfigModel model in loadedModels) counterInfos.Add(CreateFromModel(model));
                     foreach (CustomCounter potential in CustomCounterCreator.LoadedCustomCounters)
@@ -212,8 +213,8 @@ namespace CountersPlus.UI.ViewControllers
                 {
                     if (info.IsCustom)
                     {
-                        if (string.IsNullOrEmpty((info.Model as CustomConfigModel).CustomCounter.Icon_ResourceName))
-                            packCoverImage.sprite = CustomUI.Utilities.UIUtilities.LoadSpriteFromResources((info.Model as CustomConfigModel).CustomCounter.Icon_ResourceName);
+                        if ((info.Model as CustomConfigModel).CustomCounter.LoadedIcon != null)
+                            packCoverImage.sprite = (info.Model as CustomConfigModel).CustomCounter.LoadedIcon;
                         else packCoverImage.sprite = Images.Images.LoadSprite("Custom");
                         cell.showNewRibbon = (info.Model as CustomConfigModel).CustomCounter.IsNew;
                     }

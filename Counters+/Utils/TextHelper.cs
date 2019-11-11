@@ -29,8 +29,11 @@ namespace CountersPlus
 
             if (floatingHUD)
             {
-                coreGameHUD.transform.localScale = Vector3.one * ScaleFactor;
-                coreGameHUD.transform.localPosition = Vector3.back * 70;
+                if (coreGameHUD != null)
+                {
+                    coreGameHUD.transform.localScale = Vector3.one * ScaleFactor;
+                    coreGameHUD.transform.localPosition = Vector3.back * 70;
+                }
                 if (Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().FirstOrDefault()?
                     .GetPrivateField<MainSettingsModel>("_mainSettingsModel")?.smoothCameraEnabled?.value ?? false)
                 {
