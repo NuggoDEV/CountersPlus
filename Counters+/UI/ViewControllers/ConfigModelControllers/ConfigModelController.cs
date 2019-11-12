@@ -58,18 +58,27 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             return controller;
         }
 
-        public static ConfigModelController GenerateController(string bsmlFileName, Type controllerType, GameObject baseTransform)
+        public static ConfigModelController GenerateController(string bsmlFileName, Type controllerType, GameObject baseTransform,
+            bool addBaseSettings = false, ConfigModel model = null)
         {
             GameObject controllerGO = new GameObject($"Counters+ | {bsmlFileName} Settings Controller");
             controllerGO.transform.parent = baseTransform.transform;
             ConfigModelController controller = controllerGO.AddComponent<ConfigModelController>();
-            controller.UseBaseSettings = false;
-            controller.ConfigModel = null;
-            controller.editControllerBase = baseTransform;
+            controller.ConfigModel = model;
             if (controllerType != null)
                 controller.ModelSpecificController = controllerGO.AddComponent(controllerType);
-            BSMLParser.instance.Parse(Utilities.GetResourceContent(controllerType.Assembly,//CountersPlus.UI.BSML.MainSettings.bsml
-                $"CountersPlus.UI.BSML.{bsmlFileName}.bsml"), baseTransform, controller.ModelSpecificController);
+            if (addBaseSettings)
+                BSMLParser.instance.Parse(controller.baseConfigLocation, baseTransform, controller);
+            try
+            {
+                BSMLParser.instance.Parse(Utilities.GetResourceContent(controllerType.Assembly,
+                    bsmlFileName), baseTransform, controller.ModelSpecificController);
+            }catch(Exception e)
+            {
+                Plugin.Log($"Exception thrown while attempting to load a non-Counters+ BSML file:\n{bsmlFileName}\n{e}",
+                    LogInfo.Error,
+                    "Report this issue to the mod author who created this Custom Counter, rather than to Counters+ itself.");
+            }
             return controller;
         }
 

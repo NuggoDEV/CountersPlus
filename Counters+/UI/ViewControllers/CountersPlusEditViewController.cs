@@ -104,7 +104,7 @@ namespace CountersPlus.UI.ViewControllers
             ClearScreen(true);
             Instance.SettingsName.text = "Main Settings";
             Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.MainSettingsController");
-            ConfigModelController.GenerateController("MainSettings", controllerType, Instance.SettingsContainer);
+            ConfigModelController.GenerateController("CountersPlus.UI.BSML.MainSettings.bsml", controllerType, Instance.SettingsContainer);
             MockCounter.Highlight<ConfigModel>(null);
         }
 
@@ -117,8 +117,17 @@ namespace CountersPlus.UI.ViewControllers
                 ClearScreen(true);
                 MockCounter.Highlight(settings);
                 string name = string.Join("", settings.DisplayName.Split(' '));
-                Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.{name}Controller");
-                ConfigModelController controller = ConfigModelController.GenerateController(settings, controllerType, Instance.SettingsContainer);
+                if (settings is CustomConfigModel custom)
+                {
+                    ConfigModelController.GenerateController(custom.CustomCounter.CustomSettingsResource,
+                        custom.CustomCounter.CustomSettingsHandler, Instance.SettingsContainer, true, settings);
+                    name = custom.CustomCounter.Name;
+                }
+                else
+                {
+                    Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.{name}Controller");
+                    ConfigModelController controller = ConfigModelController.GenerateController(settings, controllerType, Instance.SettingsContainer);
+                }
                 Instance.SettingsName.text = $"{(settings is null ? "Oops!" : $"{settings.DisplayName} Settings")}";
             }
             catch (Exception e) { Plugin.Log(e.ToString(), LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue. This shouldn't happen!"); }

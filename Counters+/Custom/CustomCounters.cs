@@ -108,7 +108,7 @@ namespace CountersPlus.Custom
         /// </summary>
         public IBeatSaberPlugin BSIPAMod;
         /// <summary>
-        /// The name of the GAmeObject that holds the Canvas of the counter.
+        /// The name of the <see cref="GameObject"/> that holds the <see cref="Canvas"/> that contains all the text for the counter.
         /// </summary>
         public string Counter;
         /// <summary>
@@ -123,6 +123,14 @@ namespace CountersPlus.Custom
         /// Positions that are restricted for this counter. By default, it is open to every position.
         /// </summary>
         public ICounterPositions[] RestrictedPositions = Enum.GetValues(typeof(ICounterPositions)) as ICounterPositions[];
+        /// <summary>
+        /// Location to a BSML (*.bsml) file to load extra settings in the Counters+ menu.
+        /// </summary>
+        public string CustomSettingsResource;
+        /// <summary>
+        /// The <see cref="Type"/> of a <see cref="MonoBehaviour"/> that will handle the file defined in <see cref="CustomSettingsResource"/>.
+        /// </summary>
+        public Type CustomSettingsHandler;
 
         /// <summary>
         /// Local name of the mod from BSIPA or IPA.
