@@ -17,9 +17,9 @@ namespace CountersPlus.UI
         private BackButton navigationController;
         private CountersPlusFillerForMainViewController placeholder;
         private CountersPlusEditViewController editSettings;
-        //private CountersPlusSettingsListViewController settingsList;
         private CountersPlusCreditsViewController credits;
         private CountersPlusHorizontalSettingsListViewController horizSettingsList;
+
         internal static CountersPlusSettingsFlowCoordinator Instance;
 
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
@@ -36,7 +36,6 @@ namespace CountersPlus.UI
                 
                 editSettings = BeatSaberUI.CreateViewController<CountersPlusEditViewController>();
                 placeholder = BeatSaberUI.CreateViewController<CountersPlusFillerForMainViewController>();
-                //settingsList = BeatSaberUI.CreateViewController<CountersPlusSettingsListViewController>();
                 horizSettingsList = BeatSaberUI.CreateViewController<CountersPlusHorizontalSettingsListViewController>();
                 credits = BeatSaberUI.CreateViewController<CountersPlusCreditsViewController>();
             }
@@ -66,16 +65,16 @@ namespace CountersPlus.UI
 
         internal static void UpdateMockCounters()
         {
-            Instance.StartCoroutine(UpdateMockCountersRoutine());
+            Instance.StartCoroutine(Instance.UpdateMockCountersRoutine());
         }
 
-        private static IEnumerator UpdateMockCountersRoutine()
+        private IEnumerator UpdateMockCountersRoutine()
         {
             bool allCountersActive = false;
             while (!allCountersActive)
             {
                 int loaded = 0;
-                foreach (SettingsInfo counter in CountersPlusHorizontalSettingsListViewController.Instance.counterInfos)
+                foreach (SettingsInfo counter in horizSettingsList.counterInfos)
                 {
                     try
                     {
@@ -84,7 +83,7 @@ namespace CountersPlus.UI
                     }
                     catch { } //Mainly from custom counters, no biggie.
                 }
-                if (loaded == CountersPlusHorizontalSettingsListViewController.Instance.counterInfos.Count) allCountersActive = true;
+                if (loaded == horizSettingsList.counterInfos.Count) allCountersActive = true;
                 yield return new WaitForEndOfFrame();
             }
         }

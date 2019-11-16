@@ -25,7 +25,6 @@ namespace CountersPlus.UI.ViewControllers
      */
     class CountersPlusHorizontalSettingsListViewController : CustomViewController, TableView.IDataSource
     {
-        internal static CountersPlusHorizontalSettingsListViewController Instance;
         public List<SettingsInfo> counterInfos = new List<SettingsInfo>();
 
         private Button PageLeftButton;
@@ -59,7 +58,6 @@ namespace CountersPlus.UI.ViewControllers
                     counterInfos.RemoveAll(x => x is null);
 
                     //Largely unchanged from CustomListController. Keep all of this.
-                    Instance = this;
                     levelPackTableCellInstance = Resources.FindObjectsOfTypeAll<LevelPackTableCell>().First(x => x.name == "LevelPackTableCell");
                     levelPackTableCellInstance.reuseIdentifier = ReuseIdentifier;
 
