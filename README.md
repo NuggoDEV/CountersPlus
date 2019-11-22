@@ -1,8 +1,15 @@
 # CountersPlus
-A combination of widely-used counters, all configurable in one mod.
+A combination of widely-used counters, all configurable in one Beat Saber mod.
 
 ## What is this?
-**Counters+** (also known as CountersPlus) is a mod that bundles different counters, both widely used and quite unusual, into one mod. Counters+ also boasts a large amount of configuration, all available from a custom made settings menu that updates in real time!
+**Counters+** (also known as CountersPlus) is a powerful UI Enhancement mod for the popular VR rhythm game Beat Saber. It features a variety of different counters that track varying statistics, all bundled into one core system.
+
+Counters+ also boasts a large amount of configuration, all available from a custom made settings menu.
+
+## Installation
+To install Counters+, simply use a Beat Saber mod manager such as [ModAssistant](https://github.com/Assistant/ModAssistant). This will ensure that any dependencies are installed along with Counters+. If you like to do things manually, download Counters+ from [BeatMods](https://beatmods.com), and drag and drop the containing `Plugins` folder into your Beat Saber directory.
+
+If you want to get access to any potential Hotfix or Prelease/Beta builds Counters+ has to offer, simply watch the repository, and grab the latest release in the [Releases page](https://github.com/Caeden117/CountersPlus/releases).
 
 ## Available Counters
 |Counter|Version Added|Description|
@@ -21,61 +28,8 @@ A combination of widely-used counters, all configurable in one mod.
 ### Custom Counters
 Counters+ also supports the addition of Custom Counters. Other mods can input their counters into the Counters+ system and allow the user to edit the position through the Counters+ UI.
 
-#### Supported Custom Counters
-If you wish to add your mod to this list, please DM me on Discord: *Caeden117#0117*
+#### Want to make some?
+See the [Counters+ Wiki page on developing your own Custom Counters](https://github.com/Caeden117/CountersPlus/wiki/For-Developers).
 
-|Mod|Description|
-|-|-|
-|***FPS Counter***|Frames per second. Easy!|
-|***Deviation Counter***|How early or late were you on cutting a block|
-
-## Configuration
-
-These are currently being moved over to the [Counters+ Wiki](https://github.com/Caeden117/CountersPlus/wiki).
-
-### Plugin-wide settings
-|Setting|Description|
-|-|-|
-|***Enabled***|Toggles the plugin on and off. The Counters+ UI will still be visible.|
-|***Advanced Counter Properties***|Displays more information about the counters in the new menu.|
-|***Combo Offset***|Before Distance is taken into account, how far away should counters be from Combo.|
-|***Multiplier Offset***|Before Distance is taken into account, how far away should counters be from the Multiplier.|
-|***Hide Combo***|Will attempt to hide the Combo counter when entering a song.|
-|***Hide Multiplier***|Will attempt to hide the Multiplier counter when entering a song.|
-
-### Every Counter has these 3 options
-|Setting|Description|
-|-|-|
-|***Enabled***|Toggles the counter on or off.|
-|***Position***|Sets the position of a counter relative to commonly used UI elements (Combo, Multiplier, Highway, etc.)|
-|***Distance***|How far away from the Position a counter will be. A higher Distance would set the Counter farther away from the UI element defined in *Position*.|
-
-### Advanced Options
-|Setting|Counters|Description
-|-|-|-|
-|***Percentage Precision***|*Notes*, *Score*, *Speed*, and *Personal Best*|How precise do the decimals go?|
-|***Show Precentage***|*Notes*|Displays the percentage of notes hit over notes in total.|
-|***Display Rank***|*Score*|Displays the Rank you get during a song (SS, S, A, B, C, D, E.)|
-|***Custom Rank Colors***|*Score*|Changes color of the rank, depending on which rank you're at, according to the config.|
-|***Progress From End***|*Progress*|The counter starts at full, and decreases as you progress though a song.|
-|***Include Progress Ring***|*Progress*|Whether or not the *Progress From End* option will also effect the Progress Ring. Only available in *Original* mode.|
-|***Mode***|*Speed*, *Progress*, *Spinometer*, and *Score*|Changes the display mode for the Counter (See Hint Text in-game for more detail.)|
-|***Text Size***|*Personal Best*|How large should the counter be?|
-|***Below Score Counter***|*Personal Best*|Whether or not the Personal Best counter should be displayed below the Score Counter instead.|
-|***Custom Miss Text Integration***|*Miss*|When Custom Miss Text is installed, replace the "Misses" label with one of the various insults.|
-|***Track Restarts***|*Fail*|Instead of showing global fail count, instead show the times you've restarted the same song.|
-|***Label Above Count***|*Notes Left*|Changes the Notes Left counter to look similarly with other Counters+ counters, with the label above the number.|
-|***Hide First Score***|*Personal Best*|Hides your personal best if the song you are playing has not yet been completed.|
-
-### Some Notes
-
-- If ***Advanced HUD*** is Disabled:
-  - If ***Progress Counter***'s *Mode* is set to **Base**:
-    - Nothing will appear.
-  - If ***Score Counter***'s *Base Game* option is set to **True**:
-    - Only the score will appear. No rank.
-  - If ***Score Counter***'s *Base Game* option is set to **False**:
-    - No score will appear.
-
-## For Developers
-If you wish to add your own custom counter to Counters+, or see how it can be used in your plugin, see the [Wiki page.](https://github.com/Caeden117/CountersPlus/wiki/For-Developers)
+## Configuration and Documentation
+If you'd like to see documentation on the various Counters and settings Counters+ has to offer, please visit the [Counters+ Wiki](https://github.com/Caeden117/CountersPlus/wiki).
