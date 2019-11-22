@@ -90,7 +90,7 @@ namespace CountersPlus.Counters
             }
             if (settings.Mode == ICounterMode.LeavePoints || settings.Mode == ICounterMode.BaseWithOutPoints)
             {
-                transform.Find("ScoreText").GetComponent<TextMeshProUGUI>().rectTransform.position = new Vector3(-3.2f,
+                PointsText.rectTransform.position = new Vector3(-3.2f,
                     0.35f + (settings.Mode == ICounterMode.LeavePoints ? 7.8f : 0), 7);
             }
             GetComponent<ImmediateRankUIPanel>().Start(); //BS way of getting Harmony patch to function but "if it works its not stupid" ~Caeden117
