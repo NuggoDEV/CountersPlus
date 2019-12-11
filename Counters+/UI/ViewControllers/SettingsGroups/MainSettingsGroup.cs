@@ -33,7 +33,6 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
                     packNameText.text = "Donators";
                     packInfoText.text = "See who supported me on Ko-fi!";
                     packCoverImage.sprite = Images.Images.LoadSprite("Donators");
-                    cell.showNewRibbon = true;
                     break;
                 case 2:
                     packNameText.text = "Contributors";

@@ -136,6 +136,7 @@
     <Compile Include="UI\MenuUI.cs" />
     <Compile Include="UI\MockCounter.cs" />
     <Compile Include="UI\ViewControllers\SettingsGroups\CountersSettingsGroup.cs" />
+    <Compile Include="UI\ViewControllers\SettingsGroups\HUDSettingsGroup.cs" />
     <Compile Include="UI\ViewControllers\SettingsGroups\MainSettingsGroup.cs" />
     <Compile Include="UI\ViewControllers\SettingsGroups\SettingsGroup.cs" />
     <Compile Include="Utils\Config.cs" />
@@ -214,7 +215,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\BSML\BottomSettingsList.bsml" />
-    <None Include="UI\BSML\Config\Error.bsml" />
+    <EmbeddedResource Include="UI\BSML\Config\Error.bsml" />
     <EmbeddedResource Include="UI\BSML\MainSettings.bsml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
