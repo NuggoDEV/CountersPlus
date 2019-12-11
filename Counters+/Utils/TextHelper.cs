@@ -34,20 +34,17 @@ namespace CountersPlus
                     coreGameHUD.transform.localScale = Vector3.one * ScaleFactor;
                     coreGameHUD.transform.localPosition = Vector3.back * 70;
                 }
-                if (Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().FirstOrDefault()?
-                    .GetPrivateField<MainSettingsModel>("_mainSettingsModel")?.smoothCameraEnabled?.value ?? false)
+
+                if (coreGameHUD != null)
                 {
-                    if (coreGameHUD != null)
+                    foreach (Transform children in coreGameHUD.transform)
                     {
-                        foreach (Transform children in coreGameHUD.transform)
-                        {
-                            if (children.Find("BG")) children.Find("BG").gameObject.SetActive(false);
-                            if (children.Find("Top")) children.Find("Top").gameObject.SetActive(false);
-                        }
+                        if (children.Find("BG")) children.Find("BG").gameObject.SetActive(false);
+                        if (children.Find("Top")) children.Find("Top").gameObject.SetActive(false);
                     }
-                    CanvasGO.AddComponent<FloatingOverlayWindow>();
-                    CanvasGO.AddComponent<Utils.ResetCameraOnDestroy>();
                 }
+                CanvasGO.AddComponent<FloatingOverlayWindow>();
+                CanvasGO.AddComponent<Utils.ResetCameraOnDestroy>();
             }
             
             return canvas;
@@ -58,12 +55,6 @@ namespace CountersPlus
             if (CounterCanvas == null)
             {
                 bool useFloatingHUD = CountersController.settings.FloatingHUD;
-                if (useFloatingHUD && !(Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().FirstOrDefault()?
-                        .GetPrivateField<MainSettingsModel>("_mainSettingsModel")?.smoothCameraEnabled?.value ?? true))
-                {
-                    CounterWarning.Create("Please enable \"Smooth Camera\" in Beat Saber's Settings to use Floating HUD.");
-                    useFloatingHUD = false;
-                }
                 float scaleFactor = useFloatingHUD ? 50 : ScaleFactor;
                 CounterCanvas = CreateCanvas(Vector3.forward * 7, useFloatingHUD, scaleFactor);
             }
@@ -75,7 +66,7 @@ namespace CountersPlus
             var rectTransform = canvas.transform as RectTransform;
             rectTransform.sizeDelta = new Vector2(100, 50);
 
-            tmp_text = CustomUI.BeatSaber.BeatSaberUI.CreateText(rectTransform, "", anchoredPosition * ScaleFactor);
+            tmp_text = BeatSaberMarkupLanguage.BeatSaberUI.CreateText(rectTransform, "", anchoredPosition * ScaleFactor);
             tmp_text.alignment = TextAlignmentOptions.Center;
             tmp_text.fontSize = 4f;
             tmp_text.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 2f);

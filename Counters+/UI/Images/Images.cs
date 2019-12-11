@@ -1,13 +1,12 @@
-﻿using CustomUI.Utilities;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
+using CountersPlus.Utils;
 
 namespace CountersPlus.UI.Images
 {
     class Images
     {
-        public static Texture LoadTexture(string name)
-        { //It's not easy without Sprite cranberry.
+        public static Texture2D LoadTexture(string name)
+        {
             return UIUtilities.LoadTextureFromResources($"CountersPlus.UI.Images.{name}.png");
         }
 

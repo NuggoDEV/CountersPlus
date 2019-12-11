@@ -1,19 +1,15 @@
-﻿using CustomUI.BeatSaber;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using VRUI;
 using CountersPlus.Config;
 using UnityEngine;
 using TMPro;
-using CustomUI.Settings;
 using CountersPlus.Custom;
 using BS_Utils.Gameplay;
-using System.Collections;
 using BeatSaberMarkupLanguage.ViewControllers;
 using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage;
 using CountersPlus.UI.ViewControllers.ConfigModelControllers;
-using System.Reflection;
 
 namespace CountersPlus.UI.ViewControllers
 {

@@ -93,7 +93,7 @@ namespace CountersPlus.Counters
                 PointsText.rectTransform.position = new Vector3(-3.2f,
                     0.35f + (settings.Mode == ICounterMode.LeavePoints ? 7.8f : 0), 7);
             }
-            GetComponent<ImmediateRankUIPanel>().Start(); //BS way of getting Harmony patch to function but "if it works its not stupid" ~Caeden117
+            GetComponent<ImmediateRankUIPanel>().InvokePrivateMethod("Start", null); //BS way of getting Harmony patch to function but "if it works its not stupid" ~Caeden117
         }
     }
 }

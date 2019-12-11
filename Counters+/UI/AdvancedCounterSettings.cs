@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using CountersPlus.Config;
-using CustomUI.BeatSaber;
-using CustomUI.Settings;
-using UnityEngine;
-using CPEVC = CountersPlus.UI.ViewControllers.CountersPlusEditViewController;
-using CC = CountersPlus.CountersController;
-using CountersPlus.Utils;
 
 namespace CountersPlus.UI
 {

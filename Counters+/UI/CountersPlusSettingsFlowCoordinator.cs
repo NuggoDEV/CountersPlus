@@ -1,12 +1,13 @@
 ﻿using CountersPlus.Config;
-using CustomUI.BeatSaber;
-using CustomUI.Utilities;
+using BeatSaberMarkupLanguage;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using VRUI;
+using HMUI;
 using CountersPlus.UI.ViewControllers;
+using CountersPlus.Utils;
+using CountersPlus.Custom;
 
 namespace CountersPlus.UI
 {
@@ -14,11 +15,11 @@ namespace CountersPlus.UI
     {
         private Vector3 MainScreenPosition;
         private GameObject MainScreen;
-        private BackButton navigationController;
         private CountersPlusFillerForMainViewController placeholder;
         private CountersPlusEditViewController editSettings;
         private CountersPlusCreditsViewController credits;
         private CountersPlusHorizontalSettingsListViewController horizSettingsList;
+        private CountersPlusBottomSettingsSelectorViewController bottomSettings;
 
         internal static CountersPlusSettingsFlowCoordinator Instance;
 
@@ -30,17 +31,16 @@ namespace CountersPlus.UI
             {
                 Instance = this;
                 title = "Counters+";
-
-                navigationController = BeatSaberUI.CreateViewController<BackButton>();
-                navigationController.DidFinishEvent += BackButton_DidFinish;
+                showBackButton = true;
                 
                 editSettings = BeatSaberUI.CreateViewController<CountersPlusEditViewController>();
                 placeholder = BeatSaberUI.CreateViewController<CountersPlusFillerForMainViewController>();
                 horizSettingsList = BeatSaberUI.CreateViewController<CountersPlusHorizontalSettingsListViewController>();
+                bottomSettings = BeatSaberUI.CreateViewController<CountersPlusBottomSettingsSelectorViewController>();
                 credits = BeatSaberUI.CreateViewController<CountersPlusCreditsViewController>();
             }
-            SetViewControllersToNavigationConctroller(navigationController, new VRUIViewController[] { credits });
-            ProvideInitialViewControllers(placeholder, navigationController, editSettings, horizSettingsList);
+            PushViewControllerToNavigationController(bottomSettings, horizSettingsList);
+            ProvideInitialViewControllers(placeholder, credits, editSettings, bottomSettings);
             MainScreen.transform.position = new Vector3(0, -100, 0); //"If it works it's not stupid"
             
             CounterWarning.Create("Due to limitations, some counters may not reflect their true appearance in-game.", 7.5f);
@@ -50,8 +50,6 @@ namespace CountersPlus.UI
 
         protected override void DidDeactivate(DeactivationType deactivationType)
         {
-            if (deactivationType == DeactivationType.RemovedFromHierarchy)
-                PopViewControllerFromNavigationController(navigationController);
         }
 
         private IEnumerator InitMockCounters()
@@ -60,35 +58,22 @@ namespace CountersPlus.UI
             MockCounterInfo info = new MockCounterInfo();
             MockCounter.CreateStatic("Combo", $"{info.notesCut}");
             MockCounter.CreateStatic("Multiplier", "x8");
-            StartCoroutine(UpdateMockCountersRoutine());
+            UpdateMockCounters();
         }
 
         internal static void UpdateMockCounters()
         {
-            Instance.StartCoroutine(Instance.UpdateMockCountersRoutine());
+            List<ConfigModel> loadedModels = TypesUtility.GetListOfType<ConfigModel>();
+            loadedModels = loadedModels.Where(x => !(x is CustomConfigModel)).ToList();
+            loadedModels.ForEach(x => x = ConfigLoader.DeserializeFromConfig(x, x.DisplayName) as ConfigModel);
+            foreach (CustomCounter potential in CustomCounterCreator.LoadedCustomCounters)
+                loadedModels.Add(potential.ConfigModel);
+            loadedModels.RemoveAll(x => x is null);
+
+            foreach (ConfigModel counter in loadedModels) MockCounter.Update(counter);
         }
 
-        private IEnumerator UpdateMockCountersRoutine()
-        {
-            bool allCountersActive = false;
-            while (!allCountersActive)
-            {
-                int loaded = 0;
-                foreach (SettingsInfo counter in horizSettingsList.counterInfos)
-                {
-                    try
-                    {
-                        MockCounter.Update(counter.Model);
-                        loaded++;
-                    }
-                    catch { } //Mainly from custom counters, no biggie.
-                }
-                if (loaded == horizSettingsList.counterInfos.Count) allCountersActive = true;
-                yield return new WaitForEndOfFrame();
-            }
-        }
-
-        private void BackButton_DidFinish()
+        protected override void BackButtonWasPressed(ViewController controller)
         {
             foreach (KeyValuePair<MockCounterGroup, ConfigModel> kvp in MockCounter.loadedMockCounters)
             {
@@ -102,7 +87,7 @@ namespace CountersPlus.UI
             TextHelper.CounterCanvas = null;
             MainScreen.transform.position = MainScreenPosition;
             MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
-            mainFlow.InvokeMethod("DismissFlowCoordinator", this, null, false);
+            mainFlow.InvokePrivateMethod("DismissFlowCoordinator", new object[] { this, null, false });
 
             //Reload settings from config
             CountersController.settings = ConfigLoader.LoadSettings();

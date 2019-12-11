@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using CustomUI.MenuButton;
-using CustomUI.Utilities;
+using BeatSaberMarkupLanguage;
+using BeatSaberMarkupLanguage.MenuButtons;
 using UnityEngine;
 
 namespace CountersPlus.UI
@@ -10,15 +10,16 @@ namespace CountersPlus.UI
         static CountersPlusSettingsFlowCoordinator settingsFC;
         public static void CreateUI()
         {
-            MenuButtonUI.AddButton("Counters+", "Configure Counters+ settings.", OnClick);
+            MenuButton button = new MenuButton("Counters+", "Configure Counters+ settings.", OnClick);
+            MenuButtons.instance.RegisterButton(button);
         }
 
         internal static void OnClick()
         {
             if (settingsFC == null)
-                settingsFC = new GameObject("Counters+ | Settings Flow Coordinator").AddComponent<CountersPlusSettingsFlowCoordinator>();
+                settingsFC = BeatSaberUI.CreateFlowCoordinator<CountersPlusSettingsFlowCoordinator>();
             MainFlowCoordinator main = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
-            main.InvokeMethod("PresentFlowCoordinator", settingsFC, null, false, false);
+            main.InvokePrivateMethod("PresentFlowCoordinator", new object[] { settingsFC, null, false, false });
         }
     }
 }

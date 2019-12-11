@@ -50,11 +50,11 @@ namespace CountersPlus.Utils
         /// <summary>
         /// Returns the PluginMetadata of a provided BSIPA plugin
         /// </summary>
-        public static PluginLoader.PluginMetadata GetPluginMetadata(IBeatSaberPlugin plugin)
+        public static PluginLoader.PluginMetadata GetPluginMetadata(IPA.IBeatSaberPlugin plugin)
         {
             foreach (PluginLoader.PluginInfo pluginInfo in PluginManager.AllPlugins)
             {
-                if (pluginInfo != null && plugin == pluginInfo.GetPrivateProperty<IBeatSaberPlugin>("Plugin"))
+                if (pluginInfo != null && plugin == pluginInfo.GetPrivateProperty<IPA.IBeatSaberPlugin>("Plugin"))
                     return pluginInfo.Metadata ?? null;
             }
             return null;

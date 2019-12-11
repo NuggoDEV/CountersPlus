@@ -71,7 +71,7 @@ namespace CountersPlus
                 Log(e.ToString(), LogInfo.Fatal, "Install your dependencies!");
             }
         }
-
+        public void OnEnable() { }
         public void OnSceneUnloaded(Scene scene) { }
         public void OnUpdate() { }
         public void OnFixedUpdate() { }
