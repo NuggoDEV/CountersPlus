@@ -37,6 +37,7 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers.HUD
         {
             yield return new WaitForSeconds(0.1f);
             TextHelper.CounterCanvas.transform.rotation = Quaternion.Euler(CountersController.settings.hudConfig.HUDRotation);
+            CountersController.settings.hudConfig.Save();
         }
     }
 }

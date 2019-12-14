@@ -10,7 +10,9 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers.HUD
     {
         private static readonly List<string> filteredCameras = new List<string>()
         {
-            "MainMenuCamera"
+            "MenuMainCamera",
+            "MirrorCam",
+            "AppInitCamera"
         };
 
         [UIValue("attach_to_camera")]
@@ -33,8 +35,9 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers.HUD
             get
             {
                 List<string> cameras = Resources.FindObjectsOfTypeAll<UnityEngine.Camera>().Select(x => x.name).ToList();
+                cameras.RemoveAll(x => filteredCameras.Any(y => y.Contains(x)));
                 cameras.Add("MainCamera");
-                cameras.RemoveAll(x => filteredCameras.Contains(x));
+                cameras.Sort();
                 return cameras.Cast<object>().ToList();
             }
         }

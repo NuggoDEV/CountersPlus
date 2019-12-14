@@ -3,6 +3,9 @@
     <checkbox-setting on-change='update_model' apply-on-change='true' value='attach_base_game' text='Include Base Game HUD' hover-hint='Attaches or detaches the HUD from the Base Game to the Counters+ HUD.'></checkbox-setting>
   </horizontal>
   <horizontal horizontal-fit='PreferredSize'>
+    <checkbox-setting on-change='update_model' apply-on-change='true' value='attach_to_base_game' text='Attach to Base Game for 360 Levels' hover-hint='Attaches the Counters+ HUD to the Base Game HUD when playing 360/90 degree levels. When playing these levels, it will override the above setting and any Camera options you have.'></checkbox-setting>
+  </horizontal>
+  <horizontal horizontal-fit='PreferredSize'>
     <slider-setting on-change='update_model' apply-on-change='true' value='hud_size' text='Counters+ HUD Size' hover-hint='Controls size of Counters+ HUD (Smaller number means larger HUD).' min='1' max='50' increment='1'></slider-setting>
   </horizontal>
 </vertical>

@@ -137,6 +137,7 @@ namespace CountersPlus.Config
     {
         public string DisplayName => "HUD Settings";
         public bool AttachBaseGameHUD = true;
+        public bool AttachToBaseGameHUDFor360 = true;
         public float HUDSize = 10;
         public float HUDPositionScaleFactor = 10;
         public Vector3 HUDPosition => new Vector3(HUDPosition_X, HUDPosition_Y, HUDPosition_Z);

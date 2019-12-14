@@ -17,7 +17,7 @@ namespace CountersPlus.UI.ViewControllers
         protected override void DidActivate(bool firstActivation, ActivationType type)
         {
             base.DidActivate(firstActivation, type);
-            if (type == ActivationType.AddedToHierarchy)
+            if (firstActivation)
                 BSMLParser.instance.Parse(Utilities.GetResourceContent(GetType().Assembly, ResourceName), gameObject, this);
             tab = gameObject.GetComponentInChildren<TabSelector>();
             tab.textSegmentedControl.didSelectCellEvent += HandleCellSelectedEvent;

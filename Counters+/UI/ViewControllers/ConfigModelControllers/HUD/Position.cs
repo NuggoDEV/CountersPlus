@@ -37,6 +37,7 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers.HUD
         {
             yield return new WaitForSeconds(0.1f);
             TextHelper.CounterCanvas.transform.position = CountersController.settings.hudConfig.HUDPosition;
+            CountersController.settings.hudConfig.Save();
         }
     }
 }

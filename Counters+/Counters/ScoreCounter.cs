@@ -72,6 +72,9 @@ namespace CountersPlus.Counters
             PointsText.rectTransform.SetParent(ScoreMesh.rectTransform, false);
             PointsText.rectTransform.localScale = PointsText.rectTransform.localScale * TextHelper.SizeScaleFactor;
             PointsText.rectTransform.localPosition = new Vector3(0, 77.7f, 0);
+            bool hud360 = CountersController.settings.hudConfig.AttachToBaseGameHUDFor360 &&
+                Resources.FindObjectsOfTypeAll<FlyingGameHUDRotation>().Length > 0;
+            if (hud360) PointsText.rectTransform.localPosition = new Vector3(0, 131, 0);
             if (settings.DisplayRank)
             {
                 _RankObject = new GameObject("Counters+ | Score Rank");

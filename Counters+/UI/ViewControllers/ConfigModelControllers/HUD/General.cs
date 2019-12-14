@@ -13,6 +13,13 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers.HUD
             set => CountersController.settings.hudConfig.AttachBaseGameHUD = value;
         }
 
+        [UIValue("attach_to_base_game")]
+        public bool AttachToBaseGame
+        {
+            get => CountersController.settings.hudConfig.AttachToBaseGameHUDFor360;
+            set => CountersController.settings.hudConfig.AttachToBaseGameHUDFor360 = value;
+        }
+
         [UIValue("hud_size")]
         public float HUDSize
         {
