@@ -14,7 +14,7 @@ namespace CountersPlus.Utils
         private void Start()
         {
             List<Camera> cameras = Resources.FindObjectsOfTypeAll<Camera>().ToList();
-            assignedCamera = cameras.Where(x => x.name == CountersController.settings.hudConfig.AttachedCamera).FirstOrDefault();
+            assignedCamera = cameras.Where(x => x.name.Contains(CountersController.settings.hudConfig.AttachedCamera)).LastOrDefault();
         }
 
         private void Update()

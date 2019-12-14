@@ -100,17 +100,17 @@ namespace CountersPlus
             switch (position)
             {
                 case ICounterPositions.BelowCombo:
-                    pos = new Vector3(-X, 0.85f - settings.ComboOffset, 7);
+                    pos = new Vector3(-X, 1.05f - settings.ComboOffset, 7);
                     break;
                 case ICounterPositions.AboveCombo:
-                    pos = new Vector3(-X, 1.7f + settings.ComboOffset, 7);
+                    pos = new Vector3(-X, 1.9f + settings.ComboOffset, 7);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
                 case ICounterPositions.BelowMultiplier:
-                    pos = new Vector3(X, 0.75f - settings.MultiplierOffset, 7);
+                    pos = new Vector3(X, 0.95f - settings.MultiplierOffset, 7);
                     break;
                 case ICounterPositions.AboveMultiplier:
-                    pos = new Vector3(X, 1.7f + settings.MultiplierOffset, 7);
+                    pos = new Vector3(X, 1.9f + settings.MultiplierOffset, 7);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
                 case ICounterPositions.BelowEnergy:

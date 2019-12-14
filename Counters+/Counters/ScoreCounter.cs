@@ -16,7 +16,7 @@ namespace CountersPlus.Counters
         internal override void Counter_Start()
         {
             settings = CountersController.settings.scoreConfig;
-            if (gameObject.name == "ScorePanel")
+            if (gameObject.name == "ScoreCanvas")
                 PreInit();
             else
                 StartCoroutine(YeetToBaseCounter());
@@ -27,8 +27,8 @@ namespace CountersPlus.Counters
         IEnumerator YeetToBaseCounter()
         {
             GameObject baseCounter;
-            yield return new WaitUntil(() => GameObject.Find("ScorePanel") != null);
-            baseCounter = GameObject.Find("ScorePanel");
+            yield return new WaitUntil(() => GameObject.Find("ScoreCanvas") != null);
+            baseCounter = GameObject.Find("ScoreCanvas");
             CountersController.LoadedCounters.Remove(gameObject);
             baseCounter.AddComponent<ScoreCounter>();
             Destroy(gameObject);
@@ -93,7 +93,7 @@ namespace CountersPlus.Counters
                 PointsText.rectTransform.position = new Vector3(-3.2f,
                     0.35f + (settings.Mode == ICounterMode.LeavePoints ? 7.8f : 0), 7);
             }
-            GetComponent<ImmediateRankUIPanel>().InvokePrivateMethod("Start", null); //BS way of getting Harmony patch to function but "if it works its not stupid" ~Caeden117
+            GetComponent<ImmediateRankUIPanel>().Start(); //BS way of getting Harmony patch to function but "if it works its not stupid" ~Caeden117
         }
     }
 }

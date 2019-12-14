@@ -2,6 +2,7 @@
 using TMPro;
 using BeatSaberMarkupLanguage;
 using CountersPlus.Utils;
+using System.Linq;
 
 namespace CountersPlus
 {
@@ -26,27 +27,22 @@ namespace CountersPlus
             CanvasGO.transform.position = Position;
             CanvasGO.transform.rotation = Quaternion.Euler(CountersController.settings.hudConfig.HUDRotation);
 
-            GameObject coreGameHUD = GameObject.Find("CoreGameHUD"); //Attach base game HUD to Counters+. Why? Why not.
-            if (coreGameHUD != null) coreGameHUD.transform.SetParent(CanvasGO.transform, true);
-
-            if (floatingHUD)
+            GameObject coreGameHUD = Resources.FindObjectsOfTypeAll<CoreGameHUDController>()?.FirstOrDefault()?.gameObject ?? null;
+            if (CountersController.settings.hudConfig.AttachBaseGameHUD && coreGameHUD != null)
             {
-                if (coreGameHUD != null)
+                coreGameHUD.transform.SetParent(CanvasGO.transform, true);
+                coreGameHUD.transform.localScale = Vector3.one * 10;
+                coreGameHUD.transform.localPosition = Position;
+                coreGameHUD.transform.localRotation = Quaternion.identity;
+                foreach (Transform children in coreGameHUD.transform)
                 {
-                    coreGameHUD.transform.localScale = Vector3.one * CanvasScaleFactor;
-                    coreGameHUD.transform.localPosition = Vector3.back * 70;
+                    if (children.Find("BG")) children.Find("BG").gameObject.SetActive(false);
+                    if (children.Find("Top")) children.Find("Top").gameObject.SetActive(false);
+                    children.localPosition = new Vector3(children.localPosition.x, children.localPosition.y, 0);
                 }
-
-                if (coreGameHUD != null)
-                {
-                    foreach (Transform children in coreGameHUD.transform)
-                    {
-                        if (children.Find("BG")) children.Find("BG").gameObject.SetActive(false);
-                        if (children.Find("Top")) children.Find("Top").gameObject.SetActive(false);
-                    }
-                }
-                CanvasGO.AddComponent<AssignedFloatingWindow>();
             }
+
+            if (floatingHUD) CanvasGO.AddComponent<AssignedFloatingWindow>();
             
             return canvas;
         }

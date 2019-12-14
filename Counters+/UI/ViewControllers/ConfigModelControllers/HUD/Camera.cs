@@ -8,6 +8,11 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers.HUD
 {
     class Camera : MonoBehaviour
     {
+        private static readonly List<string> filteredCameras = new List<string>()
+        {
+            "MainMenuCamera"
+        };
+
         [UIValue("attach_to_camera")]
         public bool AttachBaseGame
         {
@@ -23,7 +28,16 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers.HUD
         }
 
         [UIValue("camera_values")]
-        public List<object> CameraValues => Resources.FindObjectsOfTypeAll<UnityEngine.Camera>().Select(x => x.name).Cast<object>().ToList();
+        public List<object> CameraValues
+        {
+            get
+            {
+                List<string> cameras = Resources.FindObjectsOfTypeAll<UnityEngine.Camera>().Select(x => x.name).ToList();
+                cameras.Add("MainCamera");
+                cameras.RemoveAll(x => filteredCameras.Contains(x));
+                return cameras.Cast<object>().ToList();
+            }
+        }
 
         [UIAction("update_model")]
         public void UpdateModel(object obj)

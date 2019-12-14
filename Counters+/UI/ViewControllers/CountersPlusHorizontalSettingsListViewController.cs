@@ -109,15 +109,13 @@ namespace CountersPlus.UI.ViewControllers
                         (CustomListTableView.transform.GetChild(i).transform as RectTransform).anchorMin = Vector3.zero;
                         (CustomListTableView.transform.GetChild(i).transform as RectTransform).anchorMax = Vector3.one;
                     }
-
-                    //Reload the data, and select the first cell in the list.
-                    CustomListTableView.didSelectCellWithIdxEvent += OnCellSelect;
-                    HandleSettingsGroupChanged(SettingsGroupType.Main);
                 }
             } catch (Exception e)
             {  //Edit this with your logging system of choice, or delete it altogether (As this shouldn't really cause Exceptions)
                 Plugin.Log(e.ToString(), LogInfo.Error, "Report this as an issue on the Counters+ GitHub.");
             }
+            CustomListTableView.didSelectCellWithIdxEvent += OnCellSelect;
+            HandleSettingsGroupChanged(SettingsGroupType.Main);
             CountersPlusBottomSettingsSelectorViewController.SettingsGroupChanged += HandleSettingsGroupChanged;
             (transform as RectTransform).anchoredPosition = Vector3.zero;
         }

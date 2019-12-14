@@ -233,6 +233,12 @@
   <ItemGroup>
     <EmbeddedResource Include="UI\BSML\HUD\Rotation.bsml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Images\HUD_Camera.png" />
+    <EmbeddedResource Include="UI\Images\HUD_General.png" />
+    <EmbeddedResource Include="UI\Images\HUD_Position.png" />
+    <EmbeddedResource Include="UI\Images\HUD_Rotation.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "$(BeatSaberDir)\Plugins\CountersPlus.dll"</PostBuildEvent>

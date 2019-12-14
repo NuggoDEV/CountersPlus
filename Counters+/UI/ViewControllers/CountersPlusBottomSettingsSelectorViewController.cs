@@ -18,10 +18,8 @@ namespace CountersPlus.UI.ViewControllers
         {
             base.DidActivate(firstActivation, type);
             if (type == ActivationType.AddedToHierarchy)
-            {
                 BSMLParser.instance.Parse(Utilities.GetResourceContent(GetType().Assembly, ResourceName), gameObject, this);
-                tab = gameObject.GetComponentInChildren<TabSelector>();
-            }
+            tab = gameObject.GetComponentInChildren<TabSelector>();
             tab.textSegmentedControl.didSelectCellEvent += HandleCellSelectedEvent;
         }
 

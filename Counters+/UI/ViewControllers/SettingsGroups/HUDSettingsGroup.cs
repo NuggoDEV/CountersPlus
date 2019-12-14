@@ -24,29 +24,29 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
             switch (row)
             {
                 case 0:
-                    SetCellInfo(ref cell, "General HUD Settings", "Change general settings, such as HUD size.", "Custom");
+                    SetCellInfo(ref cell, "General HUD Settings", "Change general settings, such as HUD size.", "HUD_General");
                     break;
                 case 1:
-                    SetCellInfo(ref cell, "Lock HUD to Camera", "Allows the HUD to be locked to your various cameras, with various smoothness settings.", "Custom");
+                    SetCellInfo(ref cell, "Lock HUD to Camera", "Allows the HUD to be locked to various cameras.", "HUD_Camera");
                     break;
                 case 2:
-                    SetCellInfo(ref cell, "HUD Position Offset", "Changes the positional offset of the HUD.", "Custom");
+                    SetCellInfo(ref cell, "HUD Position Offset", "Changes the positional offset of the HUD.", "HUD_Position");
                     break;
                 case 3:
-                    SetCellInfo(ref cell, "HUD Rotation Offset", "Changes the rotational offset of the HUD.", "Custom");
+                    SetCellInfo(ref cell, "HUD Rotation Offset", "Changes the rotational offset of the HUD.", "HUD_Rotation");
                     break;
             }
             return cell;
         }
 
-        private void SetCellInfo(ref LevelPackTableCell cell, string name, string info, string imageResource, bool newRibbon = false)
+        private void SetCellInfo(ref LevelPackTableCell cell, string name, string info, string imageResource, bool ribbon = true)
         {
             TextMeshProUGUI packNameText = cell.GetPrivateField<TextMeshProUGUI>("_packNameText"); //Grab some TMP references.
             TextMeshProUGUI packInfoText = cell.GetPrivateField<TextMeshProUGUI>("_infoText");
             packInfoText.richText = true; //Enable rich text for info text. Optional, but I use it for Counters+.
             UnityEngine.UI.Image packCoverImage = cell.GetPrivateField<UnityEngine.UI.Image>("_coverImage");
-            packCoverImage.mainTexture.wrapMode = TextureWrapMode.Clamp; //Fixes bordering on images (especially transparent ones)
-            cell.showNewRibbon = newRibbon;
+            packCoverImage.mainTexture.wrapMode = TextureWrapMode.Clamp; //Fixes bordering on images
+            cell.showNewRibbon = ribbon;
 
             packNameText.text = name;
             packInfoText.text = info;
