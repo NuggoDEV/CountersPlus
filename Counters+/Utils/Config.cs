@@ -8,12 +8,13 @@ using IniParser.Model;
 using System.Linq;
 using CountersPlus.Utils;
 using IPA.Utilities;
+using UnityEngine;
 
 namespace CountersPlus.Config
 {
     public class ConfigLoader
     {
-        internal static BS_Utils.Utilities.Config config = new BS_Utils.Utilities.Config("CountersPlus"); //Conflicts with CountersPlus.Config POG
+        internal static BS_Utils.Utilities.Config config = new BS_Utils.Utilities.Config("CountersPlus");
         /// <summary>
         /// Load Counters+ settings from config.
         /// Automatically generates any missing settings with their defaults found in the ConfigDefaults class.
@@ -23,19 +24,20 @@ namespace CountersPlus.Config
             if (!File.Exists(Path.Combine(BeatSaber.UserDataPath, "CountersPlus.ini")))
                 File.Create(Path.Combine(BeatSaber.UserDataPath, "CountersPlus.ini"));
             MainConfigModel model = new MainConfigModel();
-            model = (MainConfigModel)DeserializeFromConfig(model, model.DisplayName);
+            model = DeserializeFromConfig(model, model.DisplayName);
             try
             {   //For adding new Counters, assign your ConfigModel here, using the DeserializeFromConfig function.
-                model.missedConfig = DeserializeFromConfig(model.missedConfig, model.missedConfig.DisplayName) as MissedConfigModel;
-                model.noteConfig = DeserializeFromConfig(model.noteConfig, model.noteConfig.DisplayName) as NoteConfigModel;
-                model.progressConfig = DeserializeFromConfig(model.progressConfig, model.progressConfig.DisplayName) as ProgressConfigModel;
-                model.scoreConfig = DeserializeFromConfig(model.scoreConfig, model.scoreConfig.DisplayName) as ScoreConfigModel;
-                model.speedConfig = DeserializeFromConfig(model.speedConfig, model.speedConfig.DisplayName) as SpeedConfigModel;
-                model.cutConfig = DeserializeFromConfig(model.cutConfig, model.cutConfig.DisplayName) as CutConfigModel;
-                model.spinometerConfig = DeserializeFromConfig(model.spinometerConfig, model.spinometerConfig.DisplayName) as SpinometerConfigModel;
-                model.pbConfig = DeserializeFromConfig(model.pbConfig, model.pbConfig.DisplayName) as PBConfigModel;
-                model.notesLeftConfig = DeserializeFromConfig(model.notesLeftConfig, model.notesLeftConfig.DisplayName) as NotesLeftConfigModel;
-                model.failsConfig = DeserializeFromConfig(model.failsConfig, model.failsConfig.DisplayName) as FailConfigModel;
+                model.hudConfig = DeserializeFromConfig(model.hudConfig, model.hudConfig.DisplayName);
+                model.missedConfig = DeserializeFromConfig(model.missedConfig, model.missedConfig.DisplayName);
+                model.noteConfig = DeserializeFromConfig(model.noteConfig, model.noteConfig.DisplayName);
+                model.progressConfig = DeserializeFromConfig(model.progressConfig, model.progressConfig.DisplayName);
+                model.scoreConfig = DeserializeFromConfig(model.scoreConfig, model.scoreConfig.DisplayName);
+                model.speedConfig = DeserializeFromConfig(model.speedConfig, model.speedConfig.DisplayName);
+                model.cutConfig = DeserializeFromConfig(model.cutConfig, model.cutConfig.DisplayName);
+                model.spinometerConfig = DeserializeFromConfig(model.spinometerConfig, model.spinometerConfig.DisplayName);
+                model.pbConfig = DeserializeFromConfig(model.pbConfig, model.pbConfig.DisplayName);
+                model.notesLeftConfig = DeserializeFromConfig(model.notesLeftConfig, model.notesLeftConfig.DisplayName);
+                model.failsConfig = DeserializeFromConfig(model.failsConfig, model.failsConfig.DisplayName);
             }
             catch (Exception e)
             {
@@ -58,7 +60,7 @@ namespace CountersPlus.Config
                 if (!TypesUtility.GetListOfType<ConfigModel>().Any(y => y.DisplayName == section.SectionName))
                 {
                     CustomConfigModel unloadedModel = new CustomConfigModel(section.SectionName);
-                    CustomConfigModel loadedModel = DeserializeFromConfig(unloadedModel, section.SectionName) as CustomConfigModel;
+                    CustomConfigModel loadedModel = DeserializeFromConfig(unloadedModel, section.SectionName);
                     counters.Add(loadedModel);
                 }
             }
@@ -66,10 +68,10 @@ namespace CountersPlus.Config
         }
 
         /// <summary>
-        /// Automatically assigns fields of an input from the Config file, and attempts to assign defaults if they do not exist.
-        /// While this might work for objects outside of Counters+, it is recommended to yoink this code from GitHub and modify it yourself.
+        /// Automatically assigns fields of an input from the Config file, and attempts to assign defaults.
+        /// If you want to use this code, it is recommended to copy this yourself.
         /// </summary>
-        public static object DeserializeFromConfig(object input, string DisplayName)
+        public static T DeserializeFromConfig<T>(T input, string DisplayName)
         {
             Type type = input.GetType();
             MemberInfo[] infos = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
@@ -96,7 +98,7 @@ namespace CountersPlus.Config
     
     /// <summary>
     /// Main class for Counters+ config.
-    /// For adding new Counters, add their ConfigModels as a field in this class, making sure that "Config" is in the name (like "fpsConfig").
+    /// For adding new Counters, add their ConfigModels as a field in this class, making sure that "Config" is in the name.
     /// </summary>
     public class MainConfigModel {
         public string DisplayName { get { return "Main"; } }
@@ -106,7 +108,7 @@ namespace CountersPlus.Config
         public bool HideMultiplier = false;
         public float ComboOffset = 0.2f;
         public float MultiplierOffset = 0.4f;
-        public bool FloatingHUD = false;
+        public HUDConfigModel hudConfig = new HUDConfigModel();
         public MissedConfigModel missedConfig = new MissedConfigModel();
         public NoteConfigModel noteConfig = new NoteConfigModel();
         public ProgressConfigModel progressConfig = new ProgressConfigModel();
@@ -126,6 +128,34 @@ namespace CountersPlus.Config
                 if (info.MemberType != MemberTypes.Field) continue;
                 FieldInfo finfo = (FieldInfo)info;
                 if (finfo.Name.ToLower().Contains("config")) continue;
+                ConfigLoader.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
+            }
+        }
+    }
+
+    public sealed class HUDConfigModel
+    {
+        public string DisplayName => "HUD Settings";
+        public bool AttachBaseGameHUD = true;
+        public float HUDSize = 10;
+        public float HUDPositionScaleFactor = 10;
+        public Vector3 HUDPosition => new Vector3(HUDPosition_X, HUDPosition_Y, HUDPosition_Z);
+        public float HUDPosition_X = 0;
+        public float HUDPosition_Y = 0;
+        public float HUDPosition_Z = 7;
+        public Vector3 HUDRotation => new Vector3(HUDRotation_X, HUDRotation_Y, HUDRotation_Z);
+        public float HUDRotation_X = 0;
+        public float HUDRotation_Y = 0;
+        public float HUDRotation_Z = 0;
+        public bool AttachHUDToCamera = false;
+        public string AttachedCamera = "Main Camera";
+        public void Save()
+        {
+            MemberInfo[] infos = GetType().GetMembers(BindingFlags.Public | BindingFlags.Instance);
+            foreach (MemberInfo info in infos)
+            {
+                if (info.MemberType != MemberTypes.Field) continue;
+                FieldInfo finfo = (FieldInfo)info;
                 ConfigLoader.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
             }
         }

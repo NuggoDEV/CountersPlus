@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
-using System.Linq;
-using CountersPlus.UI;
+using BeatSaberMarkupLanguage;
+using CountersPlus.Utils;
 
 namespace CountersPlus
 {
@@ -13,7 +13,8 @@ namespace CountersPlus
          * I cannot thank him enough.
          */
         public static Canvas CounterCanvas;
-        internal static readonly float ScaleFactor = 10;
+        public static float PosScaleFactor => CountersController.settings.hudConfig.HUDPositionScaleFactor;
+        public static float SizeScaleFactor => CountersController.settings.hudConfig.HUDSize;
 
         public static Canvas CreateCanvas(Vector3 Position, bool floatingHUD = false, float CanvasScaleFactor = 10)
         {
@@ -23,6 +24,7 @@ namespace CountersPlus
             canvas.renderMode = RenderMode.WorldSpace;
             CanvasGO.transform.localScale = Vector3.one / CanvasScaleFactor;
             CanvasGO.transform.position = Position;
+            CanvasGO.transform.rotation = Quaternion.Euler(CountersController.settings.hudConfig.HUDRotation);
 
             GameObject coreGameHUD = GameObject.Find("CoreGameHUD"); //Attach base game HUD to Counters+. Why? Why not.
             if (coreGameHUD != null) coreGameHUD.transform.SetParent(CanvasGO.transform, true);
@@ -31,7 +33,7 @@ namespace CountersPlus
             {
                 if (coreGameHUD != null)
                 {
-                    coreGameHUD.transform.localScale = Vector3.one * ScaleFactor;
+                    coreGameHUD.transform.localScale = Vector3.one * CanvasScaleFactor;
                     coreGameHUD.transform.localPosition = Vector3.back * 70;
                 }
 
@@ -43,8 +45,7 @@ namespace CountersPlus
                         if (children.Find("Top")) children.Find("Top").gameObject.SetActive(false);
                     }
                 }
-                CanvasGO.AddComponent<FloatingOverlayWindow>();
-                CanvasGO.AddComponent<Utils.ResetCameraOnDestroy>();
+                CanvasGO.AddComponent<AssignedFloatingWindow>();
             }
             
             return canvas;
@@ -54,9 +55,9 @@ namespace CountersPlus
         {
             if (CounterCanvas == null)
             {
-                bool useFloatingHUD = CountersController.settings.FloatingHUD;
-                float scaleFactor = useFloatingHUD ? 50 : ScaleFactor;
-                CounterCanvas = CreateCanvas(Vector3.forward * 7, useFloatingHUD, scaleFactor);
+                bool useFloatingHUD = CountersController.settings.hudConfig.AttachHUDToCamera;
+                float scale = CountersController.settings.hudConfig.HUDSize;
+                CounterCanvas = CreateCanvas(CountersController.settings.hudConfig.HUDPosition, useFloatingHUD, scale);
             }
             CreateText(out tmp_text, CounterCanvas, anchoredPosition);
         }
@@ -65,8 +66,9 @@ namespace CountersPlus
         {
             var rectTransform = canvas.transform as RectTransform;
             rectTransform.sizeDelta = new Vector2(100, 50);
+            float scale = CountersController.settings.hudConfig.HUDPositionScaleFactor;
 
-            tmp_text = BeatSaberMarkupLanguage.BeatSaberUI.CreateText(rectTransform, "", anchoredPosition * ScaleFactor);
+            tmp_text = BeatSaberUI.CreateText(rectTransform, "", anchoredPosition * scale);
             tmp_text.alignment = TextAlignmentOptions.Center;
             tmp_text.fontSize = 4f;
             tmp_text.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 2f);

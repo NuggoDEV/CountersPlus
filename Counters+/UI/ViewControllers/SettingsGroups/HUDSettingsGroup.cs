@@ -1,4 +1,7 @@
-﻿using HMUI;
+﻿using CountersPlus.Config;
+using CountersPlus.UI.ViewControllers.ConfigModelControllers;
+using HMUI;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -13,7 +16,7 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
             LevelPackTableCell cell = view.DequeueReusableCellForIdentifier(settings.ReuseIdentifier) as LevelPackTableCell;
             if (cell == null) //Dequeue the cell, and make an instance if it doesn't exist.
             {
-                cell = Object.Instantiate(settings.levelPackTableCellInstance);
+                cell = UnityEngine.Object.Instantiate(settings.levelPackTableCellInstance);
                 cell.reuseIdentifier = settings.ReuseIdentifier;
             }
             cell.showNewRibbon = false; //Dequeued cells will keep NEW ribbon value. Always change it to false.
@@ -21,16 +24,16 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
             switch (row)
             {
                 case 0:
-                    SetCellInfo(ref cell, "General HUD Settings", "Yep.", "Custom");
+                    SetCellInfo(ref cell, "General HUD Settings", "Change general settings, such as HUD size.", "Custom");
                     break;
                 case 1:
-                    SetCellInfo(ref cell, "Lock HUD to Camera", "Yep.", "Custom");
+                    SetCellInfo(ref cell, "Lock HUD to Camera", "Allows the HUD to be locked to your various cameras, with various smoothness settings.", "Custom");
                     break;
                 case 2:
-                    SetCellInfo(ref cell, "HUD Position Offset", "Yep.", "Custom");
+                    SetCellInfo(ref cell, "HUD Position Offset", "Changes the positional offset of the HUD.", "Custom");
                     break;
                 case 3:
-                    SetCellInfo(ref cell, "HUD Rotation Offset", "Yep.", "Custom");
+                    SetCellInfo(ref cell, "HUD Rotation Offset", "Changes the rotational offset of the HUD.", "Custom");
                     break;
             }
             return cell;
@@ -55,6 +58,31 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
 
         public override void OnCellSelect(TableView view, int row, CountersPlusHorizontalSettingsListViewController settings)
         {
+            CountersPlusEditViewController.ClearScreen(true);
+            MockCounter.Highlight<ConfigModel>(null);
+            switch (row)
+            {
+                case 0:
+                    RefreshScreen("General", "General HUD Settings");
+                    break;
+                case 1:
+                    RefreshScreen("Camera", "HUD Camera Settings");
+                    break;
+                case 2:
+                    RefreshScreen("Position", "HUD Position Offset");
+                    break;
+                case 3:
+                    RefreshScreen("Rotation", "HUD Rotation");
+                    break;
+            }
+        }
+
+        private void RefreshScreen(string name, string title)
+        {
+            CountersPlusEditViewController.UpdateTitle(title);
+            Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.HUD.{name}");
+            ConfigModelController.GenerateController($"CountersPlus.UI.BSML.HUD.{name}.bsml", controllerType,
+                CountersPlusEditViewController.Instance.SettingsContainer);
         }
     }
 }

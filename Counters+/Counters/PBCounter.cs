@@ -69,7 +69,7 @@ namespace CountersPlus.Counters
             }
 
             _PbTrackerText.rectTransform.SetParent(counter.RankText.rectTransform);
-            _PbTrackerText.rectTransform.localPosition = new Vector2(0, (TextHelper.ScaleFactor / 2) + (settings.TextSize / 10) + offset) * -1;
+            _PbTrackerText.rectTransform.localPosition = new Vector2(0, (TextHelper.PosScaleFactor / 2) + (settings.TextSize / 10) + offset) * -1;
         }
 
         internal override void Counter_Destroy()

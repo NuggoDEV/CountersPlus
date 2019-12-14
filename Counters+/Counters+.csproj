@@ -108,7 +108,6 @@
     <Compile Include="Counters\NotesLeftCounter.cs" />
     <Compile Include="Counters\Spinometer.cs" />
     <Compile Include="Custom\CustomCounters.cs" />
-    <Compile Include="Harmony\FloatingOverlayWindowUpdate.cs" />
     <Compile Include="Harmony\ScoreCounterHook.cs" />
     <Compile Include="UI\AdvancedCounterSettings.cs" />
     <Compile Include="UI\CounterWarning.cs" />
@@ -117,6 +116,10 @@
     <Compile Include="UI\ViewControllers\ConfigModelControllers\ConfigModelController.cs" />
     <Compile Include="UI\ViewControllers\ConfigModelControllers\CutController.cs" />
     <Compile Include="UI\ViewControllers\ConfigModelControllers\FailController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\HUD\Camera.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\HUD\General.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\HUD\Position.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\HUD\Rotation.cs" />
     <Compile Include="UI\ViewControllers\ConfigModelControllers\MainSettingsController.cs" />
     <Compile Include="UI\ViewControllers\ConfigModelControllers\MissedController.cs" />
     <Compile Include="UI\ViewControllers\ConfigModelControllers\NotesController.cs" />
@@ -139,6 +142,7 @@
     <Compile Include="UI\ViewControllers\SettingsGroups\HUDSettingsGroup.cs" />
     <Compile Include="UI\ViewControllers\SettingsGroups\MainSettingsGroup.cs" />
     <Compile Include="UI\ViewControllers\SettingsGroups\SettingsGroup.cs" />
+    <Compile Include="Utils\AssignedFloatingWindow.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="CountersController.cs" />
     <Compile Include="Counters\MissedCounter.cs" />
@@ -151,7 +155,6 @@
     <Compile Include="Utils\ReflectionUtil.cs" />
     <Compile Include="Counters\ScoreCounter.cs" />
     <Compile Include="Counters\SpeedCounter.cs" />
-    <Compile Include="Utils\ResetCameraOnDestroy.cs" />
     <Compile Include="Utils\SimpleJSON.cs" />
     <Compile Include="Utils\TextHelper.cs" />
     <Compile Include="Utils\TypesUtility.cs" />
@@ -217,6 +220,18 @@
     <EmbeddedResource Include="UI\BSML\BottomSettingsList.bsml" />
     <EmbeddedResource Include="UI\BSML\Config\Error.bsml" />
     <EmbeddedResource Include="UI\BSML\MainSettings.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\HUD\General.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\HUD\Camera.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\HUD\Position.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\HUD\Rotation.bsml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

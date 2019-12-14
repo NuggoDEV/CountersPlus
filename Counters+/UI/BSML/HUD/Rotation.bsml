@@ -1,0 +1,11 @@
+﻿<vertical spacing='1'>
+  <horizontal horizontal-fit='PreferredSize'>
+    <slider-setting on-change='update_model' apply-on-change='true' value='rot_x' text='X' hover-hint='Pitch' min='-360' max='360' increment='5'></slider-setting>
+  </horizontal>
+  <horizontal horizontal-fit='PreferredSize'>
+    <slider-setting on-change='update_model' apply-on-change='true' value='rot_y' text='Y' hover-hint='Yaw' min='-360' max='360' increment='5'></slider-setting>
+  </horizontal>
+  <horizontal horizontal-fit='PreferredSize'>
+    <slider-setting on-change='update_model' apply-on-change='true' value='rot_z' text='Z' hover-hint='Roll' min='-360' max='360' increment='5'></slider-setting>
+  </horizontal>
+</vertical>

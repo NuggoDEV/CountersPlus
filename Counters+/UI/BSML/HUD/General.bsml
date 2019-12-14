@@ -1,0 +1,8 @@
+﻿<vertical spacing='1'>
+  <horizontal horizontal-fit='PreferredSize'>
+    <checkbox-setting on-change='update_model' apply-on-change='true' value='attach_base_game' text='Include Base Game HUD' hover-hint='Attaches or detaches the HUD from the Base Game to the Counters+ HUD.'></checkbox-setting>
+  </horizontal>
+  <horizontal horizontal-fit='PreferredSize'>
+    <slider-setting on-change='update_model' apply-on-change='true' value='hud_size' text='Counters+ HUD Size' hover-hint='Controls size of Counters+ HUD.' min='1' max='20' increment='1'></slider-setting>
+  </horizontal>
+</vertical>

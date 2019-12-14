@@ -1,0 +1,11 @@
+﻿<vertical spacing='1'>
+  <horizontal horizontal-fit='PreferredSize'>
+    <slider-setting on-change='update_model' apply-on-change='true' value='pos_x' text='X' hover-hint='Left and Right' min='-10' max='10' increment='1'></slider-setting>
+  </horizontal>
+  <horizontal horizontal-fit='PreferredSize'>
+    <slider-setting on-change='update_model' apply-on-change='true' value='pos_y' text='Y' hover-hint='Up and Down' min='-10' max='10' increment='1'></slider-setting>
+  </horizontal>
+  <horizontal horizontal-fit='PreferredSize'>
+    <slider-setting on-change='update_model' apply-on-change='true' value='pos_z' text='Z' hover-hint='Front and Back' min='-10' max='10' increment='1'></slider-setting>
+  </horizontal>
+</vertical>

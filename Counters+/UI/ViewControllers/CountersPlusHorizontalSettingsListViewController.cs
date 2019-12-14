@@ -127,6 +127,8 @@ namespace CountersPlus.UI.ViewControllers
             selectedSettingsGroup = loadedSettingsGroups.Where(x => x.type == obj).FirstOrDefault();
             CustomListTableView.ReloadData();
             CustomListTableView.SelectCellWithIdx(0);
+            TableViewScroller scroller = CustomListTableView.GetPrivateField<TableViewScroller>("_scroller");
+            scroller.ScrollToCellWithIdx(0, TableViewScroller.ScrollPositionType.Beginning, true);
         }
 
         protected override void DidDeactivate(DeactivationType deactivationType)

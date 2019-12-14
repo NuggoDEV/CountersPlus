@@ -63,6 +63,13 @@ namespace CountersPlus.UI
 
         internal static void UpdateMockCounters()
         {
+            foreach (KeyValuePair<MockCounterGroup, ConfigModel> kvp in MockCounter.loadedMockCounters)
+            {
+                Destroy(kvp.Key.CounterName);
+                Destroy(kvp.Key.CounterData);
+            }
+            if (TextHelper.CounterCanvas != null) Destroy(TextHelper.CounterCanvas.gameObject);
+            TextHelper.CounterCanvas = null;
             List<ConfigModel> loadedModels = TypesUtility.GetListOfType<ConfigModel>();
             loadedModels = loadedModels.Where(x => !(x is CustomConfigModel)).ToList();
             loadedModels.ForEach(x => x = ConfigLoader.DeserializeFromConfig(x, x.DisplayName) as ConfigModel);

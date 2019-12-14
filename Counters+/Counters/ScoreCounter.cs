@@ -70,7 +70,7 @@ namespace CountersPlus.Counters
             ScoreMesh.color = Color.white;
             ScoreMesh.alignment = TextAlignmentOptions.Center;
             PointsText.rectTransform.SetParent(ScoreMesh.rectTransform, false);
-            PointsText.rectTransform.localScale = PointsText.rectTransform.localScale * TextHelper.ScaleFactor;
+            PointsText.rectTransform.localScale = PointsText.rectTransform.localScale * TextHelper.SizeScaleFactor;
             PointsText.rectTransform.localPosition = new Vector3(0, 77.7f, 0);
             if (settings.DisplayRank)
             {

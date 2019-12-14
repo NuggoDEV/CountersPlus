@@ -86,7 +86,7 @@ namespace CountersPlus.Counters
                 bg.CrossFadeAlpha(0.05f, 1f, false);
 
                 g.GetComponent<RectTransform>().SetParent(TextHelper.CounterCanvas.transform, false);
-                g.transform.localScale = Vector3.one * TextHelper.ScaleFactor;
+                g.transform.localScale = Vector3.one * TextHelper.SizeScaleFactor;
                 g.transform.localPosition = _timeMesh.transform.localPosition;
                 _image.fillAmount = (settings.ProgressTimeLeft && settings.IncludeRing) ? 1 : 0;
             }else if (settings.Mode == ICounterMode.Percent)
