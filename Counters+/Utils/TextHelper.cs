@@ -28,13 +28,13 @@ namespace CountersPlus
             CanvasGO.transform.rotation = Quaternion.Euler(CountersController.settings.hudConfig.HUDRotation);
 
             GameObject coreGameHUD = Resources.FindObjectsOfTypeAll<CoreGameHUDController>()?.FirstOrDefault()?.gameObject ?? null;
-            FlyingGameHUDRotation flyingGameHUD = Resources.FindObjectsOfTypeAll<FlyingGameHUDRotation>().FirstOrDefault();
+            FlyingGameHUDRotation flyingGameHUD = Resources.FindObjectsOfTypeAll<FlyingGameHUDRotation>().FirstOrDefault(x => x.isActiveAndEnabled);
             bool attachToHUD = flyingGameHUD != null && CountersController.settings.hudConfig.AttachToBaseGameHUDFor360;
             if (CountersController.settings.hudConfig.AttachBaseGameHUD && !attachToHUD && coreGameHUD != null)
             {
                 coreGameHUD.transform.SetParent(CanvasGO.transform, true);
                 coreGameHUD.transform.localScale = Vector3.one * 10;
-                coreGameHUD.transform.localPosition = Position;
+                coreGameHUD.transform.localPosition = Vector3.zero;
                 coreGameHUD.transform.localRotation = Quaternion.identity;
                 foreach (Transform children in coreGameHUD.transform)
                 {
@@ -45,8 +45,6 @@ namespace CountersPlus
                 if (flyingGameHUD != null)
                 {
                     Object.Destroy(coreGameHUD.GetComponent<FlyingGameHUDRotation>());
-                    coreGameHUD.transform.localPosition = Vector3.zero;
-                    coreGameHUD.transform.localRotation = Quaternion.identity;
                     Transform container = coreGameHUD.transform.GetChild(0);
                     container.localPosition = new Vector3(0, 1.8f, 0);
                     container.localRotation = Quaternion.identity;

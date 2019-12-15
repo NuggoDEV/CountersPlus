@@ -96,7 +96,7 @@ namespace CountersPlus
         {
             Vector3 pos = new Vector3(); //Base position
             Vector3 offset = new Vector3(0, -0.75f * (index), 0); //Offset for any overlapping, indexes, etc.
-            bool hud360 = settings.hudConfig.AttachToBaseGameHUDFor360 && Resources.FindObjectsOfTypeAll<FlyingGameHUDRotation>().Any();
+            bool hud360 = settings.hudConfig.AttachToBaseGameHUDFor360 && Resources.FindObjectsOfTypeAll<FlyingGameHUDRotation>().Any(x => x.isActiveAndEnabled);
             float X = hud360 ? 2f : 3.2f;
             switch (position)
             {
