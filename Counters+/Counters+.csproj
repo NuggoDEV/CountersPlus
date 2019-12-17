@@ -38,12 +38,14 @@
     <Reference Include="0Harmony.1.2.0.1">
       <HintPath>$(BeatSaberDir)\Libs\0Harmony.1.2.0.1.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Assembly-CSharp.dll</HintPath>
+    <Reference Include="MainAssembly">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\MainAssembly.dll</HintPath>
     </Reference>
-    <Reference Include="BeatSaberCustomUI, Version=1.5.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(BeatSaberDir)\Plugins\BeatSaberCustomUI.dll</HintPath>
+    <Reference Include="HMUI">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\HMUI.dll</HintPath>
+    </Reference>
+    <Reference Include="HMLib">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\HMLib.dll</HintPath>
     </Reference>
     <Reference Include="BSML">
       <HintPath>$(BeatSaberDir)\Plugins\BSML.dll</HintPath>
@@ -86,6 +88,9 @@
     <Reference Include="UnityEngine.UIModule">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.UIModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UnityWebRequestModule">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
     </Reference>
@@ -103,7 +108,6 @@
     <Compile Include="Counters\NotesLeftCounter.cs" />
     <Compile Include="Counters\Spinometer.cs" />
     <Compile Include="Custom\CustomCounters.cs" />
-    <Compile Include="Harmony\FloatingOverlayWindowUpdate.cs" />
     <Compile Include="Harmony\ScoreCounterHook.cs" />
     <Compile Include="UI\AdvancedCounterSettings.cs" />
     <Compile Include="UI\CounterWarning.cs" />
@@ -112,6 +116,10 @@
     <Compile Include="UI\ViewControllers\ConfigModelControllers\ConfigModelController.cs" />
     <Compile Include="UI\ViewControllers\ConfigModelControllers\CutController.cs" />
     <Compile Include="UI\ViewControllers\ConfigModelControllers\FailController.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\HUD\Camera.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\HUD\General.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\HUD\Position.cs" />
+    <Compile Include="UI\ViewControllers\ConfigModelControllers\HUD\Rotation.cs" />
     <Compile Include="UI\ViewControllers\ConfigModelControllers\MainSettingsController.cs" />
     <Compile Include="UI\ViewControllers\ConfigModelControllers\MissedController.cs" />
     <Compile Include="UI\ViewControllers\ConfigModelControllers\NotesController.cs" />
@@ -122,6 +130,7 @@
     <Compile Include="UI\ViewControllers\ConfigModelControllers\SpeedController.cs" />
     <Compile Include="UI\ViewControllers\ConfigModelControllers\SpinometerController.cs" />
     <Compile Include="UI\ViewControllers\ContributorsAndDonators.cs" />
+    <Compile Include="UI\ViewControllers\CountersPlusBottomSettingsSelectorViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusCreditsViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusEditViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusFillerForMainViewController.cs" />
@@ -129,6 +138,11 @@
     <Compile Include="UI\ViewControllers\CountersPlusHorizontalSettingsListViewController.cs" />
     <Compile Include="UI\MenuUI.cs" />
     <Compile Include="UI\MockCounter.cs" />
+    <Compile Include="UI\ViewControllers\SettingsGroups\CountersSettingsGroup.cs" />
+    <Compile Include="UI\ViewControllers\SettingsGroups\HUDSettingsGroup.cs" />
+    <Compile Include="UI\ViewControllers\SettingsGroups\MainSettingsGroup.cs" />
+    <Compile Include="UI\ViewControllers\SettingsGroups\SettingsGroup.cs" />
+    <Compile Include="Utils\AssignedFloatingWindow.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="CountersController.cs" />
     <Compile Include="Counters\MissedCounter.cs" />
@@ -141,10 +155,10 @@
     <Compile Include="Utils\ReflectionUtil.cs" />
     <Compile Include="Counters\ScoreCounter.cs" />
     <Compile Include="Counters\SpeedCounter.cs" />
-    <Compile Include="Utils\ResetCameraOnDestroy.cs" />
     <Compile Include="Utils\SimpleJSON.cs" />
     <Compile Include="Utils\TextHelper.cs" />
     <Compile Include="Utils\TypesUtility.cs" />
+    <Compile Include="Utils\UIUtilities.cs" />
     <Compile Include="Utils\VersionChecker.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -203,8 +217,27 @@
     <EmbeddedResource Include="UI\BSML\Config\Fail.bsml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="UI\BSML\Config\Error.bsml" />
+    <EmbeddedResource Include="UI\BSML\BottomSettingsList.bsml" />
+    <EmbeddedResource Include="UI\BSML\Config\Error.bsml" />
     <EmbeddedResource Include="UI\BSML\MainSettings.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\HUD\General.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\HUD\Camera.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\HUD\Position.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\BSML\HUD\Rotation.bsml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Images\HUD_Camera.png" />
+    <EmbeddedResource Include="UI\Images\HUD_General.png" />
+    <EmbeddedResource Include="UI\Images\HUD_Position.png" />
+    <EmbeddedResource Include="UI\Images\HUD_Rotation.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

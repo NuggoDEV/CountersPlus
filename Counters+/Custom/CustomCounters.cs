@@ -8,7 +8,6 @@ using IPA.Loader;
 using IPA.Old;
 using CountersPlus.Config;
 using CountersPlus.Utils;
-using CustomUI.Utilities;
 
 namespace CountersPlus.Custom
 {
@@ -101,12 +100,12 @@ namespace CountersPlus.Custom
         /// <summary>
         /// The plugin that created this custom counter. Will be displayed in the Settings UI.
         /// </summary>
-        public IPlugin Mod;
+        public IPA.Old.IPlugin Mod;
 #pragma warning restore CS0618 // IPA is obsolete
         /// <summary>
         /// The plugin that created this custom counter. Will be displayed in the Settings UI.
         /// </summary>
-        public IBeatSaberPlugin BSIPAMod;
+        public IPA.IBeatSaberPlugin BSIPAMod;
         /// <summary>
         /// The name of the <see cref="GameObject"/> that holds the <see cref="Canvas"/> that contains all the text for the counter.
         /// </summary>

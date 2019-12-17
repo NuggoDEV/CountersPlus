@@ -16,7 +16,7 @@ namespace CountersPlus.Counters
         internal override void Counter_Start()
         {
             settings = CountersController.settings.scoreConfig;
-            if (gameObject.name == "ScorePanel")
+            if (gameObject.name == "ScoreCanvas")
                 PreInit();
             else
                 StartCoroutine(YeetToBaseCounter());
@@ -27,8 +27,8 @@ namespace CountersPlus.Counters
         IEnumerator YeetToBaseCounter()
         {
             GameObject baseCounter;
-            yield return new WaitUntil(() => GameObject.Find("ScorePanel") != null);
-            baseCounter = GameObject.Find("ScorePanel");
+            yield return new WaitUntil(() => GameObject.Find("ScoreCanvas") != null);
+            baseCounter = GameObject.Find("ScoreCanvas");
             CountersController.LoadedCounters.Remove(gameObject);
             baseCounter.AddComponent<ScoreCounter>();
             Destroy(gameObject);
@@ -70,7 +70,7 @@ namespace CountersPlus.Counters
             ScoreMesh.color = Color.white;
             ScoreMesh.alignment = TextAlignmentOptions.Center;
             PointsText.rectTransform.SetParent(ScoreMesh.rectTransform, false);
-            PointsText.rectTransform.localScale = PointsText.rectTransform.localScale * TextHelper.ScaleFactor;
+            PointsText.rectTransform.localScale = PointsText.rectTransform.localScale * TextHelper.SizeScaleFactor;
             PointsText.rectTransform.localPosition = new Vector3(0, 77.7f, 0);
             if (settings.DisplayRank)
             {

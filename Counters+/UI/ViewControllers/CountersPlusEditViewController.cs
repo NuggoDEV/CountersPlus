@@ -1,19 +1,15 @@
-﻿using CustomUI.BeatSaber;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using VRUI;
 using CountersPlus.Config;
 using UnityEngine;
 using TMPro;
-using CustomUI.Settings;
 using CountersPlus.Custom;
 using BS_Utils.Gameplay;
-using System.Collections;
 using BeatSaberMarkupLanguage.ViewControllers;
 using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage;
 using CountersPlus.UI.ViewControllers.ConfigModelControllers;
-using System.Reflection;
 
 namespace CountersPlus.UI.ViewControllers
 {
@@ -25,7 +21,7 @@ namespace CountersPlus.UI.ViewControllers
 
         internal static List<GameObject> LoadedElements = new List<GameObject>(); //Mass clearing
 
-        [UIObject("body")] private GameObject SettingsContainer;
+        [UIObject("body")] internal GameObject SettingsContainer;
         [UIObject("settings_parent")] private GameObject SettingsParent;
         [UIComponent("name")] private TextMeshProUGUI SettingsName;
 
@@ -106,6 +102,11 @@ namespace CountersPlus.UI.ViewControllers
             Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.MainSettingsController");
             ConfigModelController.GenerateController("CountersPlus.UI.BSML.MainSettings.bsml", controllerType, Instance.SettingsContainer);
             MockCounter.Highlight<ConfigModel>(null);
+        }
+
+        internal static void UpdateTitle(string title)
+        {
+            Instance.SettingsName.text = title;
         }
 
         public static void UpdateSettings<T>(T settings) where T : ConfigModel

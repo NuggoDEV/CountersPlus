@@ -1,0 +1,8 @@
+﻿<vertical spacing='1'>
+  <horizontal horizontal-fit='PreferredSize'>
+    <checkbox-setting on-change='update_model' apply-on-change='true' value='attach_to_camera' text='Attach HUD To Camera' hover-hint='Attaches or detaches the Counters+ HUD to a camera, mocking an OBS overlay effect.'></checkbox-setting>
+  </horizontal>
+  <horizontal horizontal-fit='PreferredSize'>
+    <dropdown-list-setting text='Attached Camera' on-change='update_model' apply-on-change='true' value='camera' options='camera_values' hover-hint='Choose the camera that Counters+ will attach its HUD to.'></dropdown-list-setting>
+  </horizontal>
+</vertical>

@@ -43,6 +43,7 @@ namespace CountersPlus
             }
 
             CountersController.OnLoad();
+            MenuUI.CreateUI();
         }
 
         public void OnApplicationQuit()
@@ -61,17 +62,8 @@ namespace CountersPlus
             CountersController.LoadedCounters.Clear();
         }
 
-        public void OnSceneLoaded(Scene arg, LoadSceneMode hiBrian)
-        {
-            try
-            {
-                if (arg.name == "MenuCore") MenuUI.CreateUI();
-            }catch(Exception e)
-            {
-                Log(e.ToString(), LogInfo.Fatal, "Install your dependencies!");
-            }
-        }
-
+        public void OnSceneLoaded(Scene arg, LoadSceneMode hiBrian) { }
+        public void OnEnable() { }
         public void OnSceneUnloaded(Scene scene) { }
         public void OnUpdate() { }
         public void OnFixedUpdate() { }

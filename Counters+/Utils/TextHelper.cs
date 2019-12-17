@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using TMPro;
+using BeatSaberMarkupLanguage;
+using CountersPlus.Utils;
 using System.Linq;
-using CountersPlus.UI;
 
 namespace CountersPlus
 {
@@ -13,7 +14,8 @@ namespace CountersPlus
          * I cannot thank him enough.
          */
         public static Canvas CounterCanvas;
-        internal static readonly float ScaleFactor = 10;
+        public static float PosScaleFactor => CountersController.settings.hudConfig.HUDPositionScaleFactor;
+        public static float SizeScaleFactor => CountersController.settings.hudConfig.HUDSize;
 
         public static Canvas CreateCanvas(Vector3 Position, bool floatingHUD = false, float CanvasScaleFactor = 10)
         {
@@ -23,32 +25,55 @@ namespace CountersPlus
             canvas.renderMode = RenderMode.WorldSpace;
             CanvasGO.transform.localScale = Vector3.one / CanvasScaleFactor;
             CanvasGO.transform.position = Position;
+            CanvasGO.transform.rotation = Quaternion.Euler(CountersController.settings.hudConfig.HUDRotation);
 
-            GameObject coreGameHUD = GameObject.Find("CoreGameHUD"); //Attach base game HUD to Counters+. Why? Why not.
-            if (coreGameHUD != null) coreGameHUD.transform.SetParent(CanvasGO.transform, true);
-
-            if (floatingHUD)
+            GameObject coreGameHUD = Resources.FindObjectsOfTypeAll<CoreGameHUDController>()?.FirstOrDefault()?.gameObject ?? null;
+            FlyingGameHUDRotation flyingGameHUD = Resources.FindObjectsOfTypeAll<FlyingGameHUDRotation>().FirstOrDefault(x => x.isActiveAndEnabled);
+            bool attachToHUD = flyingGameHUD != null && CountersController.settings.hudConfig.AttachToBaseGameHUDFor360;
+            if (CountersController.settings.hudConfig.AttachBaseGameHUD && !attachToHUD && coreGameHUD != null)
             {
-                if (coreGameHUD != null)
+                coreGameHUD.transform.SetParent(CanvasGO.transform, true);
+                coreGameHUD.transform.localScale = Vector3.one * 10;
+                coreGameHUD.transform.localPosition = Vector3.zero;
+                coreGameHUD.transform.localRotation = Quaternion.identity;
+                foreach (Transform children in coreGameHUD.transform)
                 {
-                    coreGameHUD.transform.localScale = Vector3.one * ScaleFactor;
-                    coreGameHUD.transform.localPosition = Vector3.back * 70;
+                    if (children.Find("BG")) children.Find("BG").gameObject.SetActive(false);
+                    if (children.Find("Top")) children.Find("Top").gameObject.SetActive(false);
+                    children.localPosition = new Vector3(children.localPosition.x, children.localPosition.y, 0);
                 }
-                if (Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().FirstOrDefault()?
-                    .GetPrivateField<MainSettingsModel>("_mainSettingsModel")?.smoothCameraEnabled?.value ?? false)
+                if (flyingGameHUD != null)
                 {
-                    if (coreGameHUD != null)
+                    Object.Destroy(coreGameHUD.GetComponent<FlyingGameHUDRotation>());
+                    Transform container = coreGameHUD.transform.GetChild(0);
+                    container.localPosition = new Vector3(0, 1.8f, 0);
+                    container.localRotation = Quaternion.identity;
+                    foreach (Transform children in container)
                     {
-                        foreach (Transform children in coreGameHUD.transform)
+                        switch (children.name)
                         {
-                            if (children.Find("BG")) children.Find("BG").gameObject.SetActive(false);
-                            if (children.Find("Top")) children.Find("Top").gameObject.SetActive(false);
+                            default: break;
+                            case "EnergyPanel":
+                                children.localPosition = new Vector3(0, -120, 0);
+                                break;
+                            case "ComboPanel":
+                                children.localPosition = new Vector3(-160, -57.5f, 0);
+                                break;
+                            case "MultiplierCanvas":
+                                children.localPosition = new Vector3(160, 0, 0);
+                                break;
                         }
                     }
-                    CanvasGO.AddComponent<FloatingOverlayWindow>();
-                    CanvasGO.AddComponent<Utils.ResetCameraOnDestroy>();
                 }
+            }else if (attachToHUD)
+            {
+                CanvasGO.transform.SetParent(coreGameHUD.transform.GetChild(0), false);
+                CanvasGO.transform.localPosition = Vector3.down * 70;
+                CanvasGO.transform.localRotation = Quaternion.identity;
+                CanvasGO.transform.localScale = Vector3.one * 4;
             }
+
+            if (floatingHUD && !attachToHUD) CanvasGO.AddComponent<AssignedFloatingWindow>();
             
             return canvas;
         }
@@ -57,15 +82,9 @@ namespace CountersPlus
         {
             if (CounterCanvas == null)
             {
-                bool useFloatingHUD = CountersController.settings.FloatingHUD;
-                if (useFloatingHUD && !(Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().FirstOrDefault()?
-                        .GetPrivateField<MainSettingsModel>("_mainSettingsModel")?.smoothCameraEnabled?.value ?? true))
-                {
-                    CounterWarning.Create("Please enable \"Smooth Camera\" in Beat Saber's Settings to use Floating HUD.");
-                    useFloatingHUD = false;
-                }
-                float scaleFactor = useFloatingHUD ? 50 : ScaleFactor;
-                CounterCanvas = CreateCanvas(Vector3.forward * 7, useFloatingHUD, scaleFactor);
+                bool useFloatingHUD = CountersController.settings.hudConfig.AttachHUDToCamera;
+                float scale = CountersController.settings.hudConfig.HUDSize;
+                CounterCanvas = CreateCanvas(CountersController.settings.hudConfig.HUDPosition, useFloatingHUD, scale);
             }
             CreateText(out tmp_text, CounterCanvas, anchoredPosition);
         }
@@ -74,8 +93,9 @@ namespace CountersPlus
         {
             var rectTransform = canvas.transform as RectTransform;
             rectTransform.sizeDelta = new Vector2(100, 50);
+            float scale = CountersController.settings.hudConfig.HUDPositionScaleFactor;
 
-            tmp_text = CustomUI.BeatSaber.BeatSaberUI.CreateText(rectTransform, "", anchoredPosition * ScaleFactor);
+            tmp_text = BeatSaberUI.CreateText(rectTransform, "", anchoredPosition * scale);
             tmp_text.alignment = TextAlignmentOptions.Center;
             tmp_text.fontSize = 4f;
             tmp_text.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 2f);

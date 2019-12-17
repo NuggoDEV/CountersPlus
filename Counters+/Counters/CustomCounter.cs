@@ -60,7 +60,7 @@ namespace CountersPlus.Counters
             counter.transform.localScale = Vector3.one;
             Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             position = new Vector3(position.x, position.y, 0);
-            counter.transform.localPosition = position * TextHelper.ScaleFactor;
+            counter.transform.localPosition = position * TextHelper.PosScaleFactor;
         }
     }
 }

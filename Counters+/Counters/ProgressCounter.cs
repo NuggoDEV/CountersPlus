@@ -21,7 +21,7 @@ namespace CountersPlus.Counters
         internal override void Counter_Start()
         {
             useTimeLeft = settings.ProgressTimeLeft;
-            if (settings.Mode == ICounterMode.BaseGame && gameObject.name != "SongProgressPanel")
+            if (settings.Mode == ICounterMode.BaseGame && gameObject.name != "SongProgressCanvas")
                 StartCoroutine(YeetToBaseCounter());
             else if (settings.Mode == ICounterMode.BaseGame) OnDestroy();
         }
@@ -29,8 +29,8 @@ namespace CountersPlus.Counters
 
         IEnumerator YeetToBaseCounter()
         {
-            yield return new WaitUntil(() => GameObject.Find("SongProgressPanel") != null);
-            GameObject.Find("SongProgressPanel").AddComponent<ProgressCounter>();
+            yield return new WaitUntil(() => GameObject.Find("SongProgressCanvas") != null);
+            GameObject.Find("SongProgressCanvas").AddComponent<ProgressCounter>();
             Destroy(gameObject);
         }
 
@@ -55,7 +55,7 @@ namespace CountersPlus.Counters
                 Canvas canvas = g.AddComponent<Canvas>();
                 canvas.renderMode = RenderMode.WorldSpace;
                 CanvasScaler cs = g.AddComponent<CanvasScaler>();
-                cs.scaleFactor = 10.0f;
+                cs.scaleFactor = 10f;
                 cs.dynamicPixelsPerUnit = 10f;
                 GraphicRaycaster gr = g.AddComponent<GraphicRaycaster>();
                 g.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 1f);
@@ -86,7 +86,7 @@ namespace CountersPlus.Counters
                 bg.CrossFadeAlpha(0.05f, 1f, false);
 
                 g.GetComponent<RectTransform>().SetParent(TextHelper.CounterCanvas.transform, false);
-                g.transform.localScale = Vector3.one * TextHelper.ScaleFactor;
+                g.transform.localScale = Vector3.one * 10f;
                 g.transform.localPosition = _timeMesh.transform.localPosition;
                 _image.fillAmount = (settings.ProgressTimeLeft && settings.IncludeRing) ? 1 : 0;
             }else if (settings.Mode == ICounterMode.Percent)
@@ -99,7 +99,8 @@ namespace CountersPlus.Counters
                 _timeMesh.alignment = TextAlignmentOptions.Center;
             }
             transform.position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
-            if (GameObject.Find("SongProgressPanel") != null && settings.Mode != ICounterMode.BaseGame) Destroy(GameObject.Find("SongProgressPanel"));
+            if (GameObject.Find("SongProgressCanvas") != null && settings.Mode != ICounterMode.BaseGame)
+                Destroy(GameObject.Find("SongProgressCanvas"));
             StartCoroutine(SecondTick());
         }
 
