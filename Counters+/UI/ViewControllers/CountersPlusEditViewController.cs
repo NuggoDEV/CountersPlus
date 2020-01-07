@@ -100,7 +100,7 @@ namespace CountersPlus.UI.ViewControllers
             ClearScreen(true);
             Instance.SettingsName.text = "Main Settings";
             Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.MainSettingsController");
-            ConfigModelController.GenerateController("CountersPlus.UI.BSML.MainSettings.bsml", controllerType, Instance.SettingsContainer);
+            ConfigModelController.GenerateController(controllerType, Instance.SettingsContainer,"CountersPlus.UI.BSML.MainSettings.bsml");
             MockCounter.Highlight<ConfigModel>(null);
         }
 
@@ -120,8 +120,8 @@ namespace CountersPlus.UI.ViewControllers
                 string name = string.Join("", settings.DisplayName.Split(' '));
                 if (settings is CustomConfigModel custom)
                 {
-                    ConfigModelController.GenerateController(custom.CustomCounter.CustomSettingsResource,
-                        custom.CustomCounter.CustomSettingsHandler, Instance.SettingsContainer, true, settings);
+                    ConfigModelController.GenerateController(custom.CustomCounter.CustomSettingsHandler,
+                        Instance.SettingsContainer, custom.CustomCounter.CustomSettingsResource, true, settings);
                     name = custom.CustomCounter.Name;
                 }
                 else

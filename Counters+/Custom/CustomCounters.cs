@@ -125,11 +125,15 @@ namespace CountersPlus.Custom
         /// <summary>
         /// Location to a BSML (*.bsml) file to load extra settings in the Counters+ menu.
         /// </summary>
-        public string CustomSettingsResource;
+        public string CustomSettingsResource = null;
         /// <summary>
         /// The <see cref="Type"/> of a <see cref="MonoBehaviour"/> that will handle the file defined in <see cref="CustomSettingsResource"/>.
         /// </summary>
         public Type CustomSettingsHandler;
+        /// <summary>
+        /// A template counter that inherits from <see cref="CustomCounterTemplate"/>.
+        /// </summary>
+        public Type TemplateCounter;
 
         /// <summary>
         /// Local name of the mod from BSIPA or IPA.
