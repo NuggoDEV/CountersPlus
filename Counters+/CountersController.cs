@@ -38,10 +38,11 @@ namespace CountersPlus
         /// <typeparam name="T">ConfigModel to use for settings.</typeparam>
         /// <typeparam name="R">MonoBehaviour to attach to the new GameObject.</typeparam>
         /// <param name="settings">ConfigModel settings reference.</param>
-        internal static void LoadCounter<T, R>(T settings) where T : ConfigModel where R : Counter<T>
+        internal static void LoadCounter<T, R>(T settings, Type counterInstance = null) where T : ConfigModel where R : Counter<T>
         {
+            if (counterInstance is null) counterInstance = typeof(R);
             if (!settings.Enabled || GameObject.Find($"Counters+ | {settings.DisplayName} Counter")) return;
-            R counter = new GameObject($"Counters+ | {settings.DisplayName} Counter").AddComponent(typeof(R)) as R;
+            R counter = new GameObject($"Counters+ | {settings.DisplayName} Counter").AddComponent(counterInstance) as R;
             counter.settings = settings;
             Plugin.Log($"Loaded Counter: {settings.DisplayName}");
             LoadedCounters.Add(counter.gameObject);
@@ -87,7 +88,12 @@ namespace CountersPlus
             LoadCounter<NotesLeftConfigModel, NotesLeftCounter>(settings.notesLeftConfig);
             LoadCounter<FailConfigModel, FailCounter>(settings.failsConfig);
             foreach (CustomCounter potential in CustomCounterCreator.LoadedCustomCounters)
-                LoadCounter<CustomConfigModel, CustomCounterHook>(potential.ConfigModel);
+            {
+                if (potential.TemplateCounter != null)
+                    LoadCounter<CustomConfigModel, CustomCounterTemplate>(potential.ConfigModel, potential.TemplateCounter);
+                else
+                    LoadCounter<CustomConfigModel, CustomCounterHook>(potential.ConfigModel);
+            }
             Plugin.Log("Counters loaded!", LogInfo.Notice);
             Instance.StartCoroutine(Instance.ObtainRequiredData());
         }

@@ -58,10 +58,11 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             return controller;
         }
 
-        public static ConfigModelController GenerateController(string bsmlFileName, Type controllerType, GameObject baseTransform,
-            bool addBaseSettings = false, ConfigModel model = null)
+        public static ConfigModelController GenerateController(Type controllerType, GameObject baseTransform,
+            string bsmlFileName = null, bool addBaseSettings = false, ConfigModel model = null)
         {
-            GameObject controllerGO = new GameObject($"Counters+ | {bsmlFileName} Settings Controller");
+            string name = bsmlFileName == null ? "Blank" : bsmlFileName;
+            GameObject controllerGO = new GameObject($"Counters+ | {name} Settings Controller");
             controllerGO.transform.parent = baseTransform.transform;
             ConfigModelController controller = controllerGO.AddComponent<ConfigModelController>();
             controller.ConfigModel = model;
@@ -71,8 +72,9 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
                 BSMLParser.instance.Parse(controller.baseConfigLocation, baseTransform, controller);
             try
             {
-                BSMLParser.instance.Parse(Utilities.GetResourceContent(controllerType.Assembly,
-                    bsmlFileName), baseTransform, controller.ModelSpecificController);
+                if (bsmlFileName != null)
+                    BSMLParser.instance.Parse(Utilities.GetResourceContent(controllerType.Assembly,
+                        bsmlFileName), baseTransform, controller.ModelSpecificController);
             }catch(Exception e)
             {
                 Plugin.Log($"Exception thrown while attempting to load a non-Counters+ BSML file:\n{bsmlFileName}\n{e}",

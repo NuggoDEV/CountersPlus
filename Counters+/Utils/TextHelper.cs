@@ -27,7 +27,7 @@ namespace CountersPlus
             CanvasGO.transform.position = Position;
             CanvasGO.transform.rotation = Quaternion.Euler(CountersController.settings.hudConfig.HUDRotation);
 
-            GameObject coreGameHUD = Resources.FindObjectsOfTypeAll<CoreGameHUDController>()?.FirstOrDefault()?.gameObject ?? null;
+            GameObject coreGameHUD = Resources.FindObjectsOfTypeAll<CoreGameHUDController>()?.FirstOrDefault(x => x.isActiveAndEnabled)?.gameObject ?? null;
             FlyingGameHUDRotation flyingGameHUD = Resources.FindObjectsOfTypeAll<FlyingGameHUDRotation>().FirstOrDefault(x => x.isActiveAndEnabled);
             bool attachToHUD = flyingGameHUD != null && CountersController.settings.hudConfig.AttachToBaseGameHUDFor360;
             if (CountersController.settings.hudConfig.AttachBaseGameHUD && !attachToHUD && coreGameHUD != null)

@@ -81,8 +81,8 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
         {
             CountersPlusEditViewController.UpdateTitle(title);
             Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.HUD.{name}");
-            ConfigModelController.GenerateController($"CountersPlus.UI.BSML.HUD.{name}.bsml", controllerType,
-                CountersPlusEditViewController.Instance.SettingsContainer);
+            ConfigModelController.GenerateController(controllerType,
+                CountersPlusEditViewController.Instance.SettingsContainer, $"CountersPlus.UI.BSML.HUD.{name}.bsml");
         }
     }
 }
