@@ -38,9 +38,6 @@
     <Reference Include="0Harmony.1.2.0.1">
       <HintPath>$(BeatSaberDir)\Libs\0Harmony.1.2.0.1.dll</HintPath>
     </Reference>
-    <Reference Include="MainAssembly">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\MainAssembly.dll</HintPath>
-    </Reference>
     <Reference Include="HMUI">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\HMUI.dll</HintPath>
     </Reference>
@@ -63,6 +60,10 @@
     <Reference Include="IPA.Loader, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\IPA.Loader.dll</HintPath>
+    </Reference>
+    <Reference Include="MainAssembly, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Beat Saber_Data\Managed\MainAssembly.dll</HintPath>
     </Reference>
     <Reference Include="SemVer.1.2.0.0">
       <HintPath>$(BeatSaberDir)\Libs\SemVer.1.2.0.0.dll</HintPath>
@@ -107,11 +108,14 @@
     <Compile Include="Counters\FailCounter.cs" />
     <Compile Include="Counters\NotesLeftCounter.cs" />
     <Compile Include="Counters\Spinometer.cs" />
+    <Compile Include="Custom\Attributes\CounterDestroyAttribute.cs" />
+    <Compile Include="Custom\Attributes\CounterStartAttribute.cs" />
+    <Compile Include="Custom\Attributes\CounterUpdateAttribute.cs" />
     <Compile Include="Custom\CustomCounters.cs" />
     <Compile Include="Custom\CustomCounterTemplate.cs" />
-    <Compile Include="Custom\DisplayNameAttribute.cs" />
-    <Compile Include="Custom\FormattedTextAttribute.cs" />
-    <Compile Include="Custom\RefreshCounterAttribute.cs" />
+    <Compile Include="Custom\Attributes\DisplayNameAttribute.cs" />
+    <Compile Include="Custom\Attributes\FormattedTextAttribute.cs" />
+    <Compile Include="Custom\Attributes\RefreshCounterAttribute.cs" />
     <Compile Include="Harmony\ScoreCounterHook.cs" />
     <Compile Include="UI\AdvancedCounterSettings.cs" />
     <Compile Include="UI\CounterWarning.cs" />

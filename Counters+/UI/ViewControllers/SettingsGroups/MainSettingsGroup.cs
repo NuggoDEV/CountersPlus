@@ -17,7 +17,6 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
                 cell.reuseIdentifier = settings.ReuseIdentifier;
             }
             cell.showNewRibbon = false; //Dequeued cells will keep NEW ribbon value. Always change it to false.
-            TextMeshProUGUI packNameText = cell.GetPrivateField<TextMeshProUGUI>("_packNameText"); //Grab some TMP references.
             TextMeshProUGUI packInfoText = cell.GetPrivateField<TextMeshProUGUI>("_infoText");
             packInfoText.richText = true; //Enable rich text for info text. Optional, but I use it for Counters+.
             UnityEngine.UI.Image packCoverImage = cell.GetPrivateField<UnityEngine.UI.Image>("_coverImage");
@@ -25,22 +24,26 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
             switch (row)
             {
                 case 0:
-                    packNameText.text = "Main Settings";
-                    packInfoText.text = "Configure basic Counters+ settings.";
-                    packCoverImage.sprite = Images.Images.LoadSprite("MainSettings");
+                    SetText("Main Settings", "Configure basic Counters+ settings.", Images.Images.LoadSprite("MainSettings"),
+                        ref packInfoText, ref packCoverImage);
                     break;
                 case 1:
-                    packNameText.text = "Donators";
-                    packInfoText.text = "See who supported me on Ko-fi!";
-                    packCoverImage.sprite = Images.Images.LoadSprite("Donators");
+                    SetText("Donators", "See who supported me on Ko-fi!", Images.Images.LoadSprite("Donators"),
+                        ref packInfoText, ref packCoverImage);
                     break;
                 case 2:
-                    packNameText.text = "Contributors";
-                    packInfoText.text = "See who helped with Counters+!";
-                    packCoverImage.sprite = Images.Images.LoadSprite("Contributors");
+                    SetText("Contributors", "See who helped with Counters+!", Images.Images.LoadSprite("Contributors"),
+                        ref packInfoText, ref packCoverImage);
                     break;
             }
             return cell;
+        }
+
+
+        private void SetText(string name, string desc, Sprite sprite, ref TextMeshProUGUI packInfo, ref UnityEngine.UI.Image packCover)
+        {
+            packInfo.text = $"{name}\n\n{desc}";
+            packCover.sprite = sprite;
         }
 
         public override int NumberOfCells() => 3;

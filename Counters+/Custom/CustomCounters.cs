@@ -127,7 +127,7 @@ namespace CountersPlus.Custom
         /// </summary>
         public string CustomSettingsResource = null;
         /// <summary>
-        /// The <see cref="Type"/> of a <see cref="MonoBehaviour"/> that will handle the file defined in <see cref="CustomSettingsResource"/>.
+        /// The <see cref="Type"/> of a <see cref="MonoBehaviour"/> that will handle the BSML file defined in <see cref="CustomSettingsResource"/>.
         /// </summary>
         public Type CustomSettingsHandler;
         /// <summary>

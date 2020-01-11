@@ -25,15 +25,13 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
                 cell.reuseIdentifier = settings.ReuseIdentifier;
             }
             cell.showNewRibbon = false; //Dequeued cells will keep NEW ribbon value. Always change it to false.
-            TextMeshProUGUI packNameText = cell.GetPrivateField<TextMeshProUGUI>("_packNameText"); //Grab some TMP references.
             TextMeshProUGUI packInfoText = cell.GetPrivateField<TextMeshProUGUI>("_infoText");
             packInfoText.richText = true; //Enable rich text for info text. Optional, but I use it for Counters+.
             UnityEngine.UI.Image packCoverImage = cell.GetPrivateField<UnityEngine.UI.Image>("_coverImage");
             packCoverImage.mainTexture.wrapMode = TextureWrapMode.Clamp; //Fixes bordering on images (especially transparent ones)
 
             SettingsInfo info = counterInfos[row];
-            packNameText.text = info.Name;
-            packInfoText.text = info.Description;
+            packInfoText.text = $"{info.Name}\n\n{info.Description}";
             try
             {
                 if (info.IsCustom)

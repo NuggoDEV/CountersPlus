@@ -41,15 +41,13 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
 
         private void SetCellInfo(ref LevelPackTableCell cell, string name, string info, string imageResource, bool ribbon = true)
         {
-            TextMeshProUGUI packNameText = cell.GetPrivateField<TextMeshProUGUI>("_packNameText"); //Grab some TMP references.
             TextMeshProUGUI packInfoText = cell.GetPrivateField<TextMeshProUGUI>("_infoText");
             packInfoText.richText = true; //Enable rich text for info text. Optional, but I use it for Counters+.
             UnityEngine.UI.Image packCoverImage = cell.GetPrivateField<UnityEngine.UI.Image>("_coverImage");
             packCoverImage.mainTexture.wrapMode = TextureWrapMode.Clamp; //Fixes bordering on images
             cell.showNewRibbon = ribbon;
 
-            packNameText.text = name;
-            packInfoText.text = info;
+            packInfoText.text = $"{name}\n\n{info}";
             packCoverImage.sprite = Images.Images.LoadSprite(imageResource);
         }
 
