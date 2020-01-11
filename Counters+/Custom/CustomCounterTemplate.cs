@@ -1,16 +1,55 @@
 ﻿using CountersPlus.Counters;
 using TMPro;
 using UnityEngine;
+using System;
+using System.Reflection;
 
 namespace CountersPlus.Custom
 {
-    public abstract class CustomCounterTemplate : Counter<CustomConfigModel>
+    public class CustomCounterTemplate : Counter<CustomConfigModel>
     {
-        public abstract string DisplayName { get; }
-        public abstract string FormattedText { get; }
+        private PropertyInfo displayName;
+        private PropertyInfo formattedText;
+        private FieldInfo refreshCounter;
+        private object host;
+
+        private Action counterRefreshedEvent;
 
         private TMP_Text label;
         private TMP_Text counter;
+
+        internal override void Counter_Start()
+        {
+            foreach (PropertyInfo propertyInfo in settings.CustomCounter.TemplateCounter.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                DisplayNameAttribute display = propertyInfo.GetCustomAttribute(typeof(DisplayNameAttribute), true) as DisplayNameAttribute;
+                FormattedTextAttribute text = propertyInfo.GetCustomAttribute(typeof(FormattedTextAttribute), true) as FormattedTextAttribute;
+                host = settings.CustomCounter.TemplateCounter;
+                if (display != null) displayName = propertyInfo;
+                if (text != null) formattedText = propertyInfo;
+            }
+            foreach (FieldInfo fieldInfo in settings.CustomCounter.TemplateCounter.GetType().GetFields(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                RefreshCounterAttribute refresh = fieldInfo.GetCustomAttribute(typeof(RefreshCounterAttribute), true) as RefreshCounterAttribute;
+                if (refresh != null)
+                {
+                    if (refreshCounter.FieldType != typeof(Action))
+                    {
+                        Plugin.Log($"Custom Counter {settings.CustomCounter.Name} provides a RefreshCounterAttribute, however it is not an Action.",
+                            LogInfo.Fatal, "Contact the creator of this Custom Counter, rather than to Counters+ itself");
+                        Destroy(this);
+                    }
+                    refreshCounter = fieldInfo;
+                    fieldInfo.SetValue(host, counterRefreshedEvent);
+                }
+            }
+            counterRefreshedEvent += RefreshCounter;
+        }
+
+        internal override void Counter_Destroy()
+        {
+            counterRefreshedEvent -= RefreshCounter;
+        }
 
         internal override void Init(CountersData data)
         {
@@ -33,8 +72,9 @@ namespace CountersPlus.Custom
 
         public void RefreshCounter()
         {
-            label.text = DisplayName;
-            counter.text = FormattedText;
+            if (host is null || displayName is null || formattedText is null) return;
+            label.text = displayName.GetGetMethod(false).Invoke(host, new object[] { }).ToString();
+            counter.text = formattedText.GetGetMethod(false).Invoke(host, new object[] { }).ToString();
         }
     }
 }

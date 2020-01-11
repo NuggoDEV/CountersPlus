@@ -131,9 +131,9 @@ namespace CountersPlus.Custom
         /// </summary>
         public Type CustomSettingsHandler;
         /// <summary>
-        /// A template counter that inherits from <see cref="CustomCounterTemplate"/>.
+        /// An instance to a class that contains various attributes for a Counters+ template counter.
         /// </summary>
-        public Type TemplateCounter;
+        public object TemplateCounter;
 
         /// <summary>
         /// Local name of the mod from BSIPA or IPA.
