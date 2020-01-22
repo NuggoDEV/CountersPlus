@@ -40,41 +40,19 @@ namespace CountersPlus.Harmony
             }
             if (model.CustomRankColors) //checks if custom rank colors is enabled
             {
-                if (RankModel.GetRankName(rank) == "SS") 
+                string color = "#FFFFFF"; //Blank white shall be used for the default color in case like some SSS shit happens
+                switch (RankModel.GetRankName(rank)) //Using PogU switch case instead of Pepega If chain
                 {
-                    ColorUtility.TryParseHtmlString(model.SSColor, out Color RankColor); //converts config hex color to unity RGBA value
-                    ____rankText.color = RankColor; //sets color of ranktext
+                    case "SS": color = model.SSColor; break; //Even compressing this shit down to one liners, look at me!
+                    case "S": color = model.SColor; break;
+                    case "A": color = model.AColor; break;
+                    case "B": color = model.BColor; break;
+                    case "C": color = model.CColor; break;
+                    case "D": color = model.DColor; break;
+                    case "E": color = model.EColor; break;
                 }
-                if (RankModel.GetRankName(rank) == "S")
-                {
-                    ColorUtility.TryParseHtmlString(model.SColor, out Color RankColor);
-                    ____rankText.color = RankColor;
-                }
-                if (RankModel.GetRankName(rank) == "A")
-                {
-                    ColorUtility.TryParseHtmlString(model.AColor, out Color RankColor);
-                    ____rankText.color = RankColor;
-                }
-                if (RankModel.GetRankName(rank) == "B")
-                {
-                    ColorUtility.TryParseHtmlString(model.BColor, out Color RankColor);
-                    ____rankText.color = RankColor;
-                }
-                if (RankModel.GetRankName(rank) == "C")
-                {
-                    ColorUtility.TryParseHtmlString(model.CColor, out Color RankColor);
-                    ____rankText.color = RankColor;
-                }
-                if (RankModel.GetRankName(rank) == "D")
-                {
-                    ColorUtility.TryParseHtmlString(model.DColor, out Color RankColor);
-                    ____rankText.color = RankColor;
-                }
-                if (RankModel.GetRankName(rank) == "E")
-                {
-                    ColorUtility.TryParseHtmlString(model.EColor, out Color RankColor);
-                    ____rankText.color = RankColor;
-                }
+                ColorUtility.TryParseHtmlString(color, out Color RankColor); //converts config hex color to unity RGBA value
+                ____rankText.color = RankColor; //sets color of ranktext
             }
             float score = ____relativeScoreAndImmediateRankCounter.relativeScore;
             if (Mathf.Abs(____prevRelativeScore - score) >= 0.001f)
