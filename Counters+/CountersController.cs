@@ -62,19 +62,19 @@ namespace CountersPlus
 
         private void HideUIElementWithComponent<T>() where T : MonoBehaviour
         {
-            try
+            GameObject gameObject = (Resources.FindObjectsOfTypeAll<T>().FirstOrDefault() as MonoBehaviour).gameObject;
+            if (gameObject != null && gameObject.activeInHierarchy)
+                RecurseFunctionOverGameObjectTree(gameObject, (child) => child.SetActive(false));
+            else Plugin.Log($"Can't remove a GameObject with the attached component {typeof(T).Name}!", LogInfo.Warning);
+        }
+
+        private void RecurseFunctionOverGameObjectTree(GameObject go, Action<GameObject> func)
+        {
+            foreach (Transform child in go.transform)
             {
-                GameObject gameObject = (Resources.FindObjectsOfTypeAll<T>().FirstOrDefault() as MonoBehaviour).gameObject;
-                if (gameObject != null && gameObject.activeInHierarchy)
-                {
-                    for (int i = 0; i < gameObject.transform.childCount; i++)
-                    {
-                        GameObject child = gameObject.transform.GetChild(i).gameObject;
-                        if (child.name != "BG") child.SetActive(false);
-                    }
-                }
+                RecurseFunctionOverGameObjectTree(child.gameObject, func);
+                func?.Invoke(go);
             }
-            catch { Plugin.Log($"Can't remove a GameObject with the attached component {typeof(T).Name}!", LogInfo.Warning); }
         }
 
         public static void LoadCounters()

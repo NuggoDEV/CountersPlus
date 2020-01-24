@@ -23,14 +23,13 @@ namespace CountersPlus.Counters
             useTimeLeft = settings.ProgressTimeLeft;
             if (settings.Mode == ICounterMode.BaseGame && gameObject.name != "SongProgressCanvas")
                 StartCoroutine(YeetToBaseCounter());
-            else if (settings.Mode == ICounterMode.BaseGame) OnDestroy();
         }
         internal override void Counter_Destroy() { }
 
         IEnumerator YeetToBaseCounter()
         {
             yield return new WaitUntil(() => GameObject.Find("SongProgressCanvas") != null);
-            GameObject.Find("SongProgressCanvas").AddComponent<ProgressCounter>();
+            GameObject.Find("SongProgressCanvas").transform.position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             Destroy(gameObject);
         }
 
