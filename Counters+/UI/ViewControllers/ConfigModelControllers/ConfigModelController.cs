@@ -101,7 +101,7 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
         [UIAction("update_model")]
         internal void ConfigChanged(object obj)
         {
-            StartCoroutine(DelayedMockCounterUpdate(ConfigModel));
+            if (gameObject.activeInHierarchy) StartCoroutine(DelayedMockCounterUpdate(ConfigModel));
         }
 
         private IEnumerator DelayedMockCounterUpdate<T>(T settings) where T : ConfigModel

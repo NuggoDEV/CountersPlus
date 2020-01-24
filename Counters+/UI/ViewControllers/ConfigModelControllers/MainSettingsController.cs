@@ -60,7 +60,7 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
         [UIAction("update_model")]
         internal void UpdateMocksAndSaveModel(object obj)
         {
-            StartCoroutine(WaitThenUpdate());
+            if (gameObject.activeInHierarchy) StartCoroutine(WaitThenUpdate());
         }
 
         private IEnumerator WaitThenUpdate()

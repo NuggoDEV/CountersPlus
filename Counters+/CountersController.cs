@@ -56,21 +56,25 @@ namespace CountersPlus
             CountersData data = new CountersData();
             ReadyToInit.Invoke(data);
             Plugin.Log("Obtained data!");
-            if (settings.HideCombo) HideUIElement("Combo");
-            if (settings.HideMultiplier) HideUIElement("Multiplier");
+            if (settings.HideCombo) HideUIElementWithComponent<ComboUIController>();
+            if (settings.HideMultiplier) HideUIElementWithComponent<ScoreMultiplierUIController>();
         }
 
-        private void HideUIElement(string Name)
+        private void HideUIElementWithComponent<T>() where T : MonoBehaviour
         {
             try
             {
-                for (int i = 0; i < GameObject.Find($"{Name}Panel").transform.childCount; i++)
+                GameObject gameObject = (Resources.FindObjectsOfTypeAll<T>().FirstOrDefault() as MonoBehaviour).gameObject;
+                if (gameObject != null && gameObject.activeInHierarchy)
                 {
-                    GameObject child = GameObject.Find($"{Name}Panel").transform.GetChild(i).gameObject;
-                    if (child.name != "BG") child.SetActive(false);
+                    for (int i = 0; i < gameObject.transform.childCount; i++)
+                    {
+                        GameObject child = gameObject.transform.GetChild(i).gameObject;
+                        if (child.name != "BG") child.SetActive(false);
+                    }
                 }
             }
-            catch { Plugin.Log($"Can't remove the {Name} counter!", LogInfo.Warning); }
+            catch { Plugin.Log($"Can't remove a GameObject with the attached component {typeof(T).Name}!", LogInfo.Warning); }
         }
 
         public static void LoadCounters()
