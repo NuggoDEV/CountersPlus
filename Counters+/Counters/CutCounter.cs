@@ -9,7 +9,7 @@ namespace CountersPlus.Counters
     public class CutCounter : Counter<CutConfigModel>
     {
         private TMP_Text cutLabel;
-        private ScoreController _scoreController;
+        private BeatmapObjectSpawnController beatmapObjectSpawnController;
         private GameObject _RankObject;
         private TMP_Text cutCounter;
         private int totalCutCountLeft = 0;
@@ -23,7 +23,7 @@ namespace CountersPlus.Counters
 
         internal override void Init(CountersData data)
         {
-            _scoreController = data.ScoreController;
+            beatmapObjectSpawnController = data.BOSC;
             Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out cutLabel, position);
             cutLabel.text = "Average Cut";
@@ -39,18 +39,18 @@ namespace CountersPlus.Counters
             cutCounter.color = Color.white;
             cutCounter.alignment = TextAlignmentOptions.Center;
             
-            if (_scoreController != null)
-                _scoreController.noteWasCutEvent += UpdateScore;
+            if (beatmapObjectSpawnController != null)
+                beatmapObjectSpawnController.noteWasCutEvent += UpdateScore;
         }
 
         internal override void Counter_Destroy()
         {
-            _scoreController.noteWasCutEvent -= UpdateScore;
+            beatmapObjectSpawnController.noteWasCutEvent -= UpdateScore;
         }
 
-        private void UpdateScore(NoteData data, NoteCutInfo info, int score)
+        private void UpdateScore(BeatmapObjectSpawnController bosc, INoteController data, NoteCutInfo info)
         {
-            if (data.noteType == NoteType.Bomb || !info.allIsOK) return;
+            if (data.noteData.noteType == NoteType.Bomb || !info.allIsOK) return;
             noteCutInfos.Add(info.swingRatingCounter, info);
             info.swingRatingCounter.didFinishEvent -= SaberSwingRatingCounter_didFinishEvent;
             info.swingRatingCounter.didFinishEvent += SaberSwingRatingCounter_didFinishEvent;

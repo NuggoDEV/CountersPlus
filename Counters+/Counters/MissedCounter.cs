@@ -8,7 +8,7 @@ namespace CountersPlus.Counters
 {
     class MissedCounter : Counter<MissedConfigModel>
     {
-        private ScoreController scoreController;
+        private BeatmapObjectSpawnController beatmapObjectSpawnController;
         private TMP_Text missedText;
         private TMP_Text label;
         private int counter;
@@ -17,7 +17,7 @@ namespace CountersPlus.Counters
 
         internal override void Init(CountersData data)
         {
-            scoreController = data.ScoreController;
+            beatmapObjectSpawnController = data.BOSC;
             Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out missedText, position - new Vector3(0, 0.4f, 0));
             missedText.text = "0";
@@ -41,27 +41,20 @@ namespace CountersPlus.Counters
                 settings.Save();
             }
 
-            if (scoreController != null)
+            if (beatmapObjectSpawnController != null)
             {
-                scoreController.noteWasCutEvent += OnNoteCut;
-                scoreController.noteWasMissedEvent += OnNoteMiss;
+                beatmapObjectSpawnController.noteWasMissedEvent += OnNoteMiss;
             }
         }
 
         internal override void Counter_Destroy()
         {
-            scoreController.noteWasCutEvent -= OnNoteCut;
-            scoreController.noteWasMissedEvent -= OnNoteMiss;
+            beatmapObjectSpawnController.noteWasMissedEvent -= OnNoteMiss;
         }
 
-        private void OnNoteCut(NoteData data, NoteCutInfo info, int c)
+        private void OnNoteMiss(BeatmapObjectSpawnController bosc, INoteController data)
         {
-            if (data.noteType == NoteType.Bomb || !info.allIsOK) IncrementCounter();
-        }
-
-        private void OnNoteMiss(NoteData data, int c)
-        {
-            if (data.noteType != NoteType.Bomb)
+            if (data.noteData.noteType != NoteType.Bomb)
             {
                 IncrementCounter();
                 if (settings.CustomMissTextIntegration) UpdateCustomMissText();

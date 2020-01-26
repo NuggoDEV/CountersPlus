@@ -8,15 +8,15 @@ namespace CountersPlus.Counters
     {
         private int notesLeft = 0;
         private TMP_Text counter;
-        private ScoreController SC;
+        private BeatmapObjectSpawnController beatmapObjectSpawnController;
 
         internal override void Counter_Start() { }
 
         internal override void Init(CountersData data)
         {
-            SC = data.ScoreController;
-            SC.noteWasCutEvent += OnNoteCut;
-            SC.noteWasMissedEvent += OnNoteMiss;
+            beatmapObjectSpawnController = data.BOSC;
+            beatmapObjectSpawnController.noteWasCutEvent += OnNoteCut;
+            beatmapObjectSpawnController.noteWasMissedEvent += OnNoteMiss;
             notesLeft = data.GCSSD.difficultyBeatmap.beatmapData.notesCount;
             Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out counter, position - new Vector3(0, 0.4f, 0));
@@ -39,14 +39,14 @@ namespace CountersPlus.Counters
             }
         }
 
-        private void OnNoteCut(NoteData data, NoteCutInfo info, int cutScore)
+        private void OnNoteCut(BeatmapObjectSpawnController bosc, INoteController data, NoteCutInfo info)
         {
-            if (data.noteType != NoteType.Bomb) DecrementCounter();
+            if (data.noteData.noteType != NoteType.Bomb) DecrementCounter();
         }
 
-        private void OnNoteMiss(NoteData data, int score)
+        private void OnNoteMiss(BeatmapObjectSpawnController bosc, INoteController data)
         {
-            if (data.noteType != NoteType.Bomb) DecrementCounter();
+            if (data.noteData.noteType != NoteType.Bomb) DecrementCounter();
         }
 
         private void DecrementCounter()
@@ -58,8 +58,8 @@ namespace CountersPlus.Counters
 
         internal override void Counter_Destroy()
         {
-            SC.noteWasCutEvent -= OnNoteCut;
-            SC.noteWasMissedEvent -= OnNoteMiss;
+            beatmapObjectSpawnController.noteWasCutEvent -= OnNoteCut;
+            beatmapObjectSpawnController.noteWasMissedEvent -= OnNoteMiss;
         }
     }
 }

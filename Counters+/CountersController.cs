@@ -50,7 +50,7 @@ namespace CountersPlus
         private IEnumerator ObtainRequiredData()
         {
             Plugin.Log("Obtaining required counter data...");
-            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<ScoreController>().Any());
+            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<BeatmapObjectSpawnController>().Any());
             yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<PlayerController>().Any());
             yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().Any());
             CountersData data = new CountersData();
@@ -139,6 +139,7 @@ namespace CountersPlus
 
     public class CountersData
     {
+        public BeatmapObjectSpawnController BOSC;
         public ScoreController ScoreController;
         public PlayerController PlayerController;
         public AudioTimeSyncController AudioTimeSyncController;
@@ -148,6 +149,7 @@ namespace CountersPlus
 
         public CountersData()
         {
+            BOSC = Resources.FindObjectsOfTypeAll<BeatmapObjectSpawnController>().First();
             ScoreController = Resources.FindObjectsOfTypeAll<ScoreController>().First();
             PlayerController = Resources.FindObjectsOfTypeAll<PlayerController>().First();
             AudioTimeSyncController = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().First();
