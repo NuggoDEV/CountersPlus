@@ -67,7 +67,11 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             ConfigModelController controller = controllerGO.AddComponent<ConfigModelController>();
             controller.ConfigModel = model;
             if (controllerType != null)
-                controller.ModelSpecificController = controllerGO.AddComponent(controllerType);
+            {
+                if (FindObjectOfType(controllerType))
+                    controller.ModelSpecificController = FindObjectOfType(controllerType) as Component;
+                else controller.ModelSpecificController = controllerGO.AddComponent(controllerType);
+            }
             if (addBaseSettings)
                 BSMLParser.instance.Parse(controller.baseConfigLocation, baseTransform, controller);
             try
