@@ -256,6 +256,7 @@ namespace CountersPlus.Config
         public CutConfigModel() { DisplayName = "Cut"; VersionAdded = new SemVer.Version("1.1.0");
             Enabled = false; Position = ICounterPositions.AboveHighway; Distance = 1; } //Default values
         public bool SeparateSaberCounts = false;
+        public bool SeparateCutValues = false;
     }
 
     public sealed class NotesLeftConfigModel : ConfigModel

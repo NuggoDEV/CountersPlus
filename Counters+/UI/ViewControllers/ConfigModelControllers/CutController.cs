@@ -13,11 +13,18 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
     {
         public ConfigModelController parentController;
 
-        [UIValue("separate")]
+        [UIValue("separate-sabers")]
         public bool SeparateSaberCuts
         {
             get => (parentController?.ConfigModel as CutConfigModel).SeparateSaberCounts;
             set => (parentController?.ConfigModel as CutConfigModel).SeparateSaberCounts = value;
+        }
+
+        [UIValue("separate-values")]
+        public bool SeparateCutValues
+        {
+            get => (parentController?.ConfigModel as CutConfigModel).SeparateCutValues;
+            set => (parentController?.ConfigModel as CutConfigModel).SeparateCutValues = value;
         }
 
         [UIAction("update_model")]
