@@ -1,40 +1,42 @@
 ﻿using CountersPlus.UI;
-using Harmony;
-using IPA;
+using HarmonyLib;
 using IPA.Loader;
+using IPA;
 using System;
 using System.Linq;
-using UnityEngine.SceneManagement;
 using IPALogger = IPA.Logging.Logger;
 using CountersPlus.Utils;
 
 namespace CountersPlus
 {
     public enum LogInfo { Info, Warning, Notice, Error, Fatal };
-    public class Plugin : IBeatSaberPlugin
+
+    [Plugin(RuntimeOptions.SingleStartInit)]
+    public class Plugin
     {
         public static SemVer.Version PluginVersion { get; private set; } = new SemVer.Version("0.0.0"); //Default.
         public static SemVer.Version WebVersion { get; internal set; } = new SemVer.Version("0.0.0"); //Default.
 
-        internal static bool UpToDate
-        {
-            get { return PluginVersion >= WebVersion; }
-        }
+        internal static bool UpToDate => PluginVersion >= WebVersion;
 
-        private static HarmonyInstance harmonyInstance;
+        private static Harmony harmonyInstance;
         public const string harmonyId = "com.caeden117.beatsaber.countersplus";
 
-        public void Init(IPALogger log, PluginLoader.PluginMetadata metadata)
+        [Init]
+        public void Init(IPALogger log, PluginMetadata metadata)
         {
             Logger.Init(log);   
             PluginVersion = metadata?.Version;
+            BS_Utils.Utilities.BSEvents.gameSceneActive += GameCoreLoaded;
+            BS_Utils.Utilities.BSEvents.menuSceneActive += ClearCounters;
         }
 
+        [OnStart]
         public void OnApplicationStart()
         {
             try
             {
-                harmonyInstance = HarmonyInstance.Create(harmonyId);
+                harmonyInstance = new Harmony(harmonyId);
                 harmonyInstance.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
             }
             catch (Exception ex)
@@ -46,27 +48,28 @@ namespace CountersPlus
             MenuUI.CreateUI();
         }
 
+        [OnExit]
         public void OnApplicationQuit()
         {
             if (harmonyInstance != null) harmonyInstance?.UnpatchAll(harmonyId);
+            BS_Utils.Utilities.BSEvents.gameSceneActive -= GameCoreLoaded;
+            BS_Utils.Utilities.BSEvents.menuSceneActive -= ClearCounters;
         }
 
-        public void OnActiveSceneChanged(Scene arg0, Scene arg1)
+        private void GameCoreLoaded()
         {
-            if (arg1.name == "GameCore" &&
-                CountersController.settings.Enabled &&
-                (!UnityEngine.Resources.FindObjectsOfTypeAll<PlayerDataModelSO>()
-                    .FirstOrDefault()?
-                    .playerData.playerSpecificSettings.noTextsAndHuds ?? true)
-                ) CountersController.LoadCounters();
+            PlayerDataModel dataModel = UnityEngine.Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault();
+            if (CountersController.settings.Enabled && (dataModel?.playerData.playerSpecificSettings.noTextsAndHuds ?? true))
+            {
+                CountersController.LoadCounters();
+            }
+        }
+
+        private void ClearCounters()
+        {
             CountersController.LoadedCounters.Clear();
         }
 
-        public void OnSceneLoaded(Scene arg, LoadSceneMode hiBrian) { }
-        public void OnEnable() { }
-        public void OnSceneUnloaded(Scene scene) { }
-        public void OnUpdate() { }
-        public void OnFixedUpdate() { }
         public static void Log(string m, LogInfo l = LogInfo.Info, string suggestedAction = null)
         {
             Logger.Log(m, l, suggestedAction);

@@ -13,7 +13,7 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
 
         public override TableCell CellForIdx(TableView view, int row, CountersPlusHorizontalSettingsListViewController settings)
         {
-            LevelPackTableCell cell = view.DequeueReusableCellForIdentifier(settings.ReuseIdentifier) as LevelPackTableCell;
+            AnnotatedBeatmapLevelCollectionTableCell cell = view.DequeueReusableCellForIdentifier(settings.ReuseIdentifier) as AnnotatedBeatmapLevelCollectionTableCell;
             if (cell == null) //Dequeue the cell, and make an instance if it doesn't exist.
             {
                 cell = UnityEngine.Object.Instantiate(settings.levelPackTableCellInstance);
@@ -39,7 +39,7 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
             return cell;
         }
 
-        private void SetCellInfo(ref LevelPackTableCell cell, string name, string info, string imageResource, bool ribbon = true)
+        private void SetCellInfo(ref AnnotatedBeatmapLevelCollectionTableCell cell, string name, string info, string imageResource, bool ribbon = true)
         {
             TextMeshProUGUI packInfoText = cell.GetPrivateField<TextMeshProUGUI>("_infoText");
             packInfoText.richText = true; //Enable rich text for info text. Optional, but I use it for Counters+.

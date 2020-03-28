@@ -10,7 +10,7 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
 
         public override TableCell CellForIdx(TableView view, int row, CountersPlusHorizontalSettingsListViewController settings)
         {
-            LevelPackTableCell cell = view.DequeueReusableCellForIdentifier(settings.ReuseIdentifier) as LevelPackTableCell;
+            AnnotatedBeatmapLevelCollectionTableCell cell = view.DequeueReusableCellForIdentifier(settings.ReuseIdentifier) as AnnotatedBeatmapLevelCollectionTableCell;
             if (cell == null) //Dequeue the cell, and make an instance if it doesn't exist.
             {
                 cell = Object.Instantiate(settings.levelPackTableCellInstance);

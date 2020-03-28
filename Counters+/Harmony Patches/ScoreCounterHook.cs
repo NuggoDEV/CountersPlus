@@ -1,11 +1,11 @@
 ﻿using System;
-using Harmony;
+using HarmonyLib;
 using UnityEngine;
 using TMPro;
 using CountersPlus.Counters;
 using CountersPlus.Config;
 
-namespace CountersPlus.Harmony
+namespace CountersPlus.HarmonyPatches
 {
     [HarmonyPatch(typeof(ImmediateRankUIPanel))]
     [HarmonyPatch("Start", MethodType.Normal)]

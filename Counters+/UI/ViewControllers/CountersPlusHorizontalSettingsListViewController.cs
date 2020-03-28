@@ -27,7 +27,7 @@ namespace CountersPlus.UI.ViewControllers
         internal Button PageRightButton;
         private TableView CustomListTableView;
         internal readonly string ReuseIdentifier = "CountersPlusSettingsListTableCell"; //Change this if you plan on yoinking my code.
-        internal LevelPackTableCell levelPackTableCellInstance;
+        internal AnnotatedBeatmapLevelCollectionTableCell levelPackTableCellInstance;
 
         private List<SettingsGroup> loadedSettingsGroups = new List<SettingsGroup>();
         private SettingsGroup selectedSettingsGroup;
@@ -40,7 +40,7 @@ namespace CountersPlus.UI.ViewControllers
                 {
                     loadedSettingsGroups = TypesUtility.GetListOfType<SettingsGroup>();
                     //Largely unchanged from CustomListController. Keep all of this.
-                    levelPackTableCellInstance = Resources.FindObjectsOfTypeAll<LevelPackTableCell>().First(x => x.name == "LevelPackTableCell");
+                    levelPackTableCellInstance = Resources.FindObjectsOfTypeAll<AnnotatedBeatmapLevelCollectionTableCell>().First(x => x.name == "LevelPackTableCell");
                     levelPackTableCellInstance.reuseIdentifier = ReuseIdentifier;
 
                     RectTransform container = new GameObject("HorizontalListContainer", typeof(RectTransform)).transform as RectTransform;

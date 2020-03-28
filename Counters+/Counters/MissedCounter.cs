@@ -8,7 +8,7 @@ namespace CountersPlus.Counters
 {
     class MissedCounter : Counter<MissedConfigModel>
     {
-        private BeatmapObjectSpawnController beatmapObjectSpawnController;
+        private BeatmapObjectManager beatmapObjectManager;
         private TMP_Text missedText;
         private TMP_Text label;
         private int counter;
@@ -17,7 +17,7 @@ namespace CountersPlus.Counters
 
         internal override void Init(CountersData data)
         {
-            beatmapObjectSpawnController = data.BOSC;
+            beatmapObjectManager = data.BOM;
             Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out missedText, position - new Vector3(0, 0.4f, 0));
             missedText.text = "0";
@@ -41,18 +41,18 @@ namespace CountersPlus.Counters
                 settings.Save();
             }
 
-            if (beatmapObjectSpawnController != null)
+            if (beatmapObjectManager != null)
             {
-                beatmapObjectSpawnController.noteWasMissedEvent += OnNoteMiss;
+                beatmapObjectManager.noteWasMissedEvent += OnNoteMiss;
             }
         }
 
         internal override void Counter_Destroy()
         {
-            beatmapObjectSpawnController.noteWasMissedEvent -= OnNoteMiss;
+            beatmapObjectManager.noteWasMissedEvent -= OnNoteMiss;
         }
 
-        private void OnNoteMiss(BeatmapObjectSpawnController bosc, INoteController data)
+        private void OnNoteMiss(INoteController data)
         {
             if (data.noteData.noteType != NoteType.Bomb)
             {

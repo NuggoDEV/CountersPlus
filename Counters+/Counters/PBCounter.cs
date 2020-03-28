@@ -30,13 +30,13 @@ namespace CountersPlus.Counters
         internal override void Init(CountersData data)
         {
             _scoreController = data.ScoreController;
-            PlayerDataModelSO player = data.PlayerData;
+            PlayerDataModel player = data.PlayerData;
             gameplayModsModel = data.ModifiersData;
             gameplayMods = data.PlayerData.playerData.gameplayModifiers;
             IDifficultyBeatmap beatmap = data.GCSSD.difficultyBeatmap;
             stats = player.playerData.GetPlayerLevelStatsData(
                 beatmap.level.levelID, beatmap.difficulty, beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic);
-            int maxRawScore = ScoreController.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
+            int maxRawScore = ScoreModel.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
             _maxPossibleScore = Mathf.RoundToInt(maxRawScore * gameplayModsModel.GetTotalMultiplier(gameplayMods));
             beginningPB = stats.highScore / (float)_maxPossibleScore;
             highScore = stats.highScore;

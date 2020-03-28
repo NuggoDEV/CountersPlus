@@ -139,21 +139,21 @@ namespace CountersPlus
 
     public class CountersData
     {
-        public BeatmapObjectSpawnController BOSC;
+        public BeatmapObjectManager BOM;
         public ScoreController ScoreController;
         public PlayerController PlayerController;
         public AudioTimeSyncController AudioTimeSyncController;
-        public PlayerDataModelSO PlayerData;
+        public PlayerDataModel PlayerData;
         public GameplayModifiersModelSO ModifiersData;
         public GameplayCoreSceneSetupData GCSSD;
 
         public CountersData()
         {
-            BOSC = Resources.FindObjectsOfTypeAll<BeatmapObjectSpawnController>().First();
+            BOM = Resources.FindObjectsOfTypeAll<BeatmapObjectManager>().First();
             ScoreController = Resources.FindObjectsOfTypeAll<ScoreController>().First();
             PlayerController = Resources.FindObjectsOfTypeAll<PlayerController>().First();
             AudioTimeSyncController = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().First();
-            PlayerData = Resources.FindObjectsOfTypeAll<PlayerDataModelSO>().First();
+            PlayerData = Resources.FindObjectsOfTypeAll<PlayerDataModel>().First();
             ModifiersData = Resources.FindObjectsOfTypeAll<GameplayModifiersModelSO>().First();
             GCSSD = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData; //By the time all of these load, so should GCSSD.
         }

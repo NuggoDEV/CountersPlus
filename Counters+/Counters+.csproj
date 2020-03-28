@@ -35,8 +35,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony.1.2.0.1">
-      <HintPath>$(BeatSaberDir)\Libs\0Harmony.1.2.0.1.dll</HintPath>
+    <Reference Include="0Harmony">
+      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Libs\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="HMUI">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\HMUI.dll</HintPath>
@@ -61,12 +61,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\IPA.Loader.dll</HintPath>
     </Reference>
-    <Reference Include="MainAssembly, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Beat Saber_Data\Managed\MainAssembly.dll</HintPath>
+    <Reference Include="Main">
+      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Beat Saber_Data\Managed\Main.dll</HintPath>
     </Reference>
-    <Reference Include="SemVer.1.2.0.0">
-      <HintPath>$(BeatSaberDir)\Libs\SemVer.1.2.0.0.dll</HintPath>
+    <Reference Include="SemVer">
+      <HintPath>D:\Oculus\Software\Software\hyperbolic-magnetism-beat-saber\Libs\SemVer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -116,7 +115,7 @@
     <Compile Include="Custom\Attributes\DisplayNameAttribute.cs" />
     <Compile Include="Custom\Attributes\FormattedTextAttribute.cs" />
     <Compile Include="Custom\Attributes\RefreshCounterAttribute.cs" />
-    <Compile Include="Harmony\ScoreCounterHook.cs" />
+    <Compile Include="Harmony Patches\ScoreCounterHook.cs" />
     <Compile Include="UI\AdvancedCounterSettings.cs" />
     <Compile Include="UI\CounterWarning.cs" />
     <Compile Include="UI\Images\Images.cs" />
