@@ -11,11 +11,12 @@ namespace CountersPlus.Counters
         private TMP_Text cutLabel;
         private BeatmapObjectManager beatmapObjectManager;
         private GameObject _RankObject;
-        private TMP_Text cutCounter;
+        private TMP_Text cutCounterLeft;
+        private TMP_Text cutCounterRight;
         private int totalCutCountLeft = 0;
         private int totalCutCountRight = 0;
-        private int totalScoreLeft = 0; // MaxScoreForNumberOfNotes() is an int. Don't expect scores over 2 billion.
-        private int totalScoreRight = 0;
+        private int[] totalScoresLeft = new int[] { 0, 0, 0 }; // [0]=beforeCut, [1]=afterCut, [2]=cutDistance
+        private int[] totalScoresRight = new int[] { 0, 0, 0 };
 
         private Dictionary<SaberSwingRatingCounter, NoteCutInfo> noteCutInfos = new Dictionary<SaberSwingRatingCounter, NoteCutInfo>();
 
@@ -62,28 +63,66 @@ namespace CountersPlus.Counters
             //"cutDistanceRawScore" is already calculated into "beforeCutRawScore"
             if (noteCutInfos[v].saberType == SaberType.SaberA)
             {
-                totalScoreLeft += beforeCut + afterCut + cutDistance;
+                totalScoresLeft[0] += beforeCut;
+                totalScoresLeft[1] += afterCut;
+                totalScoresLeft[2] += cutDistance;
                 ++totalCutCountLeft;
             }
             else
             {
-                totalScoreRight += beforeCut + afterCut + cutDistance;
+                totalScoresRight[0] += beforeCut;
+                totalScoresRight[1] += afterCut;
+                totalScoresRight[2] += cutDistance;
                 ++totalCutCountRight;
             }
 
-            if (settings.SeparateSaberCounts)
-            {
-                double leftAverage = Math.Round(((double)(totalScoreLeft)) / (totalCutCountLeft));
-                double rightAverage = Math.Round(((double)(totalScoreRight)) / (totalCutCountRight));
-                leftAverage = double.IsNaN(leftAverage) ? 0 : leftAverage;
-                rightAverage = double.IsNaN(rightAverage) ? 0 : rightAverage;
-                cutCounter.text = $"{leftAverage}";
-                cutCounter.text += $"  {rightAverage}";
-            }
-            else
-                cutCounter.text = $"{Math.Round(((double)(totalScoreRight + totalScoreLeft)) / (totalCutCountRight + totalCutCountLeft))}";
+            UpdateLabels();
 
             noteCutInfos.Remove(v);
+        }
+
+        private void UpdateLabels()
+        {
+            double[] leftAverages = new double[3]
+            {
+                SafeDivideScore(totalScoresLeft[0], totalCutCountLeft),
+                SafeDivideScore(totalScoresLeft[1], totalCutCountLeft),
+                SafeDivideScore(totalScoresLeft[2], totalCutCountLeft)
+            };
+
+            double[] rightAverages = new double[3]
+            {
+                SafeDivideScore(totalScoresRight[0], (totalCutCountRight)),
+                SafeDivideScore(totalScoresRight[1], (totalCutCountRight)),
+                SafeDivideScore(totalScoresRight[2], (totalCutCountRight))
+            };
+
+            if (settings.SeparateCutValues && settings.SeparateSaberCounts)
+            {
+                cutCounterLeft.text = $"{leftAverages[0]}\n{leftAverages[1]}\n{leftAverages[2]}";
+                cutCounterRight.text = $"{rightAverages[0]}\n{rightAverages[1]}\n{rightAverages[2]}";
+            }
+            else if (settings.SeparateCutValues)
+            {
+                cutCounterLeft.text = $"{(leftAverages[0] + rightAverages[0]) / 2}\n{(leftAverages[1] + rightAverages[1]) / 2}\n{(leftAverages[2] + rightAverages[2]) / 2}";
+            }
+            else if (settings.SeparateSaberCounts)
+            {
+                cutCounterLeft.text = $"{leftAverages[0] + leftAverages[1] + leftAverages[2]}";
+                cutCounterRight.text = $"{rightAverages[0] + rightAverages[1] + rightAverages[2]}";
+            }
+            else
+            {
+                // Divide combined left and right score by 2 only if both sabers have cut something.
+                int divisor = (totalCutCountRight * totalCutCountLeft == 0 ? 1 : 2);
+                cutCounterLeft.text = $"{(leftAverages[0] + leftAverages[1] + leftAverages[2] + rightAverages[0] + rightAverages[1] + rightAverages[2]) / divisor}";
+            }
+        }
+
+        private double SafeDivideScore(int total, int count)
+        {
+            double result = Math.Round(((double)(total)) / (count));
+            return Double.IsNaN(result) ? 0 : result;
         }
     }
 }
