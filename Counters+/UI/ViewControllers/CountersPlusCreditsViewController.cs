@@ -14,6 +14,7 @@ namespace CountersPlus.UI.ViewControllers
         [UIComponent("versionText")] private TextMeshProUGUI version = null;
         [UIComponent("creatorText")] private TextMeshProUGUI creator = null;
         [UIComponent("updateText")] private TextMeshProUGUI update = null;
+        [UIComponent("aprilFoolsText")] private TextMeshProUGUI aprilfools = null;
         [UIComponent("linkOpenedText")] private TextMeshProUGUI linkOpened = null;
         [UIComponent("github")] private Button github = null;
         [UIComponent("donate")] private Button donate = null;
@@ -28,6 +29,9 @@ namespace CountersPlus.UI.ViewControllers
             version.text = $"Version <color={(Plugin.UpToDate ? "#00FF00" : "#FF0000")}>{Plugin.PluginVersion}</color>";
             creator.text = "Developed by: <color=#00c0ff>Caeden117</color>";
             update.text = $"<color=#FF0000>Version {Plugin.WebVersion} available for download!</color>";
+
+            System.DateTime date = System.DateTime.Now;
+            aprilfools.gameObject.SetActive(date.Month == 4 && date.Day == 1);
 
             if (Plugin.UpToDate) update.gameObject.SetActive(false);
             linkOpened.gameObject.SetActive(false);

@@ -22,6 +22,11 @@ namespace CountersPlus
             Canvas canvas;
             GameObject CanvasGO = new GameObject("Counters+ | Counters Canvas");
             canvas = CanvasGO.AddComponent<Canvas>();
+            System.DateTime date = System.DateTime.Now;
+            if (date.Month == 4 && date.Day == 1 && CountersController.settings.AprilFoolsTomfoolery)
+            {
+                CanvasGO.AddComponent<OopsAllAprilFools>();
+            }
             canvas.renderMode = RenderMode.WorldSpace;
             CanvasGO.transform.localScale = Vector3.one / CanvasScaleFactor;
             CanvasGO.transform.position = Position;

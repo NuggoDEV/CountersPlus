@@ -1,4 +1,7 @@
 ﻿<vertical spacing='1'>
+  <horizontal horizontal-fit='PreferredSize' id='aprilfools'>
+    <checkbox-setting text='April Fools Tomfoolery' on-change='update_model' apply-on-change='true' value='april-fools' hover-hint='Who puts April Fools jokes in a Counters mod?'></checkbox-setting>
+  </horizontal>
   <horizontal horizontal-fit='PreferredSize'>
     <checkbox-setting text='Enabled' on-change='update_model' apply-on-change='true' value='enabled' hover-hint='Toggles Counters+ on or off.'></checkbox-setting>
   </horizontal>

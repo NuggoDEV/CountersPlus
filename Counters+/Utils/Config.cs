@@ -108,6 +108,7 @@ namespace CountersPlus.Config
         public bool HideMultiplier = false;
         public float ComboOffset = 0.2f;
         public float MultiplierOffset = 0.4f;
+        public bool AprilFoolsTomfoolery = true;
         public HUDConfigModel hudConfig = new HUDConfigModel();
         public MissedConfigModel missedConfig = new MissedConfigModel();
         public NoteConfigModel noteConfig = new NoteConfigModel();
