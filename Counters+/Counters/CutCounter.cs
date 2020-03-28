@@ -34,12 +34,26 @@ namespace CountersPlus.Counters
 
             _RankObject = new GameObject("Counters+ | Cut Label");
             _RankObject.transform.parent = transform;
-            TextHelper.CreateText(out cutCounter, position - new Vector3(0, 0.4f, 0));
-            cutCounter.text = settings.SeparateSaberCounts ? "0  0" : "0";
-            cutCounter.fontSize = 4;
-            cutCounter.color = Color.white;
-            cutCounter.alignment = TextAlignmentOptions.Center;
-            
+            TextHelper.CreateText(out cutCounterLeft, position - new Vector3(0, settings.SeparateCutValues ? 0.9f : 0.4f, 0));
+            cutCounterLeft.fontSize = 4;
+            cutCounterLeft.color = Color.white;
+            cutCounterLeft.lineSpacing = -26;
+            cutCounterLeft.text = settings.SeparateCutValues ? "0\n0\n0" : "0";
+            cutCounterLeft.alignment = TextAlignmentOptions.Center;
+
+            if (settings.SeparateSaberCounts)
+            {
+                TextHelper.CreateText(out cutCounterRight, position - new Vector3(-0.2f, settings.SeparateCutValues ? 0.9f : 0.4f, 0));
+                cutCounterRight.fontSize = 4;
+                cutCounterRight.color = Color.white;
+                cutCounterRight.lineSpacing = -26;
+                cutCounterRight.text = settings.SeparateCutValues ? "0\n0\n0" : "0";
+                cutCounterRight.alignment = TextAlignmentOptions.Left;
+
+                cutCounterLeft.alignment = TextAlignmentOptions.Right;
+                cutCounterLeft.transform.position = position - new Vector3(0.2f, settings.SeparateCutValues ? 0.9f : 0.4f, 0);
+            }
+
             if (beatmapObjectManager != null)
                 beatmapObjectManager.noteWasCutEvent += UpdateScore;
         }
