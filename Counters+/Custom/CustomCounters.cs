@@ -53,8 +53,7 @@ namespace CountersPlus.Custom
 
             if (model.BSIPAMod != null)
             {
-                PluginLoader.PluginMetadata pluginMetadata = PluginUtility.GetPluginMetadata(model.BSIPAMod);
-                if (pluginMetadata != null) modCreator = pluginMetadata.Name;
+                modCreator = model.BSIPAMod.Name;
             }
             model.ModName = modCreator;
 
@@ -105,7 +104,7 @@ namespace CountersPlus.Custom
         /// <summary>
         /// The plugin that created this custom counter. Will be displayed in the Settings UI.
         /// </summary>
-        public IPA.IBeatSaberPlugin BSIPAMod;
+        public PluginMetadata BSIPAMod;
         /// <summary>
         /// The name of the <see cref="GameObject"/> that holds the <see cref="Canvas"/> that contains all the text for the counter.
         /// </summary>

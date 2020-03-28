@@ -14,8 +14,8 @@ namespace CountersPlus.Utils
         public static bool IsPluginEnabled(string PluginName)
         {
             if (!IsPluginPresent(PluginName)) return false;
-            PluginLoader.PluginInfo pluginInfo = PluginManager.GetPluginFromId(PluginName);
-            if (pluginInfo?.Metadata != null) return PluginManager.IsEnabled(pluginInfo.Metadata);
+            PluginMetadata pluginInfo = PluginManager.GetPluginFromId(PluginName);
+            if (pluginInfo != null) return PluginManager.IsEnabled(pluginInfo);
             return false;
         }
 
@@ -34,28 +34,15 @@ namespace CountersPlus.Utils
         /// <summary>
         /// Returns the PluginMetadata of a loaded BSIPA plugin
         /// </summary>
-        public static PluginLoader.PluginMetadata GetPluginMetadata(string pluginName)
+        public static PluginMetadata GetPluginMetadata(string pluginName)
         {
             if (IsPluginPresent(pluginName))
             {
-                PluginLoader.PluginMetadata metadataFromName = PluginManager.GetPlugin(pluginName).Metadata;
-                PluginLoader.PluginMetadata metadataFromId = PluginManager.GetPluginFromId(pluginName).Metadata;
+                PluginMetadata metadataFromName = PluginManager.GetPlugin(pluginName);
+                PluginMetadata metadataFromId = PluginManager.GetPluginFromId(pluginName);
 
                 if (metadataFromName != null) return metadataFromName;
                 else if (metadataFromId != null) return metadataFromId;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Returns the PluginMetadata of a provided BSIPA plugin
-        /// </summary>
-        public static PluginLoader.PluginMetadata GetPluginMetadata(IPA.IBeatSaberPlugin plugin)
-        {
-            foreach (PluginLoader.PluginInfo pluginInfo in PluginManager.AllPlugins)
-            {
-                if (pluginInfo != null && plugin == pluginInfo.GetPrivateProperty<IPA.IBeatSaberPlugin>("Plugin"))
-                    return pluginInfo.Metadata ?? null;
             }
             return null;
         }

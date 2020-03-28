@@ -70,10 +70,8 @@ namespace CountersPlus.Custom
             counterDestroy?.Invoke(host, new object[] { });
         }
 
-        internal override void Init(CountersData data)
+        internal override void Init(CountersData data, Vector3 position)
         {
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
-
             TextHelper.CreateText(out counter, position - new Vector3(0, 0.4f, 0));
             counter.text = "Data";
             counter.fontSize = 4;

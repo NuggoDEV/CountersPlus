@@ -8,17 +8,16 @@ namespace CountersPlus.Counters
     class AccuracyCounter : Counter<NoteConfigModel>
     {
 
-        private BeatmapObjectSpawnController beatmapObjectSpawnController;
+        private BeatmapObjectManager beatmapObjectManager;
         private TMP_Text counterText;
         private int counter;
         private int total;
 
         internal override void Counter_Start() { }
 
-        internal override void Init(CountersData data)
+        internal override void Init(CountersData data, Vector3 position)
         {
-            beatmapObjectSpawnController = data.BOSC;
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
+            beatmapObjectManager = data.BOM;
             TextHelper.CreateText(out counterText, position - new Vector3(0, 0.4f, 0));
             counterText.text = settings.ShowPercentage ? "0 / 0 - (100%)" : "0 / 0";
             counterText.fontSize = 4;
@@ -33,20 +32,20 @@ namespace CountersPlus.Counters
             label.color = Color.white;
             label.alignment = TextAlignmentOptions.Center;
 
-            if (beatmapObjectSpawnController != null)
+            if (beatmapObjectManager != null)
             {
-                beatmapObjectSpawnController.noteWasCutEvent += OnNoteCut;
-                beatmapObjectSpawnController.noteWasMissedEvent += OnNoteMiss;
+                beatmapObjectManager.noteWasCutEvent += OnNoteCut;
+                beatmapObjectManager.noteWasMissedEvent += OnNoteMiss;
             }
         }
 
         internal override void Counter_Destroy()
         {
-            beatmapObjectSpawnController.noteWasCutEvent -= OnNoteCut;
-            beatmapObjectSpawnController.noteWasMissedEvent -= OnNoteMiss;
+            beatmapObjectManager.noteWasCutEvent -= OnNoteCut;
+            beatmapObjectManager.noteWasMissedEvent -= OnNoteMiss;
         }
 
-        private void OnNoteCut(BeatmapObjectSpawnController bosc, INoteController data, NoteCutInfo info)
+        private void OnNoteCut(INoteController data, NoteCutInfo info)
         {
             if (data.noteData.noteType != NoteType.Bomb && info.allIsOK)
                 Increment(true);
@@ -54,7 +53,7 @@ namespace CountersPlus.Counters
                 Increment(false);
         }
 
-        private void OnNoteMiss(BeatmapObjectSpawnController bosc, INoteController data)
+        private void OnNoteMiss(INoteController data)
         {
             if (data.noteData.noteType != NoteType.Bomb) Increment(false);
         }

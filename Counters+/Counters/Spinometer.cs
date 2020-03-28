@@ -22,13 +22,12 @@ namespace CountersPlus.Counters
         
         internal override void Counter_Destroy() {}
 
-        internal override void Init(CountersData data)
+        internal override void Init(CountersData data, Vector3 position)
         {
             Saber[] sabers = Resources.FindObjectsOfTypeAll<Saber>();
             leftSaber = sabers.Where((Saber x) => x.name.ToLower().Contains("left")).First();
             rightSaber = sabers.Where((Saber x) => x.name.ToLower().Contains("right")).First();
 
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out spinometer, position - new Vector3(0, 0.4f, 0));
             spinometer.text = settings.Mode == ICounterMode.SplitAverage ? "0 | 0" : "0";
             spinometer.fontSize = 4;

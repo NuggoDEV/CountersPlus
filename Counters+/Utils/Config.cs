@@ -21,8 +21,8 @@ namespace CountersPlus.Config
         /// </summary>
         public static MainConfigModel LoadSettings()
         {
-            if (!File.Exists(Path.Combine(BeatSaber.UserDataPath, "CountersPlus.ini")))
-                File.Create(Path.Combine(BeatSaber.UserDataPath, "CountersPlus.ini"));
+            if (!File.Exists(Path.Combine(UnityGame.UserDataPath, "CountersPlus.ini")))
+                File.Create(Path.Combine(UnityGame.UserDataPath, "CountersPlus.ini"));
             MainConfigModel model = new MainConfigModel();
             model = DeserializeFromConfig(model, model.DisplayName);
             try
@@ -54,7 +54,7 @@ namespace CountersPlus.Config
         {
             List<CustomConfigModel> counters = new List<CustomConfigModel>();
             FileIniDataParser parser = new FileIniDataParser();
-            IniData data = parser.ReadFile(Path.Combine(BeatSaber.UserDataPath, "CountersPlus.ini"));
+            IniData data = parser.ReadFile(Path.Combine(UnityGame.UserDataPath, "CountersPlus.ini"));
             foreach (SectionData section in data.Sections)
             {
                 if (!TypesUtility.GetListOfType<ConfigModel>().Any(y => y.DisplayName == section.SectionName))
@@ -127,9 +127,14 @@ namespace CountersPlus.Config
             {
                 if (info.MemberType != MemberTypes.Field) continue;
                 FieldInfo finfo = (FieldInfo)info;
-                if (finfo.Name.ToLower().Contains("config")) continue;
+                if (finfo.Name.ToLower().Contains("config"))
+                {
+                    finfo.FieldType.GetMethod("Save").Invoke(finfo.GetValue(this), null);
+                    continue;
+                }
                 ConfigLoader.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
             }
+            hudConfig.Save();
         }
     }
 

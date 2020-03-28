@@ -9,7 +9,7 @@ namespace CountersPlus.Counters
     public class CutCounter : Counter<CutConfigModel>
     {
         private TMP_Text cutLabel;
-        private BeatmapObjectSpawnController beatmapObjectSpawnController;
+        private BeatmapObjectManager beatmapObjectManager;
         private GameObject _RankObject;
         private TMP_Text cutCounterLeft;
         private TMP_Text cutCounterRight;
@@ -22,10 +22,9 @@ namespace CountersPlus.Counters
 
         internal override void Counter_Start() { }
 
-        internal override void Init(CountersData data)
+        internal override void Init(CountersData data, Vector3 position)
         {
-            beatmapObjectSpawnController = data.BOSC;
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
+            beatmapObjectManager = data.BOM;
             TextHelper.CreateText(out cutLabel, position);
             cutLabel.text = "Average Cut";
             cutLabel.fontSize = 3;
@@ -54,16 +53,16 @@ namespace CountersPlus.Counters
                 cutCounterLeft.transform.position = position - new Vector3(0.2f, settings.SeparateCutValues ? 0.9f : 0.4f, 0);
             }
 
-            if (beatmapObjectSpawnController != null)
-                beatmapObjectSpawnController.noteWasCutEvent += UpdateScore;
+            if (beatmapObjectManager != null)
+                beatmapObjectManager.noteWasCutEvent += UpdateScore;
         }
 
         internal override void Counter_Destroy()
         {
-            beatmapObjectSpawnController.noteWasCutEvent -= UpdateScore;
+            beatmapObjectManager.noteWasCutEvent -= UpdateScore;
         }
 
-        private void UpdateScore(BeatmapObjectSpawnController bosc, INoteController data, NoteCutInfo info)
+        private void UpdateScore(INoteController data, NoteCutInfo info)
         {
             if (data.noteData.noteType == NoteType.Bomb || !info.allIsOK) return;
             noteCutInfos.Add(info.swingRatingCounter, info);
@@ -73,9 +72,9 @@ namespace CountersPlus.Counters
 
         private void SaberSwingRatingCounter_didFinishEvent(SaberSwingRatingCounter v)
         {
-            ScoreController.RawScoreWithoutMultiplier(noteCutInfos[v], out int beforeCut, out int afterCut, out int cutDistance);
+            ScoreModel.RawScoreWithoutMultiplier(noteCutInfos[v], out int beforeCut, out int afterCut, out int cutDistance);
             //"cutDistanceRawScore" is already calculated into "beforeCutRawScore"
-            if (noteCutInfos[v].saberType == Saber.SaberType.SaberA)
+            if (noteCutInfos[v].saberType == SaberType.SaberA)
             {
                 totalScoresLeft[0] += beforeCut;
                 totalScoresLeft[1] += afterCut;

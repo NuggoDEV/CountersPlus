@@ -24,13 +24,16 @@ namespace CountersPlus.Counters
                 Plugin.Log($"Custom Counter ({Name}) could not find its attached config model. Destroying...", LogInfo.Notice);
                 Destroy(this);
             }
-            StartCoroutine(GetRequired());
         }
 
-        internal override void Init(CountersData data) { }
+        internal override void Init(CountersData data, Vector3 position)
+        {
+            StartCoroutine(GetRequired(position));
+        }
+
         internal override void Counter_Destroy() { }
 
-        IEnumerator GetRequired()
+        IEnumerator GetRequired(Vector3 position)
         {
             int tries = 1;
             while (true)
@@ -50,15 +53,14 @@ namespace CountersPlus.Counters
                 }
                 catch { }
             }
-            if (tries <= 10) StartCoroutine(Init());
+            if (tries <= 10) StartCoroutine(Init(position));
         }
 
-        private IEnumerator Init()
+        private IEnumerator Init(Vector3 position)
         {
             yield return new WaitUntil(() => TextHelper.CounterCanvas != null);
             counter.transform.SetParent(TextHelper.CounterCanvas.transform, false);
             counter.transform.localScale = Vector3.one;
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             position = new Vector3(position.x, position.y, 0);
             counter.transform.localPosition = position * TextHelper.PosScaleFactor;
         }

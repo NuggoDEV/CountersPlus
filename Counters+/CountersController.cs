@@ -110,17 +110,17 @@ namespace CountersPlus
             switch (position)
             {
                 case ICounterPositions.BelowCombo:
-                    pos = new Vector3(-X, 1.05f - settings.ComboOffset, 7);
+                    pos = new Vector3(-X, 1.15f - settings.ComboOffset, 7);
                     break;
                 case ICounterPositions.AboveCombo:
-                    pos = new Vector3(-X, 1.9f + settings.ComboOffset, 7);
+                    pos = new Vector3(-X, 2f + settings.ComboOffset, 7);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
                 case ICounterPositions.BelowMultiplier:
-                    pos = new Vector3(X, 0.95f - settings.MultiplierOffset, 7);
+                    pos = new Vector3(X, 1.05f - settings.MultiplierOffset, 7);
                     break;
                 case ICounterPositions.AboveMultiplier:
-                    pos = new Vector3(X, 1.9f + settings.MultiplierOffset, 7);
+                    pos = new Vector3(X, 2f + settings.MultiplierOffset, 7);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
                 case ICounterPositions.BelowEnergy:
@@ -139,23 +139,25 @@ namespace CountersPlus
 
     public class CountersData
     {
-        public BeatmapObjectSpawnController BOSC;
+        public BeatmapObjectManager BOM;
         public ScoreController ScoreController;
         public PlayerController PlayerController;
         public AudioTimeSyncController AudioTimeSyncController;
-        public PlayerDataModelSO PlayerData;
+        public PlayerDataModel PlayerData;
         public GameplayModifiersModelSO ModifiersData;
         public GameplayCoreSceneSetupData GCSSD;
+        public bool Is360Or90Level = false;
 
         public CountersData()
         {
-            BOSC = Resources.FindObjectsOfTypeAll<BeatmapObjectSpawnController>().First();
+            BOM = Resources.FindObjectsOfTypeAll<BeatmapObjectManager>().First();
             ScoreController = Resources.FindObjectsOfTypeAll<ScoreController>().First();
             PlayerController = Resources.FindObjectsOfTypeAll<PlayerController>().First();
             AudioTimeSyncController = Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().First();
-            PlayerData = Resources.FindObjectsOfTypeAll<PlayerDataModelSO>().First();
+            PlayerData = Resources.FindObjectsOfTypeAll<PlayerDataModel>().First();
             ModifiersData = Resources.FindObjectsOfTypeAll<GameplayModifiersModelSO>().First();
             GCSSD = BS_Utils.Plugin.LevelData.GameplayCoreSceneSetupData; //By the time all of these load, so should GCSSD.
+            Is360Or90Level = Resources.FindObjectsOfTypeAll<FlyingGameHUDRotation>().Any(x => x.isActiveAndEnabled);
         }
     }
 }

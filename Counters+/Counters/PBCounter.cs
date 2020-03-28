@@ -27,21 +27,20 @@ namespace CountersPlus.Counters
             ColorUtility.TryParseHtmlString("#FFA500", out orange);
         }
 
-        internal override void Init(CountersData data)
+        internal override void Init(CountersData data, Vector3 position)
         {
             _scoreController = data.ScoreController;
-            PlayerDataModelSO player = data.PlayerData;
+            PlayerDataModel player = data.PlayerData;
             gameplayModsModel = data.ModifiersData;
             gameplayMods = data.PlayerData.playerData.gameplayModifiers;
             IDifficultyBeatmap beatmap = data.GCSSD.difficultyBeatmap;
             stats = player.playerData.GetPlayerLevelStatsData(
                 beatmap.level.levelID, beatmap.difficulty, beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic);
-            int maxRawScore = ScoreController.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
+            int maxRawScore = ScoreModel.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
             _maxPossibleScore = Mathf.RoundToInt(maxRawScore * gameplayModsModel.GetTotalMultiplier(gameplayMods));
             beginningPB = stats.highScore / (float)_maxPossibleScore;
             highScore = stats.highScore;
 
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out _PbTrackerText, position);
             _PbTrackerText.fontSize = settings.TextSize;
             _PbTrackerText.color = Color.white;
