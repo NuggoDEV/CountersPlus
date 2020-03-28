@@ -15,10 +15,9 @@ namespace CountersPlus.Counters
 
         internal override void Counter_Start() { }
 
-        internal override void Init(CountersData data)
+        internal override void Init(CountersData data, Vector3 position)
         {
             beatmapObjectManager = data.BOM;
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out missedText, position - new Vector3(0, 0.4f, 0));
             missedText.text = "0";
             missedText.fontSize = 4;

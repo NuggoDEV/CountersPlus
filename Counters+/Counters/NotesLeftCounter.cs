@@ -12,13 +12,12 @@ namespace CountersPlus.Counters
 
         internal override void Counter_Start() { }
 
-        internal override void Init(CountersData data)
+        internal override void Init(CountersData data, Vector3 position)
         {
             beatmapObjectManager = data.BOM;
             beatmapObjectManager.noteWasCutEvent += OnNoteCut;
             beatmapObjectManager.noteWasMissedEvent += OnNoteMiss;
             notesLeft = data.GCSSD.difficultyBeatmap.beatmapData.notesCount;
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out counter, position - new Vector3(0, 0.4f, 0));
             counter.text = $"Notes Remaining {notesLeft}";
             counter.fontSize = 3f;

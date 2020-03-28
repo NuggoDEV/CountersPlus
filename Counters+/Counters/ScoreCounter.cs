@@ -22,7 +22,7 @@ namespace CountersPlus.Counters
                 StartCoroutine(YeetToBaseCounter());
         }
         internal override void Counter_Destroy() { }
-        internal override void Init(CountersData data) { }
+        internal override void Init(CountersData data, Vector3 position) { }
 
         IEnumerator YeetToBaseCounter()
         {

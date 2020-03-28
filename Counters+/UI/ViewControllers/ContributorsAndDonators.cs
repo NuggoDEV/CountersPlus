@@ -36,6 +36,7 @@ namespace CountersPlus.UI.ViewControllers
             { "FrostDragon", "People copy my code all the time! I let them!" },
             { "ateRstones", "Thanks for liking my mod!" },
             { "Storm Knight", "As long as Beat Saber is still kicking, I'll be here." },
+            { "R1zputin", "Aww, thanks <3" },
             { "Someone", "To all the people who remain anonymous, I thank you." },
         };
 

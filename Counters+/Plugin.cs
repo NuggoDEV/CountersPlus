@@ -59,7 +59,7 @@ namespace CountersPlus
         private void GameCoreLoaded()
         {
             PlayerDataModel dataModel = UnityEngine.Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault();
-            if (CountersController.settings.Enabled && (dataModel?.playerData.playerSpecificSettings.noTextsAndHuds ?? true))
+            if (CountersController.settings.Enabled && !(dataModel?.playerData.playerSpecificSettings.noTextsAndHuds ?? false))
             {
                 CountersController.LoadCounters();
             }

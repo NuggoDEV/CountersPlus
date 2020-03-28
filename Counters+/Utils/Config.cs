@@ -127,9 +127,14 @@ namespace CountersPlus.Config
             {
                 if (info.MemberType != MemberTypes.Field) continue;
                 FieldInfo finfo = (FieldInfo)info;
-                if (finfo.Name.ToLower().Contains("config")) continue;
+                if (finfo.Name.ToLower().Contains("config"))
+                {
+                    finfo.FieldType.GetMethod("Save").Invoke(finfo.GetValue(this), null);
+                    continue;
+                }
                 ConfigLoader.config.SetString(DisplayName, info.Name, finfo.GetValue(this).ToString());
             }
+            hudConfig.Save();
         }
     }
 

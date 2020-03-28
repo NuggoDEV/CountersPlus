@@ -40,7 +40,7 @@ namespace CountersPlus.UI.ViewControllers
                 {
                     loadedSettingsGroups = TypesUtility.GetListOfType<SettingsGroup>();
                     //Largely unchanged from CustomListController. Keep all of this.
-                    levelPackTableCellInstance = Resources.FindObjectsOfTypeAll<AnnotatedBeatmapLevelCollectionTableCell>().First(x => x.name == "LevelPackTableCell");
+                    levelPackTableCellInstance = Resources.FindObjectsOfTypeAll<AnnotatedBeatmapLevelCollectionTableCell>().First(x => x.name == "AnnotatedBeatmapLevelCollectionTableCell");
                     levelPackTableCellInstance.reuseIdentifier = ReuseIdentifier;
 
                     RectTransform container = new GameObject("HorizontalListContainer", typeof(RectTransform)).transform as RectTransform;
@@ -96,7 +96,7 @@ namespace CountersPlus.UI.ViewControllers
 
                     CustomListTableView.SetPrivateField("_pageUpButton", PageLeftButton); //Set Up button to Left
                     CustomListTableView.SetPrivateField("_pageDownButton", PageRightButton); //Set down button to Right
-                    CustomListTableView.InvokePrivateMethod("Init", null); //Init, have "_scrollRectTransform" be null.
+                    CustomListTableView.Init(); //Init, have "_scrollRectTransform" be null.
                     CustomListTableView.SetPrivateField("_scrollRectTransform", viewport); //Set it with our hot-out-of-the-oven Viewport.
                     CustomListTableView.dataSource = this; //Add data source
                     go.SetActive(true);

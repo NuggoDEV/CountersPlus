@@ -27,7 +27,7 @@ namespace CountersPlus.Counters
             ColorUtility.TryParseHtmlString("#FFA500", out orange);
         }
 
-        internal override void Init(CountersData data)
+        internal override void Init(CountersData data, Vector3 position)
         {
             _scoreController = data.ScoreController;
             PlayerDataModel player = data.PlayerData;
@@ -41,7 +41,6 @@ namespace CountersPlus.Counters
             beginningPB = stats.highScore / (float)_maxPossibleScore;
             highScore = stats.highScore;
 
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out _PbTrackerText, position);
             _PbTrackerText.fontSize = settings.TextSize;
             _PbTrackerText.color = Color.white;

@@ -33,13 +33,12 @@ namespace CountersPlus.Counters
             Destroy(gameObject);
         }
 
-        internal override void Init(CountersData data)
+        internal override void Init(CountersData data, Vector3 position)
         {
             _audioTimeSync = data.AudioTimeSyncController;
             length = _audioTimeSync.songLength;
             if (settings.Mode == ICounterMode.Original)
             {
-                Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
                 TextHelper.CreateText(out _timeMesh, position + new Vector3(-0.25f, 0.25f, 0));
                 _timeMesh.text = settings.ProgressTimeLeft ? $"{Math.Floor(length / 60):N0}:{Math.Floor(length % 60):00}" : "0:00";
                 _timeMesh.fontSize = 4;
@@ -90,14 +89,13 @@ namespace CountersPlus.Counters
                 _image.fillAmount = (settings.ProgressTimeLeft && settings.IncludeRing) ? 1 : 0;
             }else if (settings.Mode == ICounterMode.Percent)
             {
-                Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
                 TextHelper.CreateText(out _timeMesh, position);
                 _timeMesh.text = settings.ProgressTimeLeft ? "100%" : "0.00%";
                 _timeMesh.fontSize = 4;
                 _timeMesh.color = Color.white;
                 _timeMesh.alignment = TextAlignmentOptions.Center;
             }
-            transform.position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
+            transform.position = position;
             if (GameObject.Find("SongProgressCanvas") != null && settings.Mode != ICounterMode.BaseGame)
                 Destroy(GameObject.Find("SongProgressCanvas"));
             StartCoroutine(SecondTick());

@@ -17,7 +17,7 @@ namespace CountersPlus.Counters
 
         internal override void Counter_Start() { }
 
-        internal override void Init(CountersData data)
+        internal override void Init(CountersData data, Vector3 position)
         {
             //Because CountersController.ReadyToInit relies on finding other objects via Resources.FindObjectsOfTypeAll<>()
             //before invoking, it is safe to assume that the objects we find do indeed exist.
@@ -44,7 +44,6 @@ namespace CountersPlus.Counters
                 }
             }
 
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out failText, position - new Vector3(0, 0.4f, 0));
             failText.text = settings.ShowRestartsInstead ? Restarts.ToString() : fails.ToString();
             failText.fontSize = 4;

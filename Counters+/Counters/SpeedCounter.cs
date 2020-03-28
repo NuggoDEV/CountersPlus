@@ -21,9 +21,8 @@ namespace CountersPlus.Counters
         internal override void Counter_Start() { }
         internal override void Counter_Destroy() { }
 
-        internal override void Init(CountersData data)
+        internal override void Init(CountersData data, Vector3 position)
         {
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             pc = data.PlayerController;
             right = data.PlayerController.rightSaber;
             left = data.PlayerController.leftSaber;

@@ -22,10 +22,9 @@ namespace CountersPlus.Counters
 
         internal override void Counter_Start() { }
 
-        internal override void Init(CountersData data)
+        internal override void Init(CountersData data, Vector3 position)
         {
             beatmapObjectManager = data.BOM;
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out cutLabel, position);
             cutLabel.text = "Average Cut";
             cutLabel.fontSize = 3;

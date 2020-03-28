@@ -15,10 +15,9 @@ namespace CountersPlus.Counters
 
         internal override void Counter_Start() { }
 
-        internal override void Init(CountersData data)
+        internal override void Init(CountersData data, Vector3 position)
         {
             beatmapObjectManager = data.BOM;
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out counterText, position - new Vector3(0, 0.4f, 0));
             counterText.text = settings.ShowPercentage ? "0 / 0 - (100%)" : "0 / 0";
             counterText.fontSize = 4;
