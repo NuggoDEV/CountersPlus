@@ -30,7 +30,8 @@ namespace CountersPlus.Counters
             yield return new WaitUntil(() => GameObject.Find("ScoreCanvas") != null);
             baseCounter = GameObject.Find("ScoreCanvas");
             CountersController.LoadedCounters.Remove(gameObject);
-            baseCounter.AddComponent<ScoreCounter>();
+            ScoreCounter newCounter = baseCounter.AddComponent<ScoreCounter>();
+            newCounter.settings = settings;
             Destroy(gameObject);
             CountersController.LoadedCounters.Add(baseCounter);
         }

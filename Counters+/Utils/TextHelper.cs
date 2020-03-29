@@ -13,7 +13,25 @@ namespace CountersPlus
          * 
          * I cannot thank him enough.
          */
-        public static Canvas CounterCanvas;
+        private static Canvas internalCounterCanvas;
+        public static Canvas CounterCanvas
+        {
+            get
+            {
+                if (internalCounterCanvas is null)
+                {
+                    bool useFloatingHUD = CountersController.settings.hudConfig.AttachHUDToCamera;
+                    float scale = CountersController.settings.hudConfig.HUDSize;
+                    internalCounterCanvas = CreateCanvas(CountersController.settings.hudConfig.HUDPosition, useFloatingHUD, scale);
+                }
+                return internalCounterCanvas;
+            }
+            set
+            {
+                internalCounterCanvas = value;
+            }
+        }
+
         public static float PosScaleFactor => CountersController.settings.hudConfig.HUDPositionScaleFactor;
         public static float SizeScaleFactor => CountersController.settings.hudConfig.HUDSize;
 
@@ -85,12 +103,6 @@ namespace CountersPlus
 
         public static void CreateText(out TMP_Text tmp_text, Vector3 anchoredPosition)
         {
-            if (CounterCanvas == null)
-            {
-                bool useFloatingHUD = CountersController.settings.hudConfig.AttachHUDToCamera;
-                float scale = CountersController.settings.hudConfig.HUDSize;
-                CounterCanvas = CreateCanvas(CountersController.settings.hudConfig.HUDPosition, useFloatingHUD, scale);
-            }
             CreateText(out tmp_text, CounterCanvas, anchoredPosition);
         }
 
