@@ -67,6 +67,7 @@ namespace CountersPlus
 
         private void ClearCounters()
         {
+            TextHelper.CounterCanvas = null;
             CountersController.LoadedCounters.Clear();
         }
 
