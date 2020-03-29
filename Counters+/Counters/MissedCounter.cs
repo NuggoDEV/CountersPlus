@@ -43,12 +43,19 @@ namespace CountersPlus.Counters
             if (beatmapObjectManager != null)
             {
                 beatmapObjectManager.noteWasMissedEvent += OnNoteMiss;
+                beatmapObjectManager.noteWasCutEvent += OnNoteCut;
             }
         }
 
         internal override void Counter_Destroy()
         {
             beatmapObjectManager.noteWasMissedEvent -= OnNoteMiss;
+            beatmapObjectManager.noteWasCutEvent -= OnNoteCut;
+        }
+
+        private void OnNoteCut(INoteController data, NoteCutInfo info)
+        {
+            if (!info.allIsOK && data.noteData.noteType != NoteType.Bomb) IncrementCounter();
         }
 
         private void OnNoteMiss(INoteController data)
