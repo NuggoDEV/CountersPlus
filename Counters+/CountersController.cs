@@ -50,7 +50,7 @@ namespace CountersPlus
         private IEnumerator ObtainRequiredData()
         {
             Plugin.Log("Obtaining required counter data...");
-            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<BeatmapObjectSpawnController>().Any());
+            yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<BeatmapObjectManager>().Any());
             yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<PlayerController>().Any());
             yield return new WaitUntil(() => Resources.FindObjectsOfTypeAll<AudioTimeSyncController>().Any());
             CountersData data = new CountersData();

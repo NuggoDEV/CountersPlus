@@ -27,6 +27,8 @@ namespace CountersPlus.UI.ViewControllers
 
         private static ConfigModel SelectedConfigModel = null;
 
+        private static bool wasInMainSettingsMenu = false;
+
         private static void SetPositioning(RectTransform r, float x, float y, float w, float h, float pivotX)
         {
             r.anchorMin = new Vector2(x, y);
@@ -43,6 +45,8 @@ namespace CountersPlus.UI.ViewControllers
             rect = rectTransform;
             if (!firstActivation && SelectedConfigModel != null)
                 UpdateSettings(SelectedConfigModel);
+            else if (!firstActivation && wasInMainSettingsMenu)
+                ShowMainSettings();
         }
 
         internal static void ShowContributors()
@@ -102,6 +106,7 @@ namespace CountersPlus.UI.ViewControllers
             Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.MainSettingsController");
             ConfigModelController.GenerateController(controllerType, Instance.SettingsContainer,"CountersPlus.UI.BSML.MainSettings.bsml");
             MockCounter.Highlight<ConfigModel>(null);
+            wasInMainSettingsMenu = true;
         }
 
         internal static void UpdateTitle(string title)
@@ -114,6 +119,7 @@ namespace CountersPlus.UI.ViewControllers
             try
             {
                 if (settings is null) return;
+                wasInMainSettingsMenu = false;
                 SelectedConfigModel = settings;
                 ClearScreen(true);
                 MockCounter.Highlight(settings);
