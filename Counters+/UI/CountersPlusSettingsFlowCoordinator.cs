@@ -8,6 +8,7 @@ using HMUI;
 using CountersPlus.UI.ViewControllers;
 using CountersPlus.Utils;
 using CountersPlus.Custom;
+using CountersPlus.UI.ViewControllers.ConfigModelControllers;
 
 namespace CountersPlus.UI
 {
@@ -95,6 +96,7 @@ namespace CountersPlus.UI
             MainScreen.transform.position = MainScreenPosition;
             MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
             mainFlow.InvokePrivateMethod("DismissFlowCoordinator", new object[] { this, null, false });
+            ConfigModelController.ClearAllControllers();
 
             //Reload settings from config
             CountersController.settings = ConfigLoader.LoadSettings();

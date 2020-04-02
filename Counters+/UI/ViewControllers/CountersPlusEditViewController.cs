@@ -106,6 +106,7 @@ namespace CountersPlus.UI.ViewControllers
             Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.MainSettingsController");
             ConfigModelController.GenerateController(controllerType, Instance.SettingsContainer,"CountersPlus.UI.BSML.MainSettings.bsml");
             MockCounter.Highlight<ConfigModel>(null);
+            SelectedConfigModel = null;
             wasInMainSettingsMenu = true;
         }
 
