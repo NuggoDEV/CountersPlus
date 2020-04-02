@@ -10,34 +10,24 @@ namespace CountersPlus.Counters
         internal TMP_Text ScoreMesh;
         internal TMP_Text RankText;
         internal TMP_Text PointsText;
+        private CountersData localData; //Used for transferring data
+        private Vector3 localPosition; //Used for transferring data
 
         GameObject _RankObject;
 
-        internal override void Counter_Start()
-        {
-            settings = CountersController.settings.scoreConfig;
-            if (gameObject.name == "ScoreCanvas")
-                PreInit();
-            else
-                StartCoroutine(YeetToBaseCounter());
-        }
+        internal override void Counter_Start() { }
+
         internal override void Counter_Destroy() { }
-        internal override void Init(CountersData data, Vector3 position) { }
 
-        IEnumerator YeetToBaseCounter()
+        internal override void Init(CountersData data, Vector3 position)
         {
-            GameObject baseCounter;
-            yield return new WaitUntil(() => GameObject.Find("ScoreCanvas") != null);
-            baseCounter = GameObject.Find("ScoreCanvas");
-            CountersController.LoadedCounters.Remove(gameObject);
-            ScoreCounter newCounter = baseCounter.AddComponent<ScoreCounter>();
-            newCounter.settings = settings;
-            Destroy(gameObject);
-            CountersController.LoadedCounters.Add(baseCounter);
-        }
-
-        private void PreInit()
-        {
+            localData = data;
+            localPosition = position;
+            if (gameObject.name != "ScoreCanvas")
+            {
+                StartCoroutine(YeetToBaseCounter());
+                return;
+            }
             if (!(settings.Mode == ICounterMode.BaseGame || settings.Mode == ICounterMode.BaseWithOutPoints))
             {
                 for (var i = 0; i < transform.childCount; i++)
@@ -51,20 +41,32 @@ namespace CountersPlus.Counters
                     else PointsText = child.GetComponent<TMP_Text>();
                 }
                 if (settings.Mode == ICounterMode.ScoreOnly) Destroy(GameObject.Find("ScoreText"));
-                CreateText();
+                CreateText(position);
             }
             else
             {
-                transform.position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
                 transform.SetParent(TextHelper.CounterCanvas.transform, true);
+                transform.localPosition = position;
             }
         }
 
-        private void CreateText()
+        IEnumerator YeetToBaseCounter()
+        {
+            GameObject baseCounter;
+            yield return new WaitUntil(() => GameObject.Find("ScoreCanvas") != null);
+            baseCounter = GameObject.Find("ScoreCanvas");
+            CountersController.LoadedCounters.Remove(gameObject);
+            ScoreCounter newCounter = baseCounter.AddComponent<ScoreCounter>();
+            newCounter.settings = settings;
+            newCounter.Init(localData, localPosition);
+            Destroy(gameObject);
+            CountersController.LoadedCounters.Add(baseCounter);
+        }
+
+        private void CreateText(Vector3 position)
         {
             transform.localScale = Vector3.one;
             PointsText.fontSize = 0.325f;
-            Vector3 position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
             TextHelper.CreateText(out ScoreMesh, position);
             ScoreMesh.text = "100.0%";
             ScoreMesh.fontSize = 3;

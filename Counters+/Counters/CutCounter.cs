@@ -50,7 +50,7 @@ namespace CountersPlus.Counters
                 cutCounterRight.alignment = TextAlignmentOptions.Left;
 
                 cutCounterLeft.alignment = TextAlignmentOptions.Right;
-                cutCounterLeft.transform.position = position - new Vector3(0.2f, settings.SeparateCutValues ? 0.9f : 0.4f, 0);
+                cutCounterLeft.transform.localPosition = position - new Vector3(0.2f, settings.SeparateCutValues ? 0.9f : 0.4f, 0);
             }
 
             if (beatmapObjectManager != null)
