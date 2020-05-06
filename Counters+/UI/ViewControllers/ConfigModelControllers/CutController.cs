@@ -27,6 +27,17 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             set => (parentController?.ConfigModel as CutConfigModel).SeparateCutValues = value;
         }
 
+        [UIValue("average-precision")]
+        public int AveragePrecision
+        {
+            get => (parentController?.ConfigModel as CutConfigModel).AveragePrecision;
+            set => (parentController?.ConfigModel as CutConfigModel).AveragePrecision = value;
+        }
+
+        [UIValue("average-precision_values")]
+        public List<object> AveragePrecisionValues => AdvancedCounterSettings.AverageCutPrecision.Cast<object>().ToList();
+
+
         [UIAction("update_model")]
         internal void ConfigChanged(object obj)
         {
