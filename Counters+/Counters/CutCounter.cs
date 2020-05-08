@@ -27,21 +27,17 @@ namespace CountersPlus.Counters
         internal override void Init(CountersData data, Vector3 position)
         {
             string iniValue = FormatLabel(0, 0, settings.AveragePrecision);
+            Vector3 leftOffset; // Added this so you don't have to change position after creating the text
+            TextAlignmentOptions leftAlign;
+
+            _RankObject = new GameObject("Counters+ | Cut Label");
+            _RankObject.transform.parent = transform;
             beatmapObjectManager = data.BOM;
             TextHelper.CreateText(out cutLabel, position);
             cutLabel.text = "Average Cut";
             cutLabel.fontSize = 3;
             cutLabel.color = Color.white;
             cutLabel.alignment = TextAlignmentOptions.Center;
-
-            _RankObject = new GameObject("Counters+ | Cut Label");
-            _RankObject.transform.parent = transform;
-            TextHelper.CreateText(out cutCounterLeft, position - new Vector3(0, 0.2f, 0));
-            cutCounterLeft.fontSize = 4;
-            cutCounterLeft.color = Color.white;
-            cutCounterLeft.lineSpacing = -26;
-            cutCounterLeft.text = settings.SeparateCutValues ? $"{iniValue}\n{iniValue}\n{iniValue}" : $"{iniValue}";
-            cutCounterLeft.alignment = TextAlignmentOptions.Top;
 
             if (settings.SeparateSaberCounts)
             {
@@ -52,9 +48,21 @@ namespace CountersPlus.Counters
                 cutCounterRight.text = settings.SeparateCutValues ? $"{iniValue}\n{iniValue}\n{iniValue}" : $"{iniValue}";
                 cutCounterRight.alignment = TextAlignmentOptions.TopLeft;
 
-                cutCounterLeft.alignment = TextAlignmentOptions.TopRight;
-                cutCounterLeft.transform.position = position - new Vector3(0.2f, 0.2f, 0);
+                leftOffset = new Vector3(0.2f, 0.2f, 0);
+                leftAlign = TextAlignmentOptions.TopRight;
             }
+            else
+            {
+                leftOffset = new Vector3(0, 0.2f, 0);
+                leftAlign = TextAlignmentOptions.Top;
+            }
+
+            TextHelper.CreateText(out cutCounterLeft, position - leftOffset);
+            cutCounterLeft.fontSize = 4;
+            cutCounterLeft.color = Color.white;
+            cutCounterLeft.lineSpacing = -26;
+            cutCounterLeft.text = settings.SeparateCutValues ? $"{iniValue}\n{iniValue}\n{iniValue}" : $"{iniValue}";
+            cutCounterLeft.alignment = leftAlign;
 
             if (beatmapObjectManager != null)
                 beatmapObjectManager.noteWasCutEvent += UpdateScore;
