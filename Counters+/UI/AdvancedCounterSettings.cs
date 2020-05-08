@@ -42,5 +42,6 @@ namespace CountersPlus.UI
         public static readonly List<int> PercentagePrecision = new List<int> { 0, 1, 2, 3, 4, 5 };
         public static readonly List<int> TextSize = new List<int> { 2, 3, 4 };
         public static readonly List<float> CounterOffsets = new List<float> { -1, -0.9f, -0.8f, -0.7f, -0.6f, -0.5f, -0.4f, -0.3f, -0.2f, -0.1f, 0, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1 };
+        public static readonly List<int> AverageCutPrecision = new List<int> { 0, 1, 2, 3 };
     }
 }
