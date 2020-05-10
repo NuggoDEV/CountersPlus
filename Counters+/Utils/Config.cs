@@ -212,6 +212,7 @@ namespace CountersPlus.Config
         public ICounterMode Mode = ICounterMode.Original;
         public bool ProgressTimeLeft = false;
         public bool IncludeRing = false;
+        public bool ShowTimeInBeats = false;
     }
 
     public sealed class ScoreConfigModel : ConfigModel

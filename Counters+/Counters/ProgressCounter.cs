@@ -10,15 +10,14 @@ namespace CountersPlus.Counters
 {
     public class ProgressCounter : Counter<ProgressConfigModel>
     {
-
-        TMP_Text _timeMesh;
-        AudioTimeSyncController _audioTimeSync;
-        Image _image;
-
-        bool useTimeLeft = false;
-        float t = 0;
-        float length = 0;
+        private TMP_Text _timeMesh;
+        private AudioTimeSyncController _audioTimeSync;
+        private Image _image;
+        private bool useTimeLeft = false;
+        private bool hasInit = false;
+        private float length = 0;
         private CountersData data = null;
+        private float songBPM = 60;
 
         internal override void Counter_Start()
         {
@@ -41,6 +40,7 @@ namespace CountersPlus.Counters
             this.data = data;
             _audioTimeSync = data.AudioTimeSyncController;
             length = _audioTimeSync.songLength;
+            songBPM = data.GCSSD.difficultyBeatmap.level.beatsPerMinute;
             if (settings.Mode == ICounterMode.Original)
             {
                 TextHelper.CreateText(out _timeMesh, position + new Vector3(-0.25f, 0.25f, 0));
@@ -102,28 +102,38 @@ namespace CountersPlus.Counters
             transform.position = position;
             if (GameObject.Find("SongProgressCanvas") != null && settings.Mode != ICounterMode.BaseGame)
                 Destroy(GameObject.Find("SongProgressCanvas"));
-            StartCoroutine(SecondTick());
+            hasInit = true;
         }
 
-        IEnumerator SecondTick()
+        private void Update()
         {
-            while (true)
+            if (!hasInit) return;
+            var time = _audioTimeSync.songTime;
+            if (useTimeLeft) time = length - time;
+            if (time <= 0f) return;
+            if (settings.Mode == ICounterMode.Original)
             {
-                yield return new WaitForSecondsRealtime(1);
-                t = _audioTimeSync.songTime;
-                var time = t;
-                if (useTimeLeft) time = length - t;
-                if (time <= 0f) yield return null;
-                if (settings.Mode == ICounterMode.Original)
+                if (settings.ShowTimeInBeats)
+                {
+                    float beats = songBPM / 60 * time;
+                    _timeMesh.text = beats.ToString("00");
+                }
+                else
                 {
                     _timeMesh.text = $"{Math.Floor(time / 60):N0}:{Math.Floor(time % 60):00}";
-                    if (settings.IncludeRing)
-                        _image.fillAmount = (useTimeLeft ? 1 : 0) - _audioTimeSync.songTime / length * (useTimeLeft ? 1 : -1);
-                    else
-                        _image.fillAmount = _audioTimeSync.songTime / length;
                 }
-                else if (settings.Mode == ICounterMode.Percent)
-                    _timeMesh.text = $"{((time / length) * 100).ToString("00")}%";
+                if (settings.IncludeRing)
+                {
+                    _image.fillAmount = (useTimeLeft ? 1 : 0) - _audioTimeSync.songTime / length * (useTimeLeft ? 1 : -1);
+                }
+                else
+                {
+                    _image.fillAmount = _audioTimeSync.songTime / length;
+                }
+            }
+            else if (settings.Mode == ICounterMode.Percent)
+            {
+                _timeMesh.text = $"{(time / length * 100).ToString("00")}%";
             }
         }
     }

@@ -8,4 +8,7 @@
   <horizontal horizontal-fit='PreferredSize'>
     <checkbox-setting id='includering' text='Include Progress Ring' on-change='update_model' apply-on-change='true' value='includering' hover-hint='Whether or not the Progress Ring will also be effected by the "Progress From End" setting. Only active in "Original" mode.'></checkbox-setting>
   </horizontal>
+  <horizontal horizontal-fit='PreferredSize'>
+    <checkbox-setting id='show_time_in_beats' text='Show Time In Beats' on-change='update_model' apply-on-change='true' value='show_time_in_beats' hover-hint='Displays times in beats instead of in seconds.'></checkbox-setting>
+  </horizontal>
 </vertical>

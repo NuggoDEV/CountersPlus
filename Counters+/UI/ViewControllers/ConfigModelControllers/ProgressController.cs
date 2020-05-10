@@ -27,6 +27,13 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             set => (parentController?.ConfigModel as ProgressConfigModel).IncludeRing = value;
         }
 
+        [UIValue("show_time_in_beats")]
+        public bool ShowTimeInBeats
+        {
+            get => (parentController?.ConfigModel as ProgressConfigModel).ShowTimeInBeats;
+            set => (parentController?.ConfigModel as ProgressConfigModel).ShowTimeInBeats = value;
+        }
+
         [UIValue("precision_values")]
         public List<object> PrecisionValues => AdvancedCounterSettings.PercentagePrecision.Cast<object>().ToList();
 
