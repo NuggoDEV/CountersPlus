@@ -263,6 +263,7 @@ namespace CountersPlus.Config
             Enabled = false; Position = ICounterPositions.AboveHighway; Distance = 1; } //Default values
         public bool SeparateSaberCounts = false;
         public bool SeparateCutValues = false;
+        public int AveragePrecision = 1;
     }
 
     public sealed class NotesLeftConfigModel : ConfigModel
