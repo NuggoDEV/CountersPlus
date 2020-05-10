@@ -46,31 +46,26 @@ namespace CountersPlus.UI
             
             CounterWarning.Create("Due to limitations, some counters may not reflect their true appearance in-game.", 7.5f);
             if (!Plugin.UpToDate) CounterWarning.Create("A new Counters+ update is available to download!", 5);
-            StartCoroutine(InitMockCounters());
+            InitMockCounters();
         }
 
         protected override void DidDeactivate(DeactivationType deactivationType)
         {
         }
 
-        private IEnumerator InitMockCounters()
+        private void InitMockCounters()
         {
-            yield return new WaitForEndOfFrame();
-            MockCounterInfo info = new MockCounterInfo();
-            MockCounter.CreateStatic("Combo", $"{info.notesCut}");
-            MockCounter.CreateStatic("Multiplier", "x8");
+            MockCounter.CreateStatic("Combo", $"0");
+            MockCounter.CreateStatic("Multiplier", "x1");
             UpdateMockCounters();
         }
 
         internal static void UpdateMockCounters()
         {
-            foreach (KeyValuePair<MockCounterGroup, ConfigModel> kvp in MockCounter.loadedMockCounters)
-            {
-                Destroy(kvp.Key.CounterName);
-                Destroy(kvp.Key.CounterData);
-            }
+            MockCounter.ClearAllMockCounters();
             if (TextHelper.CounterCanvas != null) Destroy(TextHelper.CounterCanvas.gameObject);
             TextHelper.CounterCanvas = null;
+
             List<ConfigModel> loadedModels = TypesUtility.GetListOfType<ConfigModel>();
             loadedModels = loadedModels.Where(x => !(x is CustomConfigModel)).ToList();
             loadedModels.ForEach(x => x = ConfigLoader.DeserializeFromConfig(x, x.DisplayName) as ConfigModel);
@@ -83,13 +78,8 @@ namespace CountersPlus.UI
 
         protected override void BackButtonWasPressed(ViewController controller)
         {
-            foreach (KeyValuePair<MockCounterGroup, ConfigModel> kvp in MockCounter.loadedMockCounters)
-            {
-                Destroy(kvp.Key.CounterName);
-                Destroy(kvp.Key.CounterData);
-            }
+            MockCounter.ClearAllMockCounters();
             CountersPlusEditViewController.ClearScreen();
-            MockCounter.loadedMockCounters.Clear();
             CounterWarning.ClearAllWarnings();
             Destroy(TextHelper.CounterCanvas.gameObject);
             TextHelper.CounterCanvas = null;
