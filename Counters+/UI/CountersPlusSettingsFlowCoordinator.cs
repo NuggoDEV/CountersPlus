@@ -23,6 +23,7 @@ namespace CountersPlus.UI
         private CountersPlusBottomSettingsSelectorViewController bottomSettings;
 
         internal static CountersPlusSettingsFlowCoordinator Instance;
+        private static List<ConfigModel> loadedModels = new List<ConfigModel>();
 
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
@@ -30,6 +31,14 @@ namespace CountersPlus.UI
             MainScreenPosition = MainScreen.transform.position;
             if (firstActivation && activationType == ActivationType.AddedToHierarchy)
             {
+                loadedModels = TypesUtility.GetListOfType<ConfigModel>();
+                loadedModels = loadedModels.Where(x => !(x is CustomConfigModel)).ToList();
+                loadedModels.ForEach(x => x = ConfigLoader.DeserializeFromConfig(x, x.DisplayName) as ConfigModel);
+                foreach (CustomCounter potential in CustomCounterCreator.LoadedCustomCounters)
+                    loadedModels.Add(potential.ConfigModel);
+                loadedModels.RemoveAll(x => x is null);
+
+
                 Instance = this;
                 title = "Counters+";
                 showBackButton = true;
@@ -46,33 +55,18 @@ namespace CountersPlus.UI
             
             CounterWarning.Create("Due to limitations, some counters may not reflect their true appearance in-game.", 7.5f);
             if (!Plugin.UpToDate) CounterWarning.Create("A new Counters+ update is available to download!", 5);
-            InitMockCounters();
+            UpdateMockCounters();
         }
 
         protected override void DidDeactivate(DeactivationType deactivationType)
         {
         }
 
-        private void InitMockCounters()
-        {
-            MockCounter.CreateStatic("Combo", $"0");
-            MockCounter.CreateStatic("Multiplier", "x1");
-            UpdateMockCounters();
-        }
-
         internal static void UpdateMockCounters()
         {
             MockCounter.ClearAllMockCounters();
-            if (TextHelper.CounterCanvas != null) Destroy(TextHelper.CounterCanvas.gameObject);
-            TextHelper.CounterCanvas = null;
-
-            List<ConfigModel> loadedModels = TypesUtility.GetListOfType<ConfigModel>();
-            loadedModels = loadedModels.Where(x => !(x is CustomConfigModel)).ToList();
-            loadedModels.ForEach(x => x = ConfigLoader.DeserializeFromConfig(x, x.DisplayName) as ConfigModel);
-            foreach (CustomCounter potential in CustomCounterCreator.LoadedCustomCounters)
-                loadedModels.Add(potential.ConfigModel);
-            loadedModels.RemoveAll(x => x is null);
-
+            MockCounter.CreateStatic("Combo", $"0");
+            MockCounter.CreateStatic("Multiplier", "x1");
             foreach (ConfigModel counter in loadedModels) MockCounter.Update(counter);
         }
 

@@ -18,6 +18,8 @@ namespace CountersPlus.Counters
         bool useTimeLeft = false;
         float t = 0;
         float length = 0;
+        private CountersData data = null;
+
         internal override void Counter_Start()
         {
             useTimeLeft = settings.ProgressTimeLeft;
@@ -29,12 +31,14 @@ namespace CountersPlus.Counters
         IEnumerator YeetToBaseCounter()
         {
             yield return new WaitUntil(() => GameObject.Find("SongProgressCanvas") != null);
-            GameObject.Find("SongProgressCanvas").transform.position = CountersController.DeterminePosition(gameObject, settings.Position, settings.Distance);
+            yield return new WaitUntil(() => data != null);
+            GameObject.Find("SongProgressCanvas").transform.position = DeterminePosition(this, data);
             Destroy(gameObject);
         }
 
         internal override void Init(CountersData data, Vector3 position)
         {
+            this.data = data;
             _audioTimeSync = data.AudioTimeSyncController;
             length = _audioTimeSync.songLength;
             if (settings.Mode == ICounterMode.Original)

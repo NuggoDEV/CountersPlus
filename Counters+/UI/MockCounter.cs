@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using CountersPlus.Config;
-using CountersPlus.Custom;
 
 namespace CountersPlus.UI
 {
@@ -26,10 +20,7 @@ namespace CountersPlus.UI
         public static void Create<T>(T settings, string counterName, string counterData) where T : ConfigModel
         {
             if (!settings.Enabled) return;
-            GameObject counter = new GameObject($"Counters+ | Mock {counterName} Counter");
-            GameObject nameGO = new GameObject($"Counters+ | Mock {counterName} Label");
-            Vector3 position = (CountersController.DeterminePosition(counter, settings.Position, settings.Distance) - new Vector3(0, 0.4f, 0));
-            nameGO.transform.parent = counter.transform;
+            Vector3 position = DeterminePosition(settings) - new Vector3(0, 0.4f, 0);
             TextHelper.CreateText(out TMP_Text name, position);
             name.text = counterName;
             name.fontSize = 3;
@@ -57,8 +48,6 @@ namespace CountersPlus.UI
 
         public static void CreateStatic(string counterName, string counterData)
         {
-            GameObject counter = new GameObject($"Counters+ | Static {counterName} Counter");
-            GameObject nameGO = new GameObject($"Counters+ | Static {counterName} Label");
             Vector3 position = Vector3.zero;
             if (counterName == "Combo")
                 position = new Vector3(-3.2f, 1.25f, 7);
@@ -66,19 +55,17 @@ namespace CountersPlus.UI
                 position = new Vector3(3.2f, 1.25f, 7);
             else if (counterName == "123 456")
                 position = new Vector3(-3.2f, 0.35f, 7);
-            nameGO.transform.parent = counter.transform;
-            //TextMeshPro name = nameGO.AddComponent<TextMeshPro>();
+
             TextHelper.CreateText(out TMP_Text name, position);
-            name.text = counterName;
+            name.gameObject.name = name.text = counterName;
             name.fontSize = 3;
-            name.color = Color.white;
+            name.color = Color.gray;
             name.alignment = TextAlignmentOptions.Center;
 
-            //TextMeshPro data = counter.AddComponent<TextMeshPro>();
             TextHelper.CreateText(out TMP_Text data, position - new Vector3(0, 0.4f, 0));
-            data.text = counterData;
+            data.gameObject.name = data.text = counterData;
             data.fontSize = 4;
-            data.color = Color.white;
+            data.color = Color.gray;
             data.alignment = TextAlignmentOptions.Center;
 
 
@@ -129,6 +116,41 @@ namespace CountersPlus.UI
             loadedMockCounters.Clear();
             loadedStaticMockCounters.Clear();
         }
+
+        internal static Vector3 DeterminePosition<T>(T model) where T : ConfigModel
+        {
+            ICounterPositions position = model.Position;
+            int index = model.Distance;
+            Vector3 pos = new Vector3(); //Base position
+            Vector3 offset = new Vector3(0, -0.75f * index, 0); //Offset for any overlapping, indexes, etc.
+            float X = 3.2f;
+            var settings = CountersController.settings;
+            switch (position)
+            {
+                case ICounterPositions.BelowCombo:
+                    pos = new Vector3(-X, 1.15f - settings.ComboOffset, 7);
+                    break;
+                case ICounterPositions.AboveCombo:
+                    pos = new Vector3(-X, 2f + settings.ComboOffset, 7);
+                    offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
+                    break;
+                case ICounterPositions.BelowMultiplier:
+                    pos = new Vector3(X, 1.05f - settings.MultiplierOffset, 7);
+                    break;
+                case ICounterPositions.AboveMultiplier:
+                    pos = new Vector3(X, 2f + settings.MultiplierOffset, 7);
+                    offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
+                    break;
+                case ICounterPositions.BelowEnergy:
+                    pos = new Vector3(0, -1.5f, 7);
+                    break;
+                case ICounterPositions.AboveHighway:
+                    pos = new Vector3(0, 2.5f, 7);
+                    offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
+                    break;
+            }
+            return pos + offset;
+        }
     }
 
     public class MockCounterGroup
@@ -150,8 +172,8 @@ namespace CountersPlus.UI
 
         public void DestroyText()
         {
-            UnityEngine.Object.Destroy(CounterName);
-            UnityEngine.Object.Destroy(CounterData);
+            Object.Destroy(CounterName.gameObject);
+            Object.Destroy(CounterData.gameObject);
         }
     }
 }

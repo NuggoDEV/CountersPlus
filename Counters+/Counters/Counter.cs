@@ -23,7 +23,7 @@ namespace CountersPlus.Counters
         internal abstract void Counter_Destroy();
 
         //We have a local copy here so that we can do some optimizing that isn't available in MenuCore.
-        private Vector3 DeterminePosition(Counter<T> counter, CountersData data)
+        protected Vector3 DeterminePosition(Counter<T> counter, CountersData data)
         {
             float comboOffset = CountersController.settings.ComboOffset;
             float multOffset = CountersController.settings.MultiplierOffset;

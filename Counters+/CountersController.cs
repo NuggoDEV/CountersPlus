@@ -100,41 +100,6 @@ namespace CountersPlus
             Plugin.Log("Counters loaded!", LogInfo.Notice);
             Instance.StartCoroutine(Instance.ObtainRequiredData());
         }
-
-        public static Vector3 DeterminePosition(GameObject counter, ICounterPositions position, int index)
-        {
-            Vector3 pos = new Vector3(); //Base position
-            Vector3 offset = new Vector3(0, -0.75f * (index), 0); //Offset for any overlapping, indexes, etc.
-            bool hud360 = settings.hudConfig.AttachToBaseGameHUDFor360 && Resources.FindObjectsOfTypeAll<FlyingGameHUDRotation>().Any(x => x.isActiveAndEnabled);
-            float X = hud360 ? 2f : 3.2f;
-            switch (position)
-            {
-                case ICounterPositions.BelowCombo:
-                    pos = new Vector3(-X, 1.15f - settings.ComboOffset, 7);
-                    break;
-                case ICounterPositions.AboveCombo:
-                    pos = new Vector3(-X, 2f + settings.ComboOffset, 7);
-                    offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
-                    break;
-                case ICounterPositions.BelowMultiplier:
-                    pos = new Vector3(X, 1.05f - settings.MultiplierOffset, 7);
-                    break;
-                case ICounterPositions.AboveMultiplier:
-                    pos = new Vector3(X, 2f + settings.MultiplierOffset, 7);
-                    offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
-                    break;
-                case ICounterPositions.BelowEnergy:
-                    pos = new Vector3(0, hud360 ? -0.25f : -1.5f, 7);
-                    break;
-                case ICounterPositions.AboveHighway:
-                    pos = new Vector3(0, 2.5f, 7);
-                    offset = new Vector3(0, (offset.y * -1) + (hud360 ? 0.25f : 0.75f), 0);
-                    break;
-            }
-            if (counter.GetComponent<ProgressCounter>() != null)
-                if (settings.progressConfig.Mode == ICounterMode.Original) offset += new Vector3(0.25f, 0, 0);
-            return pos + offset;
-        }
     }
 
     public class CountersData
