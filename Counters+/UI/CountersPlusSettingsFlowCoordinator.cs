@@ -55,18 +55,21 @@ namespace CountersPlus.UI
             
             CounterWarning.Create("Due to limitations, some counters may not reflect their true appearance in-game.", 7.5f);
             if (!Plugin.UpToDate) CounterWarning.Create("A new Counters+ update is available to download!", 5);
-            UpdateMockCounters();
+            UpdateMockCounters(true);
         }
 
         protected override void DidDeactivate(DeactivationType deactivationType)
         {
         }
 
-        internal static void UpdateMockCounters()
+        internal static void UpdateMockCounters(bool hardReset = false)
         {
-            MockCounter.ClearAllMockCounters();
-            MockCounter.CreateStatic("Combo", $"0");
-            MockCounter.CreateStatic("Multiplier", "x1");
+            if (hardReset)
+            {
+                MockCounter.ClearAllMockCounters();
+                MockCounter.CreateStatic("Combo", $"0");
+                MockCounter.CreateStatic("Multiplier", "x1");
+            }
             foreach (ConfigModel counter in loadedModels) MockCounter.Update(counter);
         }
 

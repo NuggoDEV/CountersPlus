@@ -22,13 +22,13 @@ namespace CountersPlus.UI
             if (!settings.Enabled) return;
             Vector3 position = DeterminePosition(settings) - new Vector3(0, 0.4f, 0);
             TextHelper.CreateText(out TMP_Text name, position);
-            name.text = counterName;
+            name.gameObject.name = name.text = counterName;
             name.fontSize = 3;
             name.color = Color.white;
             name.alignment = TextAlignmentOptions.Center;
 
             TextHelper.CreateText(out TMP_Text data, position - new Vector3(0, 0.4f, 0));
-            data.text = counterData;
+            data.gameObject.name = data.text = counterData;
             data.fontSize = 4;
             data.color = Color.white;
             data.alignment = TextAlignmentOptions.Center;
@@ -39,7 +39,7 @@ namespace CountersPlus.UI
                 group.DestroyText();
                 loadedMockCounters.Remove(settings);
             }
-            loadedMockCounters.Add(settings, new MockCounterGroup(name, data));
+            loadedMockCounters.Add(settings, new MockCounterGroup(name, data, settings));
             if (HighlightedObject != null)
             {
                 if (settings.DisplayName == HighlightedObject.DisplayName) name.color = data.color = Color.yellow;
@@ -69,7 +69,7 @@ namespace CountersPlus.UI
             data.alignment = TextAlignmentOptions.Center;
 
 
-            loadedStaticMockCounters.Add(new MockCounterGroup(name, data));
+            loadedStaticMockCounters.Add(new MockCounterGroup(name, data, null));
         }
         #endregion
 
@@ -83,9 +83,17 @@ namespace CountersPlus.UI
                 MockCounterGroup group = loadedMockCounters[settings];
                 group.DestroyText();
                 loadedMockCounters.Remove(settings);
+                return;
             }
-
-            Create(settings, "", settings.DisplayName);
+            else if (settings.Enabled && !loadedMockCounters.ContainsKey(settings))
+            {
+                Create(settings, "", settings.DisplayName);
+                return;
+            }
+            else if (settings.Enabled && loadedMockCounters.ContainsKey(settings))
+            {
+                loadedMockCounters[settings].UpdatePosition();
+            }
         }
 
         public static void Highlight<T>(T settings) where T : ConfigModel
@@ -115,6 +123,7 @@ namespace CountersPlus.UI
             foreach (var group in loadedStaticMockCounters) group.DestroyText();
             loadedMockCounters.Clear();
             loadedStaticMockCounters.Clear();
+            HighlightedObject = null;
         }
 
         internal static Vector3 DeterminePosition<T>(T model) where T : ConfigModel
@@ -157,11 +166,13 @@ namespace CountersPlus.UI
     {
         public TMP_Text CounterName;
         public TMP_Text CounterData;
+        private ConfigModel settings;
 
-        public MockCounterGroup(TMP_Text name, TMP_Text data)
+        public MockCounterGroup(TMP_Text name, TMP_Text data, ConfigModel model)
         {
             CounterName = name;
             CounterData = data;
+            settings = model;
         }
 
         public void UpdateColor(Color color)
@@ -172,8 +183,22 @@ namespace CountersPlus.UI
 
         public void DestroyText()
         {
-            Object.Destroy(CounterName.gameObject);
-            Object.Destroy(CounterData.gameObject);
+            if (CounterName != null) Object.Destroy(CounterName.gameObject);
+            if (CounterData != null) Object.Destroy(CounterData.gameObject);
+        }
+
+        public void UpdatePosition()
+        {
+            if (settings is null) return;
+            Vector3 position = MockCounter.DeterminePosition(settings) - new Vector3(0, 0.4f, 0);
+            if (CounterName != null)
+            {
+                CounterName.rectTransform.anchoredPosition = position * TextHelper.PosScaleFactor;
+            }
+            if (CounterData != null)
+            {
+                CounterData.rectTransform.anchoredPosition = (position - new Vector3(0, 0.4f, 0)) * TextHelper.PosScaleFactor;
+            }
         }
     }
 }
