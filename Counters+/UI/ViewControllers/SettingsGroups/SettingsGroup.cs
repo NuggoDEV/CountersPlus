@@ -1,4 +1,7 @@
-﻿using HMUI;
+﻿using IPA.Utilities;
+using TMPro;
+using HMUI;
+using UnityEngine.UI;
 
 namespace CountersPlus.UI.ViewControllers.SettingsGroups
 {
@@ -11,6 +14,9 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
 
     public abstract class SettingsGroup
     {
+        protected static FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, TextMeshProUGUI>.Accessor packInfoTextAccessor = FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, TextMeshProUGUI>.GetAccessor("_infoText");
+        protected static FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, Image>.Accessor coverImageAccessor = FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, Image>.GetAccessor("_coverImage");
+
         public abstract SettingsGroupType type { get; }
 
         public abstract int NumberOfCells();

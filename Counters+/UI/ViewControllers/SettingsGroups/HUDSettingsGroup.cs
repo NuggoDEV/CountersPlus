@@ -39,11 +39,11 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
             return cell;
         }
 
-        private void SetCellInfo(ref AnnotatedBeatmapLevelCollectionTableCell cell, string name, string info, string imageResource, bool ribbon = true)
+        private void SetCellInfo(ref AnnotatedBeatmapLevelCollectionTableCell cell, string name, string info, string imageResource, bool ribbon = false)
         {
-            TextMeshProUGUI packInfoText = cell.GetPrivateField<TextMeshProUGUI>("_infoText");
+            TextMeshProUGUI packInfoText = packInfoTextAccessor(ref cell);
             packInfoText.richText = true; //Enable rich text for info text. Optional, but I use it for Counters+.
-            UnityEngine.UI.Image packCoverImage = cell.GetPrivateField<UnityEngine.UI.Image>("_coverImage");
+            UnityEngine.UI.Image packCoverImage = coverImageAccessor(ref cell);
             packCoverImage.mainTexture.wrapMode = TextureWrapMode.Clamp; //Fixes bordering on images
             cell.showNewRibbon = ribbon;
 
