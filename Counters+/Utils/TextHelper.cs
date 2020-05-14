@@ -53,6 +53,19 @@ namespace CountersPlus
             GameObject coreGameHUD = Resources.FindObjectsOfTypeAll<CoreGameHUDController>()?.FirstOrDefault(x => x.isActiveAndEnabled)?.gameObject ?? null;
             FlyingGameHUDRotation flyingGameHUD = Resources.FindObjectsOfTypeAll<FlyingGameHUDRotation>().FirstOrDefault(x => x.isActiveAndEnabled);
             bool attachToHUD = flyingGameHUD != null && CountersController.settings.hudConfig.AttachToBaseGameHUDFor360;
+
+            //We inherit canvas properties from the Energy Bar as to exclude the Counters+ HUD from the debris distortion effects
+            //(See https://github.com/Caeden117/CountersPlus/issues/51)
+            if (coreGameHUD != null)
+            {
+                Canvas energyCanvas = coreGameHUD.GetComponentInChildren<GameEnergyUIPanel>(true).GetComponent<Canvas>();
+                canvas.overrideSorting = energyCanvas.overrideSorting;
+                canvas.sortingLayerID = energyCanvas.sortingLayerID;
+                canvas.sortingLayerName = energyCanvas.sortingLayerName;
+                canvas.sortingOrder = energyCanvas.sortingOrder;
+                canvas.gameObject.layer = energyCanvas.gameObject.layer;
+            }
+
             if (CountersController.settings.hudConfig.AttachBaseGameHUD && !attachToHUD && coreGameHUD != null)
             {
                 coreGameHUD.transform.SetParent(CanvasGO.transform, true);
@@ -110,9 +123,8 @@ namespace CountersPlus
         {
             var rectTransform = canvas.transform as RectTransform;
             rectTransform.sizeDelta = new Vector2(100, 50);
-            float scale = CountersController.settings.hudConfig.HUDPositionScaleFactor;
 
-            tmp_text = BeatSaberUI.CreateText(rectTransform, "", anchoredPosition * scale);
+            tmp_text = BeatSaberUI.CreateText(rectTransform, "", anchoredPosition * PosScaleFactor);
             tmp_text.alignment = TextAlignmentOptions.Center;
             tmp_text.fontSize = 4f;
             tmp_text.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 2f);
