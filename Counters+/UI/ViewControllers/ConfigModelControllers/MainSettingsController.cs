@@ -26,13 +26,6 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             set => CountersController.settings.Enabled = value;
         }
 
-        [UIValue("advanced_mock")]
-        public bool AdvancedMockCounters
-        {
-            get => CountersController.settings.AdvancedCounterInfo;
-            set => CountersController.settings.AdvancedCounterInfo = value;
-        }
-
         [UIValue("offset_values")]
         public List<object> OffsetValues => AdvancedCounterSettings.CounterOffsets.Cast<object>().ToList();
 
