@@ -1,8 +1,4 @@
-﻿<vertical spacing='1'>
-  <horizontal horizontal-fit='PreferredSize'>
-    <text text='Uh oh! We have encountered an issue while loading this Counter.' align='Center' font-size='4'></text>
-  </horizontal>
-  <horizontal horizontal-fit='PreferredSize'>
-    <text text='If you would like to report, please use the Report An Issue button on the left screen.' align='Center' font-size='4'></text>
-  </horizontal>
+﻿<vertical spacing='1' horizontal-fit='PreferredSize'>
+  <text text='Uh oh! We have encountered an issue while loading this Counter.' align='Center' font-size='4'></text>
+  <text text='If you would like to report, please use the Report An Issue button on the left screen.' align='Center' font-size='4'></text>
 </vertical>

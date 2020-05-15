@@ -1,5 +1,3 @@
-﻿<vertical spacing='1'>
-  <horizontal horizontal-fit='PreferredSize'>
-    <checkbox-setting text='Custom Miss Text Integration' on-change='update_model' apply-on-change='true' value='custommisstext' hover-hint='Replaces the \"Misses\" label with one of the Custom Miss Text insults.\nAlso changes when you miss a note.'></checkbox-setting>
-  </horizontal>
+﻿<vertical spacing='1' horizontal-fit='PreferredSize'>
+  <checkbox-setting text='Custom Miss Text Integration' on-change='update_model' apply-on-change='true' value='custommisstext' hover-hint='Replaces the \"Misses\" label with one of the Custom Miss Text insults.\nAlso changes when you miss a note.'></checkbox-setting>
 </vertical>

@@ -1,14 +1,6 @@
-﻿<vertical spacing='1'>
-  <horizontal horizontal-fit='PreferredSize'>
-    <checkbox-setting text='Display Rank' on-change='update_model' apply-on-change='true' value='display_rank' hover-hint='Displays the rank as you progress in a song.'></checkbox-setting>
-  </horizontal>
-  <horizontal horizontal-fit='PreferredSize'>
-    <dropdown-list-setting text='Mode' on-change='update_model' apply-on-change='true' value='mode' options='mode_values' formatter='mode_formatter' hover-hint='How should this Counter display data?'></dropdown-list-setting>
-  </horizontal>
-  <horizontal horizontal-fit='PreferredSize'>
-    <list-setting text='Percentage Precision' on-change='update_model' apply-on-change='true' value='precision' options='precision_values' hover-hint='How precise should the precentage be?'></list-setting>
-  </horizontal>
-  <horizontal horizontal-fit='PreferredSize'>
-    <checkbox-setting text='Custom Rank Colors' on-change='update_model' apply-on-change='true' value='rank_colors' hover-hint='Colors your Score Counter depending on the rank you have in a song. Colors can be edited manually in the config file.'></checkbox-setting>
-  </horizontal>
+﻿<vertical spacing='1' horizontal-fit='PreferredSize'>
+  <checkbox-setting text='Display Rank' on-change='update_model' apply-on-change='true' value='display_rank' hover-hint='Displays the rank as you progress in a song.'></checkbox-setting>
+  <dropdown-list-setting text='Mode' on-change='update_model' apply-on-change='true' value='mode' options='mode_values' formatter='mode_formatter' hover-hint='How should this Counter display data?'></dropdown-list-setting>
+  <list-setting text='Percentage Precision' on-change='update_model' apply-on-change='true' value='precision' options='precision_values' hover-hint='How precise should the precentage be?'></list-setting>
+  <checkbox-setting text='Custom Rank Colors' on-change='update_model' apply-on-change='true' value='rank_colors' hover-hint='Colors your Score Counter depending on the rank you have in a song. Colors can be edited manually in the config file.'></checkbox-setting>
 </vertical>
