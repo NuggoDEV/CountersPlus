@@ -12,7 +12,7 @@ namespace CountersPlus.UI
     public class MockCounter
     {
 
-        public static Dictionary<ConfigModel, MockCounterGroup> loadedMockCounters = new Dictionary<ConfigModel, MockCounterGroup>();
+        public static Dictionary<string, MockCounterGroup> loadedMockCounters = new Dictionary<string, MockCounterGroup>();
         private static List<MockCounterGroup> loadedStaticMockCounters = new List<MockCounterGroup>();
         public static ConfigModel HighlightedObject { get; private set; } = null;
 
@@ -33,13 +33,17 @@ namespace CountersPlus.UI
             data.color = Color.white;
             data.alignment = TextAlignmentOptions.Center;
             
-            if (loadedMockCounters.ContainsKey(settings))
+            if (loadedMockCounters.ContainsKey(settings.DisplayName))
             {
-                MockCounterGroup group = loadedMockCounters[settings];
-                group.DestroyText();
-                loadedMockCounters.Remove(settings);
+                MockCounterGroup group = loadedMockCounters[settings.DisplayName];
+                group.UpdatePosition(settings);
+                if (HighlightedObject != null)
+                {
+                    group.UpdateColor(settings.DisplayName == HighlightedObject.DisplayName ? Color.yellow : Color.white);
+                }
+                return;
             }
-            loadedMockCounters.Add(settings, new MockCounterGroup(name, data, settings));
+            loadedMockCounters.Add(settings.DisplayName, new MockCounterGroup(name, data));
             if (HighlightedObject != null)
             {
                 if (settings.DisplayName == HighlightedObject.DisplayName) name.color = data.color = Color.yellow;
@@ -69,7 +73,7 @@ namespace CountersPlus.UI
             data.alignment = TextAlignmentOptions.Center;
 
 
-            loadedStaticMockCounters.Add(new MockCounterGroup(name, data, null));
+            loadedStaticMockCounters.Add(new MockCounterGroup(name, data));
         }
         #endregion
 
@@ -78,21 +82,21 @@ namespace CountersPlus.UI
         {
             if (settings is null) return;
 
-            if (!settings.Enabled && loadedMockCounters.ContainsKey(settings))
+            if (!settings.Enabled && loadedMockCounters.ContainsKey(settings.DisplayName))
             {
-                MockCounterGroup group = loadedMockCounters[settings];
+                MockCounterGroup group = loadedMockCounters[settings.DisplayName];
                 group.DestroyText();
-                loadedMockCounters.Remove(settings);
+                loadedMockCounters.Remove(settings.DisplayName);
                 return;
             }
-            else if (settings.Enabled && !loadedMockCounters.ContainsKey(settings))
+            else if (settings.Enabled && !loadedMockCounters.ContainsKey(settings.DisplayName))
             {
                 Create(settings, "", settings.DisplayName);
                 return;
             }
-            else if (settings.Enabled && loadedMockCounters.ContainsKey(settings))
+            else if (settings.Enabled && loadedMockCounters.ContainsKey(settings.DisplayName))
             {
-                loadedMockCounters[settings].UpdatePosition();
+                loadedMockCounters[settings.DisplayName].UpdatePosition(settings);
             }
         }
 
@@ -100,12 +104,12 @@ namespace CountersPlus.UI
         {
             if (settings != null)
             {
-                if (HighlightedObject != null && loadedMockCounters.ContainsKey(HighlightedObject))
+                if (HighlightedObject != null && loadedMockCounters.ContainsKey(HighlightedObject.DisplayName))
                 {
-                    loadedMockCounters[HighlightedObject].UpdateColor(Color.white);
+                    loadedMockCounters[HighlightedObject.DisplayName].UpdateColor(Color.white);
                 }
-                if (loadedMockCounters.ContainsKey(settings)) {
-                    loadedMockCounters[settings].UpdateColor(Color.yellow);
+                if (loadedMockCounters.ContainsKey(settings.DisplayName)) {
+                    loadedMockCounters[settings.DisplayName].UpdateColor(Color.yellow);
                 }
                 HighlightedObject = settings;
             }
@@ -166,13 +170,11 @@ namespace CountersPlus.UI
     {
         public TMP_Text CounterName;
         public TMP_Text CounterData;
-        private ConfigModel settings;
 
-        public MockCounterGroup(TMP_Text name, TMP_Text data, ConfigModel model)
+        public MockCounterGroup(TMP_Text name, TMP_Text data)
         {
             CounterName = name;
             CounterData = data;
-            settings = model;
         }
 
         public void UpdateColor(Color color)
@@ -187,7 +189,7 @@ namespace CountersPlus.UI
             if (CounterData != null) Object.Destroy(CounterData.gameObject);
         }
 
-        public void UpdatePosition()
+        public void UpdatePosition(ConfigModel settings)
         {
             if (settings is null) return;
             Vector3 position = MockCounter.DeterminePosition(settings) - new Vector3(0, 0.4f, 0);

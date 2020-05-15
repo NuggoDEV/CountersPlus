@@ -35,14 +35,15 @@ namespace CountersPlus.HarmonyPatches
             RankModel.Rank rank = ____relativeScoreAndImmediateRankCounter.immediateRank;
             if (rank != ____prevImmediateRank)
             {
-                ____rankText.text = model.Mode != ICounterMode.BaseGame ? $"\n{RankModel.GetRankName(rank)}" : RankModel.GetRankName(rank);
+                string rankName = RankModel.GetRankName(rank);
+                ____rankText.text = model.Mode != ICounterMode.BaseGame ? $"\n{rankName}" : rankName;
                 ____prevImmediateRank = rank;
                 //I am moving this code down here so that it only runs if the rank changes instead of every time the game refreshes the UI.
                 //Because of how cosmic brain Beat Games is, this code should run on game startup, because SSS != SS, so should work fine.
                 if (model.CustomRankColors) 
                 {
                     string color = "#FFFFFF"; //Blank white shall be used for the default color in case like some SSS shit happens
-                    switch (RankModel.GetRankName(rank)) //Using PogU switch case instead of Pepega If chain
+                    switch (rankName) //Using PogU switch case instead of Pepega If chain
                     {
                         case "SS": color = model.SSColor; break; //Even compressing this shit down to one liners, look at me!
                         case "S": color = model.SColor; break;
@@ -61,6 +62,7 @@ namespace CountersPlus.HarmonyPatches
             {
                 float roundedScore = (float)Math.Round((decimal)score * 100, model.DecimalPrecision);
                 ____relativeScoreText.text = $"{roundedScore.ToString($"F{model.DecimalPrecision}")}%";
+                ____prevRelativeScore = score;
             }
             return false;
         }
