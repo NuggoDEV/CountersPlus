@@ -6,15 +6,23 @@ using UnityEngine;
 using TMPro;
 using CountersPlus.Custom;
 using BS_Utils.Gameplay;
+using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage;
 using CountersPlus.UI.ViewControllers.ConfigModelControllers;
+using IPA.Utilities;
+using HMUI;
+using UnityEngine.UI;
+using System.Collections;
 
 namespace CountersPlus.UI.ViewControllers
 {
     class CountersPlusEditViewController : BSMLResourceViewController
     {
+        private static FieldAccessor<ScrollView, Button>.Accessor upButtonAccessor = FieldAccessor<ScrollView, Button>.GetAccessor("_pageUpButton");
+        private static FieldAccessor<ScrollView, Button>.Accessor downButtonAccessor = FieldAccessor<ScrollView, Button>.GetAccessor("_pageDownButton");
+
         public override string ResourceName => "CountersPlus.UI.BSML.EditBase.bsml";
         public static CountersPlusEditViewController Instance;
         private static RectTransform rect;
@@ -23,10 +31,10 @@ namespace CountersPlus.UI.ViewControllers
 
         [UIObject("body")] internal GameObject SettingsContainer;
         [UIObject("settings_parent")] private GameObject SettingsParent;
+        [UIComponent("ScrollContent")] private BSMLScrollableContainer ScrollView;
         [UIComponent("name")] private TextMeshProUGUI SettingsName;
 
         private static ConfigModel SelectedConfigModel = null;
-
         private static bool wasInMainSettingsMenu = false;
 
         private static void SetPositioning(RectTransform r, float x, float y, float w, float h, float pivotX)
@@ -108,6 +116,7 @@ namespace CountersPlus.UI.ViewControllers
             MockCounter.Highlight<ConfigModel>(null);
             SelectedConfigModel = null;
             wasInMainSettingsMenu = true;
+            ResetScrollViewContent();
         }
 
         internal static void UpdateTitle(string title)
@@ -137,8 +146,19 @@ namespace CountersPlus.UI.ViewControllers
                     ConfigModelController controller = ConfigModelController.GenerateController(settings, controllerType, Instance.SettingsContainer);
                 }
                 Instance.SettingsName.text = $"{(settings is null ? "Oops!" : $"{settings.DisplayName} Settings")}";
+                ResetScrollViewContent();
             }
             catch (Exception e) { Plugin.Log(e.ToString(), LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue. This shouldn't happen!"); }
+        }
+
+        private static void ResetScrollViewContent() => Instance.StartCoroutine(Instance.WaitThenDirtyTheFuckingScrollView());
+
+        private IEnumerator WaitThenDirtyTheFuckingScrollView()
+        {
+            yield return new WaitUntil(() => Instance.ScrollView != null && Instance.ScrollView.transform != null);
+            Instance.ScrollView.ContentRect.gameObject.SetActive(false);
+            yield return new WaitForSeconds(0.1f);
+            Instance.ScrollView.ContentRect.gameObject.SetActive(true);
         }
 
         internal static void ClearScreen(bool enableSettings = false)

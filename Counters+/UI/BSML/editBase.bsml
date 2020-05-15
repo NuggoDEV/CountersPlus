@@ -3,9 +3,27 @@
     <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
       <text id='name' text='Select an Option' align='Center' font-size='8'></text>
     </horizontal>
-    <vertical id='body' bg='round-rect-panel' pad='5' vertical-fit='PreferredSize' spacing='1'>
-      <text text='Welcome to the Counters+ settings menu.'></text>
-      <text text='Please select an option below to refresh this screen.'></text>
-    </vertical>
   </vertical>
+  <bg anchor-min-x='0' anchor-min-y='0.1'
+        anchor-max-x='1' anchor-max-y='0.85'
+        anchor-pos-x='0' anchor-pos-y='0'
+        size-delta-x='-5' size-delta-y='-5'
+        pivot-x='.5' pivot-y='1'>
+    <scrollable-container id='ScrollContent' mask-overflow='true' size-delta-x='0'>
+      <vertical id='body' bg='round-rect-panel' pad='5' vertical-fit='PreferredSize' spacing='1'>
+        <text text='Welcome to the Counters+ settings menu.'></text>
+        <text text='Please select an option below to refresh this screen.'></text>
+      </vertical>
+    </scrollable-container>
+    <scroll-indicator tags='IndicatorFor:ScrollContent'
+                      anchor-pos-x='.5' anchor-pos-y='0'
+                      anchor-min-x='1' anchor-min-y='0'
+                      anchor-max-x='1' anchor-max-y='1'
+                      size-delta-x='1' size-delta-y='-2'
+                      pivot-x='0' pivot-y='.5' />
+  </bg>
+  <bottom-button-panel>
+    <button text='Scroll Up' tags='PageUpFor:ScrollContent'></button>
+    <button text='Scroll Down' tags='PageDownFor:ScrollContent'></button>
+  </bottom-button-panel>
 </bg>
