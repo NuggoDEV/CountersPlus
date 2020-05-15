@@ -106,9 +106,13 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
 
         public static void ClearAllControllers()
         {
-            //Make a new copy to prevent enumeration modification
-            List<ConfigModelController> cached = new List<ConfigModelController>(loadedConfigModelControllers);
-            loadedConfigModelControllers.ForEach((x) => Destroy(x.gameObject));
+            foreach(ConfigModelController controller in loadedConfigModelControllers)
+            {
+                if (controller != null)
+                {
+                    Destroy(controller.gameObject);
+                }
+            }
             loadedConfigModelControllers.Clear();
         }
 

@@ -67,6 +67,8 @@ namespace CountersPlus.UI
             if (hardReset)
             {
                 MockCounter.ClearAllMockCounters();
+                Destroy(TextHelper.CounterCanvas.gameObject);
+                TextHelper.CounterCanvas = null;
                 MockCounter.CreateStatic("Combo", $"0");
                 MockCounter.CreateStatic("Multiplier", "x1");
             }
