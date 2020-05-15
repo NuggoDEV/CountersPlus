@@ -71,9 +71,7 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             controller.ConfigModel = model;
             if (controllerType != null)
             {
-                if (FindObjectOfType(controllerType))
-                    controller.ModelSpecificController = FindObjectOfType(controllerType) as Component;
-                else controller.ModelSpecificController = controllerGO.AddComponent(controllerType);
+                controller.ModelSpecificController = controllerGO.AddComponent(controllerType);
             }
             if (addBaseSettings)
                 BSMLParser.instance.Parse(controller.baseConfigLocation, baseTransform, controller);
@@ -104,21 +102,13 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
         private void OnDestroy()
         {
             ConfigModel?.Save();
-            loadedConfigModelControllers.Remove(this);
         }
 
         public static void ClearAllControllers()
         {
             //Make a new copy to prevent enumeration modification
             List<ConfigModelController> cached = new List<ConfigModelController>(loadedConfigModelControllers);
-            foreach (ConfigModelController controller in cached)
-            {
-                if (controller != null)
-                {
-                    Destroy(controller.gameObject);
-                }
-                loadedConfigModelControllers.Remove(controller);
-            }
+            loadedConfigModelControllers.ForEach((x) => Destroy(x.gameObject));
             loadedConfigModelControllers.Clear();
         }
 

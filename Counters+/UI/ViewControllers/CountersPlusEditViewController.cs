@@ -133,6 +133,7 @@ namespace CountersPlus.UI.ViewControllers
                 SelectedConfigModel = settings;
                 ClearScreen(true);
                 MockCounter.Highlight(settings);
+                ConfigModelController.ClearAllControllers();
                 string name = string.Join("", settings.DisplayName.Split(' '));
                 if (settings is CustomConfigModel custom)
                 {

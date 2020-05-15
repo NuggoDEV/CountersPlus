@@ -59,7 +59,8 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             set => CountersController.settings.HideMultiplier = value;
         }
 
-        private void Start()
+        [UIAction("#post-parse")]
+        private void PostParse()
         {
             System.DateTime date = System.DateTime.Now;
             aprilFools.SetActive(date.Month == 4 && date.Day == 1);
@@ -68,7 +69,8 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
         [UIAction("update_model")]
         internal void UpdateMocksAndSaveModel(object obj)
         {
-            if (gameObject.activeInHierarchy) StartCoroutine(WaitThenUpdate());
+            if (this is null || gameObject is null) return;
+            StartCoroutine(WaitThenUpdate());
         }
 
         private IEnumerator WaitThenUpdate()
