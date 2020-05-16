@@ -81,6 +81,7 @@ namespace CountersPlus.UI.ViewControllers.SettingsGroups
             Type controllerType = Type.GetType($"CountersPlus.UI.ViewControllers.ConfigModelControllers.HUD.{name}");
             ConfigModelController.GenerateController(controllerType,
                 CountersPlusEditViewController.Instance.SettingsContainer, $"CountersPlus.UI.BSML.HUD.{name}.bsml");
+            CountersPlusEditViewController.ResetScrollViewContent();
         }
     }
 }
