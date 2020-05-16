@@ -4,6 +4,7 @@ using System.Linq;
 using CountersPlus.UI.ViewControllers.SettingsGroups;
 using CountersPlus.Utils;
 using HMUI;
+using IPA.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +23,7 @@ namespace CountersPlus.UI.ViewControllers
      */
     public class CountersPlusHorizontalSettingsListViewController : ViewController, TableView.IDataSource
     {
+        private static FieldAccessor<TableView, TableViewScroller>.Accessor tableViewScrollerAccessor = FieldAccessor<TableView, TableViewScroller>.GetAccessor("_scroller");
 
         internal Button PageLeftButton;
         internal Button PageRightButton;
@@ -125,7 +127,7 @@ namespace CountersPlus.UI.ViewControllers
             selectedSettingsGroup = loadedSettingsGroups.Where(x => x.type == obj).FirstOrDefault();
             CustomListTableView.ReloadData();
             CustomListTableView.SelectCellWithIdx(0);
-            TableViewScroller scroller = CustomListTableView.GetPrivateField<TableViewScroller>("_scroller");
+            TableViewScroller scroller = tableViewScrollerAccessor(ref CustomListTableView);
             scroller.ScrollToCellWithIdx(0, TableViewScroller.ScrollPositionType.Beginning, true);
         }
 

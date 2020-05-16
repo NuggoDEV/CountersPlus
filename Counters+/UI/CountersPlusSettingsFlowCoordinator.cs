@@ -83,8 +83,7 @@ namespace CountersPlus.UI
             Destroy(TextHelper.CounterCanvas.gameObject);
             TextHelper.CounterCanvas = null;
             MainScreen.transform.position = MainScreenPosition;
-            MainFlowCoordinator mainFlow = Resources.FindObjectsOfTypeAll<MainFlowCoordinator>().First();
-            mainFlow.InvokePrivateMethod("DismissFlowCoordinator", new object[] { this, null, false });
+            BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(this, null, false);
             ConfigModelController.ClearAllControllers();
 
             //Reload settings from config

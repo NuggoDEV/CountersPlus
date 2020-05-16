@@ -4,12 +4,15 @@ using System.Linq;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using IPA.Utilities;
 using CountersPlus.Config;
 
 namespace CountersPlus.Counters
 {
     public class ProgressCounter : Counter<ProgressConfigModel>
     {
+        private static FieldAccessor<ScoreMultiplierUIController, Image>.Accessor multiplierImageAccessor = FieldAccessor<ScoreMultiplierUIController, Image>.GetAccessor("_multiplierProgressImage");
+
         private TMP_Text _timeMesh;
         private AudioTimeSyncController _audioTimeSync;
         private Image _image;
@@ -50,8 +53,9 @@ namespace CountersPlus.Counters
                 _timeMesh.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 0);
                 _timeMesh.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 0);
 
-                var image = ReflectionUtil.GetPrivateField<Image>(
-                    Resources.FindObjectsOfTypeAll<ScoreMultiplierUIController>().First(), "_multiplierProgressImage");
+                ScoreMultiplierUIController multiplierUI = Resources.FindObjectsOfTypeAll<ScoreMultiplierUIController>().First();
+
+                var image = multiplierImageAccessor(ref multiplierUI);
 
                 GameObject g = new GameObject();
                 Canvas canvas = g.AddComponent<Canvas>();
