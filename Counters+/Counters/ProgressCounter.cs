@@ -115,8 +115,8 @@ namespace CountersPlus.Counters
             {
                 if (settings.ShowTimeInBeats)
                 {
-                    float beats = songBPM / 60 * time;
-                    _timeMesh.text = beats.ToString("00");
+                    float beats = Mathf.Round(songBPM / 60 * time / 0.25f) * 0.25f;
+                    _timeMesh.text = beats.ToString("F2");
                 }
                 else
                 {
