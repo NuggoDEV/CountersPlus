@@ -103,7 +103,6 @@ namespace CountersPlus.Config
     public class MainConfigModel {
         public string DisplayName { get { return "Main"; } }
         public bool Enabled = true;
-        public bool ScoreSaberReplayWarning = true;
         public bool HideCombo = false;
         public bool HideMultiplier = false;
         public float ComboOffset = 0.2f;
