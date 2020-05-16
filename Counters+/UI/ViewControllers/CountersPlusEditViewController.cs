@@ -37,6 +37,8 @@ namespace CountersPlus.UI.ViewControllers
         private static ConfigModel SelectedConfigModel = null;
         private static bool wasInMainSettingsMenu = false;
 
+        private const int SupportersPerColumn = 18;
+
         private static void SetPositioning(RectTransform r, float x, float y, float w, float h, float pivotX)
         {
             r.anchorMin = new Vector2(x, y);
@@ -87,8 +89,10 @@ namespace CountersPlus.UI.ViewControllers
 
         internal static void ShowDonators()
         {
-            Dictionary<string, string> donators = new Dictionary<string, string>(ContributorsAndDonators.Donators);
-            TextMeshProUGUI donatorLabel = BeatSaberUI.CreateText(rect, "Thanks to the <color=#FF0048>Ko-fi</color> donators who support me! <i>DM me on Discord for any corrections to these names.</i>", Vector2.zero);
+            List<string> allDonatorsAndPatreonSupporters = ContributorsAndDonators.Donators.Distinct().OrderBy(x => x).ToList();
+            TextMeshProUGUI donatorLabel = BeatSaberUI.CreateText(rect,
+                "Thanks to these <color=#FF0048>Ko-fi</color> and <color=#FF0048>Patreon</color> supporters! " +
+                "<i>DM me on Discord for any corrections to these names.</i>", Vector2.zero);
 
             ClearScreen();
             donatorLabel.fontSize = 3;
@@ -96,13 +100,15 @@ namespace CountersPlus.UI.ViewControllers
             SetPositioning(donatorLabel.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
             LoadedElements.Add(donatorLabel.gameObject);
 
-            foreach (var kvp in donators)
+            for (int i = 0; i < allDonatorsAndPatreonSupporters.Count(); i++)
             {
-                TextMeshProUGUI donator = BeatSaberUI.CreateText(rect, $"<color=#FF0048>{kvp.Key}</color> | {kvp.Value}", Vector2.zero);
+                string supporter = allDonatorsAndPatreonSupporters[i];
+                TextMeshProUGUI donator = BeatSaberUI.CreateText(rect, $"<color=#FF0048>{supporter}</color>", Vector2.zero);
                 donator.fontSize = 3;
                 donator.alignment = TextAlignmentOptions.Left;
-                SetPositioning(donator.rectTransform, 0.05f,
-                    0.8f - (donators.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
+                float X = (Mathf.Floor(i / SupportersPerColumn) * 0.35f) + 0.05f;
+                float Y = 0.8f - ((allDonatorsAndPatreonSupporters.ToList().IndexOf(supporter) % SupportersPerColumn) * 0.05f);
+                SetPositioning(donator.rectTransform, X, Y, 1, 0.166f, 0.5f);
                 LoadedElements.Add(donator.gameObject);
             }
         }
@@ -152,13 +158,13 @@ namespace CountersPlus.UI.ViewControllers
             catch (Exception e) { Plugin.Log(e.ToString(), LogInfo.Fatal, "Go to the Counters+ GitHub and open an Issue. This shouldn't happen!"); }
         }
 
-        private static void ResetScrollViewContent() => Instance.StartCoroutine(Instance.WaitThenDirtyTheFuckingScrollView());
+        internal static void ResetScrollViewContent() => Instance.StartCoroutine(Instance.WaitThenDirtyTheFuckingScrollView());
 
         private IEnumerator WaitThenDirtyTheFuckingScrollView()
         {
-            yield return new WaitUntil(() => Instance.ScrollView != null && Instance.ScrollView.transform != null);
+            yield return new WaitUntil(() => Instance != null && Instance.ScrollView != null && Instance.ScrollView.ContentRect != null);
             Instance.ScrollView.ContentRect.gameObject.SetActive(false);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForEndOfFrame();
             Instance.ScrollView.ContentRect.gameObject.SetActive(true);
         }
 

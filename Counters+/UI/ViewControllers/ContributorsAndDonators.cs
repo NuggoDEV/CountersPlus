@@ -27,17 +27,36 @@ namespace CountersPlus.UI.ViewControllers
             { "Alppuccino", "Custom Rank colors" }
         };
 
-        internal static Dictionary<string, string> Donators = new Dictionary<string, string>()
+        internal static List<string> Donators = new List<string>()
         {
-            { "altrewin", "Thanks for the love, and coffee. <3" },
-            { "Latest", "Sorry I was late on thanking you, here you go!" },
-            { "Jackz", "C# is better." },
-            { "Cade", "Thanks for the donation! I'm always here if you have issues." },
-            { "FrostDragon", "People copy my code all the time! I let them!" },
-            { "ateRstones", "Thanks for liking my mod!" },
-            { "Storm Knight", "As long as Beat Saber is still kicking, I'll be here." },
-            { "R1zputin", "Aww, thanks <3" },
-            { "Someone", "To all the people who remain anonymous, I thank you." },
+            "altrewin",
+            "Latest",
+            "Jackz",
+            "Cade",
+            "FrostDragon",
+            "ateRstones",
+            "Storm Knight",
+            "R1zputin",
+            "Anonymous Donators",
+            "[CANA]Dan",
+            "Brb House On Fire",
+            "c_death",
+            "Canadian Dragon",
+            "CyanSnow",
+            "dragon1797",
+            "Elynnya",
+            "HelenCarnate",
+            "Jamman360",
+            "Noonday",
+            "Nyri0",
+            "Phoenixin",
+            "Rawkers",
+            "Rustic",
+            "Schwank",
+            "The_DomeX",
+            "uhyoch",
+            "Xhera",
+            "zhaey"
         };
 
     }
