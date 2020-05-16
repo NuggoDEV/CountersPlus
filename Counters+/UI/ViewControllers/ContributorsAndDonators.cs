@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CountersPlus.UI.ViewControllers
 {
@@ -13,7 +9,7 @@ namespace CountersPlus.UI.ViewControllers
             { "Moon", "Bug fixing and code optimization" },
             { "Shoko84", "Bug fixing" },
             { "xhuytox", "Big early bug hunter - thanks man!" },
-            { "Brian", "CustomUI to power Counters+'s early UI." },
+            { "Brian", "CustomUI to power Counters+'s early UI" },
             { "Viscoci", "Text helper & YURFit UI code" },
             { "monkeymanboy", "Beat Saber Markup Language" },
             { "Assistant", "Custom Avatars UI code" },
@@ -21,11 +17,13 @@ namespace CountersPlus.UI.ViewControllers
             { "Ragesaq", "Speed Counter and Spinometer idea" },
             { "SkyKiwiTV", "Original version checking code" },
             { "Dracrius", "Bug fixing and beta testing" },
-            { "guyyst", "Cut's \"Separate Saber Counts\" option." },
+            { "guyyst", "Cut's \"Separate Saber Counts\" option" },
             { "Steven", "Revitalized Custom Counters" },
             { "Pespiri", "Internal code refactoring" },
             { "Alppuccino", "Custom Rank colors" },
-            { "Trolav", "Cut's \"Average Cut Precision\" option." }
+            { "Fefeland", "Idea for Counters+'s HUD options" },
+            { "Bloodcloak", "Progress's \"Show Time in Beats \" idea" },
+            { "Trolav", "Cut's \"Average Cut Precision\" option" }
         };
 
         internal static List<string> Donators = new List<string>()

@@ -37,7 +37,7 @@ namespace CountersPlus.UI.ViewControllers
         private static ConfigModel SelectedConfigModel = null;
         private static bool wasInMainSettingsMenu = false;
 
-        private const int ItemsPerColumn = 18;
+        private const int ItemsPerColumn = 17;
 
         private static void SetPositioning(RectTransform r, float x, float y, float w, float h, float pivotX)
         {
