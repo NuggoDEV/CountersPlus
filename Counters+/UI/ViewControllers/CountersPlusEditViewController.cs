@@ -37,7 +37,7 @@ namespace CountersPlus.UI.ViewControllers
         private static ConfigModel SelectedConfigModel = null;
         private static bool wasInMainSettingsMenu = false;
 
-        private const int SupportersPerColumn = 18;
+        private const int ItemsPerColumn = 18;
 
         private static void SetPositioning(RectTransform r, float x, float y, float w, float h, float pivotX)
         {
@@ -76,13 +76,17 @@ namespace CountersPlus.UI.ViewControllers
             SetPositioning(contributorLabel.rectTransform, 0, 0.85f, 1, 0.166f, 0.5f);
             LoadedElements.Add(contributorLabel.gameObject);
 
-            foreach (var kvp in contributors)
+            for (int i = 0; i < contributors.Count; i++)
             {
-                TextMeshProUGUI contributor = BeatSaberUI.CreateText(rect, $"<color=#00c0ff>{kvp.Key}</color> | {kvp.Value}", Vector2.zero);
+                string contributorName = contributors.Keys.ToList()[i];
+                string contributorContent = contributors[contributorName];
+                TextMeshProUGUI contributor = BeatSaberUI.CreateText(rect, $"<color=#00c0ff>{contributorName}</color> | {contributorContent}", Vector2.zero);
                 contributor.fontSize = 3;
                 contributor.alignment = TextAlignmentOptions.Left;
-                SetPositioning(contributor.rectTransform, 0.05f,
-                    0.8f - (contributors.Keys.ToList().IndexOf(kvp.Key) * 0.05f), 1, 0.166f, 0.5f);
+
+                float X = (Mathf.Floor(i / ItemsPerColumn) * 0.5f) + 0.05f;
+                float Y = 0.8f - ((i % ItemsPerColumn) * 0.05f);
+                SetPositioning(contributor.rectTransform, X, Y, 1, 0.166f, 0.5f);
                 LoadedElements.Add(contributor.gameObject);
             }
         }
@@ -106,8 +110,8 @@ namespace CountersPlus.UI.ViewControllers
                 TextMeshProUGUI donator = BeatSaberUI.CreateText(rect, $"<color=#FF0048>{supporter}</color>", Vector2.zero);
                 donator.fontSize = 3;
                 donator.alignment = TextAlignmentOptions.Left;
-                float X = (Mathf.Floor(i / SupportersPerColumn) * 0.35f) + 0.05f;
-                float Y = 0.8f - ((allDonatorsAndPatreonSupporters.ToList().IndexOf(supporter) % SupportersPerColumn) * 0.05f);
+                float X = (Mathf.Floor(i / ItemsPerColumn) * 0.35f) + 0.05f;
+                float Y = 0.8f - ((allDonatorsAndPatreonSupporters.ToList().IndexOf(supporter) % ItemsPerColumn) * 0.05f);
                 SetPositioning(donator.rectTransform, X, Y, 1, 0.166f, 0.5f);
                 LoadedElements.Add(donator.gameObject);
             }
