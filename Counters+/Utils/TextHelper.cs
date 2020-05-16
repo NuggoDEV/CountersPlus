@@ -22,7 +22,7 @@ namespace CountersPlus
                 {
                     bool useFloatingHUD = CountersController.settings.hudConfig.AttachHUDToCamera;
                     float scale = CountersController.settings.hudConfig.HUDSize;
-                    internalCounterCanvas = CreateCanvas(CountersController.settings.hudConfig.HUDPosition, useFloatingHUD, scale);
+                    internalCounterCanvas = CreateCanvas(CountersController.settings.hudConfig.HUDPosition, false, useFloatingHUD, scale);
                 }
                 return internalCounterCanvas;
             }
@@ -35,7 +35,7 @@ namespace CountersPlus
         public static float PosScaleFactor => CountersController.settings.hudConfig.HUDPositionScaleFactor;
         public static float SizeScaleFactor => CountersController.settings.hudConfig.HUDSize;
 
-        public static Canvas CreateCanvas(Vector3 Position, bool floatingHUD = false, float CanvasScaleFactor = 10)
+        public static Canvas CreateCanvas(Vector3 Position, bool simple = false, bool floatingHUD = false, float CanvasScaleFactor = 10)
         {
             Canvas canvas;
             GameObject CanvasGO = new GameObject("Counters+ | Counters Canvas");
@@ -49,6 +49,8 @@ namespace CountersPlus
             CanvasGO.transform.localScale = Vector3.one / CanvasScaleFactor;
             CanvasGO.transform.position = Position;
             CanvasGO.transform.rotation = Quaternion.Euler(CountersController.settings.hudConfig.HUDRotation);
+
+            if (simple) return canvas;
 
             GameObject coreGameHUD = Resources.FindObjectsOfTypeAll<CoreGameHUDController>()?.FirstOrDefault(x => x.isActiveAndEnabled)?.gameObject ?? null;
             FlyingGameHUDRotation flyingGameHUD = Resources.FindObjectsOfTypeAll<FlyingGameHUDRotation>().FirstOrDefault(x => x.isActiveAndEnabled);

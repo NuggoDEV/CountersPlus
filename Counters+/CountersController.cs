@@ -58,6 +58,13 @@ namespace CountersPlus
             Plugin.Log("Obtained data!");
             if (settings.HideCombo) HideUIElementWithComponent<ComboUIController>();
             if (settings.HideMultiplier) HideUIElementWithComponent<ScoreMultiplierUIController>();
+
+            //Bullshit warning of detecting ScoreSaber replays but uhhhh i cant do shit about false positives during them.
+            //Yell at Umby to expose events that Counters+ can use during ScoreSaber replays.
+            if (GameObject.Find("InGameReplayUI") != null)
+            {
+                UI.CounterWarning.Create("Counters+ is not fully compatible with ScoreSaber replays.");
+            }
         }
 
         private void HideUIElementWithComponent<T>() where T : MonoBehaviour
