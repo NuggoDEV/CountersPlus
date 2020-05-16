@@ -61,7 +61,7 @@ namespace CountersPlus
 
             //Bullshit warning of detecting ScoreSaber replays but uhhhh i cant do shit about false positives during them.
             //Yell at Umby to expose events that Counters+ can use during ScoreSaber replays.
-            if (GameObject.Find("InGameReplayUI") != null)
+            if (GameObject.Find("InGameReplayUI") != null && settings.ScoreSaberReplayWarning)
             {
                 UI.CounterWarning.Create("Counters+ is not fully compatible with ScoreSaber replays.");
             }

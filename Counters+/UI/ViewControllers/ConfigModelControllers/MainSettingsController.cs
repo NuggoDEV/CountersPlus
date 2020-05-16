@@ -59,6 +59,13 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers
             set => CountersController.settings.HideMultiplier = value;
         }
 
+        [UIValue("score-saber-replay")]
+        public bool ScoreSaberReplay
+        {
+            get => CountersController.settings.ScoreSaberReplayWarning;
+            set => CountersController.settings.ScoreSaberReplayWarning = value;
+        }
+
         [UIAction("#post-parse")]
         private void PostParse()
         {

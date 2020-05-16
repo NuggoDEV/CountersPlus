@@ -1,6 +1,7 @@
 ﻿<vertical spacing='1' horizontal-fit='PreferredSize'>
   <checkbox-setting id='aprilfools' text='April Fools Tomfoolery' on-change='update_model' apply-on-change='true' value='april-fools' hover-hint='Who puts April Fools jokes in a Counters mod?'></checkbox-setting>
   <checkbox-setting text='Enabled' on-change='update_model' apply-on-change='true' value='enabled' hover-hint='Toggles Counters+ on or off.'></checkbox-setting>
+  <checkbox-setting text='ScoreSaber Replay Warning' on-change='update_model' apply-on-change='true' value='score-saber-replay' hover-hint='Toggles a warning that appears when using Counters+ while entering a ScoreSaber replay.'></checkbox-setting>
   <list-setting text='Combo Offset' on-change='update_model' apply-on-change='true' value='combo_offset' options='offset_values' hover-hint='Positions counters further or closer to the Combo counter before Distance is taken into account.'></list-setting>
   <list-setting text='Multiplier Offset' on-change='update_model' apply-on-change='true' value='mult_offset' options='offset_values' hover-hint='Positions counters further or closer to the Multiplier counter before Distance is taken into account.'></list-setting>
   <checkbox-setting text='Hide Combo In-Game' on-change='update_model' apply-on-change='true' value='hide_combo' hover-hint='Hide the combo counter from play.'></checkbox-setting>
