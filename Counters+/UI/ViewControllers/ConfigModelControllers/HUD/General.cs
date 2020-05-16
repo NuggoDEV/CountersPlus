@@ -44,7 +44,7 @@ namespace CountersPlus.UI.ViewControllers.ConfigModelControllers.HUD
         {
             yield return new WaitForSeconds(0.1f);
             CountersController.settings.hudConfig.Save();
-            CountersPlusSettingsFlowCoordinator.UpdateMockCounters();
+            CountersPlusSettingsFlowCoordinator.UpdateMockCounters(true);
         }
     }
 }
