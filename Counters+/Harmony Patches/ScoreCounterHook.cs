@@ -61,12 +61,13 @@ namespace CountersPlus.HarmonyPatches
                 }
             }
             float score = ____relativeScoreAndImmediateRankCounter.relativeScore;
-            if (Mathf.Abs(____prevRelativeScore - score) >= 0.001f)
-            {
-                float roundedScore = (float)Math.Round((decimal)score * 100, model.DecimalPrecision);
-                ____relativeScoreText.text = $"{roundedScore.ToString($"F{model.DecimalPrecision}")}%";
-                ____prevRelativeScore = score;
-            }
+            //if (Mathf.Abs(____prevRelativeScore - score) >= 0.001f)
+            //{
+            //}
+            //It appears that the above code caused some errors with an outdated precision.
+            float roundedScore = (float)Math.Round((decimal)score * 100, model.DecimalPrecision);
+            ____relativeScoreText.text = $"{roundedScore.ToString($"F{model.DecimalPrecision}")}%";
+            ____prevRelativeScore = score;
             return false;
         }
     }

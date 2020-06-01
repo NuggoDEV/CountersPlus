@@ -111,7 +111,7 @@ namespace CountersPlus.UI.ViewControllers
                 donator.fontSize = 3;
                 donator.alignment = TextAlignmentOptions.Left;
                 float X = (Mathf.Floor(i / ItemsPerColumn) * 0.35f) + 0.05f;
-                float Y = 0.8f - ((allDonatorsAndPatreonSupporters.ToList().IndexOf(supporter) % ItemsPerColumn) * 0.05f);
+                float Y = 0.8f - ((i % ItemsPerColumn) * 0.05f);
                 SetPositioning(donator.rectTransform, X, Y, 1, 0.166f, 0.5f);
                 LoadedElements.Add(donator.gameObject);
             }

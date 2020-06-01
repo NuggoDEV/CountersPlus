@@ -124,7 +124,7 @@ namespace CountersPlus.UI.ViewControllers
 
         private void HandleSettingsGroupChanged(SettingsGroupType obj)
         {
-            selectedSettingsGroup = loadedSettingsGroups.Where(x => x.type == obj).FirstOrDefault();
+            selectedSettingsGroup = loadedSettingsGroups.FirstOrDefault(x => x.type == obj);
             CustomListTableView.ReloadData();
             CustomListTableView.SelectCellWithIdx(0);
             TableViewScroller scroller = tableViewScrollerAccessor(ref CustomListTableView);
