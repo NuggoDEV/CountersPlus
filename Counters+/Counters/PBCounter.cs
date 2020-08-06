@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using TMPro;
 using CountersPlus.Config;
+using System.Linq.Expressions;
 
 namespace CountersPlus.Counters
 {
@@ -49,26 +50,15 @@ namespace CountersPlus.Counters
             _scoreController.scoreDidChangeEvent += UpdateScore;
             
             SetPersonalBest(beginningPB);
-
-            if (settings.UnderScore) StartCoroutine(WaitForScoreCounter());
         }
 
-        private IEnumerator WaitForScoreCounter()
+        public void UpdatePBCounterToScorePosition(TextMeshProUGUI score)
         {
-            ScoreCounter counter = CountersController.LoadedCounters.Where((GameObject x) => x?.GetComponent<ScoreCounter>() != null).FirstOrDefault()?.GetComponent<ScoreCounter>();
-            if (counter == null) yield break;
-            float offset = 0;
-            yield return new WaitUntil(() => counter.RankText != null);
-            if (!(CountersController.settings.scoreConfig.Mode == ICounterMode.BaseGame || CountersController.settings.scoreConfig.Mode == ICounterMode.BaseWithOutPoints))
-            {
-                if (CountersController.settings.scoreConfig.DisplayRank)
-                    offset = 0.35f;
-                else
-                    offset = 0.1f;
-            }
-
-            _PbTrackerText.rectTransform.SetParent(counter.RankText.rectTransform);
-            _PbTrackerText.rectTransform.localPosition = new Vector2(0, (TextHelper.PosScaleFactor / 2) + (settings.TextSize / 10) + offset) * -1;
+            if (!settings.UnderScore) return;
+            Plugin.Log("Fuck me", LogInfo.Error);
+            float size = score.fontSize * score.fontScale;
+            Vector3 position = score.rectTransform.position - (Vector3.up * size);
+            _PbTrackerText.rectTransform.localPosition = TextHelper.CounterCanvas.transform.InverseTransformPoint(position);
         }
 
         internal override void Counter_Destroy()

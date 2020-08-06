@@ -85,10 +85,8 @@ namespace CountersPlus.Config
                     Plugin.Log($"Failed to load variable {info.Name} in {type.Name}. Using defaults...", LogInfo.Info);
                     continue;
                 }
-                if (finfo.FieldType == typeof(ICounterMode))
-                    input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterMode), value));
-                else if (finfo.FieldType == typeof(ICounterPositions))
-                    input.SetPrivateField(info.Name, Enum.Parse(typeof(ICounterPositions), value));
+                if (finfo.FieldType.IsEnum)
+                    input.SetPrivateField(info.Name, Enum.Parse(finfo.FieldType, value));
                 else input.SetPrivateField(info.Name, Convert.ChangeType(value, finfo.FieldType));
                 if (finfo.GetValue(input) == null) throw new Exception();
             }

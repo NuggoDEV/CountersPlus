@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CountersPlus.Counters
 {
-    public abstract class Counter<T> : MonoBehaviour where T : ConfigModel
+    public abstract class Counter<T> : MonoBehaviour, ICounter where T : ConfigModel
     {
         internal T settings;
 

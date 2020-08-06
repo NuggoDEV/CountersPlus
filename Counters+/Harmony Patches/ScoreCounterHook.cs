@@ -15,8 +15,7 @@ namespace CountersPlus.HarmonyPatches
         {
             if (!CountersController.settings.scoreConfig.Enabled || !CountersController.settings.Enabled) return true;
             if (__instance.gameObject.GetComponent<ScoreCounter>() == null) return true;
-            ____rankText = (TextMeshProUGUI)__instance.gameObject.GetComponent<ScoreCounter>().RankText;
-            ____relativeScoreText = (TextMeshProUGUI)__instance.gameObject.GetComponent<ScoreCounter>().ScoreMesh;
+            __instance.gameObject.GetComponent<ScoreCounter>().UpdateTextMeshes(ref ____rankText, ref ____relativeScoreText);
             return false;
         }
     }
@@ -38,7 +37,7 @@ namespace CountersPlus.HarmonyPatches
                 if (rank != ____prevImmediateRank)
                 {
                     string rankName = RankModel.GetRankName(rank);
-                    ____rankText.text = model.Mode != ICounterMode.BaseGame ? $"\n{rankName}" : rankName;
+                    ____rankText.text = rankName;
                     ____prevImmediateRank = rank;
                     //I am moving this code down here so that it only runs if the rank changes instead of every time the game refreshes the UI.
                     //Because of how cosmic brain Beat Games is, this code should run on game startup, because SSS != SS, so should work fine.
@@ -61,10 +60,6 @@ namespace CountersPlus.HarmonyPatches
                 }
             }
             float score = ____relativeScoreAndImmediateRankCounter.relativeScore;
-            //if (Mathf.Abs(____prevRelativeScore - score) >= 0.001f)
-            //{
-            //}
-            //It appears that the above code caused some errors with an outdated precision.
             float roundedScore = (float)Math.Round((decimal)score * 100, model.DecimalPrecision);
             ____relativeScoreText.text = $"{roundedScore.ToString($"F{model.DecimalPrecision}")}%";
             ____prevRelativeScore = score;
