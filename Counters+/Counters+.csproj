@@ -133,6 +133,17 @@
     <Compile Include="ConfigModels\Counters\ScoreConfigModel.cs" />
     <Compile Include="ConfigModels\Counters\SpeedConfigModel.cs" />
     <Compile Include="ConfigModels\Counters\SpinometerConfigModel.cs" />
+    <Compile Include="Counters\Counter.cs" />
+    <Compile Include="Counters\Event Broadcasters\CounterEventBroadcaster.cs" />
+    <Compile Include="Counters\Event Broadcasters\EventBroadcaster.cs" />
+    <Compile Include="Counters\Event Broadcasters\NoteEventBroadcaster.cs" />
+    <Compile Include="Counters\Event Broadcasters\ScoreEventBroadcaster.cs" />
+    <Compile Include="Counters\Interfaces\ICounter.cs" />
+    <Compile Include="Counters\Interfaces\IEventHandler.cs" />
+    <Compile Include="Counters\Interfaces\INoteEventHandler.cs" />
+    <Compile Include="Counters\Interfaces\IScoreEventHandler.cs" />
+    <Compile Include="Counters\MissedCounter.cs" />
+    <Compile Include="Installers\CountersInstaller.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
