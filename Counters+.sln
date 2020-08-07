@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Counters+", "Counters+\Counters+.csproj", "{52BA4455-F8F5-41AC-B873-9296D789C7CC}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{68603FE6-2E4E-4062-A149-F685F27251A5}"
 	ProjectSection(SolutionItems) = preProject
 		Counters+\Counters+.csproj.user = Counters+\Counters+.csproj.user
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Counters+", "Counters+\Counters+.csproj", "{A5DBF7F3-FE93-4BB1-8023-2DD50DFD3350}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{52BA4455-F8F5-41AC-B873-9296D789C7CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{52BA4455-F8F5-41AC-B873-9296D789C7CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{52BA4455-F8F5-41AC-B873-9296D789C7CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{52BA4455-F8F5-41AC-B873-9296D789C7CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5DBF7F3-FE93-4BB1-8023-2DD50DFD3350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5DBF7F3-FE93-4BB1-8023-2DD50DFD3350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5DBF7F3-FE93-4BB1-8023-2DD50DFD3350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5DBF7F3-FE93-4BB1-8023-2DD50DFD3350}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

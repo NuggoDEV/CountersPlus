@@ -1,79 +1,36 @@
-﻿using CountersPlus.UI;
-using HarmonyLib;
-using IPA.Loader;
+﻿using CountersPlus.ConfigModels;
 using IPA;
-using System;
-using System.Linq;
+using IPA.Config;
+using IPA.Config.Stores;
 using IPALogger = IPA.Logging.Logger;
-using CountersPlus.Utils;
 
 namespace CountersPlus
 {
-    public enum LogInfo { Info, Warning, Notice, Error, Fatal };
-
-    [Plugin(RuntimeOptions.SingleStartInit)]
+    [Plugin(RuntimeOptions.DynamicInit)]
     public class Plugin
     {
-        public static SemVer.Version PluginVersion { get; private set; } = new SemVer.Version("0.0.0"); //Default.
-        public static SemVer.Version WebVersion { get; internal set; } = new SemVer.Version("0.0.0"); //Default.
-
-        internal static bool UpToDate => PluginVersion >= WebVersion;
-
-        private static Harmony harmonyInstance;
-        public const string harmonyId = "com.caeden117.beatsaber.countersplus";
+        internal static Plugin Instance { get; private set; }
+        internal static IPALogger Logger { get; set; }
 
         [Init]
-        public void Init(IPALogger log, PluginMetadata metadata)
+        public Plugin(IPALogger logger,
+            [Config.Name("CountersPlus")] Config conf)
         {
-            Logger.Init(log);   
-            PluginVersion = metadata?.Version;
-            BS_Utils.Utilities.BSEvents.gameSceneActive += GameCoreLoaded;
-            BS_Utils.Utilities.BSEvents.menuSceneActive += ClearCounters;
+            Instance = this;
+            Logger = logger;
+            MainConfigModel.Instance = conf.Generated<MainConfigModel>();
         }
 
-        [OnStart]
-        public void OnApplicationStart()
+        [OnEnable]
+        public void OnEnable()
         {
-            try
-            {
-                harmonyInstance = new Harmony(harmonyId);
-                harmonyInstance.PatchAll(System.Reflection.Assembly.GetExecutingAssembly());
-            }
-            catch (Exception ex)
-            {
-                Log($"{ex.Message}", LogInfo.Fatal, "Unable to apply Harmony patches. Did you even install BSIPA correctly?");
-            }
-
-            CountersController.OnLoad();
-            MenuUI.CreateUI();
         }
 
-        [OnExit]
-        public void OnApplicationQuit()
+        [OnDisable]
+        public void OnDisable()
         {
-            if (harmonyInstance != null) harmonyInstance?.UnpatchAll(harmonyId);
-            BS_Utils.Utilities.BSEvents.gameSceneActive -= GameCoreLoaded;
-            BS_Utils.Utilities.BSEvents.menuSceneActive -= ClearCounters;
+
         }
 
-        private void GameCoreLoaded()
-        {
-            PlayerDataModel dataModel = UnityEngine.Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault();
-            if (CountersController.settings.Enabled && !(dataModel?.playerData.playerSpecificSettings.noTextsAndHuds ?? false))
-            {
-                CountersController.LoadCounters();
-            }
-        }
-
-        private void ClearCounters()
-        {
-            TextHelper.CounterCanvas = null;
-            CountersController.LoadedCounters.Clear();
-        }
-
-        public static void Log(string m, LogInfo l = LogInfo.Info, string suggestedAction = null)
-        {
-            Logger.Log(m, l, suggestedAction);
-        }
     }
 }

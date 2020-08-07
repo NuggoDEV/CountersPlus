@@ -1,3 +1,0 @@
-﻿<vertical spacing='1' horizontal-fit='PreferredSize'>
-  <checkbox-setting text='Label Above Counter' on-change='update_model' apply-on-change='true' value='label_above' hover-hint='Put the label above the number, similar to a usual Counters+ counter.'></checkbox-setting>
-</vertical>

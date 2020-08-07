@@ -1,20 +1,13 @@
 ﻿{
-  "$schema": "https://github.com/nike4613/BSIPA-MetadataFileSchema/master/Schema.json",
-  "author": "Caeden117",
-  "description": "#![CountersPlus.About.md]",
-  "gameVersion": "1.9.0",
-  "icon": "CountersPlus.UI.Images.Logo.png",
+  "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
   "id": "Counters+",
   "name": "Counters+",
-  "version": "1.9.0",
+  "author": "Caeden117",
+  "version": "2.0.0",
+  "description": "",
+  "gameVersion": "1.10.0",
   "dependsOn": {
-    "BS Utils": "^1.3.5",
-    "BeatSaberMarkupLanguage": "^1.3.2"
-  },
-  "loadAfter": [ "BS Utils", "BeatSaberMarkupLanguage" ],
-  "links": {
-    "project-source": "https://github.com/Caeden117/CountersPlus",
-    "donate": "https://ko-fi.com/Caeden117"
+
   },
   "features": []
 }

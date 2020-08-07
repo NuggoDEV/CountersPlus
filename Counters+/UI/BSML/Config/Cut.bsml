@@ -1,5 +1,0 @@
-﻿<vertical spacing='1' horizontal-fit='PreferredSize'>
-  <checkbox-setting text='Separate Saber Cuts' on-change='update_model' apply-on-change='true' value='separate-sabers' hover-hint='Shows the average cut for the left and right sabers separately.'></checkbox-setting>
-  <checkbox-setting text='Separate Cut Values' on-change='update_model' apply-on-change='true' value='separate-values' hover-hint='Show separate averages for angle before cut (0-70), angle after cut (0-30) and distance to center (0-15).'></checkbox-setting>
-  <list-setting text='Average Cut Precision' on-change='update_model' apply-on-change='true' value='average-precision' options='average-precision_values' hover-hint='How many decimals should be shown on the average cuts?'></list-setting>
-</vertical>

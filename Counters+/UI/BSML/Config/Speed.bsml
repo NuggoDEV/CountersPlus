@@ -1,4 +1,0 @@
-﻿<vertical spacing='1' horizontal-fit='PreferredSize'>
-  <list-setting text='Percentage Precision' on-change='update_model' apply-on-change='true' value='precision' options='precision_values' hover-hint='How precise should the precentage be?'></list-setting>
-  <dropdown-list-setting text='Mode' on-change='update_model' apply-on-change='true' value='mode' options='mode_values' formatter='mode_formatter' hover-hint='How should this Counter display data?'></dropdown-list-setting>
-</vertical>

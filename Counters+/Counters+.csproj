@@ -1,72 +1,62 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{52BA4455-F8F5-41AC-B873-9296D789C7CC}</ProjectGuid>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A5DBF7F3-FE93-4BB1-8023-2DD50DFD3350}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CountersPlus</RootNamespace>
     <AssemblyName>Counters+</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <DebugType>portable</DebugType>
+    <BeatSaberDir>$(ProjectDir)Refs</BeatSaberDir>
+    <BeatSaberReferences>$(BeatSaberDir)</BeatSaberReferences>
+    <ReferencePath>$(SolutionDir)Refs</ReferencePath>
+    <AppOutputBase>$(MSBuildProjectDirectory)\</AppOutputBase>
+    <PathMap>$(AppOutputBase)=X:\$(AssemblyName)\</PathMap>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <NoWarn>CS0649,CS1591</NoWarn>
-    <DocumentationFile>bin\Debug\Counters+.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(DefineConstants.Contains('CIBuild')) OR '$(NCrunch)' == '1'">
+    <DisableCopyToPlugins>True</DisableCopyToPlugins>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(NCrunch)' == '1'">
+    <DisableCopyToPlugins>True</DisableCopyToPlugins>
+    <DisableZipRelease>True</DisableZipRelease>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
+    <Reference Include="0Harmony, Version=2.0.0.7, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
       <HintPath>$(BeatSaberDir)\Libs\0Harmony.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="HMUI">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\HMUI.dll</HintPath>
-    </Reference>
-    <Reference Include="HMLib">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\HMLib.dll</HintPath>
-    </Reference>
-    <Reference Include="BSML">
-      <HintPath>$(BeatSaberDir)\Plugins\BSML.dll</HintPath>
-    </Reference>
-    <Reference Include="BS_Utils">
+    <Reference Include="BS_Utils, Version=1.4.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
       <HintPath>$(BeatSaberDir)\Plugins\BS_Utils.dll</HintPath>
-    </Reference>
-    <Reference Include="CustomMissText">
-      <HintPath>$(BeatSaberDir)\Plugins\CustomMissText.dll</HintPath>
-    </Reference>
-    <Reference Include="INIFileParser.2.5.2.0, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(BeatSaberDir)\Libs\INIFileParser.2.5.2.0.dll</HintPath>
     </Reference>
-    <Reference Include="IPA.Loader, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SiraUtil, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>$(BeatSaberDir)\Plugins\SiraUtil.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\IPA.Loader.dll</HintPath>
-    </Reference>
-    <Reference Include="Main">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Main.dll</HintPath>
-    </Reference>
-    <Reference Include="SemVer">
-      <HintPath>$(BeatSaberDir)\Libs\SemVer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -74,184 +64,90 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Main">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Main.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="HMLib">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\HMLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="HMUI">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\HMUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="IPA.Loader">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\IPA.Loader.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
       <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.ImageConversionModule">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+    <Reference Include="UnityEngine.VRModule">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.VRModule.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestModule">
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.XRModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Zenject, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Zenject.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\UnityEngine.XRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="Zenject-usage, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Zenject-usage.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Counters\AccuracyCounter.cs" />
-    <Compile Include="Counters\Counter.cs" />
-    <Compile Include="Counters\CustomCounter.cs" />
-    <Compile Include="Counters\CutCounter.cs" />
-    <Compile Include="Counters\FailCounter.cs" />
-    <Compile Include="Counters\ICounter.cs" />
-    <Compile Include="Counters\NotesLeftCounter.cs" />
-    <Compile Include="Counters\Spinometer.cs" />
-    <Compile Include="Custom\Attributes\CounterDestroyAttribute.cs" />
-    <Compile Include="Custom\Attributes\CounterStartAttribute.cs" />
-    <Compile Include="Custom\Attributes\CounterUpdateAttribute.cs" />
-    <Compile Include="Custom\CustomCounters.cs" />
-    <Compile Include="Custom\CustomCounterTemplate.cs" />
-    <Compile Include="Custom\Attributes\DisplayNameAttribute.cs" />
-    <Compile Include="Custom\Attributes\FormattedTextAttribute.cs" />
-    <Compile Include="Custom\Attributes\RefreshCounterAttribute.cs" />
-    <Compile Include="Harmony Patches\ScoreCounterHook.cs" />
-    <Compile Include="UI\AdvancedCounterSettings.cs" />
-    <Compile Include="UI\CounterWarning.cs" />
-    <Compile Include="UI\Images\Images.cs" />
-    <Compile Include="UI\ViewControllers\BackButton.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\ConfigModelController.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\CutController.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\FailController.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\HUD\Camera.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\HUD\General.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\HUD\Position.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\HUD\Rotation.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\MainSettingsController.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\MissedController.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\NotesController.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\NotesLeftController.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\PersonalBestController.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\ProgressController.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\ScoreController.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\SpeedController.cs" />
-    <Compile Include="UI\ViewControllers\ConfigModelControllers\SpinometerController.cs" />
-    <Compile Include="UI\ViewControllers\ContributorsAndDonators.cs" />
-    <Compile Include="UI\ViewControllers\CountersPlusBottomSettingsSelectorViewController.cs" />
-    <Compile Include="UI\ViewControllers\CountersPlusCreditsViewController.cs" />
-    <Compile Include="UI\ViewControllers\CountersPlusEditViewController.cs" />
-    <Compile Include="UI\ViewControllers\CountersPlusFillerForMainViewController.cs" />
-    <Compile Include="UI\CountersPlusSettingsFlowCoordinator.cs" />
-    <Compile Include="UI\ViewControllers\CountersPlusHorizontalSettingsListViewController.cs" />
-    <Compile Include="UI\MenuUI.cs" />
-    <Compile Include="UI\MockCounter.cs" />
-    <Compile Include="UI\ViewControllers\SettingsGroups\CountersSettingsGroup.cs" />
-    <Compile Include="UI\ViewControllers\SettingsGroups\HUDSettingsGroup.cs" />
-    <Compile Include="UI\ViewControllers\SettingsGroups\MainSettingsGroup.cs" />
-    <Compile Include="UI\ViewControllers\SettingsGroups\SettingsGroup.cs" />
-    <Compile Include="Utils\AssignedFloatingWindow.cs" />
-    <Compile Include="Utils\Config.cs" />
-    <Compile Include="CountersController.cs" />
-    <Compile Include="Counters\MissedCounter.cs" />
-    <Compile Include="Counters\PBCounter.cs" />
+    <Compile Include="ConfigModels\ConfigModel.cs" />
+    <Compile Include="ConfigModels\Counters\CutConfigModel.cs" />
+    <Compile Include="ConfigModels\Counters\FailConfigModel.cs" />
+    <Compile Include="ConfigModels\HUDConfigModel.cs" />
+    <Compile Include="ConfigModels\MainConfigModel.cs" />
+    <Compile Include="ConfigModels\Counters\MissedConfigModel.cs" />
+    <Compile Include="ConfigModels\Counters\NoteConfigModel.cs" />
+    <Compile Include="ConfigModels\Counters\NotesLeftConfigModel.cs" />
+    <Compile Include="ConfigModels\Counters\PBConfigModel.cs" />
+    <Compile Include="ConfigModels\Counters\ProgressConfigModel.cs" />
+    <Compile Include="ConfigModels\Counters\ScoreConfigModel.cs" />
+    <Compile Include="ConfigModels\Counters\SpeedConfigModel.cs" />
+    <Compile Include="ConfigModels\Counters\SpinometerConfigModel.cs" />
     <Compile Include="Plugin.cs" />
-    <Compile Include="Counters\ProgressCounter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\Logger.cs" />
-    <Compile Include="Utils\OopsAllAprilFools.cs" />
-    <Compile Include="Utils\PluginUtility.cs" />
-    <Compile Include="Utils\ReflectionUtil.cs" />
-    <Compile Include="Counters\ScoreCounter.cs" />
-    <Compile Include="Counters\SpeedCounter.cs" />
-    <Compile Include="Utils\SimpleJSON.cs" />
-    <Compile Include="Utils\TextHelper.cs" />
-    <Compile Include="Utils\TypesUtility.cs" />
-    <Compile Include="Utils\UIUtilities.cs" />
-    <Compile Include="Utils\VersionChecker.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UI\Images\MainSettings.png" />
-    <EmbeddedResource Include="UI\Images\Missed.png" />
-    <EmbeddedResource Include="UI\Images\Notes.png" />
-    <EmbeddedResource Include="UI\Images\Score.png" />
-    <EmbeddedResource Include="UI\Images\Progress.png" />
-    <EmbeddedResource Include="UI\Images\Speed.png" />
-    <EmbeddedResource Include="UI\Images\Cut.png" />
-    <EmbeddedResource Include="UI\Images\Spinometer.png" />
-    <EmbeddedResource Include="UI\Images\Custom.png" />
-    <EmbeddedResource Include="UI\Images\Credits.png" />
-    <EmbeddedResource Include="UI\Images\Contributors.png" />
-    <EmbeddedResource Include="UI\Images\WotAreYeDoin.png" />
     <EmbeddedResource Include="manifest.json" />
-    <EmbeddedResource Include="UI\Images\Logo.png" />
-    <EmbeddedResource Include="UI\Images\Personal Best.png" />
-    <EmbeddedResource Include="UI\Images\Bug.png" />
-    <EmbeddedResource Include="UI\Images\Fail.png" />
-    <EmbeddedResource Include="UI\Images\Notes Left.png" />
-    <EmbeddedResource Include="About.md" />
-    <EmbeddedResource Include="UI\Images\Donators.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\Credits.bsml" />
+    <None Include="BuildTargets.targets" />
+    <None Include=".gitignore" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\Config\Missed.bsml" />
-    <EmbeddedResource Include="UI\BSML\EditBase.bsml" />
-    <EmbeddedResource Include="UI\BSML\SettingsBase.bsml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\Config\Notes.bsml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\Config\Progress.bsml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\Config\Score.bsml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\Config\PersonalBest.bsml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\Config\Speed.bsml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\Config\Spinometer.bsml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\Config\Cut.bsml" />
-    <EmbeddedResource Include="UI\BSML\Config\NotesLeft.bsml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\Config\Fail.bsml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\BottomSettingsList.bsml" />
-    <EmbeddedResource Include="UI\BSML\Config\Error.bsml" />
-    <EmbeddedResource Include="UI\BSML\MainSettings.bsml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\HUD\General.bsml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\HUD\Camera.bsml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\HUD\Position.bsml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\BSML\HUD\Rotation.bsml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="UI\Images\HUD_Camera.png" />
-    <EmbeddedResource Include="UI\Images\HUD_General.png" />
-    <EmbeddedResource Include="UI\Images\HUD_Position.png" />
-    <EmbeddedResource Include="UI\Images\HUD_Rotation.png" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="BuildTargets.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetDir)$(SolutionName).dll" "$(BeatSaberDir)\Plugins\CountersPlus.dll"
-copy "$(TargetDir)$(SolutionName).xml" "$(BeatSaberDir)\Plugins\CountersPlus.xml"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
