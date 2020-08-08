@@ -2,6 +2,7 @@
 using CountersPlus.Counters;
 using CountersPlus.Counters.Event_Broadcasters;
 using CountersPlus.Counters.Interfaces;
+using CountersPlus.Utils;
 using UnityEngine;
 using Zenject;
 
@@ -13,10 +14,17 @@ namespace CountersPlus.Installers
         {
             // TODO re-add check for No Text and HUD option
             if (!MainConfigModel.Instance.Enabled) return;
+
+            /// LOADING IMPORTANT SHIT LIKE CANVASES AND STUFF ///
+            Container.Bind<HUDConfigModel>().FromInstance(MainConfigModel.Instance.HUDConfig);
+            Container.Bind<CanvasUtility>().AsSingle().NonLazy();
+
+            /// LOADING COUNTERS ///
             Plugin.Logger.Notice("Loading counters...");
 
             AddCounter<MissedConfigModel, MissedCounter>(MainConfigModel.Instance.MissedConfig);
 
+            /// LOADING BROADCASTERS ///
             Container.BindInterfacesAndSelfTo<CounterEventBroadcaster>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<NoteEventBroadcaster>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<ScoreEventBroadcaster>().AsSingle().NonLazy();

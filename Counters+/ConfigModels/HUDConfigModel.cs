@@ -18,17 +18,20 @@ namespace CountersPlus.ConfigModels
         public string Name { get; set; } = "New Canvas";
         
         public virtual bool AttachBaseGameHUD { get; set; } = true;
-        public virtual float HUDSize { get; set; } = 10;
-        public virtual float HUDPositionScaleFactor { get; set; } = 10;
-        public virtual Vector3 HUDPosition => new Vector3(HUDPosition_X, HUDPosition_Y, HUDPosition_Z);
-        public virtual float HUDPosition_X { get; set; } = 0;
-        public virtual float HUDPosition_Y { get; set; } = 0;
-        public virtual float HUDPosition_Z { get; set; } = 7;
-        public virtual Vector3 HUDRotation => new Vector3(HUDRotation_X, HUDRotation_Y, HUDRotation_Z);
-        public virtual float HUDRotation_X { get; set; } = 0;
-        public virtual float HUDRotation_Y { get; set; } = 0;
-        public virtual float HUDRotation_Z { get; set; } = 0;
+        public virtual float Size { get; set; } = 10;
+        public virtual float PositionScale { get; set; } = 10;
+        [Ignore]
+        public virtual Vector3 Position => new Vector3(Pos_X, Pos_Y, Pos_Z);
+        public virtual float Pos_X { get; set; } = 0;
+        public virtual float Pos_Y { get; set; } = 0;
+        public virtual float Pos_Z { get; set; } = 7;
+        [Ignore]
+        public virtual Vector3 Rotation => new Vector3(Rot_X, Rot_Y, Rot_Z);
+        public virtual float Rot_X { get; set; } = 0;
+        public virtual float Rot_Y { get; set; } = 0;
+        public virtual float Rot_Z { get; set; } = 0;
         public virtual bool AttachHUDToCamera { get; set; } = false;
         public virtual string AttachedCamera { get; set; } = "Main Camera";
+        public virtual bool IgnoreShockwaveEffect { get; set; } = true;
     }
 }
