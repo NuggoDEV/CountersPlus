@@ -62,6 +62,14 @@ namespace CountersPlus.Utils
             return canvas;
         }
 
+#nullable enable
+        public Canvas? GetCanvasFromID(int id)
+        {
+            if (CanvasIDToCanvas.TryGetValue(id, out Canvas canvas)) return canvas;
+            return null;
+        }
+#nullable restore
+
         public TMP_Text CreateTextFromSettings(ConfigModel settings, Vector3? offset = null)
         {
             Canvas canvasToApply = CanvasIDToCanvas[settings.CanvasID];

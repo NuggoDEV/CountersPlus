@@ -25,6 +25,11 @@ namespace CountersPlus.Installers
             AddCounter<MissedConfigModel, MissedCounter>(MainConfigModel.Instance.MissedConfig);
             AddCounter<NoteConfigModel, NotesCounter>(MainConfigModel.Instance.NoteConfig);
 
+            if (MainConfigModel.Instance.ProgressConfig.Mode != ProgressMode.BaseGame)
+            {
+                AddCounter<ProgressConfigModel, ProgressCounter>(MainConfigModel.Instance.ProgressConfig);
+            }
+
             /// LOADING BROADCASTERS WITH BROADCAST IN-GAME EVENTS TO COUNTERS AND STUFF ///
             Container.BindInterfacesAndSelfTo<CounterEventBroadcaster>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<NoteEventBroadcaster>().AsSingle().NonLazy();

@@ -1,10 +1,11 @@
 ﻿using Zenject;
+using CountersPlus.Counters.Interfaces;
 using CountersPlus.ConfigModels;
 using CountersPlus.Utils;
 using TMPro;
 using UnityEngine;
 
-namespace CountersPlus.Counters.Interfaces
+namespace CountersPlus.Counters
 {
     /// <summary>
     /// The base class for a counter, which supplies basic utilities for that counter to use.
