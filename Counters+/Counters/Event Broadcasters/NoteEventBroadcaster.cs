@@ -35,7 +35,7 @@ namespace CountersPlus.Counters.Event_Broadcasters
         public override void Dispose()
         {
             scoreController.noteWasCutEvent -= NoteWasCutEvent;
-            scoreController.noteWasMissedEvent += NoteWasMissedEvent;
+            scoreController.noteWasMissedEvent -= NoteWasMissedEvent;
         }
     }
 }

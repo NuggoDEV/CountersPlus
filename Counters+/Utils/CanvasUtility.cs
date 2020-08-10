@@ -1,10 +1,6 @@
 ﻿using BeatSaberMarkupLanguage;
 using CountersPlus.ConfigModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using static CountersPlus.Utils.Accessors;
@@ -17,6 +13,8 @@ namespace CountersPlus.Utils
         private Dictionary<Canvas, HUDCanvas> CanvasToSettings = new Dictionary<Canvas, HUDCanvas>();
         private Canvas energyCanvas;
 
+        // Using the magical power of Zenject™, we magically find ourselves with an instance of
+        // our HUDConfigModel and the CoreGameHUDController.
         public CanvasUtility(HUDConfigModel hudConfig, CoreGameHUDController coreGameHUD)
         {
             energyCanvas = EnergyPanelGO(ref coreGameHUD).GetComponent<Canvas>();

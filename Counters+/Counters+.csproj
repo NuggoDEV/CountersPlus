@@ -148,6 +148,7 @@
     <Compile Include="Counters\Interfaces\INoteEventHandler.cs" />
     <Compile Include="Counters\Interfaces\IScoreEventHandler.cs" />
     <Compile Include="Counters\MissedCounter.cs" />
+    <Compile Include="Counters\NotesCounter.cs" />
     <Compile Include="Installers\CountersInstaller.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

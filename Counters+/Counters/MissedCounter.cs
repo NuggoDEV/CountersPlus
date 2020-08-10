@@ -11,8 +11,7 @@ namespace CountersPlus.Counters
 
         public override void CounterInit()
         {
-            GenerateBasicText("Misses", out TMP_Text count);
-            counter = count;
+            GenerateBasicText("Misses", out counter);
         }
 
         public void OnNoteCut(NoteData data, NoteCutInfo info) { }

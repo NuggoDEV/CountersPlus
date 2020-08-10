@@ -8,7 +8,7 @@ namespace CountersPlus.ConfigModels
     public class HUDConfigModel
     {
         public string DisplayName => "HUD Settings";
-        public HUDCanvas MainCanvasSettings { get; set; } = new HUDCanvas() { Name = "Main" };
+        public HUDCanvas MainCanvasSettings { get; set; } = new HUDCanvas() { Name = "Main", IsMainCanvas = true };
         [UseConverter(typeof(ListConverter<HUDCanvas>))]
         public List<HUDCanvas> OtherCanvasSettings { get; set; } = new List<HUDCanvas>();
     }
@@ -16,8 +16,12 @@ namespace CountersPlus.ConfigModels
     public class HUDCanvas
     {
         public string Name { get; set; } = "New Canvas";
+
+        [Ignore]
+        public bool IsMainCanvas = false;
         
-        public virtual bool AttachBaseGameHUD { get; set; } = true;
+        public virtual bool ParentedToBaseGameHUD { get; set; } = true;
+        public virtual bool IgnoreNoTextAndHUDOption { get; set; } = false;
         public virtual float Size { get; set; } = 10;
         public virtual float PositionScale { get; set; } = 10;
         [Ignore]

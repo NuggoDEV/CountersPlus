@@ -7,7 +7,7 @@ using UnityEngine;
 namespace CountersPlus.Counters.Interfaces
 {
     /// <summary>
-    /// The base class for a counter, which supplies basic utilities, such as a <see cref="ConfigModel"/> and <see cref="CanvasUtility"/>.
+    /// The base class for a counter, which supplies basic utilities for that counter to use.
     /// This is barebones, and only contains events pertaining to the initialization and destruction of a counter.
     /// To access more events, inherit from <see cref="IEventHandler"/>s.
     /// </summary>
