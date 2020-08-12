@@ -68,12 +68,26 @@ namespace CountersPlus.Utils
             if (CanvasIDToCanvas.TryGetValue(id, out Canvas canvas)) return canvas;
             return null;
         }
+
+        public HUDCanvas? GetCanvasSettingsFromID(int id)
+        {
+            Canvas? canvas = GetCanvasFromID(id);
+            if (canvas is null) return null;
+            return GetCanvasSettingsFromCanvas(canvas);
+        }
+
+        public HUDCanvas? GetCanvasSettingsFromCanvas(Canvas canvas)
+        {
+            if (CanvasToSettings.TryGetValue(canvas, out HUDCanvas settings)) return settings;
+            return null;
+
+        }
 #nullable restore
 
         public TMP_Text CreateTextFromSettings(ConfigModel settings, Vector3? offset = null)
         {
             Canvas canvasToApply = CanvasIDToCanvas[settings.CanvasID];
-            return CreateText(canvasToApply, DeterminePosition(settings), offset);
+            return CreateText(canvasToApply, GetAnchoredPositionFromConfig(settings), offset);
         }
 
         public TMP_Text CreateText(Canvas canvas, Vector3 anchoredPosition, Vector3? offset = null)
@@ -104,7 +118,7 @@ namespace CountersPlus.Utils
             return tmp_text;
         }
 
-        private Vector3 DeterminePosition(ConfigModel settings)
+        public Vector3 GetAnchoredPositionFromConfig(ConfigModel settings)
         {
             float comboOffset = MainConfigModel.Instance.ComboOffset;
             float multOffset = MainConfigModel.Instance.MultiplierOffset;

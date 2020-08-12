@@ -8,7 +8,7 @@ using static CountersPlus.Utils.Accessors;
 
 namespace CountersPlus.Counters
 {
-    class ProgressCounter : Counter<ProgressConfigModel>, ITickable
+    public class ProgressCounter : Counter<ProgressConfigModel>, ITickable
     {
         private readonly Vector3 ringSize = Vector3.one * 1.175f;
 

@@ -1,4 +1,5 @@
 ﻿using IPA.Utilities;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,5 +18,7 @@ namespace CountersPlus.Utils
         #endregion
 
         public static FieldAccessor<ScoreMultiplierUIController, Image>.Accessor MultiplierImage = FieldAccessor<ScoreMultiplierUIController, Image>.GetAccessor("_multiplierProgressImage");
+
+        public static FieldAccessor<ScoreUIController, TextMeshProUGUI>.Accessor ScoreUIText = FieldAccessor<ScoreUIController, TextMeshProUGUI>.GetAccessor("_scoreText");
     }
 }

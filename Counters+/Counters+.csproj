@@ -18,7 +18,7 @@
     <ReferencePath>$(SolutionDir)Refs</ReferencePath>
     <AppOutputBase>$(MSBuildProjectDirectory)\</AppOutputBase>
     <PathMap>$(AppOutputBase)=X:\$(AssemblyName)\</PathMap>
-	<LangVersion>Latest</LangVersion>
+    <LangVersion>Latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -151,6 +151,7 @@
     <Compile Include="Counters\MissedCounter.cs" />
     <Compile Include="Counters\NotesCounter.cs" />
     <Compile Include="Counters\ProgressCounter.cs" />
+    <Compile Include="Counters\ScoreCounter.cs" />
     <Compile Include="Installers\CountersInstaller.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -26,5 +26,5 @@ namespace CountersPlus.ConfigModels
         public virtual string EColor { get; set; } = "#FF0000";
     }
 
-    public enum ScoreMode { Original, BaseGame, ScoreOnly, LeavePoints, BaseGameLeavePoints }
+    public enum ScoreMode { Original, ScoreOnly, LeavePoints }
 }
