@@ -1,13 +1,6 @@
 ﻿using CountersPlus.ConfigModels;
-using CountersPlus.Counters.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 using static CountersPlus.Utils.Accessors;
 
@@ -58,7 +51,7 @@ namespace CountersPlus.Counters
             scoreTransform.anchoredPosition = anchoredPos + baseGameScoreOffset;
             rankTransform.anchoredPosition = anchoredPos + baseGameRankOffset;
 
-            UnityEngine.Object.Destroy(coreGameHUD.GetComponentInChildren<ImmediateRankUIPanel>());
+            Object.Destroy(coreGameHUD.GetComponentInChildren<ImmediateRankUIPanel>());
 
             relativeScoreAndImmediateRank.relativeScoreOrImmediateRankDidChangeEvent += UpdateText;
 
@@ -70,25 +63,14 @@ namespace CountersPlus.Counters
             RankModel.Rank immediateRank = relativeScoreAndImmediateRank.immediateRank;
             if (immediateRank != prevImmediateRank)
             {
-                string rankName = RankModel.GetRankName(immediateRank);
                 rankText.text = RankModel.GetRankName(immediateRank);
                 prevImmediateRank = immediateRank;
 
-                string color = "#FFFFFF";
+                Color RankColor = Color.white;
                 if (Settings.CustomRankColors)
                 {
-                    switch (rankName)
-                    {
-                        case "SS": color = Settings.SSColor; break;
-                        case "S": color = Settings.SColor; break;
-                        case "A": color = Settings.AColor; break;
-                        case "B": color = Settings.BColor; break;
-                        case "C": color = Settings.CColor; break;
-                        case "D": color = Settings.DColor; break;
-                        case "E": color = Settings.EColor; break;
-                    }
+                    RankColor = Settings.GetRankColorFromRank(immediateRank);
                 }
-                ColorUtility.TryParseHtmlString(color, out Color RankColor); //converts config hex color to unity RGBA value
                 rankText.color = RankColor;
             }
             float relativeScore = relativeScoreAndImmediateRank.relativeScore * 100;
