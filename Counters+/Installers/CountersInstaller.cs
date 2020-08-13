@@ -16,21 +16,20 @@ namespace CountersPlus.Installers
             if (!MainConfigModel.Instance.Enabled) return;
 
             /// LOADING IMPORTANT SHIT LIKE CANVASES AND STUFF ///
-            Container.Bind<HUDConfigModel>().FromInstance(MainConfigModel.Instance.HUDConfig);
             Container.Bind<CanvasUtility>().AsSingle().NonLazy();
 
             /// LOADING COUNTERS ///
             Plugin.Logger.Notice("Loading counters...");
 
-            AddCounter<MissedConfigModel, MissedCounter>(MainConfigModel.Instance.MissedConfig);
-            AddCounter<NoteConfigModel, NotesCounter>(MainConfigModel.Instance.NoteConfig);
+            AddCounter<MissedConfigModel, MissedCounter>();
+            AddCounter<NoteConfigModel, NotesCounter>();
 
             if (MainConfigModel.Instance.ProgressConfig.Mode != ProgressMode.BaseGame)
             {
-                AddCounter<ProgressConfigModel, ProgressCounter>(MainConfigModel.Instance.ProgressConfig);
+                AddCounter<ProgressConfigModel, ProgressCounter>();
             } // TODO add base game variant for progress counter
 
-            AddCounter<ScoreConfigModel, ScoreCounter>(MainConfigModel.Instance.ScoreConfig);
+            AddCounter<ScoreConfigModel, ScoreCounter>();
 
             /// LOADING BROADCASTERS WITH BROADCAST IN-GAME EVENTS TO COUNTERS AND STUFF ///
             Container.BindInterfacesAndSelfTo<CounterEventBroadcaster>().AsSingle().NonLazy();
@@ -39,13 +38,13 @@ namespace CountersPlus.Installers
             Plugin.Logger.Notice("Counters loaded!");
         }
 
-        private void AddCounter<T, R>(T settings) where T : ConfigModel where R : ICounter
+        private void AddCounter<T, R>() where T : ConfigModel where R : ICounter
         {
+            T settings = Container.Resolve<T>();
+
             if (!settings.Enabled) return;
 
             Plugin.Logger.Warn($"Loading counter {settings.DisplayName}...");
-
-            Container.Bind<T>().FromInstance(settings);
 
             if (typeof(R).BaseType == typeof(MonoBehaviour))
             {

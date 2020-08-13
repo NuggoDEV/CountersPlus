@@ -153,6 +153,7 @@
     <Compile Include="Counters\NotesCounter.cs" />
     <Compile Include="Counters\ProgressCounter.cs" />
     <Compile Include="Counters\ScoreCounter.cs" />
+    <Compile Include="Installers\ConfigModelInstaller.cs" />
     <Compile Include="Installers\CountersInstaller.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

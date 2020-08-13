@@ -26,12 +26,14 @@ namespace CountersPlus
         [OnEnable]
         public void OnEnable()
         {
+            Installer.RegisterAppInstaller<ConfigModelInstaller>();
             Installer.RegisterGameCoreInstaller<CountersInstaller>();
         }
 
         [OnDisable]
         public void OnDisable()
         {
+            Installer.UnregisterAppInstaller<ConfigModelInstaller>();
             Installer.UnregisterGameCoreInstaller<CountersInstaller>();
         }
 
