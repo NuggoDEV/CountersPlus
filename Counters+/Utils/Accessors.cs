@@ -1,4 +1,5 @@
-﻿using IPA.Utilities;
+﻿using HMUI;
+using IPA.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,16 @@ namespace CountersPlus.Utils
         public static FieldAccessor<CoreGameHUDController, GameObject>.Accessor RelativeScoreGO = FieldAccessor<CoreGameHUDController, GameObject>.GetAccessor("_relativeScoreGO");
         public static FieldAccessor<CoreGameHUDController, GameObject>.Accessor ImmediateRankGO = FieldAccessor<CoreGameHUDController, GameObject>.GetAccessor("_immediateRankGO");
         public static FieldAccessor<CoreGameHUDController, GameObject>.Accessor EnergyPanelGO = FieldAccessor<CoreGameHUDController, GameObject>.GetAccessor("_energyPanelGO");
+        #endregion
+
+        #region Counters+ UI
+        public static FieldAccessor<TableView, TableViewScroller>.Accessor TVTableViewScroller = FieldAccessor<TableView, TableViewScroller>.GetAccessor("_scroller");
+        public static FieldAccessor<TableView, TableView.TableType>.Accessor TVTableType = FieldAccessor<TableView, TableView.TableType>.GetAccessor("_tableType");
+        public static FieldAccessor<TableView, TableView.CellsGroup[]>.Accessor TVPreallocCells = FieldAccessor<TableView, TableView.CellsGroup[]>.GetAccessor("_preallocatedCells");
+        public static FieldAccessor<TableView, bool>.Accessor TVIsInitialized = FieldAccessor<TableView, bool>.GetAccessor("_isInitialized");
+        public static FieldAccessor<TableView, Button>.Accessor TVPageUpButton = FieldAccessor<TableView, Button>.GetAccessor("_pageUpButton");
+        public static FieldAccessor<TableView, Button>.Accessor TVPageDownButton = FieldAccessor<TableView, Button>.GetAccessor("_pageDownButton");
+        public static FieldAccessor<TableView, RectTransform>.Accessor TVScrollRect = FieldAccessor<TableView, RectTransform>.GetAccessor("_scrollRectTransform");
         #endregion
 
         public static FieldAccessor<ScoreMultiplierUIController, Image>.Accessor MultiplierImage = FieldAccessor<ScoreMultiplierUIController, Image>.GetAccessor("_multiplierProgressImage");

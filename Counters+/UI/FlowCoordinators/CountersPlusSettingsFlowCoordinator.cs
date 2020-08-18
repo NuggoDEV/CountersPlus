@@ -3,14 +3,7 @@ using CountersPlus.ConfigModels;
 using CountersPlus.UI.ViewControllers;
 using CountersPlus.Utils;
 using HMUI;
-using SiraUtil.Zenject;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -18,14 +11,16 @@ namespace CountersPlus.UI.FlowCoordinators
 {
     public class CountersPlusSettingsFlowCoordinator : FlowCoordinator
     {
-        [Inject] private List<ConfigModel> allConfigModels;
-        [Inject] private DiContainer menuDiContainer;
+        [Inject] public List<ConfigModel> AllConfigModels;
         [Inject] private CanvasUtility canvasUtility;
+
+        [Inject] private CountersPlusCreditsViewController credits;
+        [Inject] private CountersPlusBlankViewController blank;
+        [Inject] private CountersPlusSettingSectionSelectionViewController settingsSelection;
+        [Inject] private CountersPlusHorizontalSettingsListViewController horizontalSettingsList;
 
         private TweenPosition mainScreenTween;
         private Vector3 mainScreenOrigin;
-
-        private CountersPlusCreditsViewController credits;
 
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
@@ -36,15 +31,16 @@ namespace CountersPlus.UI.FlowCoordinators
                 mainScreenTween._duration = 1f;
                 mainScreenOrigin = mainScreenTransform.position;
 
-                Plugin.Logger.Warn($"Loading options menu with {allConfigModels.Count} config models...");
+                Plugin.Logger.Warn($"Loading options menu with {AllConfigModels.Count} config models...");
 
                 showBackButton = true;
                 title = "Counters+";
-
-                credits = BindViewController<CountersPlusCreditsViewController>();
             }
             SetMainScreenOffset(new Vector3(0, -4, 0));
-            ProvideInitialViewControllers(credits);
+
+            PushViewControllerToNavigationController(settingsSelection, horizontalSettingsList);
+
+            ProvideInitialViewControllers(blank, credits, null, settingsSelection);
         }
 
         protected override void BackButtonWasPressed(ViewController topViewController)
@@ -58,13 +54,6 @@ namespace CountersPlus.UI.FlowCoordinators
         {
             mainScreenTween._duration = duration;
             mainScreenTween.TargetPos = mainScreenOrigin + offset;
-        }
-
-        private T BindViewController<T>() where T : ViewController
-        {
-            T view = BeatSaberUI.CreateViewController<T>();
-            menuDiContainer.InjectSpecialInstance<T>(view);
-            return view;
         }
     }
 }
