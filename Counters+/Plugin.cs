@@ -5,6 +5,7 @@ using IPA.Config.Stores;
 using IPALogger = IPA.Logging.Logger;
 using SiraUtil.Zenject;
 using CountersPlus.Installers;
+using IPA.Loader;
 
 namespace CountersPlus
 {
@@ -28,6 +29,7 @@ namespace CountersPlus
         {
             Installer.RegisterAppInstaller<ConfigModelInstaller>();
             Installer.RegisterGameCoreInstaller<CountersInstaller>();
+            Installer.RegisterMenuInstaller<MenuUIInstaller>();
         }
 
         [OnDisable]
@@ -35,6 +37,7 @@ namespace CountersPlus
         {
             Installer.UnregisterAppInstaller<ConfigModelInstaller>();
             Installer.UnregisterGameCoreInstaller<CountersInstaller>();
+            Installer.UnregisterMenuInstaller<MenuUIInstaller>();
         }
 
     }

@@ -3,21 +3,33 @@ using CountersPlus.ConfigModels;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Zenject;
 using static CountersPlus.Utils.Accessors;
 
 namespace CountersPlus.Utils
 {
     public class CanvasUtility
     {
+        public GameplayCoreHUDInstaller.HudType HUDType = GameplayCoreHUDInstaller.HudType.Basic;
+
         private Dictionary<int, Canvas> CanvasIDToCanvas = new Dictionary<int, Canvas>();
         private Dictionary<Canvas, HUDCanvas> CanvasToSettings = new Dictionary<Canvas, HUDCanvas>();
-        private Canvas energyCanvas;
+        private Canvas energyCanvas = null;
 
         // Using the magical power of Zenject™, we magically find ourselves with an instance of
         // our HUDConfigModel and the CoreGameHUDController.
-        public CanvasUtility(HUDConfigModel hudConfig, CoreGameHUDController coreGameHUD)
+        public CanvasUtility(HUDConfigModel hudConfig,
+            [Inject(Optional = true)] GameplayCoreSceneSetupData data,
+            [Inject(Optional = true)] CoreGameHUDController coreGameHUD)
         {
-            energyCanvas = EnergyPanelGO(ref coreGameHUD).GetComponent<Canvas>();
+            if (coreGameHUD != null)
+            {
+                energyCanvas = EnergyPanelGO(ref coreGameHUD).GetComponent<Canvas>();
+            }
+            if (data != null)
+            {
+                HUDType = GetGameplayCoreHUDTypeForEnvironmentSize(data.environmentInfo.environmentSizeData.width);
+            }
 
             CanvasIDToCanvas.Add(-1, CreateCanvasWithConfig(hudConfig.MainCanvasSettings));
             for (int i = 0; i < hudConfig.OtherCanvasSettings.Count; i++)
@@ -47,7 +59,7 @@ namespace CountersPlus.Utils
 
             // Inherit canvas properties from the Energy Bar to ignore the shockwave effect.
             // However, a caveat as that, when viewing through walls, UI elements will not appear.
-            if (canvasSettings.IgnoreShockwaveEffect)
+            if (canvasSettings.IgnoreShockwaveEffect && energyCanvas != null)
             {
                 canvas.overrideSorting = energyCanvas.overrideSorting;
                 canvas.sortingLayerID = energyCanvas.sortingLayerID;
@@ -126,8 +138,22 @@ namespace CountersPlus.Utils
             int index = settings.Distance;
             Vector3 pos = new Vector3(); // Base position
             Vector3 offset = new Vector3(0, -0.75f * index, 0); // Offset 
-            bool hud360 = false; // TODO re-implement 360 HUD
-            float X = hud360 ? 2 : 3.2f;
+
+            float X = 3.2f;
+            float belowEnergyOffset = -1.5f;
+            float aboveHighwayOffset = 0.75f;
+            switch (HUDType)
+            {
+                case GameplayCoreHUDInstaller.HudType.Narrow:
+                    X = 2f;
+                    break;
+                case GameplayCoreHUDInstaller.HudType.Flying:
+                    X = 2f;
+                    belowEnergyOffset = -0.25f;
+                    aboveHighwayOffset = 0.25f;
+                    break;
+            }
+
             switch (position)
             {
                 case CounterPositions.BelowCombo:
@@ -145,14 +171,37 @@ namespace CountersPlus.Utils
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
                 case CounterPositions.BelowEnergy:
-                    pos = new Vector3(0, hud360 ? -0.25f : -1.5f, 7);
+                    pos = new Vector3(0, belowEnergyOffset, 7);
                     break;
                 case CounterPositions.AboveHighway:
                     pos = new Vector3(0, 2.5f, 7);
-                    offset = new Vector3(0, (offset.y * -1) + (hud360 ? 0.25f : 0.75f), 0);
+                    offset = new Vector3(0, (offset.y * -1) + aboveHighwayOffset, 0);
                     break;
             }
             return pos + offset;
+        }
+        
+        public void ClearAllText()
+        {
+            foreach (Canvas canvas in CanvasIDToCanvas.Values)
+            {
+                foreach (Transform child in canvas.transform)
+                {
+                    Object.Destroy(child.gameObject);
+                }
+            }
+        }
+
+        private GameplayCoreHUDInstaller.HudType GetGameplayCoreHUDTypeForEnvironmentSize(EnvironmentSizeData.Width environmentWidth)
+        {
+            switch (environmentWidth)
+            {
+                case EnvironmentSizeData.Width.Narrow:
+                    return GameplayCoreHUDInstaller.HudType.Narrow;
+                case EnvironmentSizeData.Width.Circle:
+                    return GameplayCoreHUDInstaller.HudType.Flying;
+            }
+            return GameplayCoreHUDInstaller.HudType.Basic;
         }
     }
 }
