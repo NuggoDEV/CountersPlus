@@ -4,6 +4,8 @@ using TMPro;
 using Zenject;
 using UnityEngine.UI;
 using IPA.Utilities;
+using UnityEngine;
+using CountersPlus.Utils;
 
 namespace CountersPlus.UI.SettingGroups
 {
@@ -24,5 +26,13 @@ namespace CountersPlus.UI.SettingGroups
         public abstract TableCell CellForIdx(TableView view, int idx);
 
         public abstract void OnCellSelect(TableView view, int idx);
+
+        public virtual void OnDisable() { }
+
+        public virtual void OnEnable() { }
+
+        protected Texture2D LoadTexture(string name) => ImagesUtility.LoadTextureFromResources($"CountersPlus.UI.Images.{name}.png");
+
+        protected Sprite LoadSprite(string name) => ImagesUtility.LoadSpriteFromResources($"CountersPlus.UI.Images.{name}.png");
     }
 }

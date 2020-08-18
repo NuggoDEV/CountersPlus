@@ -28,7 +28,11 @@ namespace CountersPlus.UI.SettingGroups
 
             ConfigModel model = flowCoordinator.Value.AllConfigModels[idx];
             packInfoText.text = $"{model.DisplayName}";
-            // TODO images
+            try
+            {
+                packCoverImage.sprite = LoadSprite($"Counters.{model.DisplayName}");
+            }
+            catch { }
             return cell;
         }
 
@@ -36,15 +40,7 @@ namespace CountersPlus.UI.SettingGroups
 
         public override void OnCellSelect(TableView view, int idx)
         {
-            throw new NotImplementedException();
-        }
-
-        public class SettingsInfo
-        {
-            public string Name;
-            public string Description;
-            public ConfigModel Model;
-            public bool IsCustom = false;
+            Plugin.Logger.Warn($"Selected {flowCoordinator.Value.AllConfigModels[idx].DisplayName}!");
         }
     }
 }

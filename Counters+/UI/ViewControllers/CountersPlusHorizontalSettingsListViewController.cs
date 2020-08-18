@@ -134,7 +134,10 @@ namespace CountersPlus.UI.ViewControllers
         private void HandleSettingsGroupChanged(int idx)
         {
             if (idx >= loadedSettingsGroups.Count) idx = 0;
+            selectedSettingsGroup?.OnDisable();
             selectedSettingsGroup = loadedSettingsGroups[idx];
+            selectedSettingsGroup.OnEnable();
+
             customListTableView.ReloadData();
             customListTableView.SelectCellWithIdx(0);
             TableViewScroller scroller = TVTableViewScroller(ref customListTableView);
