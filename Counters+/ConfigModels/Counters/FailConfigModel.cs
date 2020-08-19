@@ -1,4 +1,5 @@
-﻿using IPA.Config.Stores.Attributes;
+﻿using BeatSaberMarkupLanguage.Attributes;
+using IPA.Config.Stores.Attributes;
 
 namespace CountersPlus.ConfigModels
 {
@@ -12,6 +13,7 @@ namespace CountersPlus.ConfigModels
         public override CounterPositions Position { get; set; } = CounterPositions.AboveCombo;
         public override int Distance { get; set; } = 0;
 
+        [UIValue(nameof(ShowRestartsInstead))]
         public virtual bool ShowRestartsInstead { get; set; } = false;
     }
 }

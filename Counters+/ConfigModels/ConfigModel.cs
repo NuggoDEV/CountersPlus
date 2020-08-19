@@ -20,8 +20,10 @@ namespace CountersPlus.ConfigModels
         [UIValue(nameof(Enabled))]
         public virtual bool Enabled { get; set; } = false;
         [UseConverter]
+        
         [UIValue(nameof(Position))]
         public virtual CounterPositions Position { get; set; } = CounterPositions.BelowCombo;
+        
         [UIValue(nameof(Distance))]
         public virtual int Distance { get; set; } = 2;
 
@@ -30,8 +32,9 @@ namespace CountersPlus.ConfigModels
         [UIValue(nameof(CanvasID))]
         public virtual int CanvasID { get; set; } = -1;
 
+        #region UI
         [UIValue(nameof(Distances))]
-        public List<object> Distances = new List<object> { -1, 0, 1, 2, 3, 4 };
+        public List<object> Distances => AllDistances.Cast<object>().ToList();
 
         [UIValue(nameof(Positions))]
         public List<object> Positions => PositionToNames.Keys.Cast<object>().ToList();
@@ -39,7 +42,10 @@ namespace CountersPlus.ConfigModels
         [UIAction(nameof(PositionsFormat))]
         public string PositionsFormat(CounterPositions pos) => PositionToNames[pos];
 
-        public static Dictionary<CounterPositions, string> PositionToNames = new Dictionary<CounterPositions, string>() {
+        private static List<int> AllDistances = new List<int>() { -1, 0, 1, 2, 3, 4 };
+
+        private static Dictionary<CounterPositions, string> PositionToNames = new Dictionary<CounterPositions, string>()
+        {
             {CounterPositions.BelowCombo, "Below Combo" },
             {CounterPositions.AboveCombo, "Above Combo" },
             {CounterPositions.BelowMultiplier, "Below Multiplier" },
@@ -47,5 +53,11 @@ namespace CountersPlus.ConfigModels
             {CounterPositions.BelowEnergy, "Below Energy" },
             {CounterPositions.AboveHighway, "Over Highway" }
         };
+
+
+        [UIValue(nameof(DecimalPrecisions))]
+        public List<object> DecimalPrecisions => new List<object>() { 0, 1, 2, 3, 4 };
+
+        #endregion UI
     }
 }

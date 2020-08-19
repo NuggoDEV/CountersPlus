@@ -1,4 +1,5 @@
-﻿using IPA.Config.Stores.Attributes;
+﻿using BeatSaberMarkupLanguage.Attributes;
+using IPA.Config.Stores.Attributes;
 
 namespace CountersPlus.ConfigModels
 {
@@ -12,6 +13,7 @@ namespace CountersPlus.ConfigModels
         public override CounterPositions Position { get; set; } = CounterPositions.AboveHighway;
         public override int Distance { get; set; } = -1;
 
+        [UIValue(nameof(LabelAboveCount))]
         public virtual bool LabelAboveCount { get; set; } = false;
     }
 }

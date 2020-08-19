@@ -1,3 +1,3 @@
 ﻿<vertical spacing='1' horizontal-fit='PreferredSize'>
-  <checkbox-setting text='Track Restarts' on-change='update_model' apply-on-change='true' value='restarts' hover-hint='Instead of showing global fail count, show the amount of times you have restarted the same song.'></checkbox-setting>
+  <checkbox-setting text='Track Restarts' apply-on-change='true' value='ShowRestartsInstead' hover-hint='Instead of showing global fail count, show the amount of times you have restarted the same song.'></checkbox-setting>
 </vertical>
