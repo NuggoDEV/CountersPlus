@@ -1,7 +1,7 @@
 ﻿using CountersPlus.ConfigModels;
 using CountersPlus.UI.FlowCoordinators;
+using CountersPlus.UI.ViewControllers.Editing;
 using HMUI;
-using System;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -11,6 +11,7 @@ namespace CountersPlus.UI.SettingGroups
     public class CountersSettingsGroup : SettingsGroup
     {
         [Inject] protected LazyInject<CountersPlusSettingsFlowCoordinator> flowCoordinator;
+        [Inject] protected LazyInject<CountersPlusCounterEditViewController> editViewController;
 
         public override TableCell CellForIdx(TableView view, int idx)
         {
@@ -40,7 +41,11 @@ namespace CountersPlus.UI.SettingGroups
 
         public override void OnCellSelect(TableView view, int idx)
         {
-            Plugin.Logger.Warn($"Selected {flowCoordinator.Value.AllConfigModels[idx].DisplayName}!");
+            ConfigModel selectedModel = flowCoordinator.Value.AllConfigModels[idx];
+            Plugin.Logger.Warn($"Selected {selectedModel.DisplayName}!");
+            Plugin.Logger.Warn($"{selectedModel.GetType().Name}");
+            flowCoordinator.Value.SetRightViewController(editViewController.Value);
+            editViewController.Value.ApplySettings(selectedModel);
         }
     }
 }

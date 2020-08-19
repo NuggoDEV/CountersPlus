@@ -1,0 +1,5 @@
+﻿<vertical spacing='1' horizontal-fit='PreferredSize'>
+  <checkbox-setting text='Enabled' apply-on-change='true' value='Enabled' hover-hint='Toggle this counter on or off.'></checkbox-setting>
+  <dropdown-list-setting text='Position' apply-on-change='true' value='Position' options='Positions' formatter='PositionsFormat' hover-hint='The relative position of common UI elements.'></dropdown-list-setting>
+  <list-setting text='Distance' apply-on-change='true' value='Distance' options='Distances' hover-hint='How far from the position the counter will be. A higher number means farther away.'></list-setting>
+</vertical>

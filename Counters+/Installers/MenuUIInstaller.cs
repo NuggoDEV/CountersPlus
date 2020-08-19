@@ -3,6 +3,7 @@ using BeatSaberMarkupLanguage.MenuButtons;
 using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.UI.SettingGroups;
 using CountersPlus.UI.ViewControllers;
+using CountersPlus.UI.ViewControllers.Editing;
 using CountersPlus.Utils;
 using HMUI;
 using SiraUtil.Zenject;
@@ -26,14 +27,14 @@ namespace CountersPlus.Installers
             BindSettingsGroup<CountersSettingsGroup>();
 
             BindViewController<CountersPlusCreditsViewController>();
+            BindViewController<CountersPlusMainScreenNavigationController>();
             BindViewController<CountersPlusBlankViewController>();
             BindViewController<CountersPlusSettingSectionSelectionViewController>();
             BindViewController<CountersPlusHorizontalSettingsListViewController>();
+            BindViewController<CountersPlusCounterEditViewController>();
 
             flowCoordinator = BeatSaberUI.CreateFlowCoordinator<CountersPlusSettingsFlowCoordinator>();
             Container.InjectSpecialInstance<CountersPlusSettingsFlowCoordinator>(flowCoordinator);
-
-            Plugin.Logger.Warn(string.Join(",", Container.AllContracts.Select(x => x.Type.Name)));
 
             MenuButton button = new MenuButton("Counters+", "Configure Counters+ settings.", OnClick);
             MenuButtons.instance.RegisterButton(button);

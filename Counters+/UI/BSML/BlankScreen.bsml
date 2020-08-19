@@ -1,0 +1,8 @@
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <horizontal id='easter-egg'>
+    <vertical id='easter-egg'>
+      <text text='get stickbugged lol'></text>
+      <img src='Counters+:CountersPlus.UI.Images.GetStickbuggedLOL.apng' preserve-aspect='true' pref-width='25'></img>
+    </vertical>
+  </horizontal>
+</bg>
