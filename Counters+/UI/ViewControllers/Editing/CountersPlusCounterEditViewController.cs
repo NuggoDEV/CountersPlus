@@ -36,11 +36,8 @@ namespace CountersPlus.UI.ViewControllers.Editing
             }
 
             settingsHeader.text = $"{model.DisplayName} Settings";
-
             mainConfig.OnConfigChanged += MainConfig_OnConfigChanged;
-
             editingConfigModel = model;
-
             mockCounter.HighlightCounter(editingConfigModel);
 
             // Loading settings base
@@ -48,9 +45,7 @@ namespace CountersPlus.UI.ViewControllers.Editing
 
             // Loading counter-specific settings
             string resourceLocation = $"CountersPlus.UI.BSML.Config.{model.DisplayName}.bsml";
-
             string resourceContent = Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), resourceLocation);
-
             BSMLParser.instance.Parse(resourceContent, settingsContainer, model);
 
             StartCoroutine(WaitThenDirtyTheFuckingScrollView());
@@ -61,7 +56,7 @@ namespace CountersPlus.UI.ViewControllers.Editing
             mockCounter.UpdateMockCounter(editingConfigModel);
         }
 
-        private IEnumerator WaitThenDirtyTheFuckingScrollView()
+        private IEnumerator WaitThenDirtyTheFuckingScrollView() // I'm still sad I have to do this.
         {
             yield return new WaitUntil(() => scrollView != null && scrollView.ContentRect != null);
             scrollView.ContentRect.gameObject.SetActive(false);

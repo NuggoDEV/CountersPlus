@@ -5,8 +5,8 @@
     /// </summary>
     public interface IScoreEventHandler : IEventHandler
     {
-        void ScoreUpdated(int score);
+        void ScoreUpdated(int modifiedScore);
 
-        void MaxScoreUpdated(int maxScore);
+        void MaxScoreUpdated(int maxModifiedScore);
     }
 }

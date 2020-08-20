@@ -10,10 +10,10 @@ namespace CountersPlus.Installers
 {
     class CountersInstaller : MonoInstaller
     {
-        [Inject] private MainConfigModel mainConfig;
-
         public override void InstallBindings()
         {
+            MainConfigModel mainConfig = Plugin.MainConfig;
+
             // TODO re-add check for No Text and HUD option
             if (!mainConfig.Enabled) return;
 
@@ -35,6 +35,9 @@ namespace CountersPlus.Installers
             AddCounter<CutConfigModel, CutCounter>();
             AddCounter<FailConfigModel, FailCounter>();
             AddCounter<NotesLeftConfigModel, NotesLeftCounter>();
+            AddCounter<PBConfigModel, PBCounter>();
+            AddCounter<SpeedConfigModel, SpeedCounter>();
+            AddCounter<SpinometerConfigModel, Spinometer>();
 
             /// LOADING BROADCASTERS WITH BROADCAST IN-GAME EVENTS TO COUNTERS AND STUFF ///
             Container.BindInterfacesAndSelfTo<CounterEventBroadcaster>().AsSingle().NonLazy();
@@ -49,7 +52,7 @@ namespace CountersPlus.Installers
 
             if (!settings.Enabled) return;
 
-            Plugin.Logger.Warn($"Loading counter {settings.DisplayName}...");
+            Plugin.Logger.Debug($"Loading counter {settings.DisplayName}...");
 
             if (typeof(R).BaseType == typeof(MonoBehaviour))
             {

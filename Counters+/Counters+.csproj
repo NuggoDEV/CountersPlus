@@ -169,8 +169,11 @@
     <Compile Include="Counters\MissedCounter.cs" />
     <Compile Include="Counters\NotesCounter.cs" />
     <Compile Include="Counters\NotesLeftCounter.cs" />
+    <Compile Include="Counters\PBCounter.cs" />
     <Compile Include="Counters\ProgressCounter.cs" />
     <Compile Include="Counters\ScoreCounter.cs" />
+    <Compile Include="Counters\SpeedCounter.cs" />
+    <Compile Include="Counters\Spinometer.cs" />
     <Compile Include="Installers\ConfigModelInstaller.cs" />
     <Compile Include="Installers\CountersInstaller.cs" />
     <Compile Include="Installers\MenuUIInstaller.cs" />

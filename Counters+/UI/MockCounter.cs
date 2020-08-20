@@ -19,7 +19,10 @@ namespace CountersPlus.UI
         {
             if (activeMockCounters.TryGetValue(settings, out TMP_Text old))
             {
-                Object.Destroy(old.gameObject);
+                if (old != null)
+                {
+                    Object.Destroy(old.gameObject);
+                }
                 activeMockCounters.Remove(settings);
             }
 
@@ -33,7 +36,7 @@ namespace CountersPlus.UI
 
         public void HighlightCounter(ConfigModel settings)
         {
-            if (highlightedConfig != null && activeMockCounters.TryGetValue(settings, out TMP_Text old))
+            if (highlightedConfig != null && activeMockCounters.TryGetValue(highlightedConfig, out TMP_Text old))
             {
                 old.color = Color.white;
             }
