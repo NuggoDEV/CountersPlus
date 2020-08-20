@@ -1,5 +1,4 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
-using IPA.Config.Data;
 using IPA.Config.Stores.Attributes;
 using System.Collections.Generic;
 

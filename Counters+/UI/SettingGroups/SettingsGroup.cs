@@ -31,6 +31,21 @@ namespace CountersPlus.UI.SettingGroups
 
         public virtual void OnEnable() { }
 
+        protected void GetCell(TableView view, out AnnotatedBeatmapLevelCollectionTableCell cell, out TextMeshProUGUI packText, out Image image)
+        {
+            cell = view.DequeueReusableCellForIdentifier(settingsList.Value.ReuseIdentifier) as AnnotatedBeatmapLevelCollectionTableCell;
+            if (cell == null) //Dequeue the cell, and make an instance if it doesn't exist.
+            {
+                cell = Object.Instantiate(settingsList.Value.levelPackTableCellInstance);
+                cell.reuseIdentifier = settingsList.Value.ReuseIdentifier;
+            }
+            cell.showNewRibbon = false; //Dequeued cells will keep NEW ribbon value. Always change it to false.
+            packText = packInfoTextAccessor(ref cell);
+            packText.richText = true; //Enable rich text for info text. Optional, but I use it for Counters+.
+            image = coverImageAccessor(ref cell);
+            image.mainTexture.wrapMode = TextureWrapMode.Clamp; //Fixes bordering on images (especially transparent ones)
+        }
+
         protected Texture2D LoadTexture(string name) => ImagesUtility.LoadTextureFromResources($"CountersPlus.UI.Images.{name}.png");
 
         protected Sprite LoadSprite(string name) => ImagesUtility.LoadSpriteFromResources($"CountersPlus.UI.Images.{name}.png");

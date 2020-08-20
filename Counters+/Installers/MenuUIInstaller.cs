@@ -1,5 +1,6 @@
 ﻿using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.MenuButtons;
+using CountersPlus.UI;
 using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.UI.SettingGroups;
 using CountersPlus.UI.ViewControllers;
@@ -23,7 +24,9 @@ namespace CountersPlus.Installers
 
             // CanvasUtility for UI
             Container.Bind<CanvasUtility>().AsSingle().NonLazy();
+            Container.Bind<MockCounter>().AsSingle().NonLazy();
 
+            BindSettingsGroup<MainSettingsGroup>();
             BindSettingsGroup<CountersSettingsGroup>();
 
             BindViewController<CountersPlusCreditsViewController>();
@@ -32,6 +35,7 @@ namespace CountersPlus.Installers
             BindViewController<CountersPlusSettingSectionSelectionViewController>();
             BindViewController<CountersPlusHorizontalSettingsListViewController>();
             BindViewController<CountersPlusCounterEditViewController>();
+            BindViewController<CountersPlusUnimplementedViewController>(); // TODO remove for Counters+ 2.0 Release
 
             flowCoordinator = BeatSaberUI.CreateFlowCoordinator<CountersPlusSettingsFlowCoordinator>();
             Container.InjectSpecialInstance<CountersPlusSettingsFlowCoordinator>(flowCoordinator);

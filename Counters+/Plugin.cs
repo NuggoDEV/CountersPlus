@@ -5,7 +5,6 @@ using IPA.Config.Stores;
 using IPALogger = IPA.Logging.Logger;
 using SiraUtil.Zenject;
 using CountersPlus.Installers;
-using IPA.Loader;
 
 namespace CountersPlus
 {
@@ -13,7 +12,8 @@ namespace CountersPlus
     public class Plugin
     {
         internal static Plugin Instance { get; private set; }
-        internal static IPALogger Logger { get; set; }
+        internal static IPALogger Logger { get; private set; }
+        internal static MainConfigModel MainConfig { get; private set; }
 
         [Init]
         public Plugin(IPALogger logger,
@@ -21,7 +21,7 @@ namespace CountersPlus
         {
             Instance = this;
             Logger = logger;
-            MainConfigModel.Instance = conf.Generated<MainConfigModel>();
+            MainConfig = conf.Generated<MainConfigModel>();
         }
 
         [OnEnable]

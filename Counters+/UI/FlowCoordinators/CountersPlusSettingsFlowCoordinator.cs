@@ -12,8 +12,11 @@ namespace CountersPlus.UI.FlowCoordinators
 {
     public class CountersPlusSettingsFlowCoordinator : FlowCoordinator
     {
+        private readonly Vector3 MAIN_SCREEN_OFFSET = new Vector3(0, -4, 0);
+
         [Inject] public List<ConfigModel> AllConfigModels;
         [Inject] private CanvasUtility canvasUtility;
+        [Inject] private MockCounter mockCounter;
 
         [Inject] private CountersPlusCreditsViewController credits;
         [Inject] private CountersPlusBlankViewController blank;
@@ -39,15 +42,35 @@ namespace CountersPlus.UI.FlowCoordinators
                 showBackButton = true;
                 title = "Counters+";
             }
-            SetMainScreenOffset(new Vector3(0, -4, 0));
+            SetMainScreenOffset(MAIN_SCREEN_OFFSET);
 
             PushViewControllerToNavigationController(mainScreenNavigation, blank);
             PushViewControllerToNavigationController(settingsSelection, horizontalSettingsList);
 
             ProvideInitialViewControllers(mainScreenNavigation, credits, null, settingsSelection);
+
+            foreach (ConfigModel settings in AllConfigModels)
+            {
+                mockCounter.UpdateMockCounter(settings);
+            }
         }
 
         public void SetRightViewController(ViewController controller) => SetRightScreenViewController(controller);
+
+        public void PushToMainScreen(ViewController controller)
+        {
+            SetViewControllerToNavigationController(mainScreenNavigation, controller);
+            SetMainScreenOffset(Vector3.zero);
+        }
+
+        public void PopFromMainScreen()
+        {
+            SetViewControllerToNavigationController(mainScreenNavigation, blank);
+            if (mainScreenNavigation.viewControllers.Count <= 2)
+            {
+                SetMainScreenOffset(MAIN_SCREEN_OFFSET);
+            }
+        }
 
         protected override void BackButtonWasPressed(ViewController topViewController)
         {

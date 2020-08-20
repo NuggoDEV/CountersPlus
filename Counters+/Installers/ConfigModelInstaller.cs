@@ -1,5 +1,4 @@
 ﻿using CountersPlus.ConfigModels;
-using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.Utils;
 using Zenject;
 
@@ -12,19 +11,21 @@ namespace CountersPlus.Installers
             Plugin.Logger.Warn("Binding config models");
             Container.Bind<VersionUtility>().AsSingle().NonLazy();
 
-            Container.Bind<MainConfigModel>().FromInstance(MainConfigModel.Instance);
-            Container.Bind<HUDConfigModel>().FromInstance(MainConfigModel.Instance.HUDConfig);
+            MainConfigModel mainConfig = Plugin.MainConfig;
 
-            BindConfig<MissedConfigModel>(MainConfigModel.Instance.MissedConfig);
-            BindConfig<NoteConfigModel>(MainConfigModel.Instance.NoteConfig);
-            BindConfig<ProgressConfigModel>(MainConfigModel.Instance.ProgressConfig);
-            BindConfig<ScoreConfigModel>(MainConfigModel.Instance.ScoreConfig);
-            BindConfig<SpeedConfigModel>(MainConfigModel.Instance.SpeedConfig);
-            BindConfig<SpinometerConfigModel>(MainConfigModel.Instance.SpinometerConfig);
-            BindConfig<PBConfigModel>(MainConfigModel.Instance.PBConfig);
-            BindConfig<CutConfigModel>(MainConfigModel.Instance.CutConfig);
-            BindConfig<FailConfigModel>(MainConfigModel.Instance.FailsConfig);
-            BindConfig<NotesLeftConfigModel>(MainConfigModel.Instance.NotesLeftConfig);
+            Container.Bind<MainConfigModel>().FromInstance(mainConfig);
+            Container.Bind<HUDConfigModel>().FromInstance(mainConfig.HUDConfig);
+
+            BindConfig<MissedConfigModel>(mainConfig.MissedConfig);
+            BindConfig<NoteConfigModel>(mainConfig.NoteConfig);
+            BindConfig<ProgressConfigModel>(mainConfig.ProgressConfig);
+            BindConfig<ScoreConfigModel>(mainConfig.ScoreConfig);
+            BindConfig<SpeedConfigModel>(mainConfig.SpeedConfig);
+            BindConfig<SpinometerConfigModel>(mainConfig.SpinometerConfig);
+            BindConfig<PBConfigModel>(mainConfig.PBConfig);
+            BindConfig<CutConfigModel>(mainConfig.CutConfig);
+            BindConfig<FailConfigModel>(mainConfig.FailsConfig);
+            BindConfig<NotesLeftConfigModel>(mainConfig.NotesLeftConfig);
         }
 
         // Helper function, allows easy modification to how configs are binded to zenject

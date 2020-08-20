@@ -15,13 +15,16 @@ namespace CountersPlus.Utils
         private Dictionary<int, Canvas> CanvasIDToCanvas = new Dictionary<int, Canvas>();
         private Dictionary<Canvas, HUDCanvas> CanvasToSettings = new Dictionary<Canvas, HUDCanvas>();
         private Canvas energyCanvas = null;
+        private MainConfigModel mainConfig;
 
         // Using the magical power of Zenject™, we magically find ourselves with an instance of
         // our HUDConfigModel and the CoreGameHUDController.
         public CanvasUtility(HUDConfigModel hudConfig,
+            MainConfigModel mainConfig,
             [Inject(Optional = true)] GameplayCoreSceneSetupData data,
             [Inject(Optional = true)] CoreGameHUDController coreGameHUD)
         {
+            this.mainConfig = mainConfig;
             if (coreGameHUD != null)
             {
                 energyCanvas = EnergyPanelGO(ref coreGameHUD).GetComponent<Canvas>();
@@ -132,8 +135,8 @@ namespace CountersPlus.Utils
 
         public Vector3 GetAnchoredPositionFromConfig(ConfigModel settings)
         {
-            float comboOffset = MainConfigModel.Instance.ComboOffset;
-            float multOffset = MainConfigModel.Instance.MultiplierOffset;
+            float comboOffset = mainConfig.ComboOffset;
+            float multOffset = mainConfig.MultiplierOffset;
             CounterPositions position = settings.Position;
             int index = settings.Distance;
             Vector3 pos = new Vector3(); // Base position

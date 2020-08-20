@@ -10,10 +10,12 @@ namespace CountersPlus.Installers
 {
     class CountersInstaller : MonoInstaller
     {
+        [Inject] private MainConfigModel mainConfig;
+
         public override void InstallBindings()
         {
             // TODO re-add check for No Text and HUD option
-            if (!MainConfigModel.Instance.Enabled) return;
+            if (!mainConfig.Enabled) return;
 
             /// LOADING IMPORTANT SHIT LIKE CANVASES AND STUFF ///
             Container.Bind<CanvasUtility>().AsSingle().NonLazy();
@@ -24,12 +26,15 @@ namespace CountersPlus.Installers
             AddCounter<MissedConfigModel, MissedCounter>();
             AddCounter<NoteConfigModel, NotesCounter>();
 
-            if (MainConfigModel.Instance.ProgressConfig.Mode != ProgressMode.BaseGame)
+            if (mainConfig.ProgressConfig.Mode != ProgressMode.BaseGame)
             {
                 AddCounter<ProgressConfigModel, ProgressCounter>();
             } // TODO add base game variant for progress counter
 
             AddCounter<ScoreConfigModel, ScoreCounter>();
+            AddCounter<CutConfigModel, CutCounter>();
+            AddCounter<FailConfigModel, FailCounter>();
+            AddCounter<NotesLeftConfigModel, NotesLeftCounter>();
 
             /// LOADING BROADCASTERS WITH BROADCAST IN-GAME EVENTS TO COUNTERS AND STUFF ///
             Container.BindInterfacesAndSelfTo<CounterEventBroadcaster>().AsSingle().NonLazy();

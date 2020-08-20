@@ -2,7 +2,7 @@
   <vertical ignore-layout='true'>
     <tab-selector tab-tag='new-tab' anchor-pos-y='2'></tab-selector>
     <tab tags='new-tab' tab-name='Main'></tab>
-    <tab tags='new-tab' tab-name='HUDs'></tab>
     <tab tags='new-tab' tab-name='Counters'></tab>
+    <tab tags='new-tab' tab-name='HUDs'></tab>
   </vertical>
 </bg>

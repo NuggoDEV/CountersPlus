@@ -156,16 +156,19 @@
     <Compile Include="ConfigModels\Counters\SpeedConfigModel.cs" />
     <Compile Include="ConfigModels\Counters\SpinometerConfigModel.cs" />
     <Compile Include="Counters\Counter.cs" />
+    <Compile Include="Counters\CutCounter.cs" />
     <Compile Include="Counters\Event Broadcasters\CounterEventBroadcaster.cs" />
     <Compile Include="Counters\Event Broadcasters\EventBroadcaster.cs" />
     <Compile Include="Counters\Event Broadcasters\NoteEventBroadcaster.cs" />
     <Compile Include="Counters\Event Broadcasters\ScoreEventBroadcaster.cs" />
+    <Compile Include="Counters\FailCounter.cs" />
     <Compile Include="Counters\Interfaces\ICounter.cs" />
     <Compile Include="Counters\Interfaces\IEventHandler.cs" />
     <Compile Include="Counters\Interfaces\INoteEventHandler.cs" />
     <Compile Include="Counters\Interfaces\IScoreEventHandler.cs" />
     <Compile Include="Counters\MissedCounter.cs" />
     <Compile Include="Counters\NotesCounter.cs" />
+    <Compile Include="Counters\NotesLeftCounter.cs" />
     <Compile Include="Counters\ProgressCounter.cs" />
     <Compile Include="Counters\ScoreCounter.cs" />
     <Compile Include="Installers\ConfigModelInstaller.cs" />
@@ -174,13 +177,16 @@
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\FlowCoordinators\CountersPlusSettingsFlowCoordinator.cs" />
+    <Compile Include="UI\MockCounter.cs" />
     <Compile Include="UI\SettingGroups\CountersSettingsGroup.cs" />
+    <Compile Include="UI\SettingGroups\MainSettingsGroup.cs" />
     <Compile Include="UI\SettingGroups\SettingsGroup.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusBlankViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusCreditsViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusHorizontalSettingsListViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusMainScreenNavigationController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusSettingSectionSelectionViewController.cs" />
+    <Compile Include="UI\ViewControllers\CountersPlusUnimplementedViewController.cs" />
     <Compile Include="UI\ViewControllers\Editing\CountersPlusCounterEditViewController.cs" />
     <Compile Include="Utils\Accessors.cs" />
     <Compile Include="Utils\CanvasUtility.cs" />
@@ -229,6 +235,7 @@
     <EmbeddedResource Include="UI\BSML\Credits.bsml" />
     <EmbeddedResource Include="UI\BSML\SettingsSectionSelection.bsml" />
     <EmbeddedResource Include="UI\BSML\BlankScreen.bsml" />
+    <EmbeddedResource Include="UI\BSML\Unimplemented.bsml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

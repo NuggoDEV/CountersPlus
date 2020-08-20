@@ -12,7 +12,6 @@ namespace CountersPlus.UI.ViewControllers
     class CountersPlusCreditsViewController : BSMLResourceViewController
     {
         [Inject] private VersionUtility versionUtility;
-        [Inject] private CanvasUtility canvasUtility;
 
         public override string ResourceName => "CountersPlus.UI.BSML.Credits.bsml";
 
@@ -28,8 +27,6 @@ namespace CountersPlus.UI.ViewControllers
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
             base.DidActivate(firstActivation, activationType);
-            var text = canvasUtility.CreateText(canvasUtility.GetCanvasFromID(-1), Vector3.zero);
-            text.text = "get stickbugged lol";
             if (!firstActivation) return;
 
             version.transform.parent.localPosition = new Vector3(0, 2.5f, 0);
@@ -53,7 +50,7 @@ namespace CountersPlus.UI.ViewControllers
             button.interactable = false;
             linkOpened.gameObject.SetActive(true);
             StartCoroutine(SecondRemove(button));
-            System.Diagnostics.Process.Start(url);
+            Application.OpenURL(url);
         }
 
         private IEnumerator SecondRemove(Button button)

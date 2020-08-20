@@ -1,4 +1,6 @@
-﻿namespace CountersPlus.ConfigModels
+﻿using System;
+
+namespace CountersPlus.ConfigModels
 {
     /// <summary>
     /// Main class for Counters+ config.
@@ -6,8 +8,6 @@
     /// </summary>
     public class MainConfigModel
     {
-        public static MainConfigModel Instance { get; set; }
-
         public string DisplayName => "Main";
         public virtual bool Enabled { get; set; } = true;
         public virtual bool HideCombo { get; set; } = false;
@@ -25,6 +25,13 @@
         public virtual SpinometerConfigModel SpinometerConfig { get; set; } = new SpinometerConfigModel();
         public virtual NotesLeftConfigModel NotesLeftConfig { get; set; } = new NotesLeftConfigModel();
         public virtual FailConfigModel FailsConfig { get; set; } = new FailConfigModel();
+
+        public event Action OnConfigChanged;
+
+        public virtual void Changed()
+        {
+            OnConfigChanged?.Invoke();
+        }
     }
 
     public enum CounterPositions { BelowCombo, AboveCombo, BelowMultiplier, AboveMultiplier, BelowEnergy, AboveHighway }
