@@ -37,11 +37,12 @@ namespace CountersPlus.Utils
             CanvasIDToCanvas.Add(-1, CreateCanvasWithConfig(hudConfig.MainCanvasSettings));
             if (coreGameHUD != null && hudConfig.MainCanvasSettings.ParentedToBaseGameHUD)
             {
-                CanvasIDToCanvas[-1].transform.SetParent(coreGameHUD.transform.GetChild(0), true);
-                CanvasIDToCanvas[-1].transform.localPosition = Vector3.zero;
-                CanvasIDToCanvas[-1].transform.localEulerAngles = Vector3.zero;
+                Transform parent = coreGameHUD.transform;
+                if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) parent = coreGameHUD.transform.GetChild(0);
+                CanvasIDToCanvas[-1].transform.SetParent(parent, true);
                 if (HUDType == GameplayCoreHUDInstaller.HudType.Flying)
                 {
+                    CanvasIDToCanvas[-1].transform.localEulerAngles = Vector3.zero;
                     CanvasIDToCanvas[-1].transform.localPosition = new Vector3(0, -70, 0);
                     CanvasIDToCanvas[-1].transform.localScale = new Vector3(4, 4, 1);
                 }

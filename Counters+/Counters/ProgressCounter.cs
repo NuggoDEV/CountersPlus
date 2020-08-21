@@ -32,7 +32,7 @@ namespace CountersPlus.Counters
             GameObject baseGameProgress = SongProgressPanelGO(ref coreGameHUD);
             UnityEngine.Object.Destroy(baseGameProgress); // I'm sorry, little one.
 
-            if (Settings.Mode == ProgressMode.Original || Settings.Mode == ProgressMode.TimeInBeats)
+            if (Settings.Mode != ProgressMode.Percent)
             {
                 ScoreMultiplierUIController scoreMultiplier = coreGameHUD.GetComponentInChildren<ScoreMultiplierUIController>();
 
@@ -79,7 +79,7 @@ namespace CountersPlus.Counters
                     progressRing.fillAmount = atsc.songTime / length;
                 }
             }
-            else if (Settings.Mode == ProgressMode.Percent)
+            else
             {
                 timeText.text = $"{time / length * 100:00}%";
             }
