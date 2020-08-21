@@ -213,6 +213,9 @@
     <EmbeddedResource Include="UI\Images\Counters\Notes Left.png" />
     <EmbeddedResource Include="UI\Images\Donators.png" />
     <EmbeddedResource Include="UI\Images\GetStickbuggedLOL.apng" />
+    <EmbeddedResource Include="UI\Images\HUDs\Add.png" />
+    <EmbeddedResource Include="UI\Images\HUDs\Manage.png" />
+    <EmbeddedResource Include="UI\Images\HUDs\Remove.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="UI\BSML\EditBase.bsml" />

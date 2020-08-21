@@ -22,12 +22,32 @@ namespace CountersPlus.UI.SettingGroups
             flowCoordinator.Value.PopFromMainScreen();
         }
 
+        public override float GetSize() => 49f;
+
         public override TableCell CellForIdx(TableView view, int idx)
         {
-            throw new NotImplementedException();
+            GetCell(view, out var cell, out var packInfoText, out var packCoverImage);
+            
+            switch (idx)
+            {
+                case 0:
+                    packCoverImage.sprite = LoadSprite("HUDs.Add");
+                    packInfoText.text = "Add new Canvas";
+                    break;
+                case 1:
+                    packCoverImage.sprite = LoadSprite("HUDs.Manage");
+                    packInfoText.text = "Edit existing Canvases";
+                    break;
+                case 2:
+                    packCoverImage.sprite = LoadSprite("HUDs.Remove");
+                    packInfoText.text = "Remove a Canvas";
+                    break;
+            }
+
+            return cell;
         }
 
-        public override int NumberOfCells() => 0;
+        public override int NumberOfCells() => 3;
 
         public override void OnCellSelect(TableView view, int idx)
         {
