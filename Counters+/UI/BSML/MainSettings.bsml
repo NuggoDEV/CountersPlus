@@ -1,0 +1,11 @@
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <horizontal>
+    <vertical spacing='1' horizontal-fit='PreferredSize' bg='round-rect-panel' pad='5'>
+      <checkbox-setting text='Enabled' apply-on-change='true' value='Enabled' hover-hint='Toggles Counters+.'></checkbox-setting>
+      <checkbox-setting text='Hide Combo' apply-on-change='true' value='HideCombo' hover-hint='Hides the Combo counter.'></checkbox-setting>
+      <checkbox-setting text='Hide Multiplier' apply-on-change='true' value='HideMultiplier' hover-hint='Hides the Multiplier.'></checkbox-setting>
+      <list-setting text='Combo Offset' apply-on-change='true' options='Offsets' value='ComboOffset' hover-hint='Applies additional offset to counters situated above or below the Combo.'></list-setting>
+      <list-setting text='Multiplier Offset' apply-on-change='true' options='Offsets' value='MultiplierOffset' hover-hint='Applies additional offset to counters situated above or below the Multiplier.'></list-setting>
+    </vertical>
+  </horizontal>
+</bg>

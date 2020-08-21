@@ -1,19 +1,20 @@
 ﻿using CountersPlus.UI.FlowCoordinators;
-using CountersPlus.UI.ViewControllers.Editing;
+using CountersPlus.UI.ViewControllers;
 using HMUI;
 using System;
 using Zenject;
 
 namespace CountersPlus.UI.SettingGroups
 {
-    public class MainSettingsGroup : SettingsGroup
+    // TODO implement
+    public class HUDsSettingsGroup : SettingsGroup
     {
         [Inject] private LazyInject<CountersPlusSettingsFlowCoordinator> flowCoordinator;
-        [Inject] private LazyInject<CountersPlusMainSettingsEditViewController> mainSettings;
+        [Inject] private LazyInject<CountersPlusUnimplementedViewController> unimplemented;
 
         public override void OnEnable()
         {
-            flowCoordinator.Value.PushToMainScreen(mainSettings.Value);
+            flowCoordinator.Value.PushToMainScreen(unimplemented.Value);
         }
 
         public override void OnDisable()

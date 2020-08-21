@@ -182,6 +182,7 @@
     <Compile Include="UI\FlowCoordinators\CountersPlusSettingsFlowCoordinator.cs" />
     <Compile Include="UI\MockCounter.cs" />
     <Compile Include="UI\SettingGroups\CountersSettingsGroup.cs" />
+    <Compile Include="UI\SettingGroups\HUDsSettingsGroup.cs" />
     <Compile Include="UI\SettingGroups\MainSettingsGroup.cs" />
     <Compile Include="UI\SettingGroups\SettingsGroup.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusBlankViewController.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="UI\ViewControllers\CountersPlusSettingSectionSelectionViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusUnimplementedViewController.cs" />
     <Compile Include="UI\ViewControllers\Editing\CountersPlusCounterEditViewController.cs" />
+    <Compile Include="UI\ViewControllers\Editing\CountersPlusMainSettingsEditViewController.cs" />
     <Compile Include="Utils\Accessors.cs" />
     <Compile Include="Utils\CanvasUtility.cs" />
     <Compile Include="Utils\ImagesUtility.cs" />
@@ -239,6 +241,7 @@
     <EmbeddedResource Include="UI\BSML\SettingsSectionSelection.bsml" />
     <EmbeddedResource Include="UI\BSML\BlankScreen.bsml" />
     <EmbeddedResource Include="UI\BSML\Unimplemented.bsml" />
+    <EmbeddedResource Include="UI\BSML\MainSettings.bsml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

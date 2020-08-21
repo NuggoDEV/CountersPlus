@@ -28,6 +28,7 @@ namespace CountersPlus.Installers
 
             BindSettingsGroup<MainSettingsGroup>();
             BindSettingsGroup<CountersSettingsGroup>();
+            BindSettingsGroup<HUDsSettingsGroup>();
 
             BindViewController<CountersPlusCreditsViewController>();
             BindViewController<CountersPlusMainScreenNavigationController>();
@@ -36,6 +37,7 @@ namespace CountersPlus.Installers
             BindViewController<CountersPlusHorizontalSettingsListViewController>();
             BindViewController<CountersPlusCounterEditViewController>();
             BindViewController<CountersPlusUnimplementedViewController>(); // TODO remove for Counters+ 2.0 Release
+            BindViewController<CountersPlusMainSettingsEditViewController>();
 
             flowCoordinator = BeatSaberUI.CreateFlowCoordinator<CountersPlusSettingsFlowCoordinator>();
             Container.InjectSpecialInstance<CountersPlusSettingsFlowCoordinator>(flowCoordinator);

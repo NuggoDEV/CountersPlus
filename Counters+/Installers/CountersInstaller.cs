@@ -14,8 +14,9 @@ namespace CountersPlus.Installers
         {
             MainConfigModel mainConfig = Plugin.MainConfig;
 
-            // TODO re-add check for No Text and HUD option
-            if (!mainConfig.Enabled) return;
+            PlayerDataModel dataModel = Container.Resolve<PlayerDataModel>();
+
+            if (!mainConfig.Enabled || dataModel.playerData.playerSpecificSettings.noTextsAndHuds) return;
 
             /// LOADING IMPORTANT SHIT LIKE CANVASES AND STUFF ///
             Container.Bind<CanvasUtility>().AsSingle().NonLazy();

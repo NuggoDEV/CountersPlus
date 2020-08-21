@@ -8,7 +8,6 @@ namespace CountersPlus.Installers
     {
         public override void InstallBindings()
         {
-            Plugin.Logger.Warn("Binding config models");
             Container.Bind<VersionUtility>().AsSingle().NonLazy();
 
             MainConfigModel mainConfig = Plugin.MainConfig;
