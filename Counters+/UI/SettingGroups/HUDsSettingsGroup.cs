@@ -55,7 +55,14 @@ namespace CountersPlus.UI.SettingGroups
             switch (idx)
             {
                 case 0:
+                    hudList.Value.IsDeleting = false;
                     hudList.Value.CreateNewCanvasDialog();
+                    break;
+                case 1:
+                    hudList.Value.IsDeleting = false;
+                    break;
+                case 2:
+                    hudList.Value.IsDeleting = true;
                     break;
             }
         }

@@ -26,9 +26,13 @@ namespace CountersPlus.UI.ViewControllers.HUDs
     {
         public override string ResourceName => "CountersPlus.UI.BSML.HUDs.HUDList.bsml";
 
+        public bool IsDeleting = false;
+        public int SelectedCanvas { get; private set; } = -1;
+
         [UIComponent("list")] private CustomListTableData data;
         [UIComponent("new-canvas-name")] private ModalKeyboard newCanvasKeyboard;
         [UIComponent("delete-canvas")] private ModalView deleteCanvas;
+        [UIComponent("canvas-error")] private ModalView canvasError;
         [UIParams] private BSMLParserParams parserParams;
 
         [Inject] private HUDConfigModel hudConfig;
@@ -71,6 +75,19 @@ namespace CountersPlus.UI.ViewControllers.HUDs
         [UIAction("cell-selected")]
         private void CellSelected (TableView view, int idx)
         {
+            SelectedCanvas = idx - 1;
+            if (IsDeleting)
+            {
+                parserParams.EmitEvent("on-deactivate");
+                if (idx == 0)
+                {
+                    canvasError.Show(true);
+                }
+                else
+                {
+                    deleteCanvas.Show(true);
+                }
+            }
             Plugin.Logger.Warn("WOOT");
         }
 
@@ -83,6 +100,29 @@ namespace CountersPlus.UI.ViewControllers.HUDs
             hudConfig.OtherCanvasSettings.Add(settings);
             mainConfig.HUDConfig = hudConfig;
             RefreshData();
+        }
+
+        [UIAction("delete-selected-canvas")]
+        private void DeleteSelectedCanvas()
+        {
+            parserParams.EmitEvent("on-deactivate");
+            if (SelectedCanvas == -1) return;
+            IEnumerable<ConfigModel> needToUpdate = flowCoordinator.Value.AllConfigModels.Where(x => x.CanvasID == SelectedCanvas);
+            for (int i = 0; i < needToUpdate.Count(); i++)
+            {
+                needToUpdate.ElementAt(i).CanvasID = -1;
+            }
+            canvasUtility.UnregisterCanvas(SelectedCanvas);
+            hudConfig.OtherCanvasSettings.RemoveAt(SelectedCanvas);
+            mainConfig.HUDConfig = hudConfig;
+            SelectedCanvas--;
+            RefreshData();
+        }
+
+        [UIAction("cancel-deletion")]
+        private void CancelCanvasDeletion()
+        {
+            parserParams.EmitEvent("on-deactivate");
         }
     }
 }

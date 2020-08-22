@@ -68,6 +68,15 @@ namespace CountersPlus.Utils
             CanvasToSettings.Add(canvas, canvasSettings);
         }
 
+        public void UnregisterCanvas(int id)
+        {
+            Canvas canvas = CanvasIDToCanvas[id];
+
+            CanvasIDToCanvas.Remove(id);
+            CanvasToSettings.Remove(canvas);
+            Object.Destroy(canvas.gameObject);
+        }
+
         public Canvas CreateCanvasWithConfig(HUDCanvas canvasSettings)
         {
             GameObject CanvasGameObject = new GameObject("Counters+ | Counters Canvas");
