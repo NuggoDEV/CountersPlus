@@ -49,6 +49,11 @@ namespace CountersPlus.UI.FlowCoordinators
 
             ProvideInitialViewControllers(mainScreenNavigation, credits, null, settingsSelection);
 
+            RefreshAllMockCounters();
+        }
+
+        public void RefreshAllMockCounters()
+        {
             foreach (ConfigModel settings in AllConfigModels)
             {
                 mockCounter.UpdateMockCounter(settings);

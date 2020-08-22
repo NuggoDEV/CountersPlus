@@ -117,6 +117,7 @@ namespace CountersPlus.UI.ViewControllers.HUDs
             mainConfig.HUDConfig = hudConfig;
             SelectedCanvas--;
             RefreshData();
+            flowCoordinator.Value.RefreshAllMockCounters();
         }
 
         [UIAction("cancel-deletion")]
