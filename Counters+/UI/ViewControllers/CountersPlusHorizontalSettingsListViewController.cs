@@ -51,7 +51,6 @@ namespace CountersPlus.UI.ViewControllers
                     //loadedSettingsGroups = TypesUtility.GetListOfType<SettingsGroup>();
                     //Largely unchanged from CustomListController. Keep all of this.
                     levelPackTableCellInstance = Resources.FindObjectsOfTypeAll<AnnotatedBeatmapLevelCollectionTableCell>().First(x => x.name == "AnnotatedBeatmapLevelCollectionTableCell");
-                    levelPackTableCellInstance.reuseIdentifier = ReuseIdentifier;
 
                     RectTransform container = new GameObject("HorizontalListContainer", typeof(RectTransform)).transform as RectTransform;
                     container.SetParent(rectTransform, false);

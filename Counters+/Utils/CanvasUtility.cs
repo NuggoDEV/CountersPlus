@@ -1,6 +1,7 @@
 ﻿using BeatSaberMarkupLanguage;
 using CountersPlus.ConfigModels;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -50,16 +51,21 @@ namespace CountersPlus.Utils
             for (int i = 0; i < hudConfig.OtherCanvasSettings.Count; i++)
             {
                 HUDCanvas canvasSettings = hudConfig.OtherCanvasSettings[i];
-                Canvas canvas = CreateCanvasWithConfig(canvasSettings);
-                CanvasIDToCanvas.Add(i, canvas);
-                CanvasToSettings.Add(canvas, canvasSettings);
+                RegisterNewCanvas(canvasSettings, i);
 
                 if (coreGameHUD != null && hudConfig.OtherCanvasSettings[i].ParentedToBaseGameHUD)
                 {
                     CanvasIDToCanvas[i].transform.SetParent(coreGameHUD.transform.GetChild(0), true);
-                    CanvasIDToCanvas[-1].transform.localEulerAngles = Vector3.zero;
+                    CanvasIDToCanvas[i].transform.localEulerAngles = Vector3.zero;
                 }
             }
+        }
+
+        public void RegisterNewCanvas(HUDCanvas canvasSettings, int id)
+        {
+            Canvas canvas = CreateCanvasWithConfig(canvasSettings);
+            CanvasIDToCanvas.Add(id, canvas);
+            CanvasToSettings.Add(canvas, canvasSettings);
         }
 
         public Canvas CreateCanvasWithConfig(HUDCanvas canvasSettings)
@@ -104,9 +110,8 @@ namespace CountersPlus.Utils
 
         public HUDCanvas? GetCanvasSettingsFromID(int id)
         {
-            Canvas? canvas = GetCanvasFromID(id);
-            if (canvas is null) return null;
-            return GetCanvasSettingsFromCanvas(canvas);
+            if (id == -1) return mainConfig.HUDConfig.MainCanvasSettings;
+            return mainConfig.HUDConfig.OtherCanvasSettings.ElementAtOrDefault(id);
         }
 
         public HUDCanvas? GetCanvasSettingsFromCanvas(Canvas canvas)

@@ -3,9 +3,9 @@ using HMUI;
 using TMPro;
 using Zenject;
 using UnityEngine.UI;
-using IPA.Utilities;
 using UnityEngine;
 using CountersPlus.Utils;
+using static CountersPlus.Utils.Accessors;
 
 namespace CountersPlus.UI.SettingGroups
 {
@@ -14,9 +14,6 @@ namespace CountersPlus.UI.SettingGroups
     /// </summary>
     public abstract class SettingsGroup
     {
-        protected static FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, TextMeshProUGUI>.Accessor packInfoTextAccessor = FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, TextMeshProUGUI>.GetAccessor("_infoText");
-        protected static FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, Image>.Accessor coverImageAccessor = FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, Image>.GetAccessor("_coverImage");
-        
         [Inject] protected LazyInject<CountersPlusHorizontalSettingsListViewController> settingsList;
 
         public virtual float GetSize() => 30f;
@@ -40,9 +37,9 @@ namespace CountersPlus.UI.SettingGroups
                 cell.reuseIdentifier = settingsList.Value.ReuseIdentifier;
             }
             cell.showNewRibbon = false; //Dequeued cells will keep NEW ribbon value. Always change it to false.
-            packText = packInfoTextAccessor(ref cell);
+            packText = PackInfoTextAccessor(ref cell);
             packText.richText = true; //Enable rich text for info text. Optional, but I use it for Counters+.
-            image = coverImageAccessor(ref cell);
+            image = CoverImageAccessor(ref cell);
             image.mainTexture.wrapMode = TextureWrapMode.Clamp; //Fixes bordering on images (especially transparent ones)
         }
 

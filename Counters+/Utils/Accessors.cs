@@ -26,6 +26,13 @@ namespace CountersPlus.Utils
         public static FieldAccessor<TableView, Button>.Accessor TVPageUpButton = FieldAccessor<TableView, Button>.GetAccessor("_pageUpButton");
         public static FieldAccessor<TableView, Button>.Accessor TVPageDownButton = FieldAccessor<TableView, Button>.GetAccessor("_pageDownButton");
         public static FieldAccessor<TableView, RectTransform>.Accessor TVScrollRect = FieldAccessor<TableView, RectTransform>.GetAccessor("_scrollRectTransform");
+
+
+        public static FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, TextMeshProUGUI>.Accessor PackInfoTextAccessor = FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, TextMeshProUGUI>.GetAccessor("_infoText");
+        public static FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, Image>.Accessor CoverImageAccessor = FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, Image>.GetAccessor("_coverImage");
+        public static FieldAccessor<LevelListTableCell, TextMeshProUGUI>.Accessor LevelListNameAccessor = FieldAccessor<LevelListTableCell, TextMeshProUGUI>.GetAccessor("_songNameText");
+        public static FieldAccessor<LevelListTableCell, TextMeshProUGUI>.Accessor LevelListAuthorAccessor = FieldAccessor<LevelListTableCell, TextMeshProUGUI>.GetAccessor("_authorText");
+        public static FieldAccessor<LevelListTableCell, RawImage>.Accessor LevelListRawImage = FieldAccessor<LevelListTableCell, RawImage>.GetAccessor("_coverRawImage");
         #endregion
 
         public static FieldAccessor<ScoreMultiplierUIController, Image>.Accessor MultiplierImage = FieldAccessor<ScoreMultiplierUIController, Image>.GetAccessor("_multiplierProgressImage");

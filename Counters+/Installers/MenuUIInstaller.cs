@@ -5,6 +5,7 @@ using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.UI.SettingGroups;
 using CountersPlus.UI.ViewControllers;
 using CountersPlus.UI.ViewControllers.Editing;
+using CountersPlus.UI.ViewControllers.HUDs;
 using CountersPlus.Utils;
 using HMUI;
 using SiraUtil.Zenject;
@@ -38,6 +39,7 @@ namespace CountersPlus.Installers
             BindViewController<CountersPlusCounterEditViewController>();
             BindViewController<CountersPlusUnimplementedViewController>(); // TODO remove for Counters+ 2.0 Release
             BindViewController<CountersPlusMainSettingsEditViewController>();
+            BindViewController<CountersPlusHUDListViewController>();
 
             flowCoordinator = BeatSaberUI.CreateFlowCoordinator<CountersPlusSettingsFlowCoordinator>();
             Container.InjectSpecialInstance<CountersPlusSettingsFlowCoordinator>(flowCoordinator);

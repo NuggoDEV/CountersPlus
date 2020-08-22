@@ -1,5 +1,6 @@
 ﻿using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.UI.ViewControllers;
+using CountersPlus.UI.ViewControllers.HUDs;
 using HMUI;
 using System;
 using Zenject;
@@ -10,11 +11,11 @@ namespace CountersPlus.UI.SettingGroups
     public class HUDsSettingsGroup : SettingsGroup
     {
         [Inject] private LazyInject<CountersPlusSettingsFlowCoordinator> flowCoordinator;
-        [Inject] private LazyInject<CountersPlusUnimplementedViewController> unimplemented;
+        [Inject] private LazyInject<CountersPlusHUDListViewController> hudList;
 
         public override void OnEnable()
         {
-            flowCoordinator.Value.PushToMainScreen(unimplemented.Value);
+            flowCoordinator.Value.PushToMainScreen(hudList.Value);
         }
 
         public override void OnDisable()
@@ -51,6 +52,12 @@ namespace CountersPlus.UI.SettingGroups
 
         public override void OnCellSelect(TableView view, int idx)
         {
+            switch (idx)
+            {
+                case 0:
+                    hudList.Value.CreateNewCanvasDialog();
+                    break;
+            }
         }
     }
 }
