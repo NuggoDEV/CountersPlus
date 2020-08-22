@@ -27,7 +27,6 @@ namespace CountersPlus.UI.ViewControllers
 
         private void HandleCellSelectedEvent(SegmentedControl control, int cellIdx)
         {
-            Plugin.Logger.Warn("Changed to section " + cellIdx);
             OnSettingsGroupChanged?.Invoke(cellIdx);
         }
 

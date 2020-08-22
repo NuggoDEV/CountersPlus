@@ -58,6 +58,25 @@ namespace CountersPlus.ConfigModels
         [UIValue(nameof(DecimalPrecisions))]
         public List<object> DecimalPrecisions => new List<object>() { 0, 1, 2, 3, 4 };
 
+        // I'll admit, these function fields are a bit gross, but they allow the CountersPlusCounterEditViewController to pass in data that the ConfigModel can't usually see.
+        [Ignore] public Func<int, HUDCanvas> GetCanvasFromID;
+        [Ignore] public Func<HUDCanvas, int> GetCanvasIDFromCanvasSettings;
+        [Ignore] public Func<List<HUDCanvas>> GetAllCanvases;
+
+        [UIValue(nameof(AttachedCanvas))]
+        [Ignore]
+        public virtual HUDCanvas AttachedCanvas
+        {
+            get => GetCanvasFromID(CanvasID);
+            set => CanvasID = GetCanvasIDFromCanvasSettings(value);
+        }
+
+        [Ignore]
+        public List<object> AllCanvases => GetAllCanvases().Cast<object>().ToList();
+
+        [UIAction(nameof(CanvasesFormat))]
+        public string CanvasesFormat(HUDCanvas canvas) => canvas.Name;
+
         #endregion UI
     }
 }

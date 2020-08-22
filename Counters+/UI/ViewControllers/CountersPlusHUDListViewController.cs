@@ -1,26 +1,18 @@
-﻿using BeatSaberMarkupLanguage;
-using BeatSaberMarkupLanguage.Attributes;
+﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.ViewControllers;
 using CountersPlus.ConfigModels;
 using CountersPlus.UI.FlowCoordinators;
-using CountersPlus.UI.SettingGroups;
+using CountersPlus.UI.ViewControllers.Editing;
 using CountersPlus.Utils;
 using HMUI;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
-using static CountersPlus.Utils.Accessors;
 
-namespace CountersPlus.UI.ViewControllers.HUDs
+namespace CountersPlus.UI.ViewControllers
 {
     class CountersPlusHUDListViewController : BSMLResourceViewController
     {
@@ -39,16 +31,18 @@ namespace CountersPlus.UI.ViewControllers.HUDs
         [Inject] private MainConfigModel mainConfig;
         [Inject] private CanvasUtility canvasUtility;
         [Inject] private LazyInject<CountersPlusSettingsFlowCoordinator> flowCoordinator;
+        [Inject] private LazyInject<CountersPlusHUDEditViewController> hudEdit;
 
         protected override void DidActivate(bool firstActivation, ActivationType type)
         {
             base.DidActivate(firstActivation, type);
             RefreshData();
+            IsDeleting = false;
         }
 
         protected override void DidDeactivate(DeactivationType deactivationType)
         {
-            parserParams.EmitEvent("on-deactivate");
+            DeactivateModals();
         }
 
         protected void RefreshData()
@@ -60,7 +54,7 @@ namespace CountersPlus.UI.ViewControllers.HUDs
                 int countersUsingCanvas = flowCoordinator.Value.AllConfigModels.Count(x => x.CanvasID == i);
                 var info = new CustomListTableData.CustomCellInfo(
                     settings?.Name ?? "Unknown",
-                    $"<i>{countersUsingCanvas} counters use this Canvas.</i>", Texture2D.blackTexture);
+                    $"<i>{countersUsingCanvas} counter(s) use this Canvas.</i>", Texture2D.blackTexture);
                 data.data.Add(info);
             }
             data.tableView.ReloadData();
@@ -68,9 +62,14 @@ namespace CountersPlus.UI.ViewControllers.HUDs
 
         public void CreateNewCanvasDialog()
         {
-            parserParams.EmitEvent("on-deactivate");
+            flowCoordinator.Value.SetRightViewController(null);
+            DeactivateModals();
             newCanvasKeyboard.modalView.Show(true);
         }
+
+        public void DeactivateModals() => parserParams.EmitEvent("on-deactivate");
+
+        public void ClearSelection() => data.tableView.ClearSelection();
 
         [UIAction("cell-selected")]
         private void CellSelected (TableView view, int idx)
@@ -78,7 +77,8 @@ namespace CountersPlus.UI.ViewControllers.HUDs
             SelectedCanvas = idx - 1;
             if (IsDeleting)
             {
-                parserParams.EmitEvent("on-deactivate");
+                flowCoordinator.Value.SetRightViewController(null);
+                DeactivateModals();
                 if (idx == 0)
                 {
                     canvasError.Show(true);
@@ -88,13 +88,19 @@ namespace CountersPlus.UI.ViewControllers.HUDs
                     deleteCanvas.Show(true);
                 }
             }
-            Plugin.Logger.Warn("WOOT");
+            else
+            {
+                flowCoordinator.Value.SetMainScreenOffset(flowCoordinator.Value.MAIN_SCREEN_OFFSET);
+                flowCoordinator.Value.SetRightViewController(hudEdit.Value);
+                hudEdit.Value.ApplyCanvasForEditing(SelectedCanvas);
+            }
         }
 
         [UIAction("create-new-canvas")]
         private void CreateNewCanvas(string name)
         {
             HUDCanvas settings = new HUDCanvas();
+            if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name)) name = "New Canvas";
             settings.Name = name;
             canvasUtility.RegisterNewCanvas(settings, hudConfig.OtherCanvasSettings.Count);
             hudConfig.OtherCanvasSettings.Add(settings);
@@ -105,7 +111,7 @@ namespace CountersPlus.UI.ViewControllers.HUDs
         [UIAction("delete-selected-canvas")]
         private void DeleteSelectedCanvas()
         {
-            parserParams.EmitEvent("on-deactivate");
+            DeactivateModals();
             if (SelectedCanvas == -1) return;
             IEnumerable<ConfigModel> needToUpdate = flowCoordinator.Value.AllConfigModels.Where(x => x.CanvasID == SelectedCanvas);
             for (int i = 0; i < needToUpdate.Count(); i++)
@@ -123,7 +129,7 @@ namespace CountersPlus.UI.ViewControllers.HUDs
         [UIAction("cancel-deletion")]
         private void CancelCanvasDeletion()
         {
-            parserParams.EmitEvent("on-deactivate");
+            DeactivateModals();
         }
     }
 }

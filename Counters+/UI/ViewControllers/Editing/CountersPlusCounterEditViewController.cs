@@ -3,8 +3,12 @@ using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
 using CountersPlus.ConfigModels;
+using CountersPlus.Utils;
+using IPA.Config.Data;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -19,6 +23,7 @@ namespace CountersPlus.UI.ViewControllers.Editing
 
         [Inject] private MainConfigModel mainConfig;
         [Inject] private MockCounter mockCounter;
+        [Inject] private CanvasUtility canvasUtility;
 
         [UIObject("body")] private GameObject settingsContainer;
         [UIComponent("ScrollContent")] private BSMLScrollableContainer scrollView;
@@ -40,6 +45,11 @@ namespace CountersPlus.UI.ViewControllers.Editing
             editingConfigModel = model;
             mockCounter.HighlightCounter(editingConfigModel);
 
+            // Setup helper functions for the config model to hook off of.
+            model.GetCanvasFromID = (v) => canvasUtility.GetCanvasSettingsFromID(v);
+            model.GetCanvasIDFromCanvasSettings = (v) => mainConfig.HUDConfig.OtherCanvasSettings.IndexOf(v);
+            model.GetAllCanvases = () => GetAllCanvases();
+
             // Loading settings base
             BSMLParser.instance.Parse(SettingsBase, settingsContainer, model);
 
@@ -49,6 +59,13 @@ namespace CountersPlus.UI.ViewControllers.Editing
             BSMLParser.instance.Parse(resourceContent, settingsContainer, model);
 
             StartCoroutine(WaitThenDirtyTheFuckingScrollView());
+        }
+
+        private List<HUDCanvas> GetAllCanvases()
+        {
+            List<HUDCanvas> allCanvases = new List<HUDCanvas>() { mainConfig.HUDConfig.MainCanvasSettings };
+            allCanvases.AddRange(mainConfig.HUDConfig.OtherCanvasSettings);
+            return allCanvases;
         }
 
         private void MainConfig_OnConfigChanged()

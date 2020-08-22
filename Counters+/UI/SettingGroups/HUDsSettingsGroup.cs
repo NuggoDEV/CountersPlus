@@ -1,8 +1,8 @@
 ﻿using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.UI.ViewControllers;
-using CountersPlus.UI.ViewControllers.HUDs;
 using HMUI;
 using System;
+using UnityEngine;
 using Zenject;
 
 namespace CountersPlus.UI.SettingGroups
@@ -20,6 +20,7 @@ namespace CountersPlus.UI.SettingGroups
 
         public override void OnDisable()
         {
+            flowCoordinator.Value.SetRightViewController(null);
             flowCoordinator.Value.PopFromMainScreen();
         }
 
@@ -55,13 +56,22 @@ namespace CountersPlus.UI.SettingGroups
             switch (idx)
             {
                 case 0:
+                    flowCoordinator.Value.SetRightViewController(null);
+                    flowCoordinator.Value.SetMainScreenOffset(Vector3.zero);
                     hudList.Value.IsDeleting = false;
                     hudList.Value.CreateNewCanvasDialog();
                     break;
                 case 1:
+                    hudList.Value.DeactivateModals();
+                    hudList.Value.ClearSelection();
+                    flowCoordinator.Value.SetMainScreenOffset(Vector3.zero);
                     hudList.Value.IsDeleting = false;
                     break;
                 case 2:
+                    hudList.Value.DeactivateModals();
+                    hudList.Value.ClearSelection();
+                    flowCoordinator.Value.SetMainScreenOffset(Vector3.zero);
+                    flowCoordinator.Value.SetRightViewController(null);
                     hudList.Value.IsDeleting = true;
                     break;
             }

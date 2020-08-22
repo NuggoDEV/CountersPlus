@@ -45,7 +45,7 @@ namespace CountersPlus.Counters
             HUDCanvas currentSettings = CanvasUtility.GetCanvasSettingsFromCanvas(currentCanvas);
             float positionScale = currentSettings?.PositionScale ?? 10;
 
-            Vector3 anchoredPos = (CanvasUtility.GetAnchoredPositionFromConfig(Settings) + offset) * positionScale;
+            Vector3 anchoredPos = (CanvasUtility.GetAnchoredPositionFromConfig(Settings, currentSettings.IsMainCanvas) + offset) * positionScale;
 
             pointsTextTransform.anchoredPosition = anchoredPos;
             scoreTransform.anchoredPosition = anchoredPos + baseGameScoreOffset;

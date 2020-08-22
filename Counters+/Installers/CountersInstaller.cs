@@ -10,11 +10,15 @@ namespace CountersPlus.Installers
 {
     class CountersInstaller : MonoInstaller
     {
+        private HUDConfigModel hudConfig;
+        private PlayerDataModel dataModel;
+
         public override void InstallBindings()
         {
             MainConfigModel mainConfig = Plugin.MainConfig;
-
-            PlayerDataModel dataModel = Container.Resolve<PlayerDataModel>();
+            
+            hudConfig = Container.Resolve<HUDConfigModel>();
+            dataModel = Container.Resolve<PlayerDataModel>();
 
             if (!mainConfig.Enabled || dataModel.playerData.playerSpecificSettings.noTextsAndHuds) return;
 
@@ -52,7 +56,9 @@ namespace CountersPlus.Installers
         {
             T settings = Container.Resolve<T>();
 
-            if (!settings.Enabled) return;
+            HUDCanvas canvasSettings = settings.CanvasID == -1 ? hudConfig.MainCanvasSettings : hudConfig.OtherCanvasSettings[settings.CanvasID];
+
+            if (!settings.Enabled || (!canvasSettings.IgnoreNoTextAndHUDOption && dataModel.playerData.playerSpecificSettings.noTextsAndHuds)) return;
 
             Plugin.Logger.Debug($"Loading counter {settings.DisplayName}...");
 

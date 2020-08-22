@@ -13,6 +13,7 @@ namespace CountersPlus.Installers
             MainConfigModel mainConfig = Plugin.MainConfig;
 
             Container.Bind<MainConfigModel>().FromInstance(mainConfig);
+            mainConfig.HUDConfig.MainCanvasSettings.IsMainCanvas = true;
             Container.Bind<HUDConfigModel>().FromInstance(mainConfig.HUDConfig);
 
             BindConfig<MissedConfigModel>(mainConfig.MissedConfig);

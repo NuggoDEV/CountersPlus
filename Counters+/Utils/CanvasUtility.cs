@@ -36,6 +36,7 @@ namespace CountersPlus.Utils
             }
 
             CanvasIDToCanvas.Add(-1, CreateCanvasWithConfig(hudConfig.MainCanvasSettings));
+            CanvasToSettings.Add(CanvasIDToCanvas[-1], hudConfig.MainCanvasSettings);
             if (coreGameHUD != null && hudConfig.MainCanvasSettings.ParentedToBaseGameHUD)
             {
                 Transform parent = coreGameHUD.transform;
@@ -56,7 +57,6 @@ namespace CountersPlus.Utils
                 if (coreGameHUD != null && hudConfig.OtherCanvasSettings[i].ParentedToBaseGameHUD)
                 {
                     CanvasIDToCanvas[i].transform.SetParent(coreGameHUD.transform.GetChild(0), true);
-                    CanvasIDToCanvas[i].transform.localEulerAngles = Vector3.zero;
                 }
             }
         }
@@ -134,7 +134,8 @@ namespace CountersPlus.Utils
         public TMP_Text CreateTextFromSettings(ConfigModel settings, Vector3? offset = null)
         {
             Canvas canvasToApply = CanvasIDToCanvas[settings.CanvasID];
-            return CreateText(canvasToApply, GetAnchoredPositionFromConfig(settings), offset);
+            HUDCanvas hudSettings = CanvasToSettings[canvasToApply];
+            return CreateText(canvasToApply, GetAnchoredPositionFromConfig(settings, hudSettings.IsMainCanvas), offset);
         }
 
         public TMP_Text CreateText(Canvas canvas, Vector3 anchoredPosition, Vector3? offset = null)
@@ -165,7 +166,7 @@ namespace CountersPlus.Utils
             return tmp_text;
         }
 
-        public Vector3 GetAnchoredPositionFromConfig(ConfigModel settings)
+        public Vector3 GetAnchoredPositionFromConfig(ConfigModel settings, bool isMainCanvas = true)
         {
             float comboOffset = mainConfig.ComboOffset;
             float multOffset = mainConfig.MultiplierOffset;
@@ -177,16 +178,19 @@ namespace CountersPlus.Utils
             float X = 3.2f;
             float belowEnergyOffset = -1.5f;
             float aboveHighwayOffset = 0.75f;
-            switch (HUDType)
+            if (isMainCanvas)
             {
-                case GameplayCoreHUDInstaller.HudType.Narrow:
-                    X = 2f;
-                    break;
-                case GameplayCoreHUDInstaller.HudType.Flying:
-                    X = 2f;
-                    belowEnergyOffset = -0.25f;
-                    aboveHighwayOffset = 0.25f;
-                    break;
+                switch (HUDType)
+                {
+                    case GameplayCoreHUDInstaller.HudType.Narrow:
+                        X = 2f;
+                        break;
+                    case GameplayCoreHUDInstaller.HudType.Flying:
+                        X = 2f;
+                        belowEnergyOffset = -0.25f;
+                        aboveHighwayOffset = 0.25f;
+                        break;
+                }
             }
 
             switch (position)

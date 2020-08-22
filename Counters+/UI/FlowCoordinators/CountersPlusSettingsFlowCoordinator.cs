@@ -12,7 +12,7 @@ namespace CountersPlus.UI.FlowCoordinators
 {
     public class CountersPlusSettingsFlowCoordinator : FlowCoordinator
     {
-        private readonly Vector3 MAIN_SCREEN_OFFSET = new Vector3(0, -4, 0);
+        public readonly Vector3 MAIN_SCREEN_OFFSET = new Vector3(0, -4, 0);
 
         [Inject] public List<ConfigModel> AllConfigModels;
         [Inject] private CanvasUtility canvasUtility;
