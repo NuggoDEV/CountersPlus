@@ -32,24 +32,19 @@ namespace CountersPlus.Counters
             Canvas currentCanvas = CanvasUtility.GetCanvasFromID(Settings.CanvasID);
 
             old.rectTransform.SetParent(currentCanvas.transform, true);
-            baseGameScore.transform.SetParent(currentCanvas.transform, true);
-            baseGameRank.transform.SetParent(currentCanvas.transform, true);
+            baseGameScore.transform.SetParent(old.transform, true);
+            baseGameRank.transform.SetParent(old.transform, true);
 
             RectTransform pointsTextTransform = old.rectTransform;
-            RectTransform scoreTransform = baseGameScore.transform as RectTransform;
-            RectTransform rankTransform = baseGameRank.transform as RectTransform;
-
-            Vector3 baseGameScoreOffset = scoreTransform.anchoredPosition - pointsTextTransform.anchoredPosition;
-            Vector3 baseGameRankOffset = rankTransform.anchoredPosition - pointsTextTransform.anchoredPosition;
 
             HUDCanvas currentSettings = CanvasUtility.GetCanvasSettingsFromCanvas(currentCanvas);
             float positionScale = currentSettings?.PositionScale ?? 10;
 
-            Vector3 anchoredPos = (CanvasUtility.GetAnchoredPositionFromConfig(Settings, currentSettings.IsMainCanvas) + offset) * positionScale;
+            Vector2 anchoredPos = (CanvasUtility.GetAnchoredPositionFromConfig(Settings, currentSettings.IsMainCanvas) + offset) * positionScale;
 
             pointsTextTransform.anchoredPosition = anchoredPos;
-            scoreTransform.anchoredPosition = anchoredPos + baseGameScoreOffset;
-            rankTransform.anchoredPosition = anchoredPos + baseGameRankOffset;
+            pointsTextTransform.localPosition = new Vector3(pointsTextTransform.localPosition.x, pointsTextTransform.localPosition.y, 0);
+            pointsTextTransform.localEulerAngles = Vector3.zero;
 
             Object.Destroy(coreGameHUD.GetComponentInChildren<ImmediateRankUIPanel>());
 

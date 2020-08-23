@@ -194,6 +194,7 @@
     <Compile Include="Utils\CanvasUtility.cs" />
     <Compile Include="Utils\ImagesUtility.cs" />
     <Compile Include="Utils\SimpleJSON.cs" />
+    <Compile Include="Utils\SoftParent.cs" />
     <Compile Include="Utils\VersionUtility.cs" />
   </ItemGroup>
   <ItemGroup>

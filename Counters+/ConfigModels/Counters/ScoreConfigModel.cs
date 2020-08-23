@@ -59,6 +59,7 @@ namespace CountersPlus.ConfigModels
             { ScoreMode.Original, "Original" },
             { ScoreMode.LeavePoints, "Dont Move Points" },
             { ScoreMode.ScoreOnly, "Remove Rank" },
+            { ScoreMode.RankOnly, "Remove Percentage" },
         };
 
         public Color GetRankColorFromRank(RankModel.Rank rank)
@@ -76,5 +77,5 @@ namespace CountersPlus.ConfigModels
         }
     }
 
-    public enum ScoreMode { Original, ScoreOnly, LeavePoints }
+    public enum ScoreMode { Original, ScoreOnly, LeavePoints, RankOnly }
 }

@@ -1,5 +1,6 @@
 ﻿using BeatSaberMarkupLanguage;
 using CountersPlus.ConfigModels;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -41,13 +42,11 @@ namespace CountersPlus.Utils
             {
                 Transform parent = coreGameHUD.transform;
                 if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) parent = coreGameHUD.transform.GetChild(0);
-                CanvasIDToCanvas[-1].transform.SetParent(parent, true);
-                if (HUDType == GameplayCoreHUDInstaller.HudType.Flying)
-                {
-                    CanvasIDToCanvas[-1].transform.localEulerAngles = Vector3.zero;
-                    CanvasIDToCanvas[-1].transform.localPosition = new Vector3(0, -70, 0);
-                    CanvasIDToCanvas[-1].transform.localScale = new Vector3(4, 4, 1);
-                }
+                SoftParent softParent = CanvasIDToCanvas[-1].gameObject.AddComponent<SoftParent>();
+                softParent.AssignParent(parent);
+                Vector3 posOofset = Vector3.zero; // yknow what, fuck it, its posOofset now.
+                if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) posOofset = parent.up;
+                softParent.AssignOffsets(posOofset, Quaternion.identity);
             }
             for (int i = 0; i < hudConfig.OtherCanvasSettings.Count; i++)
             {
@@ -56,9 +55,18 @@ namespace CountersPlus.Utils
 
                 if (coreGameHUD != null && hudConfig.OtherCanvasSettings[i].ParentedToBaseGameHUD)
                 {
-                    CanvasIDToCanvas[i].transform.SetParent(coreGameHUD.transform.GetChild(0), true);
+                    Transform parent = coreGameHUD.transform;
+                    if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) parent = coreGameHUD.transform.GetChild(0);
+                    SoftParent softParent = CanvasIDToCanvas[i].gameObject.AddComponent<SoftParent>();
+                    softParent.AssignParent(parent);
                 }
             }
+        }
+
+        private IEnumerator DelayedParent(Canvas canvas, Transform parent)
+        {
+            yield return new WaitForSeconds(2f);
+            canvas.transform.SetParent(parent, true);
         }
 
         public void RegisterNewCanvas(HUDCanvas canvasSettings, int id)
@@ -79,11 +87,10 @@ namespace CountersPlus.Utils
 
         public Canvas CreateCanvasWithConfig(HUDCanvas canvasSettings)
         {
-            GameObject CanvasGameObject = new GameObject("Counters+ | Counters Canvas");
+            GameObject CanvasGameObject = new GameObject($"Counters+ | {canvasSettings.Name} Canvas");
 
             Vector3 CanvasPos = canvasSettings.Position;
             Vector3 CanvasRot = canvasSettings.Rotation;
-            float CanvasPosScale = canvasSettings.PositionScale;
             float CanvasSize = canvasSettings.Size;
 
             Canvas canvas = CanvasGameObject.AddComponent<Canvas>();
@@ -186,7 +193,7 @@ namespace CountersPlus.Utils
                         X = 2f;
                         break;
                     case GameplayCoreHUDInstaller.HudType.Flying:
-                        X = 2f;
+                        X = 1.6f;
                         belowEnergyOffset = -0.25f;
                         aboveHighwayOffset = 0.25f;
                         break;
@@ -196,24 +203,24 @@ namespace CountersPlus.Utils
             switch (position)
             {
                 case CounterPositions.BelowCombo:
-                    pos = new Vector3(-X, 1.15f - comboOffset, 7);
+                    pos = new Vector3(-X, 1.15f - comboOffset, 0);
                     break;
                 case CounterPositions.AboveCombo:
-                    pos = new Vector3(-X, 2f + comboOffset, 7);
+                    pos = new Vector3(-X, 2f + comboOffset, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
                 case CounterPositions.BelowMultiplier:
-                    pos = new Vector3(X, 1.05f - multOffset, 7);
+                    pos = new Vector3(X, 1.05f - multOffset, 0);
                     break;
                 case CounterPositions.AboveMultiplier:
-                    pos = new Vector3(X, 2f + multOffset, 7);
+                    pos = new Vector3(X, 2f + multOffset, 0);
                     offset = new Vector3(0, (offset.y * -1) + 0.75f, 0);
                     break;
                 case CounterPositions.BelowEnergy:
-                    pos = new Vector3(0, belowEnergyOffset, 7);
+                    pos = new Vector3(0, belowEnergyOffset, 0);
                     break;
                 case CounterPositions.AboveHighway:
-                    pos = new Vector3(0, 2.5f, 7);
+                    pos = new Vector3(0, 2.5f, 0);
                     offset = new Vector3(0, (offset.y * -1) + aboveHighwayOffset, 0);
                     break;
             }
