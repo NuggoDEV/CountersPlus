@@ -63,12 +63,6 @@ namespace CountersPlus.Utils
             }
         }
 
-        private IEnumerator DelayedParent(Canvas canvas, Transform parent)
-        {
-            yield return new WaitForSeconds(2f);
-            canvas.transform.SetParent(parent, true);
-        }
-
         public void RegisterNewCanvas(HUDCanvas canvasSettings, int id)
         {
             Canvas canvas = CreateCanvasWithConfig(canvasSettings);
