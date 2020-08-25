@@ -1,6 +1,8 @@
 ﻿using CountersPlus.ConfigModels;
+using CountersPlus.Custom;
 using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.UI.ViewControllers.Editing;
+using CountersPlus.Utils;
 using HMUI;
 using Zenject;
 
@@ -16,12 +18,36 @@ namespace CountersPlus.UI.SettingGroups
             GetCell(view, out var cell, out var packInfoText, out var packCoverImage);
 
             ConfigModel model = flowCoordinator.Value.AllConfigModels[idx];
-            packInfoText.text = $"{model.DisplayName}";
-            try
+            if (!(model is CustomConfigModel customConfig))
             {
-                packCoverImage.sprite = LoadSprite($"Counters.{model.DisplayName}");
+                packInfoText.text = $"{model.DisplayName}";
+                try
+                {
+                    packCoverImage.sprite = LoadSprite($"Counters.{model.DisplayName}");
+                }
+                catch { }
             }
-            catch { }
+            else
+            {
+                packInfoText.text = $"{customConfig.AttachedCustomCounter.Name}";
+                if (customConfig.AttachedCustomCounter.BSML != null && !string.IsNullOrEmpty(customConfig.AttachedCustomCounter.BSML.Icon))
+                {
+                    try
+                    {
+                        packCoverImage.sprite = ImagesUtility.LoadSpriteFromExternalAssemblyResources(
+                            customConfig.AttachedCustomCounter.CounterType.Assembly, customConfig.AttachedCustomCounter.BSML.Icon);
+                    }
+                    catch
+                    {
+                        packCoverImage.sprite = LoadSprite("Counters.Custom");
+                        packInfoText.text += "\n<i>(Failed to load custom icon.)</i>";
+                    }
+                }
+                else
+                {
+                    packCoverImage.sprite = LoadSprite("Counters.Custom");
+                }
+            }
             return cell;
         }
 

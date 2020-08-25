@@ -1,4 +1,5 @@
 ﻿using CountersPlus.ConfigModels;
+using CountersPlus.Custom;
 using CountersPlus.Utils;
 using Zenject;
 
@@ -26,12 +27,30 @@ namespace CountersPlus.Installers
             BindConfig<CutConfigModel>(mainConfig.CutConfig);
             BindConfig<FailConfigModel>(mainConfig.FailsConfig);
             BindConfig<NotesLeftConfigModel>(mainConfig.NotesLeftConfig);
+
+            foreach (CustomCounter customCounter in Plugin.LoadedCustomCounters.Values)
+            {
+                if (!mainConfig.CustomCounters.TryGetValue(customCounter.Name, out CustomConfigModel config))
+                {
+                    config = customCounter.ConfigDefaults;
+                    mainConfig.CustomCounters.Add(customCounter.Name, config);
+                }
+                config.AttachedCustomCounter = customCounter;
+                customCounter.Config = config;
+                BindConfigWithID<CustomConfigModel>(config, customCounter.Name);
+            }
         }
 
         // Helper function, allows easy modification to how configs are binded to zenject
         private void BindConfig<T>(T settings) where T : ConfigModel
         {
             Container.BindInterfacesAndSelfTo<T>().FromInstance(settings).AsCached();
+            Container.Bind<ConfigModel>().To<T>().FromInstance(settings).AsCached();
+        }
+
+        private void BindConfigWithID<T>(T settings, object id) where T : ConfigModel
+        {
+            Container.Bind<ConfigModel>().WithId(id).To<T>().FromInstance(settings).AsCached();
             Container.Bind<ConfigModel>().To<T>().FromInstance(settings).AsCached();
         }
     }

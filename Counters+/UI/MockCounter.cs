@@ -1,4 +1,5 @@
 ﻿using CountersPlus.ConfigModels;
+using CountersPlus.Custom;
 using CountersPlus.Utils;
 using System.Collections.Generic;
 using TMPro;
@@ -29,7 +30,7 @@ namespace CountersPlus.UI
             if (!settings.Enabled) return;
 
             TMP_Text @new = canvasUtility.CreateTextFromSettings(settings);
-            @new.text = settings.DisplayName;
+            @new.text = (settings is CustomConfigModel custom) ? custom.AttachedCustomCounter.Name : settings.DisplayName;
             @new.color = highlightedConfig == settings ? Color.yellow : Color.white;
             activeMockCounters.Add(settings, @new);
         }

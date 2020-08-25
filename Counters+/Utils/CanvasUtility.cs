@@ -44,7 +44,7 @@ namespace CountersPlus.Utils
                 if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) parent = coreGameHUD.transform.GetChild(0);
                 SoftParent softParent = CanvasIDToCanvas[-1].gameObject.AddComponent<SoftParent>();
                 softParent.AssignParent(parent);
-                Vector3 posOofset = Vector3.zero; // yknow what, fuck it, its posOofset now.
+                Vector3 posOofset = Vector3.forward * 7; // yknow what, fuck it, its posOofset now.
                 if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) posOofset = parent.up;
                 softParent.AssignOffsets(posOofset, Quaternion.identity);
             }

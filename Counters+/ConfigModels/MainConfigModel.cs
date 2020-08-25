@@ -1,5 +1,8 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
+using CountersPlus.Custom;
 using IPA.Config.Data;
+using IPA.Config.Stores.Attributes;
+using IPA.Config.Stores.Converters;
 using System;
 using System.Collections.Generic;
 
@@ -33,6 +36,9 @@ namespace CountersPlus.ConfigModels
         public virtual SpinometerConfigModel SpinometerConfig { get; set; } = new SpinometerConfigModel();
         public virtual NotesLeftConfigModel NotesLeftConfig { get; set; } = new NotesLeftConfigModel();
         public virtual FailConfigModel FailsConfig { get; set; } = new FailConfigModel();
+
+        [UseConverter]
+        public virtual Dictionary<string, CustomConfigModel> CustomCounters { get; set; } = new Dictionary<string, CustomConfigModel>();
 
         public event Action OnConfigChanged;
 

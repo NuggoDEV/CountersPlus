@@ -76,6 +76,11 @@ namespace CountersPlus.Utils
             return LoadSpriteRaw(GetResource(Assembly.GetCallingAssembly(), resourcePath), PixelsPerUnit);
         }
 
+        public static Sprite LoadSpriteFromExternalAssemblyResources(Assembly assembly, string resourcePath, float pixelsPerUnit = 100f)
+        {
+            return LoadSpriteRaw(GetResource(assembly, resourcePath), pixelsPerUnit);
+        }
+
         public static byte[] GetResource(Assembly asm, string ResourceName)
         {
             System.IO.Stream stream = asm.GetManifestResourceStream(ResourceName);

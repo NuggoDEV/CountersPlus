@@ -2,7 +2,11 @@
 using CountersPlus.Counters;
 using CountersPlus.Counters.Event_Broadcasters;
 using CountersPlus.Counters.Interfaces;
+using CountersPlus.Custom;
 using CountersPlus.Utils;
+using System.Collections.Generic;
+using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Zenject;
 
@@ -45,6 +49,11 @@ namespace CountersPlus.Installers
             AddCounter<SpeedConfigModel, SpeedCounter>();
             AddCounter<SpinometerConfigModel, Spinometer>();
 
+            foreach (Custom.CustomCounter customCounter in Plugin.LoadedCustomCounters.Values)
+            {
+                AddCustomCounter(customCounter, customCounter.CounterType);
+            }
+
             /// LOADING BROADCASTERS WITH BROADCAST IN-GAME EVENTS TO COUNTERS AND STUFF ///
             Container.BindInterfacesAndSelfTo<CounterEventBroadcaster>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<NoteEventBroadcaster>().AsSingle().NonLazy();
@@ -69,6 +78,26 @@ namespace CountersPlus.Installers
             else
             {
                 Container.BindInterfacesAndSelfTo<R>().AsSingle().NonLazy();
+            }
+        }
+
+        private void AddCustomCounter(Custom.CustomCounter customCounter, Type counterType)
+        {
+            ConfigModel settings = Container.TryResolveId<ConfigModel>(customCounter.Name);
+
+            HUDCanvas canvasSettings = settings.CanvasID == -1 ? hudConfig.MainCanvasSettings : hudConfig.OtherCanvasSettings[settings.CanvasID];
+
+            if (!settings.Enabled || (!canvasSettings.IgnoreNoTextAndHUDOption && dataModel.playerData.playerSpecificSettings.noTextsAndHuds)) return;
+
+            Plugin.Logger.Debug($"Loading counter {customCounter.Name}...");
+
+            if (counterType.BaseType == typeof(MonoBehaviour))
+            {
+                Container.BindInterfacesAndSelfTo(counterType).FromComponentOnRoot().NonLazy();
+            }
+            else
+            {
+                Container.BindInterfacesAndSelfTo(counterType).AsSingle().NonLazy();
             }
         }
     }

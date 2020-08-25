@@ -3,8 +3,10 @@ using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
 using CountersPlus.ConfigModels;
+using CountersPlus.Custom;
 using CountersPlus.Utils;
 using IPA.Config.Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -24,6 +26,7 @@ namespace CountersPlus.UI.ViewControllers.Editing
         [Inject] private MainConfigModel mainConfig;
         [Inject] private MockCounter mockCounter;
         [Inject] private CanvasUtility canvasUtility;
+        [Inject] private DiContainer diContainer;
 
         [UIObject("body")] private GameObject settingsContainer;
         [UIComponent("ScrollContent")] private BSMLScrollableContainer scrollView;
@@ -54,9 +57,29 @@ namespace CountersPlus.UI.ViewControllers.Editing
             BSMLParser.instance.Parse(SettingsBase, settingsContainer, model);
 
             // Loading counter-specific settings
-            string resourceLocation = $"CountersPlus.UI.BSML.Config.{model.DisplayName}.bsml";
-            string resourceContent = Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), resourceLocation);
-            BSMLParser.instance.Parse(resourceContent, settingsContainer, model);
+            if (!(model is CustomConfigModel customConfig))
+            {
+                string resourceLocation = $"CountersPlus.UI.BSML.Config.{model.DisplayName}.bsml";
+                string resourceContent = Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), resourceLocation);
+                BSMLParser.instance.Parse(resourceContent, settingsContainer, model);
+            }
+            else
+            {
+                CustomCounter customCounter = customConfig.AttachedCustomCounter;
+                settingsHeader.text = $"{customCounter.Name} Settings";
+                if (customCounter.BSML != null)
+                {
+                    string resourceLocation = customCounter.BSML.Resource;
+                    string resourceContent = Utilities.GetResourceContent(customCounter.CounterType.Assembly, resourceLocation);
+
+                    object host = null;
+                    if (customCounter.BSML.HasType)
+                    {
+                        host = diContainer.TryResolveId<object>(customCounter.Name);
+                    }
+                    BSMLParser.instance.Parse(resourceContent, settingsContainer, host);
+                }
+            }
 
             StartCoroutine(WaitThenDirtyTheFuckingScrollView());
         }

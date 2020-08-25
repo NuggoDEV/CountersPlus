@@ -1,5 +1,6 @@
 ﻿using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.MenuButtons;
+using CountersPlus.Custom;
 using CountersPlus.UI;
 using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.UI.SettingGroups;
@@ -8,6 +9,8 @@ using CountersPlus.UI.ViewControllers.Editing;
 using CountersPlus.Utils;
 using HMUI;
 using SiraUtil.Zenject;
+using System;
+using UnityEngine;
 using Zenject;
 
 namespace CountersPlus.Installers
@@ -16,11 +19,9 @@ namespace CountersPlus.Installers
     {
         private CountersPlusSettingsFlowCoordinator flowCoordinator;
 
+        // Using Zenject for UI lets goooooooooooo
         public override void InstallBindings()
         {
-            // Using Zenject for UI lets goooooooooooo
-            Container.BindInstance(Container).WhenInjectedInto<CountersPlusSettingsFlowCoordinator>();
-
             // CanvasUtility for UI
             Container.Bind<CanvasUtility>().AsSingle().NonLazy();
             Container.Bind<MockCounter>().AsSingle().NonLazy();
@@ -28,6 +29,22 @@ namespace CountersPlus.Installers
             BindSettingsGroup<MainSettingsGroup>();
             BindSettingsGroup<CountersSettingsGroup>();
             BindSettingsGroup<HUDsSettingsGroup>();
+
+            foreach (CustomCounter customCounter in Plugin.LoadedCustomCounters.Values)
+            {
+                if (customCounter.BSML != null && customCounter.BSML.HasType)
+                {
+                    Type hostType = customCounter.BSML.HostType;
+                    if (hostType.BaseType == typeof(MonoBehaviour))
+                    {
+                        Container.Bind(hostType).WithId(customCounter.Name).To<object>().FromComponentOnRoot().AsCached();
+                    }
+                    else
+                    {
+                        Container.Bind(hostType).WithId(customCounter.Name).To<object>().AsCached();
+                    }
+                }
+            }
 
             BindViewController<CountersPlusCreditsViewController>();
             BindViewController<CountersPlusMainScreenNavigationController>();

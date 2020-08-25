@@ -37,7 +37,6 @@ namespace CountersPlus.UI.FlowCoordinators
                 mainScreenOrigin = mainScreenTransform.position;
 
                 Plugin.Logger.Warn($"Loading options menu with {AllConfigModels.Count} config models...");
-                Plugin.Logger.Warn($"{Assembly.GetExecutingAssembly().GetName().Name}");
 
                 showBackButton = true;
                 title = "Counters+";

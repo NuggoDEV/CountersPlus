@@ -54,6 +54,11 @@
       <HintPath>$(BeatSaberDir)\Plugins\BSML.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>$(BeatSaberDir)\Libs\Newtonsoft.Json.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="SemVer, Version=1.2.2.0, Culture=neutral, PublicKeyToken=a89bb7dc6f7a145c, processorArchitecture=MSIL">
       <Private>False</Private>
       <HintPath>$(BeatSaberDir)\Libs\SemVer.dll</HintPath>
@@ -151,6 +156,7 @@
     <Compile Include="ConfigModels\Counters\SpeedConfigModel.cs" />
     <Compile Include="ConfigModels\Counters\SpinometerConfigModel.cs" />
     <Compile Include="Counters\Counter.cs" />
+    <Compile Include="Counters\CustomCounter.cs" />
     <Compile Include="Counters\CutCounter.cs" />
     <Compile Include="Counters\Event Broadcasters\CounterEventBroadcaster.cs" />
     <Compile Include="Counters\Event Broadcasters\EventBroadcaster.cs" />
@@ -169,6 +175,9 @@
     <Compile Include="Counters\ScoreCounter.cs" />
     <Compile Include="Counters\SpeedCounter.cs" />
     <Compile Include="Counters\Spinometer.cs" />
+    <Compile Include="Custom\CustomConfigModel.cs" />
+    <Compile Include="Custom\CustomCounter.cs" />
+    <Compile Include="Custom\CustomCounterFeature.cs" />
     <Compile Include="Installers\ConfigModelInstaller.cs" />
     <Compile Include="Installers\CountersInstaller.cs" />
     <Compile Include="Installers\MenuUIInstaller.cs" />
