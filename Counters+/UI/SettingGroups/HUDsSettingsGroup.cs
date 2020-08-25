@@ -26,6 +26,8 @@ namespace CountersPlus.UI.SettingGroups
 
         public override float GetSize() => 49f;
 
+        public override int CellToSelect() => 1;
+
         public override TableCell CellForIdx(TableView view, int idx)
         {
             GetCell(view, out var cell, out var packInfoText, out var packCoverImage);

@@ -16,8 +16,6 @@ namespace CountersPlus.UI.SettingGroups
     {
         [Inject] protected LazyInject<CountersPlusHorizontalSettingsListViewController> settingsList;
 
-        public virtual float GetSize() => 30f;
-
         public abstract int NumberOfCells();
 
         public abstract TableCell CellForIdx(TableView view, int idx);
@@ -27,6 +25,10 @@ namespace CountersPlus.UI.SettingGroups
         public virtual void OnDisable() { }
 
         public virtual void OnEnable() { }
+
+        public virtual float GetSize() => 30f;
+
+        public virtual int CellToSelect() => 0;
 
         protected void GetCell(TableView view, out AnnotatedBeatmapLevelCollectionTableCell cell, out TextMeshProUGUI packText, out Image image)
         {

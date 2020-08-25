@@ -120,6 +120,7 @@ namespace CountersPlus.UI.ViewControllers
                     }
                     HandleSettingsGroupChanged(0);
                 }
+                selectedSettingsGroup?.OnEnable();
             }
             catch (Exception e)
             {  //Edit this with your logging system of choice, or delete it altogether (As this shouldn't really cause Exceptions)
@@ -138,7 +139,7 @@ namespace CountersPlus.UI.ViewControllers
             selectedSettingsGroup.OnEnable();
 
             customListTableView.ReloadData();
-            customListTableView.SelectCellWithIdx(0);
+            customListTableView.SelectCellWithIdx(selectedSettingsGroup.CellToSelect());
             TableViewScroller scroller = TVTableViewScroller(ref customListTableView);
             scroller.ScrollToCellWithIdx(0, TableViewScroller.ScrollPositionType.Beginning, true);
         }
