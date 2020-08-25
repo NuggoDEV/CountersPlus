@@ -34,7 +34,7 @@ namespace CountersPlus.Counters
 
             if (Settings.Mode != ProgressMode.Percent)
             {
-                ScoreMultiplierUIController scoreMultiplier = coreGameHUD.GetComponentInChildren<ScoreMultiplierUIController>();
+                ScoreMultiplierUIController scoreMultiplier = coreGameHUD.GetComponentInChildren<ScoreMultiplierUIController>(true);
 
                 Image multiplierImage = MultiplierImage(ref scoreMultiplier);
 

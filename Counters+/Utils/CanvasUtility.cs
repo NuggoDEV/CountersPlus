@@ -30,6 +30,10 @@ namespace CountersPlus.Utils
             if (coreGameHUD != null)
             {
                 energyCanvas = EnergyPanelGO(ref coreGameHUD).GetComponent<Canvas>();
+
+                // Hide Canvas and Multiplier if needed
+                if (mainConfig.HideCombo) HideBaseGameHUDElement<ComboUIController>(coreGameHUD);
+                if (mainConfig.HideMultiplier) HideBaseGameHUDElement<ScoreMultiplierUIController>(coreGameHUD);
             }
             if (data != null)
             {
@@ -251,6 +255,22 @@ namespace CountersPlus.Utils
                     return GameplayCoreHUDInstaller.HudType.Flying;
             }
             return GameplayCoreHUDInstaller.HudType.Basic;
+        }
+
+        private void HideBaseGameHUDElement<T>(CoreGameHUDController coreGameHUD) where T : MonoBehaviour
+        {
+            GameObject gameObject = coreGameHUD.GetComponentInChildren<T>().gameObject;
+            if (gameObject != null && gameObject.activeInHierarchy)
+                RecurseFunctionOverGameObjectTree(gameObject, (child) => child.SetActive(false));
+        }
+
+        private void RecurseFunctionOverGameObjectTree(GameObject go, System.Action<GameObject> func)
+        {
+            foreach (Transform child in go.transform)
+            {
+                RecurseFunctionOverGameObjectTree(child.gameObject, func);
+                func?.Invoke(go);
+            }
         }
     }
 }
