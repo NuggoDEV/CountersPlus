@@ -1,8 +1,6 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
 using CountersPlus.Custom;
-using IPA.Config.Data;
 using IPA.Config.Stores.Attributes;
-using IPA.Config.Stores.Converters;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +10,7 @@ namespace CountersPlus.ConfigModels
     /// Main class for Counters+ config.
     /// For adding new Counters, add their ConfigModels as a field in this class, making sure that "Config" is in the name.
     /// </summary>
-    public class MainConfigModel
+    internal class MainConfigModel
     {
         public string DisplayName => "Main";
         [UIValue(nameof(Enabled))]

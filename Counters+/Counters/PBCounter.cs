@@ -1,10 +1,5 @@
 ﻿using CountersPlus.ConfigModels;
 using CountersPlus.Counters.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -12,7 +7,7 @@ using static CountersPlus.Utils.Accessors;
 
 namespace CountersPlus.Counters
 {
-    public class PBCounter : Counter<PBConfigModel>, IScoreEventHandler
+    internal class PBCounter : Counter<PBConfigModel>, IScoreEventHandler
     {
         private readonly Vector3 SCORE_COUNTER_OFFSET = new Vector3(0, -0.7f, 0); 
 

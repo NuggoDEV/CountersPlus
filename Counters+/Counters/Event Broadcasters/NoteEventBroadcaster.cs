@@ -6,7 +6,7 @@ namespace CountersPlus.Counters.Event_Broadcasters
     /// <summary>
     /// A <see cref="EventBroadcaster{T}"/> that broadcasts events relating to note cutting and missing.
     /// </summary>
-    public class NoteEventBroadcaster : EventBroadcaster<INoteEventHandler>
+    internal class NoteEventBroadcaster : EventBroadcaster<INoteEventHandler>
     {
         [Inject] private ScoreController scoreController;
 

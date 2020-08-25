@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace CountersPlus.ConfigModels
 {
-    public class ScoreConfigModel : ConfigModel
+    internal class ScoreConfigModel : ConfigModel
     {
         [Ignore]
         public override string DisplayName => "Score";

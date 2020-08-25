@@ -3,7 +3,7 @@ using IPA.Config.Stores.Attributes;
 
 namespace CountersPlus.ConfigModels
 {
-    public class CutConfigModel : ConfigModel
+    internal class CutConfigModel : ConfigModel
     {
         [Ignore]
         public override string DisplayName => "Cut";

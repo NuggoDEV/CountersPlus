@@ -3,7 +3,7 @@ using IPA.Config.Stores.Attributes;
 
 namespace CountersPlus.ConfigModels
 {
-    public class NoteConfigModel : ConfigModel
+    internal class NoteConfigModel : ConfigModel
     {
         [Ignore]
         public override string DisplayName => "Notes";

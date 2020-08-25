@@ -34,7 +34,7 @@ namespace CountersPlus.UI.ViewControllers.Editing
 
         private ConfigModel editingConfigModel = null;
 
-        public void ApplySettings(ConfigModel model)
+        internal void ApplySettings(ConfigModel model)
         {
             ClearScreen();
 

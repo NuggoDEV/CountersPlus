@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CountersPlus.ConfigModels
 {
-    public class SpinometerConfigModel : ConfigModel
+    internal class SpinometerConfigModel : ConfigModel
     {
         [Ignore]
         public override string DisplayName => "Spinometer";

@@ -8,7 +8,7 @@ using Zenject;
 
 namespace CountersPlus.Counters
 {
-    public class Spinometer : Counter<SpinometerConfigModel>, ITickable
+    internal class Spinometer : Counter<SpinometerConfigModel>, ITickable
     {
         [Inject] private PlayerController playerController;
 

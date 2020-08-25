@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace CountersPlus.Counters
 {
-    public class CutCounter : Counter<CutConfigModel>, INoteEventHandler
+    internal class CutCounter : Counter<CutConfigModel>, INoteEventHandler
     {
         private TMP_Text cutCounterLeft;
         private TMP_Text cutCounterRight;

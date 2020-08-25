@@ -8,7 +8,7 @@ using Zenject;
 
 namespace CountersPlus.Counters
 {
-    public class SpeedCounter : Counter<SpeedConfigModel>, ITickable
+    internal class SpeedCounter : Counter<SpeedConfigModel>, ITickable
     {
         [Inject] private PlayerController playerController;
 

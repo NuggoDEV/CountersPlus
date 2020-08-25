@@ -5,7 +5,7 @@ using Zenject;
 
 namespace CountersPlus.Counters
 {
-    public class NotesLeftCounter : Counter<NotesLeftConfigModel>, INoteEventHandler
+    internal class NotesLeftCounter : Counter<NotesLeftConfigModel>, INoteEventHandler
     {
         [Inject] private IDifficultyBeatmap beatmap;
 

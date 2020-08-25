@@ -8,7 +8,7 @@ using Zenject;
 
 namespace CountersPlus.Counters
 {
-    public class FailCounter : Counter<FailConfigModel>
+    internal class FailCounter : Counter<FailConfigModel>
     {
         private static long difficulty = 0;
         private static int restarts = 0;

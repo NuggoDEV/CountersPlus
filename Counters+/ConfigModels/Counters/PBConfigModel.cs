@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CountersPlus.ConfigModels
 {
-    public class PBConfigModel : ConfigModel
+    internal class PBConfigModel : ConfigModel
     {
         [Ignore]
         public override string DisplayName => "Personal Best";

@@ -12,7 +12,7 @@ namespace CountersPlus.Counters
     /// This is barebones, and only contains events pertaining to the initialization and destruction of a counter.
     /// To access more events, inherit from <see cref="IEventHandler"/>s.
     /// </summary>
-    public class Counter<T> : ICounter where T : ConfigModel
+    internal class Counter<T> : ICounter where T : ConfigModel
     {
         [Inject] protected T Settings;
         [Inject] protected CanvasUtility CanvasUtility;

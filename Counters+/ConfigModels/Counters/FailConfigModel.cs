@@ -3,7 +3,7 @@ using IPA.Config.Stores.Attributes;
 
 namespace CountersPlus.ConfigModels
 {
-    public class FailConfigModel : ConfigModel
+    internal class FailConfigModel : ConfigModel
     {
         [Ignore]
         public override string DisplayName => "Fail";

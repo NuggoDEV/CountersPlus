@@ -4,7 +4,7 @@ using TMPro;
 
 namespace CountersPlus.Counters
 {
-    public class NotesCounter : Counter<NoteConfigModel>, INoteEventHandler
+    internal class NotesCounter : Counter<NoteConfigModel>, INoteEventHandler
     {
         private int goodCuts = 0;
         private int allCuts = 0;

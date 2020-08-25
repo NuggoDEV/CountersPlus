@@ -21,7 +21,7 @@ namespace CountersPlus.Utils
 
         // Using the magical power of Zenject™, we magically find ourselves with an instance of
         // our HUDConfigModel and the CoreGameHUDController.
-        public CanvasUtility(HUDConfigModel hudConfig,
+        internal CanvasUtility(HUDConfigModel hudConfig,
             MainConfigModel mainConfig,
             [Inject(Optional = true)] GameplayCoreSceneSetupData data,
             [Inject(Optional = true)] CoreGameHUDController coreGameHUD)

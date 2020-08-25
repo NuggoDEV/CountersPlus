@@ -5,7 +5,7 @@ namespace CountersPlus.Counters.Event_Broadcasters
     /// <summary>
     /// A simple <see cref="EventBroadcaster{T}"/> that broadcasts the creation and destruction of counters.
     /// </summary>
-    class CounterEventBroadcaster : EventBroadcaster<ICounter>
+    internal class CounterEventBroadcaster : EventBroadcaster<ICounter>
     {
         public override void Initialize()
         {

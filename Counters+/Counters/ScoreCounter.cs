@@ -7,7 +7,7 @@ using static CountersPlus.Utils.Accessors;
 namespace CountersPlus.Counters
 {
     // REVIEW: Perhaps look into harmony patches to take control of the base game score counter more... sanely?
-    public class ScoreCounter : Counter<ScoreConfigModel>
+    internal class ScoreCounter : Counter<ScoreConfigModel>
     {
         private readonly Vector3 offset = new Vector3(0, -2, 0);
 

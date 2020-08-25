@@ -10,7 +10,7 @@ namespace CountersPlus.Counters.Event_Broadcasters
     /// This was designed such that changes to these in-game events will only break the Event Broadcasters.
     /// </summary>
     /// <typeparam name="T">Event handler that will receive these broadcasts.</typeparam>
-    public abstract class EventBroadcaster<T>: IInitializable, IDisposable where T : IEventHandler
+    internal abstract class EventBroadcaster<T>: IInitializable, IDisposable where T : IEventHandler
     {
         [Inject] protected List<T> EventHandlers = new List<T>();
 

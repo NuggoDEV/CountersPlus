@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CountersPlus.ConfigModels
 {
-    public class ProgressConfigModel : ConfigModel
+    internal class ProgressConfigModel : ConfigModel
     {
         [Ignore]
         public override string DisplayName => "Progress";

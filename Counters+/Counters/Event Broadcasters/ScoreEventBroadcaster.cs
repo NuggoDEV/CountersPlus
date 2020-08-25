@@ -6,7 +6,7 @@ namespace CountersPlus.Counters.Event_Broadcasters
     /// <summary>
     /// A <see cref="EventBroadcaster{T}"/> that broadcasts score-related events.
     /// </summary>
-    class ScoreEventBroadcaster : EventBroadcaster<IScoreEventHandler>
+    internal class ScoreEventBroadcaster : EventBroadcaster<IScoreEventHandler>
     {
         [Inject] private ScoreController scoreController;
 

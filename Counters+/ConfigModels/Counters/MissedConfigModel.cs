@@ -2,7 +2,7 @@
 
 namespace CountersPlus.ConfigModels
 {
-    public class MissedConfigModel : ConfigModel
+    internal class MissedConfigModel : ConfigModel
     {
         [Ignore]
         public override string DisplayName => "Missed";

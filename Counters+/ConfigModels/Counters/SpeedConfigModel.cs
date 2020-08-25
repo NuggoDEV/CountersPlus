@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CountersPlus.ConfigModels
 {
-    public class SpeedConfigModel : ConfigModel
+    internal class SpeedConfigModel : ConfigModel
     {
         [Ignore]
         public override string DisplayName => "Speed";

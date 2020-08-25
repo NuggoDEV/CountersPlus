@@ -4,7 +4,7 @@ using TMPro;
 
 namespace CountersPlus.Counters
 {
-    public class MissedCounter : Counter<MissedConfigModel>, INoteEventHandler
+    internal class MissedCounter : Counter<MissedConfigModel>, INoteEventHandler
     {
         private int notesMissed = 0;
         private TMP_Text counter;
