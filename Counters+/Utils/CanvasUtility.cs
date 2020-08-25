@@ -44,9 +44,18 @@ namespace CountersPlus.Utils
                 if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) parent = coreGameHUD.transform.GetChild(0);
                 SoftParent softParent = CanvasIDToCanvas[-1].gameObject.AddComponent<SoftParent>();
                 softParent.AssignParent(parent);
-                Vector3 posOofset = Vector3.forward * 7; // yknow what, fuck it, its posOofset now.
-                if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) posOofset = parent.up;
-                softParent.AssignOffsets(posOofset, Quaternion.identity);
+
+                // Base Game HUD is rotated backwards, so we have to reflect our Position vector to match.
+                Vector3 posOofset = Vector3.Reflect(hudConfig.MainCanvasSettings.Position, Vector3.back); // yknow what, fuck it, its posOofset now.
+                Quaternion rotOofset = Quaternion.Euler(hudConfig.MainCanvasSettings.Rotation);
+
+                if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) // Special case for Main HUD w/360 environments
+                {
+                    posOofset = parent.up;
+                    rotOofset = Quaternion.identity;
+                }
+
+                softParent.AssignOffsets(posOofset, rotOofset);
             }
             for (int i = 0; i < hudConfig.OtherCanvasSettings.Count; i++)
             {
