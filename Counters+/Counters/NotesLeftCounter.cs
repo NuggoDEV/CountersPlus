@@ -16,7 +16,7 @@ namespace CountersPlus.Counters
 
         public override void CounterInit()
         {
-            if (setupData.practiceSettings.startInAdvanceAndClearNotes)
+            if (setupData.practiceSettings != null && setupData.practiceSettings.startInAdvanceAndClearNotes)
             {
                 float startTime = setupData.practiceSettings.startSongTime; // in seconds, we need to convert to beats
                 float beatsPerMinute = beatmap.level.beatsPerMinute;
