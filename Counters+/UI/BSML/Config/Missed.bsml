@@ -1,2 +1,3 @@
 ﻿<vertical spacing='1' horizontal-fit='PreferredSize'>
+  <checkbox-setting text='Include Bad Cuts' apply-on-change='true' value='CountBadCuts' hover-hint='Bad cuts count towards the Missed counter.'></checkbox-setting>
 </vertical>
