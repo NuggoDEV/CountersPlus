@@ -8,7 +8,7 @@ namespace CountersPlus.Counters.Event_Broadcasters
     /// </summary>
     internal class NoteEventBroadcaster : EventBroadcaster<INoteEventHandler>
     {
-        [Inject] private ScoreController scoreController;
+        [Inject] private BeatmapObjectManager scoreController;
 
         public override void Initialize()
         {
@@ -16,19 +16,19 @@ namespace CountersPlus.Counters.Event_Broadcasters
             scoreController.noteWasMissedEvent += NoteWasMissedEvent;
         }
 
-        private void NoteWasCutEvent(NoteData data, NoteCutInfo noteCutInfo, int _)
+        private void NoteWasCutEvent(INoteController data, NoteCutInfo noteCutInfo)
         {
             foreach (INoteEventHandler noteEventHandler in EventHandlers)
             {
-                noteEventHandler?.OnNoteCut(data, noteCutInfo);
+                noteEventHandler?.OnNoteCut(data.noteData, noteCutInfo);
             }
         }
 
-        private void NoteWasMissedEvent(NoteData data, int _)
+        private void NoteWasMissedEvent(INoteController data)
         {
             foreach (INoteEventHandler noteEventHandler in EventHandlers)
             {
-                noteEventHandler?.OnNoteMiss(data);
+                noteEventHandler?.OnNoteMiss(data.noteData);
             }
         }
 
