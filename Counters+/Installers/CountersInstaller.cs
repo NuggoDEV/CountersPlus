@@ -2,16 +2,15 @@
 using CountersPlus.Counters;
 using CountersPlus.Counters.Event_Broadcasters;
 using CountersPlus.Counters.Interfaces;
-using CountersPlus.Custom;
 using CountersPlus.Utils;
-using System.Collections.Generic;
+using SiraUtil.Zenject;
 using System;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using Zenject;
 
 namespace CountersPlus.Installers
 {
+    [RequiresInstaller(typeof(ConfigModelInstaller))]
     class CountersInstaller : MonoInstaller
     {
         private HUDConfigModel hudConfig;

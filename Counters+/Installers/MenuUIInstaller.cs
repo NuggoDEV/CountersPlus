@@ -15,6 +15,7 @@ using Zenject;
 
 namespace CountersPlus.Installers
 {
+    [RequiresInstaller(typeof(ConfigModelInstaller))]
     public class MenuUIInstaller : MonoInstaller
     {
         private CountersPlusSettingsFlowCoordinator flowCoordinator;

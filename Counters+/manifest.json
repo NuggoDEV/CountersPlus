@@ -8,7 +8,7 @@
   "gameVersion": "1.11.1",
   "dependsOn": {
     "BeatSaberMarkupLanguage": "^1.3.2",
-    "SiraUtil": "^0.2.0"
+    "SiraUtil": "^0.3.0"
   },
   "features": {
     "IPA.DefineFeature": {
