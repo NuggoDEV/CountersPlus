@@ -37,7 +37,7 @@ namespace CountersPlus.Installers
                 }
                 config.AttachedCustomCounter = customCounter;
                 customCounter.Config = config;
-                BindConfigWithID<CustomConfigModel>(config, customCounter.Name);
+                BindCustomCounter(customCounter, config);
             }
         }
 
@@ -48,10 +48,10 @@ namespace CountersPlus.Installers
             Container.Bind<ConfigModel>().To<T>().FromInstance(settings).AsCached();
         }
 
-        private void BindConfigWithID<T>(T settings, object id) where T : ConfigModel
+        private void BindCustomCounter(CustomCounter counter, CustomConfigModel settings)
         {
-            Container.Bind<ConfigModel>().WithId(id).To<T>().FromInstance(settings).AsCached();
-            Container.Bind<ConfigModel>().To<T>().FromInstance(settings).AsCached();
+            Container.Bind<ConfigModel>().WithId(counter.Name).To<CustomConfigModel>().FromInstance(settings).AsCached();
+            Container.BindInterfacesAndSelfTo<CustomConfigModel>().FromInstance(settings).WhenInjectedInto(counter.CounterType);
         }
     }
 }

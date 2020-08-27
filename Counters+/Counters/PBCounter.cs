@@ -17,9 +17,13 @@ namespace CountersPlus.Counters
         [Inject] private ScoreConfigModel scoreConfig;
 
         private GameplayModifiersModelSO modifiersModel;
-        private Color orange;
         private TMP_Text counter;
         private PlayerLevelStatsData stats;
+
+
+        private Color orange;
+        private Color white = Color.white; // Caching it beforehand, since calling the constant makes a new struct
+        private Color red = Color.red;
 
         private int maxPossibleScore = 0;
         private int highScore;
@@ -60,9 +64,9 @@ namespace CountersPlus.Counters
                 if (modifiedScore > highScore)
                 {
                     SetPersonalBest(ratio);
-                    if (!(Settings.HideFirstScore && stats.highScore == 0)) counter.color = Color.red;
+                    if (!(Settings.HideFirstScore && stats.highScore == 0)) counter.color = red;
                 }
-                else counter.color = Color.Lerp(Color.white, orange, modifiedScore / (float)highScore);
+                else counter.color = Color.Lerp(white, orange, modifiedScore / (float)highScore);
             }
         }
 

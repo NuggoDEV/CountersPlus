@@ -14,7 +14,7 @@ namespace CountersPlus.Counters
         [Inject] private CoreGameHUDController coreGameHUD;
         [Inject] private RelativeScoreAndImmediateRankCounter relativeScoreAndImmediateRank;
 
-        private RankModel.Rank prevImmediateRank = RankModel.Rank.SS;
+        private RankModel.Rank prevImmediateRank = RankModel.Rank.SSS;
         private TextMeshProUGUI rankText;
         private TextMeshProUGUI relativeScoreText;
 
@@ -34,6 +34,16 @@ namespace CountersPlus.Counters
             old.rectTransform.SetParent(currentCanvas.transform, true);
             baseGameScore.transform.SetParent(old.transform, true);
             baseGameRank.transform.SetParent(old.transform, true);
+
+            switch (Settings.Mode)
+            {
+                case ScoreMode.RankOnly:
+                    Object.Destroy(baseGameScore.gameObject);
+                    break;
+                case ScoreMode.ScoreOnly:
+                    Object.Destroy(baseGameRank.gameObject);
+                    break;
+            }
 
             RectTransform pointsTextTransform = old.rectTransform;
 

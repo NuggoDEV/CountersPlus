@@ -1,11 +1,13 @@
 ﻿using CountersPlus.Counters.Interfaces;
 using CountersPlus.Custom;
 using CountersPlus.Utils;
-using System.Reflection;
 using Zenject;
 
 namespace CountersPlus.Counters
 {
+    /// <summary>
+    /// A generic Custom Counter class for other plugins to inherit and use.
+    /// </summary>
     public abstract class CustomCounter : ICounter
     {
         /// <summary>
@@ -15,22 +17,10 @@ namespace CountersPlus.Counters
         [Inject] protected CanvasUtility CanvasUtility;
 
         /// <summary>
-        /// Obtains your <see cref="CustomConfigModel"/> by searching for one with a matching <see cref="Assembly"/>.
-        /// It is recommended to cache this config model for later reuse.
+        /// The <see cref="CustomConfigModel"/> for your Custom Counter.
+        /// Use it to help position your text with <see cref="CanvasUtility"/>.
         /// </summary>
-        /// <returns>A matching <see cref="CustomConfigModel"/></returns>
-        protected CustomConfigModel GetConfig()
-        {
-            Assembly callingAssembly = GetType().Assembly;
-            if (Plugin.LoadedCustomCounters.TryGetValue(callingAssembly, out Custom.CustomCounter customCounter))
-            {
-                return customCounter.Config;
-            }
-            else
-            {
-                return null;
-            }
-        }
+        [Inject] protected CustomConfigModel Settings;
 
         /// <summary>
         /// Called when the Counter has initialized; it is ready to create text and subscribe to events.

@@ -10,7 +10,6 @@ namespace CountersPlus.ConfigModels
     /// The base config class for every single Counter in Counters+.
     /// As part of creating a new Counter, you will need to make a class that inherits ConfigModel.
     /// For adding new options to an existing Counter, add them to their respective ConfigModel.
-    /// Add defaults to ConfigModels in the ConfigDefaults class.
     /// </summary>
     public abstract class ConfigModel
     {
@@ -19,8 +18,8 @@ namespace CountersPlus.ConfigModels
 
         [UIValue(nameof(Enabled))]
         public virtual bool Enabled { get; set; } = false;
-        [UseConverter]
         
+        [UseConverter]
         [UIValue(nameof(Position))]
         public virtual CounterPositions Position { get; set; } = CounterPositions.BelowCombo;
         
