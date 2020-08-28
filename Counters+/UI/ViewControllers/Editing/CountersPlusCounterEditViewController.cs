@@ -67,7 +67,7 @@ namespace CountersPlus.UI.ViewControllers.Editing
             {
                 CustomCounter customCounter = customConfig.AttachedCustomCounter;
                 settingsHeader.text = $"{customCounter.Name} Settings";
-                if (customCounter.BSML != null)
+                if (customCounter.BSML != null && !string.IsNullOrEmpty(customCounter.BSML.Resource))
                 {
                     string resourceLocation = customCounter.BSML.Resource;
                     string resourceContent = Utilities.GetResourceContent(customCounter.CounterType.Assembly, resourceLocation);

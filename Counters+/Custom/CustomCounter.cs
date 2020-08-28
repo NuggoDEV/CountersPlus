@@ -8,7 +8,7 @@ namespace CountersPlus.Custom
     {
         [JsonProperty(nameof(Name), Required = Required.Always)]
         public string Name;
-        [JsonProperty(nameof(Description), Required = Required.Always)]
+        [JsonProperty(nameof(Description), Required = Required.DisallowNull)]
         public string Description;
         [JsonProperty(nameof(BSML), Required = Required.DisallowNull)]
         public BSMLSettings BSML = null;
@@ -23,7 +23,7 @@ namespace CountersPlus.Custom
 
         public class BSMLSettings
         {
-            [JsonProperty(nameof(Resource), Required = Required.Always)]
+            [JsonProperty(nameof(Resource), Required = Required.AllowNull)]
             public string Resource;
             [JsonProperty(nameof(Host), Required = Required.AllowNull)]
             internal string Host;

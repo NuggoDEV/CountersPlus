@@ -23,13 +23,13 @@ namespace CountersPlus.Counters.Custom
         public override void CounterInit()
         {
             PreReparent();
-            if (!string.IsNullOrEmpty(CanvasObjectName))
-            {
-                SharedCoroutineStarter.instance.StartCoroutine(FindCanvasByString());
-            }
-            else if (CanvasReference != null)
+            if (CanvasReference != null)
             {
                 ReparentCanvas(CanvasReference);
+            }
+            else if (!string.IsNullOrEmpty(CanvasObjectName))
+            {
+                SharedCoroutineStarter.instance.StartCoroutine(FindCanvasByString());
             }
             else
             {
