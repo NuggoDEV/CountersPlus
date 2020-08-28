@@ -68,23 +68,15 @@ namespace CountersPlus.Counters.Custom
         {
             int tries = 1;
             Canvas canvas = null;
-            while (true)
+            while (tries <= 10)
             {
                 yield return new WaitForSeconds(tries * 0.1f);
-                try
-                {
-                    canvas = GameObject.Find(CanvasObjectName).GetComponent<Canvas>();
-                    if (canvas != null) break;
-                    tries++;
-                    if (tries > 10)
-                    {
-                        Plugin.Logger.Warn($"Custom Counter ({Settings.AttachedCustomCounter.Name}) could not find its referenced GameObject in 10 tries.");
-                        break;
-                    }
-                }
-                catch { }
+                canvas = GameObject.Find(CanvasObjectName)?.GetComponent<Canvas>();
+                if (canvas != null) break;
+                tries++;
             }
-            if (tries <= 10) ReparentCanvas(canvas);
+            if (canvas != null) ReparentCanvas(canvas);
+            else Plugin.Logger.Warn($"Custom Counter ({Settings.AttachedCustomCounter.Name}) could not find its Canvas in 10 tries.");
         }
 
         public override void CounterDestroy() { }
