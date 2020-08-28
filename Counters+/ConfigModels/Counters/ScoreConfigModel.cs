@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace CountersPlus.ConfigModels
 {
+    // TODO: Switch to BSIPA's "HexColorConverter" on next BSIPA update/game update
     internal class ScoreConfigModel : ConfigModel
     {
         [Ignore]
