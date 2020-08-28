@@ -156,7 +156,8 @@
     <Compile Include="ConfigModels\Counters\SpeedConfigModel.cs" />
     <Compile Include="ConfigModels\Counters\SpinometerConfigModel.cs" />
     <Compile Include="Counters\Counter.cs" />
-    <Compile Include="Counters\CustomCounter.cs" />
+    <Compile Include="Counters\Custom\BasicCustomCounter.cs" />
+    <Compile Include="Counters\Custom\CanvasCustomCounter.cs" />
     <Compile Include="Counters\CutCounter.cs" />
     <Compile Include="Counters\Event Broadcasters\CounterEventBroadcaster.cs" />
     <Compile Include="Counters\Event Broadcasters\EventBroadcaster.cs" />

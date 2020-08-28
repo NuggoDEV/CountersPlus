@@ -3,12 +3,12 @@ using CountersPlus.Custom;
 using CountersPlus.Utils;
 using Zenject;
 
-namespace CountersPlus.Counters
+namespace CountersPlus.Counters.Custom
 {
     /// <summary>
-    /// A generic Custom Counter class for other plugins to inherit and use.
+    /// A barebones Custom Counter class that provides utilities for creating custom text.
     /// </summary>
-    public abstract class CustomCounter : ICounter
+    public abstract class BasicCustomCounter : ICounter
     {
         /// <summary>
         /// Helper class for creating text within Counters+'s system.
