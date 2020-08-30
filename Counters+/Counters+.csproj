@@ -172,6 +172,7 @@
     <Compile Include="Counters\NotesCounter.cs" />
     <Compile Include="Counters\NotesLeftCounter.cs" />
     <Compile Include="Counters\PBCounter.cs" />
+    <Compile Include="Counters\ProgressBaseGameCounter.cs" />
     <Compile Include="Counters\ProgressCounter.cs" />
     <Compile Include="Counters\ScoreCounter.cs" />
     <Compile Include="Counters\SpeedCounter.cs" />

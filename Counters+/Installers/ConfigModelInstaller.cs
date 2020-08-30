@@ -48,9 +48,11 @@ namespace CountersPlus.Installers
             Container.Bind<ConfigModel>().To<T>().FromInstance(settings).AsCached();
         }
 
+        // Is this too much? Probably.
         private void BindCustomCounter(CustomCounter counter, CustomConfigModel settings)
         {
             Container.Bind<ConfigModel>().WithId(counter.Name).To<CustomConfigModel>().FromInstance(settings).AsCached();
+            Container.Bind<ConfigModel>().To<CustomConfigModel>().FromInstance(settings).AsCached();
             Container.BindInterfacesAndSelfTo<CustomConfigModel>().FromInstance(settings).WhenInjectedInto(counter.CounterType);
         }
     }

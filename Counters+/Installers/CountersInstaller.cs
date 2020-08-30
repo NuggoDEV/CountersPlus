@@ -34,11 +34,14 @@ namespace CountersPlus.Installers
             AddCounter<MissedConfigModel, MissedCounter>();
             AddCounter<NoteConfigModel, NotesCounter>();
 
-            AddCounter<ProgressConfigModel, ProgressCounter>();
-            /*if (mainConfig.ProgressConfig.Mode != ProgressMode.BaseGame)
+            if (mainConfig.ProgressConfig.Mode != ProgressMode.BaseGame)
             {
                 AddCounter<ProgressConfigModel, ProgressCounter>();
-            }*/ // TODO add base game variant for progress counter
+            }
+            else
+            {
+                AddCounter<ProgressConfigModel, ProgressBaseGameCounter>();
+            }
 
             AddCounter<ScoreConfigModel, ScoreCounter>();
             AddCounter<CutConfigModel, CutCounter>();

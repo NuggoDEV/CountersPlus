@@ -2,15 +2,12 @@
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
-using CountersPlus.ConfigModels;
-using CountersPlus.Custom;
 using CountersPlus.Utils;
-using IPA.Config.Data;
-using System;
+using CountersPlus.Custom;
+using CountersPlus.ConfigModels;
+using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -75,7 +72,7 @@ namespace CountersPlus.UI.ViewControllers.Editing
                     object host = null;
                     if (customCounter.BSML.HasType)
                     {
-                        host = diContainer.TryResolveId<object>(customCounter.Name);
+                        host = diContainer.TryResolveId(customCounter.BSML.HostType, customCounter.Name);
                     }
                     BSMLParser.instance.Parse(resourceContent, settingsContainer, host);
                 }

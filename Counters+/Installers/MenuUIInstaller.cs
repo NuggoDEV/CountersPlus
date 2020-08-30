@@ -38,11 +38,11 @@ namespace CountersPlus.Installers
                     Type hostType = customCounter.BSML.HostType;
                     if (hostType.BaseType == typeof(MonoBehaviour))
                     {
-                        Container.Bind(hostType).WithId(customCounter.Name).To<object>().FromComponentOnRoot().AsCached();
+                        Container.Bind(hostType).WithId(customCounter.Name).FromComponentOnRoot().AsCached();
                     }
                     else
                     {
-                        Container.Bind(hostType).WithId(customCounter.Name).To<object>().AsCached();
+                        Container.Bind(hostType).WithId(customCounter.Name).AsCached();
                     }
                 }
             }
