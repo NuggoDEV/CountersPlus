@@ -29,11 +29,11 @@ namespace CountersPlus.UI.FlowCoordinators
 
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
+            Transform mainScreenTransform = GameObject.Find("MainScreen").transform;
+            mainScreenTween = mainScreenTransform.gameObject.AddComponent<TweenPosition>();
+            mainScreenTween._duration = 1f;
             if (firstActivation && activationType == ActivationType.AddedToHierarchy)
             {
-                Transform mainScreenTransform = GameObject.Find("MainScreen").transform;
-                mainScreenTween = mainScreenTransform.gameObject.AddComponent<TweenPosition>();
-                mainScreenTween._duration = 1f;
                 mainScreenOrigin = mainScreenTransform.position;
 
                 Plugin.Logger.Warn($"Loading options menu with {AllConfigModels.Count} config models...");
@@ -80,6 +80,7 @@ namespace CountersPlus.UI.FlowCoordinators
         {
             SetMainScreenOffset(Vector3.zero);
             BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(this);
+            Destroy(mainScreenTween);
             canvasUtility.ClearAllText();
         }
 

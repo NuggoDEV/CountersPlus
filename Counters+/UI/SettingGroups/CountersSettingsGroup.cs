@@ -53,6 +53,8 @@ namespace CountersPlus.UI.SettingGroups
 
         public override int NumberOfCells() => flowCoordinator.Value.AllConfigModels.Count;
 
+        public override int CellToSelect() => -1;
+
         public override void OnCellSelect(TableView view, int idx)
         {
             ConfigModel selectedModel = flowCoordinator.Value.AllConfigModels[idx];

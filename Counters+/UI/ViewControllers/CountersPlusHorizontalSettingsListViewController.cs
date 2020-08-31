@@ -139,7 +139,13 @@ namespace CountersPlus.UI.ViewControllers
             selectedSettingsGroup.OnEnable();
 
             customListTableView.ReloadData();
-            customListTableView.SelectCellWithIdx(selectedSettingsGroup.CellToSelect());
+
+            int initialCell = selectedSettingsGroup.CellToSelect();
+            if (initialCell == -1)
+                customListTableView.ClearSelection();
+            else
+                customListTableView.SelectCellWithIdx(initialCell);
+
             TableViewScroller scroller = TVTableViewScroller(ref customListTableView);
             scroller.ScrollToCellWithIdx(0, TableViewScroller.ScrollPositionType.Beginning, true);
         }
