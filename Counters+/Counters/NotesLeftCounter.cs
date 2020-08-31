@@ -1,5 +1,6 @@
 ﻿using CountersPlus.ConfigModels;
 using CountersPlus.Counters.Interfaces;
+using CountersPlus.Counters.NoteCountProcessors;
 using System.Linq;
 using TMPro;
 using Zenject;
@@ -8,8 +9,8 @@ namespace CountersPlus.Counters
 {
     internal class NotesLeftCounter : Counter<NotesLeftConfigModel>, INoteEventHandler
     {
-        [Inject] private IDifficultyBeatmap beatmap;
         [Inject] private GameplayCoreSceneSetupData setupData;
+        [Inject] private NoteCountProcessor noteCountProcessor;
 
         private int notesLeft = 0;
         private TMP_Text counter;
@@ -18,20 +19,13 @@ namespace CountersPlus.Counters
         {
             if (setupData.practiceSettings != null && setupData.practiceSettings.startInAdvanceAndClearNotes)
             {
-                float startTime = setupData.practiceSettings.startSongTime; // in seconds, we need to convert to beats
-                float beatsPerMinute = beatmap.level.beatsPerMinute;
-                float startTimeInBeats = beatsPerMinute / 60 * startTime;
-
-                // This complicated LINQ statement is to ensure compatibility with Practice Mode / Practice Plugin
-                notesLeft = beatmap.beatmapData.beatmapLinesData.Sum(x => // Grab the sum of ...
-                    x.beatmapObjectsData.Count(y =>                       // all beatmap objects in lines where:
-                        y.beatmapObjectType == BeatmapObjectType.Note &&  // 1) It is a note
-                        y.time > startTimeInBeats &&                      // 2) It has not spawned yet 
-                        (y as NoteData).noteType != NoteType.Bomb));      // 3) It is not a Bomb (which is technically a Note)
+                float startTime = setupData.practiceSettings.startSongTime;
+                // This LINQ statement is to ensure compatibility with Practice Mode / Practice Plugin
+                notesLeft = noteCountProcessor.Data.Count(x => x.time > startTime);
             }
             else
             {
-                notesLeft = beatmap.beatmapData.notesCount;
+                notesLeft = noteCountProcessor.NoteCount;
             }
 
             if (Settings.LabelAboveCount)
@@ -49,12 +43,12 @@ namespace CountersPlus.Counters
 
         public void OnNoteCut(NoteData data, NoteCutInfo info)
         {
-            if (data.noteType != NoteType.Bomb) DecrementCounter();
+            if (data.noteType != NoteType.Bomb && !noteCountProcessor.ShouldIgnoreNote(data)) DecrementCounter();
         }
 
         public void OnNoteMiss(NoteData data)
         {
-            if (data.noteType != NoteType.Bomb) DecrementCounter();
+            if (data.noteType != NoteType.Bomb && !noteCountProcessor.ShouldIgnoreNote(data)) DecrementCounter();
         }
 
         private void DecrementCounter()

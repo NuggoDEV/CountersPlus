@@ -54,6 +54,16 @@
       <HintPath>$(BeatSaberDir)\Plugins\BSML.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
+    <Reference Include="CustomJSONData, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Private>False</Private>
+      <HintPath>$(BeatSaberDir)\Plugins\CustomJSONData.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.CSharp, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\Microsoft.CSharp.dll</HintPath>
+      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <Private>False</Private>
       <HintPath>$(BeatSaberDir)\Libs\Newtonsoft.Json.dll</HintPath>
@@ -168,6 +178,9 @@
     <Compile Include="Counters\Interfaces\INoteEventHandler.cs" />
     <Compile Include="Counters\Interfaces\IScoreEventHandler.cs" />
     <Compile Include="Counters\MissedCounter.cs" />
+    <Compile Include="Counters\Note Count Processors\CustomJSONDataNoteCountProcessor.cs" />
+    <Compile Include="Counters\Note Count Processors\GenericNoteCountProcessor.cs" />
+    <Compile Include="Counters\Note Count Processors\NoteCountProcessor.cs" />
     <Compile Include="Counters\NotesCounter.cs" />
     <Compile Include="Counters\NotesLeftCounter.cs" />
     <Compile Include="Counters\PBCounter.cs" />
