@@ -196,7 +196,6 @@
     <Compile Include="UI\ViewControllers\CountersPlusHorizontalSettingsListViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusMainScreenNavigationController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusSettingSectionSelectionViewController.cs" />
-    <Compile Include="UI\ViewControllers\CountersPlusUnimplementedViewController.cs" />
     <Compile Include="UI\ViewControllers\Editing\CountersPlusCounterEditViewController.cs" />
     <Compile Include="UI\ViewControllers\Editing\CountersPlusHUDEditViewController.cs" />
     <Compile Include="UI\ViewControllers\Editing\CountersPlusMainSettingsEditViewController.cs" />
@@ -252,7 +251,6 @@
     <EmbeddedResource Include="UI\BSML\Credits.bsml" />
     <EmbeddedResource Include="UI\BSML\SettingsSectionSelection.bsml" />
     <EmbeddedResource Include="UI\BSML\BlankScreen.bsml" />
-    <EmbeddedResource Include="UI\BSML\Unimplemented.bsml" />
     <EmbeddedResource Include="UI\BSML\MainSettings.bsml" />
     <EmbeddedResource Include="UI\BSML\HUDs\HUDList.bsml" />
     <EmbeddedResource Include="UI\BSML\HUDs\HUDEdit.bsml" />

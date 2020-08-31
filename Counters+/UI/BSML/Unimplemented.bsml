@@ -1,9 +1,0 @@
-﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
-  <horizontal>
-    <vertical bg='round-rect-panel' pad='10'>
-      <text text='Sorry!' bold='true' underlined='true' color='orange'></text>
-      <text text='This screen has not yet been added into Counters+ 2.0.'></text>
-      <text text='Check the Counters+ GitHub for updates!'></text>
-    </vertical>
-  </horizontal>
-</bg>
