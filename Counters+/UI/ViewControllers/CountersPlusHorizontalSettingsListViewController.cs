@@ -1,13 +1,12 @@
-﻿using System;
+﻿using CountersPlus.UI.SettingGroups;
+using HMUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using CountersPlus.UI.FlowCoordinators;
-using HMUI;
 using UnityEngine;
 using UnityEngine.UI;
-using static CountersPlus.Utils.Accessors;
 using Zenject;
-using CountersPlus.UI.SettingGroups;
+using static CountersPlus.Utils.Accessors;
 
 namespace CountersPlus.UI.ViewControllers
 {

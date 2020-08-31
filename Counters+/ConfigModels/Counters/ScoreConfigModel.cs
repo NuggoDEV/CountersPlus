@@ -1,13 +1,12 @@
 ﻿using BeatSaberMarkupLanguage.Attributes;
-using CountersPlus.ConfigModels.Converters;
 using IPA.Config.Stores.Attributes;
-using System.Collections.Generic;
+using IPA.Config.Stores.Converters;
 using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CountersPlus.ConfigModels
 {
-    // TODO: Switch to BSIPA's "HexColorConverter" on next BSIPA update/game update
     internal class ScoreConfigModel : ConfigModel
     {
         [Ignore]
@@ -27,25 +26,25 @@ namespace CountersPlus.ConfigModels
         public virtual bool DisplayRank { get; set; } = true;
         [UIValue(nameof(CustomRankColors))]
         public virtual bool CustomRankColors { get; set; } = true;
-        [UseConverter(typeof(ColorConverter))]
+        [UseConverter(typeof(HexColorConverter))]
         [UIValue(nameof(SSColor))]
         public virtual Color SSColor { get; set; } = Color.cyan;
-        [UseConverter(typeof(ColorConverter))]
+        [UseConverter(typeof(HexColorConverter))]
         [UIValue(nameof(SColor))]
         public virtual Color SColor { get; set; } = Color.white;
-        [UseConverter(typeof(ColorConverter))]
+        [UseConverter(typeof(HexColorConverter))]
         [UIValue(nameof(AColor))]
         public virtual Color AColor { get; set; } = Color.green;
-        [UseConverter(typeof(ColorConverter))]
+        [UseConverter(typeof(HexColorConverter))]
         [UIValue(nameof(BColor))]
         public virtual Color BColor { get; set; } = Color.yellow;
-        [UseConverter(typeof(ColorConverter))]
+        [UseConverter(typeof(HexColorConverter))]
         [UIValue(nameof(CColor))]
         public virtual Color CColor { get; set; } = new Color(1, 0.5f, 0);
-        [UseConverter(typeof(ColorConverter))]
+        [UseConverter(typeof(HexColorConverter))]
         [UIValue(nameof(DColor))]
         public virtual Color DColor { get; set; } = Color.red;
-        [UseConverter(typeof(ColorConverter))]
+        [UseConverter(typeof(HexColorConverter))]
         [UIValue(nameof(EColor))]
         public virtual Color EColor { get; set; } = Color.red;
 

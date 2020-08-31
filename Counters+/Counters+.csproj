@@ -142,7 +142,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigModels\ConfigModel.cs" />
-    <Compile Include="ConfigModels\Converters\ColorConverter.cs" />
     <Compile Include="ConfigModels\Counters\CutConfigModel.cs" />
     <Compile Include="ConfigModels\Counters\FailConfigModel.cs" />
     <Compile Include="ConfigModels\HUDConfigModel.cs" />
