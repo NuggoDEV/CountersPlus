@@ -1,5 +1,6 @@
 ﻿using CountersPlus.ConfigModels;
 using System;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,9 +12,10 @@ namespace CountersPlus.Counters
     internal class ProgressCounter : Counter<ProgressConfigModel>, ITickable
     {
         private readonly Vector3 ringSize = Vector3.one * 1.175f;
+        private readonly string multiplierImageSpriteName = "Circle";
 
         [Inject] private AudioTimeSyncController atsc;
-        [Inject] private CoreGameHUDController coreGameHUD; // For getting multiplier image
+        [Inject(Optional = true)] private CoreGameHUDController coreGameHUD; // For getting multiplier image
         [Inject] private GameplayCoreSceneSetupData gcssd; // I hope this works
 
         private TMP_Text timeText;
@@ -29,25 +31,24 @@ namespace CountersPlus.Counters
             length = atsc.songLength;
             songBPM = gcssd.difficultyBeatmap.level.beatsPerMinute;
 
-            GameObject baseGameProgress = SongProgressPanelGO(ref coreGameHUD);
-            UnityEngine.Object.Destroy(baseGameProgress); // I'm sorry, little one.
+            if (coreGameHUD != null)
+            {
+                GameObject baseGameProgress = SongProgressPanelGO(ref coreGameHUD);
+                UnityEngine.Object.Destroy(baseGameProgress); // I'm sorry, little one.
+            }
 
             if (Settings.Mode != ProgressMode.Percent)
             {
-                ScoreMultiplierUIController scoreMultiplier = coreGameHUD.GetComponentInChildren<ScoreMultiplierUIController>(true);
-
-                Image multiplierImage = MultiplierImage(ref scoreMultiplier);
-
                 var canvas = CanvasUtility.GetCanvasFromID(Settings.CanvasID);
                 if (canvas != null)
                 {
-                    Image backgroundImage = InstantiateImageToCanvas(multiplierImage, canvas).GetComponent<Image>();
+                    Image backgroundImage = CreateRing(canvas).GetComponent<Image>();
                     backgroundImage.rectTransform.anchoredPosition = timeText.rectTransform.anchoredPosition;
                     backgroundImage.CrossFadeAlpha(0.05f, 1f, false);
                     backgroundImage.transform.localScale = ringSize / 10;
                     backgroundImage.type = Image.Type.Simple;
 
-                    progressRing = InstantiateImageToCanvas(multiplierImage, canvas).GetComponent<Image>();
+                    progressRing = CreateRing(canvas).GetComponent<Image>();
                     progressRing.rectTransform.anchoredPosition = timeText.rectTransform.anchoredPosition;
                     progressRing.transform.localScale = ringSize / 10;
                 }
@@ -85,9 +86,18 @@ namespace CountersPlus.Counters
             }
         }
 
-        private GameObject InstantiateImageToCanvas(Image multiplierImage, Canvas canvas)
+        private Image CreateRing(Canvas canvas)
         {
-            return UnityEngine.Object.Instantiate(multiplierImage.gameObject, canvas.transform);
+            // Unfortunately, there is no garauntee that I have the CoreGameHUDController, since No Text and Huds
+            // completely disables it from spawning. So, to be safe, we recreate this all from scratch.
+            Image newImage = new GameObject("Ring Image", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
+            newImage.sprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(x => x.name == multiplierImageSpriteName);
+            newImage.transform.SetParent(canvas.transform, false);
+            newImage.type = Image.Type.Filled;
+            newImage.fillClockwise = true;
+            newImage.fillOrigin = 2;
+            newImage.fillMethod = Image.FillMethod.Radial360;
+            return newImage;
         }
     }
 }
