@@ -25,7 +25,7 @@ namespace CountersPlus.Installers
             hudConfig = Container.Resolve<HUDConfigModel>();
             dataModel = Container.Resolve<PlayerDataModel>();
 
-            if (!mainConfig.Enabled || dataModel.playerData.playerSpecificSettings.noTextsAndHuds) return;
+            if (!mainConfig.Enabled) return;
 
             /// LOADING IMPORTANT SHIT LIKE CANVASES AND STUFF ///
             Container.Bind<CanvasUtility>().AsSingle().NonLazy();
