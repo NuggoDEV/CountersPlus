@@ -58,9 +58,15 @@ namespace CountersPlus.Installers
             AddCounter<CutConfigModel, CutCounter>();
             AddCounter<FailConfigModel, FailCounter>();
             AddCounter<NotesLeftConfigModel, NotesLeftCounter>();
-            AddCounter<PBConfigModel, PBCounter>();
             AddCounter<SpeedConfigModel, SpeedCounter>();
             AddCounter<SpinometerConfigModel, Spinometer>();
+
+
+            AddCounter<PBConfigModel, PBCounter>((settings) => {
+                ScoreConfigModel scoreConfig = Container.Resolve<ScoreConfigModel>();
+                HUDCanvas canvasSettings = scoreConfig.CanvasID == -1 ? hudConfig.MainCanvasSettings : hudConfig.OtherCanvasSettings[scoreConfig.CanvasID];
+                return scoreConfig.Enabled && settings.UnderScore && (dataModel.playerData.playerSpecificSettings.noTextsAndHuds ? canvasSettings.IgnoreNoTextAndHUDOption : true);
+                });
 
             foreach (Custom.CustomCounter customCounter in Plugin.LoadedCustomCounters.Values)
             {
@@ -76,11 +82,17 @@ namespace CountersPlus.Installers
 
         private void AddCounter<T, R>() where T : ConfigModel where R : ICounter
         {
+            AddCounter<T, R>(_ => true);
+        }
+
+        private void AddCounter<T, R>(Func<T, bool> additionalReasonToSpawn) where T : ConfigModel where R : ICounter
+        {
             T settings = Container.Resolve<T>();
 
             HUDCanvas canvasSettings = settings.CanvasID == -1 ? hudConfig.MainCanvasSettings : hudConfig.OtherCanvasSettings[settings.CanvasID];
 
-            if (!settings.Enabled || (!canvasSettings.IgnoreNoTextAndHUDOption && dataModel.playerData.playerSpecificSettings.noTextsAndHuds)) return;
+            if (!settings.Enabled || (!canvasSettings.IgnoreNoTextAndHUDOption && dataModel.playerData.playerSpecificSettings.noTextsAndHuds
+                && !additionalReasonToSpawn(settings))) return;
 
             Plugin.Logger.Debug($"Loading counter {settings.DisplayName}...");
 

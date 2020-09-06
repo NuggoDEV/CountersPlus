@@ -13,6 +13,7 @@ namespace CountersPlus.Counters
 
         [Inject] private CoreGameHUDController coreGameHUD;
         [Inject] private RelativeScoreAndImmediateRankCounter relativeScoreAndImmediateRank;
+        [Inject] private PBConfigModel personalBest;
 
         private RankModel.Rank prevImmediateRank = RankModel.Rank.SSS;
         private TextMeshProUGUI rankText;
@@ -47,12 +48,16 @@ namespace CountersPlus.Counters
 
             RectTransform pointsTextTransform = old.rectTransform;
 
-            HUDCanvas currentSettings = CanvasUtility.GetCanvasSettingsFromCanvas(currentCanvas);
+            HUDCanvas currentSettings = CanvasUtility.GetCanvasSettingsFromID(Settings.CanvasID);
             float positionScale = currentSettings?.PositionScale ?? 10;
 
             Vector2 anchoredPos = (CanvasUtility.GetAnchoredPositionFromConfig(Settings, currentSettings.IsMainCanvas) + offset) * positionScale;
 
+            Plugin.Logger.Warn(anchoredPos.ToString());
+
             pointsTextTransform.anchoredPosition = anchoredPos;
+            // I dont know why Personal Best has even the SLIGHTEST of influence on the position of Score Counter... but it does?
+            if (!personalBest.Enabled) pointsTextTransform.anchoredPosition -= new Vector2(0, 25);
             pointsTextTransform.localPosition = new Vector3(pointsTextTransform.localPosition.x, pointsTextTransform.localPosition.y, 0);
             pointsTextTransform.localEulerAngles = Vector3.zero;
 

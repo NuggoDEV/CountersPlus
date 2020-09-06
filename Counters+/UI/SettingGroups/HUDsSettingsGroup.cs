@@ -1,13 +1,11 @@
 ﻿using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.UI.ViewControllers;
 using HMUI;
-using System;
 using UnityEngine;
 using Zenject;
 
 namespace CountersPlus.UI.SettingGroups
 {
-    // TODO implement
     public class HUDsSettingsGroup : SettingsGroup
     {
         [Inject] private LazyInject<CountersPlusSettingsFlowCoordinator> flowCoordinator;

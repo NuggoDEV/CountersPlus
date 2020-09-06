@@ -118,9 +118,6 @@ namespace CountersPlus.Utils
                 canvas.gameObject.layer = energyCanvas.gameObject.layer;
             }
 
-            // TODO handle interactions between Base Game and Counters+
-            // (Attach Counters+ to Base Game HUD? Move Base Game HUD elements in between?)
-
             return canvas;
         }
 
@@ -269,7 +266,7 @@ namespace CountersPlus.Utils
             foreach (Transform child in go.transform)
             {
                 RecurseFunctionOverGameObjectTree(child.gameObject, func);
-                func?.Invoke(go);
+                func?.Invoke(child.gameObject);
             }
         }
     }
