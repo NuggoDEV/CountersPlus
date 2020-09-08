@@ -82,7 +82,7 @@ namespace CountersPlus.Installers
 
         private void AddCounter<T, R>() where T : ConfigModel where R : ICounter
         {
-            AddCounter<T, R>(_ => true);
+            AddCounter<T, R>(_ => false);
         }
 
         private void AddCounter<T, R>(Func<T, bool> additionalReasonToSpawn) where T : ConfigModel where R : ICounter

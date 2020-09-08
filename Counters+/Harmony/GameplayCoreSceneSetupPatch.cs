@@ -1,4 +1,5 @@
 ﻿using CountersPlus.ConfigModels;
+using CountersPlus.Utils;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,13 +59,20 @@ namespace CountersPlus.Harmony
 
         public static bool ShouldSkip(PlayerSpecificSettings specificSettings, DiContainer container)
         {
+            HUDConfigModel hudConfig = container.Resolve<HUDConfigModel>();
             ProgressConfigModel progress = container.Resolve<ProgressConfigModel>();
             ScoreConfigModel score = container.Resolve<ScoreConfigModel>();
             bool result = specificSettings.noTextsAndHuds && !(
-                (progress.Enabled && progress.Mode == ProgressMode.BaseGame) ||
-                score.Enabled);
+                (progress.Enabled && progress.Mode == ProgressMode.BaseGame && CheckIgnoreOption(hudConfig, progress)) ||
+                (score.Enabled && CheckIgnoreOption(hudConfig, score)));
             IsOverridingBaseGameHUD = specificSettings.noTextsAndHuds && !result;
             return result;
+        }
+
+        private static bool CheckIgnoreOption(HUDConfigModel hud, ConfigModel model)
+        {
+            if (model.CanvasID == -1) return hud.MainCanvasSettings.IgnoreNoTextAndHUDOption;
+            return hud.OtherCanvasSettings[model.CanvasID].IgnoreNoTextAndHUDOption;
         }
     }
 }
