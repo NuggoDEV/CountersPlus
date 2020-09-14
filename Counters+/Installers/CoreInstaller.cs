@@ -22,7 +22,7 @@ namespace CountersPlus.Installers
             mainConfig.HUDConfig.MainCanvasSettings.IsMainCanvas = true;
             Container.Bind<HUDConfigModel>().FromInstance(mainConfig.HUDConfig);
 
-            if (harmony != null) harmony.UnpatchAll(); // Covers game restarts
+            if (harmony != null) harmony.UnpatchAll(HARMONY_ID); // Covers game restarts
             harmony = new HarmonyObj(HARMONY_ID);
             Container.Bind<HarmonyObj>().WithId(HARMONY_ID).FromInstance(harmony);
             GameplayCoreSceneSetupPatch.Patch(harmony);

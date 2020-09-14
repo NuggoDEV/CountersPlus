@@ -65,7 +65,6 @@ namespace CountersPlus.Harmony
         {
             canvasUtility.RefreshAllCanvases(hudConfig);
             menuInstaller.RemoveButton();
-            menuInstaller.AddButton();
         }
     }
 }
