@@ -29,18 +29,20 @@ namespace CountersPlus.UI.FlowCoordinators
 
         protected override void DidActivate(bool firstActivation, ActivationType activationType)
         {
+            Plugin.Logger.Warn("FRICK");
             Transform mainScreenTransform = GameObject.Find("MainScreen").transform;
             if (firstActivation && activationType == ActivationType.AddedToHierarchy)
             {
-                mainScreenTween = mainScreenTransform.gameObject.AddComponent<TweenPosition>();
-                mainScreenTween._duration = 1f;
                 mainScreenOrigin = mainScreenTransform.position;
-
-                Plugin.Logger.Warn($"Loading options menu with {AllConfigModels.Count} config models...");
 
                 showBackButton = true;
                 title = "Counters+";
             }
+
+            if (mainScreenTween != null) Destroy(mainScreenTween);
+            mainScreenTween = mainScreenTransform.gameObject.AddComponent<TweenPosition>();
+            mainScreenTween._duration = 1f;
+
             SetMainScreenOffset(MAIN_SCREEN_OFFSET);
 
             PushViewControllerToNavigationController(mainScreenNavigation, blank);

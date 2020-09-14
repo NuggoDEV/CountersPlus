@@ -1,6 +1,8 @@
 ﻿using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.MenuButtons;
+using CountersPlus.ConfigModels;
 using CountersPlus.Custom;
+using CountersPlus.Harmony;
 using CountersPlus.UI;
 using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.UI.SettingGroups;
@@ -12,13 +14,14 @@ using SiraUtil.Zenject;
 using System;
 using UnityEngine;
 using Zenject;
+using HarmonyObj = HarmonyLib.Harmony;
 
 namespace CountersPlus.Installers
 {
-    [RequiresInstaller(typeof(ConfigModelInstaller))]
+    [RequiresInstaller(typeof(CoreInstaller))]
     public class MenuUIInstaller : MonoInstaller
     {
-        private CountersPlusSettingsFlowCoordinator flowCoordinator;
+        private MenuButton menuButton;
 
         // Using Zenject for UI lets goooooooooooo
         public override void InstallBindings()
@@ -57,11 +60,26 @@ namespace CountersPlus.Installers
             BindViewController<CountersPlusHUDListViewController>();
             BindViewController<CountersPlusHUDEditViewController>();
 
-            flowCoordinator = BeatSaberUI.CreateFlowCoordinator<CountersPlusSettingsFlowCoordinator>();
+            var flowCoordinator = BeatSaberUI.CreateFlowCoordinator<CountersPlusSettingsFlowCoordinator>();
             Container.InjectSpecialInstance<CountersPlusSettingsFlowCoordinator>(flowCoordinator);
 
-            MenuButton button = new MenuButton("Counters+", "Configure Counters+ settings.", OnClick);
-            MenuButtons.instance.RegisterButton(button);
+            MenuTransitionsHelperPatch.Patch(Container.ResolveId<HarmonyObj>(CoreInstaller.HARMONY_ID),
+                Container.Resolve<CanvasUtility>(),
+                Container.Resolve<HUDConfigModel>(),
+                this);
+
+            AddButton();
+        }
+
+        public void AddButton()
+        {
+            menuButton = new MenuButton("Counters+", "Configure Counters+ settings.", OnClick);
+            MenuButtons.instance.RegisterButton(menuButton);
+        }
+
+        public void RemoveButton()
+        {
+            MenuButtons.instance.UnregisterButton(menuButton);
         }
 
         private void BindViewController<T>() where T : ViewController
@@ -77,7 +95,15 @@ namespace CountersPlus.Installers
 
         private void OnClick()
         {
-            BeatSaberUI.MainFlowCoordinator.PresentFlowCoordinator(flowCoordinator);
+            var flowCoordinator = Container.TryResolve<CountersPlusSettingsFlowCoordinator>();
+            if (flowCoordinator != null)
+            {
+                BeatSaberUI.MainFlowCoordinator.PresentFlowCoordinator(flowCoordinator);
+            }
+            else
+            {
+                Plugin.Logger.Error("Cannot obtain flow coordinator!");
+            }
         }
     }
 }

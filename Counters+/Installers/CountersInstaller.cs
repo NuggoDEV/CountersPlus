@@ -12,7 +12,7 @@ using Zenject;
 
 namespace CountersPlus.Installers
 {
-    [RequiresInstaller(typeof(ConfigModelInstaller))]
+    [RequiresInstaller(typeof(CoreInstaller))]
     class CountersInstaller : MonoInstaller
     {
         private HUDConfigModel hudConfig;

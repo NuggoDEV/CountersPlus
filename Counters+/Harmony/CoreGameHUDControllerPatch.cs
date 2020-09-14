@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
+using HarmonyObj = HarmonyLib.Harmony;
 
 namespace CountersPlus.Harmony
 {
@@ -17,8 +18,18 @@ namespace CountersPlus.Harmony
     [HarmonyPatch("Start")]
     internal class CoreGameHUDControllerPatch
     {
+        private static MethodInfo coreGame = typeof(CoreGameHUDController).GetMethod("Start",
+            BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+        private static MethodInfo transpiler = SymbolExtensions.GetMethodInfo(() => Transpiler(null));
+
         private static MethodInfo ProgressMethod = SymbolExtensions.GetMethodInfo(() => ShouldEnableProgressPanel(false));
         private static MethodInfo ScoreMethod = SymbolExtensions.GetMethodInfo(() => ShouldEnableScorePanel(false));
+
+        public static void Patch(HarmonyObj obj)
+        {
+            if (obj.GetPatchedMethods().Any(x => x == coreGame)) obj.Unpatch(coreGame, transpiler);
+            obj.Patch(coreGame, null, null, new HarmonyMethod(transpiler));
+        }
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> original)
         {

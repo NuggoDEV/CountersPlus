@@ -1,11 +1,11 @@
 ﻿using CountersPlus.ConfigModels;
-using CountersPlus.Utils;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Zenject;
+using HarmonyObj = HarmonyLib.Harmony;
 
 namespace CountersPlus.Harmony
 {
@@ -20,7 +20,16 @@ namespace CountersPlus.Harmony
     {
         public static bool IsOverridingBaseGameHUD = false;
 
+        private static MethodInfo gameplayCore => typeof(GameplayCoreSceneSetup).GetMethod("InstallBindings",
+            BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+        private static MethodInfo transpiler => SymbolExtensions.GetMethodInfo(() => Transpiler(null));
         private static MethodInfo skipHUDMethod => SymbolExtensions.GetMethodInfo(() => ShouldSkip(null, null));
+
+        public static void Patch(HarmonyObj obj)
+        {
+            if (obj.GetPatchedMethods().Any(x => x == gameplayCore)) obj.Unpatch(gameplayCore, transpiler);
+            obj.Patch(gameplayCore, null, null, new HarmonyMethod(transpiler));
+        }
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> original)
         {

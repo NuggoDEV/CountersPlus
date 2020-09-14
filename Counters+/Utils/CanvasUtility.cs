@@ -40,6 +40,13 @@ namespace CountersPlus.Utils
                 HUDType = GetGameplayCoreHUDTypeForEnvironmentSize(data.environmentInfo.environmentSizeData.width);
             }
 
+            RefreshAllCanvases(hudConfig, data, coreGameHUD);
+        }
+
+        public void RefreshAllCanvases(HUDConfigModel hudConfig, GameplayCoreSceneSetupData data = null, CoreGameHUDController coreGameHUD = null)
+        {
+            CanvasIDToCanvas.Clear();
+            CanvasToSettings.Clear();
             CanvasIDToCanvas.Add(-1, CreateCanvasWithConfig(hudConfig.MainCanvasSettings));
             CanvasToSettings.Add(CanvasIDToCanvas[-1], hudConfig.MainCanvasSettings);
             if (coreGameHUD != null && hudConfig.MainCanvasSettings.ParentedToBaseGameHUD)
@@ -151,7 +158,6 @@ namespace CountersPlus.Utils
 
         public TMP_Text CreateText(Canvas canvas, Vector3 anchoredPosition, Vector3? offset = null)
         {
-
             var rectTransform = canvas.transform as RectTransform;
             rectTransform.sizeDelta = new Vector2(100, 50);
 

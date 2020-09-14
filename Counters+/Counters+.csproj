@@ -194,7 +194,8 @@
     <Compile Include="Custom\CustomCounterFeature.cs" />
     <Compile Include="Harmony\CoreGameHUDControllerPatch.cs" />
     <Compile Include="Harmony\GameplayCoreSceneSetupPatch.cs" />
-    <Compile Include="Installers\ConfigModelInstaller.cs" />
+    <Compile Include="Harmony\MenuTransitionsHelperPatch.cs" />
+    <Compile Include="Installers\CoreInstaller.cs" />
     <Compile Include="Installers\CountersInstaller.cs" />
     <Compile Include="Installers\MenuUIInstaller.cs" />
     <Compile Include="Plugin.cs" />
