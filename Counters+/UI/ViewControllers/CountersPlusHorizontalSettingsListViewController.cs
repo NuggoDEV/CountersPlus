@@ -1,16 +1,23 @@
-﻿using System;
+﻿using CountersPlus.UI.SettingGroups;
+using HMUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using CountersPlus.UI.ViewControllers.SettingsGroups;
-using CountersPlus.Utils;
-using HMUI;
-using IPA.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
+using static CountersPlus.Utils.Accessors;
 
 namespace CountersPlus.UI.ViewControllers
 {
     /*
+     * (UPDATE 8/18/2020)
+     * 
+     * I'm still using this! BSML's offerings do not provide the level of reusability that I need for Counters+.
+     * So, it's back to this then!
+     * 
+     * ---
+     * 
      * I've copied over a large amount of this code from CustomUI's CustomListController,
      * mainly because it would need more editing then what simple overrides would allow to
      * achieve the horizontal effect that I want, and I didn't want to go through Harmony patches to do it.
@@ -23,16 +30,16 @@ namespace CountersPlus.UI.ViewControllers
      */
     public class CountersPlusHorizontalSettingsListViewController : ViewController, TableView.IDataSource
     {
-        private static FieldAccessor<TableView, TableViewScroller>.Accessor tableViewScrollerAccessor = FieldAccessor<TableView, TableViewScroller>.GetAccessor("_scroller");
+        [Inject] private LazyInject<CountersPlusSettingSectionSelectionViewController> sectionSelection;
 
         internal Button PageLeftButton;
         internal Button PageRightButton;
-        private TableView CustomListTableView;
-        internal readonly string ReuseIdentifier = "CountersPlusSettingsListTableCell"; //Change this if you plan on yoinking my code.
+        internal readonly string ReuseIdentifier = "CountersPlusSettingsListTableCell"; // Change this if you plan on yoinking my code.
         internal AnnotatedBeatmapLevelCollectionTableCell levelPackTableCellInstance;
 
-        private List<SettingsGroup> loadedSettingsGroups = new List<SettingsGroup>();
-        private SettingsGroup selectedSettingsGroup;
+        [Inject] private List<SettingsGroup> loadedSettingsGroups = new List<SettingsGroup>();
+        private SettingsGroup selectedSettingsGroup = null;
+        private TableView customListTableView;
 
         protected override void DidActivate(bool firstActivation, ActivationType type)
         {
@@ -40,10 +47,9 @@ namespace CountersPlus.UI.ViewControllers
             {
                 if (firstActivation)
                 {
-                    loadedSettingsGroups = TypesUtility.GetListOfType<SettingsGroup>();
+                    //loadedSettingsGroups = TypesUtility.GetListOfType<SettingsGroup>();
                     //Largely unchanged from CustomListController. Keep all of this.
                     levelPackTableCellInstance = Resources.FindObjectsOfTypeAll<AnnotatedBeatmapLevelCollectionTableCell>().First(x => x.name == "AnnotatedBeatmapLevelCollectionTableCell");
-                    levelPackTableCellInstance.reuseIdentifier = ReuseIdentifier;
 
                     RectTransform container = new GameObject("HorizontalListContainer", typeof(RectTransform)).transform as RectTransform;
                     container.SetParent(rectTransform, false);
@@ -53,21 +59,21 @@ namespace CountersPlus.UI.ViewControllers
 
                     var go = new GameObject("CustomListTableView");
                     go.SetActive(false); //Disable GameObject to not have scripts run.
-                    CustomListTableView = go.AddComponent<TableView>(); //Add TableView
-                    CustomListTableView.gameObject.AddComponent<RectMask2D>(); //Add Mask
-                    CustomListTableView.transform.SetParent(container, false);
-                    CustomListTableView.SetPrivateField("_tableType", TableView.TableType.Horizontal);
+                    customListTableView = go.AddComponent<TableView>(); //Add TableView
+                    customListTableView.gameObject.AddComponent<RectMask2D>(); //Add Mask
+                    customListTableView.transform.SetParent(container, false);
+                    TVTableType(ref customListTableView) = TableView.TableType.Horizontal;
 
-                    (CustomListTableView.transform as RectTransform).anchorMin = Vector2.zero;
-                    (CustomListTableView.transform as RectTransform).anchorMax = Vector2.one;
-                    (CustomListTableView.transform as RectTransform).sizeDelta = Vector2.zero;
-                    (CustomListTableView.transform as RectTransform).anchoredPosition = Vector2.zero;
+                    (customListTableView.transform as RectTransform).anchorMin = Vector2.zero;
+                    (customListTableView.transform as RectTransform).anchorMax = Vector2.one;
+                    (customListTableView.transform as RectTransform).sizeDelta = Vector2.zero;
+                    (customListTableView.transform as RectTransform).anchoredPosition = Vector2.zero;
 
-                    CustomListTableView.SetPrivateField("_preallocatedCells", new TableView.CellsGroup[0]);
-                    CustomListTableView.SetPrivateField("_isInitialized", false);
+                    TVPreallocCells(ref customListTableView) = new TableView.CellsGroup[0];
+                    TVIsInitialized(ref customListTableView) = false;
 
-                    //Code copied from monkeymanboy's Beat Saber Custom Campaigns mod. Keep these too.
-                    PageLeftButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => (x.name == "PageLeftButton")), transform);
+                    // Code copied from monkeymanboy's Beat Saber Custom Campaigns mod. Keep these too.
+                    PageLeftButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => x.name == "PageLeftButton"), transform);
                     RectTransform buttonTransform = PageLeftButton.transform.Find("BG") as RectTransform;
                     RectTransform glow = Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Last(x => (x.name == "GlowContainer")), PageLeftButton.transform).transform as RectTransform;
                     glow.localPosition = buttonTransform.localPosition;
@@ -93,60 +99,71 @@ namespace CountersPlus.UI.ViewControllers
                     PageRightButton.gameObject.SetActive(false);
 
                     RectTransform viewport = new GameObject("Viewport").AddComponent<RectTransform>(); //Make a Viewport RectTransform
-                    viewport.SetParent(CustomListTableView.transform as RectTransform, false); //It expects one from a ScrollRect, so we have to make one ourselves.
+                    viewport.SetParent(customListTableView.transform as RectTransform, false); //It expects one from a ScrollRect, so we have to make one ourselves.
                     viewport.sizeDelta = Vector2.zero; //Important to set this to zero so the TableView can scroll through all available cells.
 
-                    CustomListTableView.SetPrivateField("_pageUpButton", PageLeftButton); //Set Up button to Left
-                    CustomListTableView.SetPrivateField("_pageDownButton", PageRightButton); //Set down button to Right
-                    CustomListTableView.Init(); //Init, have "_scrollRectTransform" be null.
-                    CustomListTableView.SetPrivateField("_scrollRectTransform", viewport); //Set it with our hot-out-of-the-oven Viewport.
-                    CustomListTableView.dataSource = this; //Add data source
+                    TVPageUpButton(ref customListTableView) = PageLeftButton; // Set Up button to Left
+                    TVPageDownButton(ref customListTableView) = PageRightButton; // Set Down button to Right
+                    customListTableView.Init(); // Init, have "_scrollRectTransform" be null.
+                    TVScrollRect(ref customListTableView) = viewport; // Set it with our hot-out-of-the-oven Viewport.
+                    customListTableView.dataSource = this; //Add data source
                     go.SetActive(true);
-                    CustomListTableView.Show();
+                    customListTableView.Show();
 
                     //Finally, reset some anchors of each child so that all of the available cells are shown.
-                    for (int i = 0; i < CustomListTableView.transform.childCount; i++)
+                    for (int i = 0; i < customListTableView.transform.childCount; i++)
                     {
-                        (CustomListTableView.transform.GetChild(i).transform as RectTransform).anchoredPosition = Vector3.zero;
-                        (CustomListTableView.transform.GetChild(i).transform as RectTransform).anchorMin = Vector3.zero;
-                        (CustomListTableView.transform.GetChild(i).transform as RectTransform).anchorMax = Vector3.one;
+                        (customListTableView.transform.GetChild(i).transform as RectTransform).anchoredPosition = Vector3.zero;
+                        (customListTableView.transform.GetChild(i).transform as RectTransform).anchorMin = Vector3.zero;
+                        (customListTableView.transform.GetChild(i).transform as RectTransform).anchorMax = Vector3.one;
                     }
-                    HandleSettingsGroupChanged(SettingsGroupType.Main);
+                    HandleSettingsGroupChanged(0);
                 }
-            } catch (Exception e)
-            {  //Edit this with your logging system of choice, or delete it altogether (As this shouldn't really cause Exceptions)
-                Plugin.Log(e.ToString(), LogInfo.Error, "Report this as an issue on the Counters+ GitHub.");
+                selectedSettingsGroup?.OnEnable();
             }
-            CustomListTableView.didSelectCellWithIdxEvent += OnCellSelect;
-            CountersPlusBottomSettingsSelectorViewController.SettingsGroupChanged += HandleSettingsGroupChanged;
+            catch (Exception e)
+            {  //Edit this with your logging system of choice, or delete it altogether (As this shouldn't really cause Exceptions)
+                Plugin.Logger.Error(e);
+            }
+            customListTableView.didSelectCellWithIdxEvent += OnCellSelect;
+            sectionSelection.Value.OnSettingsGroupChanged += HandleSettingsGroupChanged;
             (transform as RectTransform).anchoredPosition = Vector3.zero;
         }
 
-        private void HandleSettingsGroupChanged(SettingsGroupType obj)
+        private void HandleSettingsGroupChanged(int idx)
         {
-            selectedSettingsGroup = loadedSettingsGroups.FirstOrDefault(x => x.type == obj);
-            CustomListTableView.ReloadData();
-            CustomListTableView.SelectCellWithIdx(0);
-            TableViewScroller scroller = tableViewScrollerAccessor(ref CustomListTableView);
+            if (idx >= loadedSettingsGroups.Count) idx = 0;
+            selectedSettingsGroup?.OnDisable();
+            selectedSettingsGroup = loadedSettingsGroups[idx];
+            selectedSettingsGroup.OnEnable();
+
+            customListTableView.ReloadData();
+
+            int initialCell = selectedSettingsGroup.CellToSelect();
+            if (initialCell == -1)
+                customListTableView.ClearSelection();
+            else
+                customListTableView.SelectCellWithIdx(initialCell);
+
+            TableViewScroller scroller = TVTableViewScroller(ref customListTableView);
             scroller.ScrollToCellWithIdx(0, TableViewScroller.ScrollPositionType.Beginning, true);
         }
 
         protected override void DidDeactivate(DeactivationType deactivationType)
         {
-            CountersPlusBottomSettingsSelectorViewController.SettingsGroupChanged -= HandleSettingsGroupChanged;
-            CustomListTableView.didSelectCellWithIdxEvent -= OnCellSelect;
+            sectionSelection.Value.OnSettingsGroupChanged -= HandleSettingsGroupChanged;
+            customListTableView.didSelectCellWithIdxEvent -= OnCellSelect;
             base.DidDeactivate(deactivationType);
         }
 
-        //I'd recommend keeping this as is (5 cells shown), unless you want more spread out cells.
-        public float CellSize() => selectedSettingsGroup?.CellSize() ?? 30f;
+        // I'd recommend keeping this as is (5 cells shown), unless you want more spread out cells.
+        public float CellSize() => selectedSettingsGroup?.GetSize() ?? 30f;
 
-        public int NumberOfCells() => selectedSettingsGroup?.NumberOfCells() ?? 0; //Tune this to the amount of cells you'll have, whether dynamic or static.
+        // Tune this to the amount of cells you'll have, whether dynamic or static.
+        public int NumberOfCells() => selectedSettingsGroup?.NumberOfCells() ?? 0;
 
-        public TableCell CellForIdx(TableView view, int row) => selectedSettingsGroup?.CellForIdx(view, row, this) ?? null;
+        public TableCell CellForIdx(TableView view, int row) => selectedSettingsGroup?.CellForIdx(view, row) ?? null;
 
-        private void OnCellSelect(TableView view, int row) => selectedSettingsGroup?.OnCellSelect(view, row, this);
+        private void OnCellSelect(TableView view, int row) => selectedSettingsGroup?.OnCellSelect(view, row);
     }
-
-    
 }

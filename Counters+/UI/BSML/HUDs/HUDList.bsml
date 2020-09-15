@@ -1,0 +1,18 @@
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <list id='list' list-style='List' select-cell='cell-selected'></list>
+  <modal-keyboard id='new-canvas-name' clear-on-open='true' on-enter='create-new-canvas' hide-event='on-deactivate'></modal-keyboard>
+  <modal id='delete-canvas' hide-event='on-deactivate' size-delta-x='65' size-delta-y='35'>
+    <text text='Are you sure you want to delete this canvas?' align='Center'></text>
+    <bottom-button-panel>
+      <button text='Yes' on-click='delete-selected-canvas'></button>
+      <button text='No' id='cancel-deletion' on-click='cancel-deletion'></button>
+    </bottom-button-panel>
+  </modal>
+  <modal id='canvas-error' hide-event='on-deactivate' size-delta-x='65' size-delta-y='35'>
+    <text text='You are not allowed to delete this canvas.' align='Center'></text>
+    <bottom-button-panel>
+      <button text='OK' on-click='cancel-deletion'></button>
+      <button text='Alright' on-click='cancel-deletion'></button>
+    </bottom-button-panel>
+  </modal>
+</bg>

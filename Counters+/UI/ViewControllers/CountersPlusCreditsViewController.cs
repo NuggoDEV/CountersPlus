@@ -4,11 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using BeatSaberMarkupLanguage.ViewControllers;
 using BeatSaberMarkupLanguage.Attributes;
+using CountersPlus.Utils;
+using Zenject;
 
 namespace CountersPlus.UI.ViewControllers
 {
     class CountersPlusCreditsViewController : BSMLResourceViewController
     {
+        [Inject] private VersionUtility versionUtility;
+
         public override string ResourceName => "CountersPlus.UI.BSML.Credits.bsml";
 
         [UIComponent("versionText")] private TextMeshProUGUI version = null;
@@ -26,14 +30,14 @@ namespace CountersPlus.UI.ViewControllers
             if (!firstActivation) return;
 
             version.transform.parent.localPosition = new Vector3(0, 2.5f, 0);
-            version.text = $"Version <color={(Plugin.UpToDate ? "#00FF00" : "#FF0000")}>{Plugin.PluginVersion}</color>";
+            version.text = $"Version <color={(versionUtility.HasLatestVersion ? "#00FF00" : "#FF0000")}>{versionUtility.PluginVersion}</color>";
             creator.text = "Developed by: <color=#00c0ff>Caeden117</color>";
-            update.text = $"<color=#FF0000>Version {Plugin.WebVersion} available for download!</color>";
+            update.text = $"<color=#FF0000>Version {versionUtility.BeatModsVersion} available for download!</color>";
 
             System.DateTime date = System.DateTime.Now;
             aprilfools.gameObject.SetActive(date.Month == 4 && date.Day == 1);
 
-            if (Plugin.UpToDate) update.gameObject.SetActive(false);
+            if (versionUtility.HasLatestVersion) update.gameObject.SetActive(false);
             linkOpened.gameObject.SetActive(false);
 
             github.onClick.AddListener(() => GoTo("https://github.com/Caeden117/CountersPlus", github));
@@ -43,11 +47,10 @@ namespace CountersPlus.UI.ViewControllers
 
         private void GoTo(string url, Button button)
         {
-            Plugin.Log("Opened a link to: " + url);
             button.interactable = false;
             linkOpened.gameObject.SetActive(true);
             StartCoroutine(SecondRemove(button));
-            System.Diagnostics.Process.Start(url);
+            Application.OpenURL(url);
         }
 
         private IEnumerator SecondRemove(Button button)
