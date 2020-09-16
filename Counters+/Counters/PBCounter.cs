@@ -1,105 +1,79 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
-using UnityEngine;
+﻿using CountersPlus.ConfigModels;
+using CountersPlus.Counters.Interfaces;
 using TMPro;
-using CountersPlus.Config;
+using UnityEngine;
+using Zenject;
+using static CountersPlus.Utils.Accessors;
 
 namespace CountersPlus.Counters
 {
-    public class PBCounter : Counter<PBConfigModel>
+    internal class PBCounter : Counter<PBConfigModel>, IScoreEventHandler
     {
-        private ScoreController _scoreController;
+        private readonly Vector3 SCORE_COUNTER_OFFSET = new Vector3(0, -0.7f, 0); 
 
-        private GameplayModifiersModelSO gameplayModsModel;
-        private GameplayModifiers gameplayMods;
+        [Inject] private GameplayCoreSceneSetupData data;
+        [Inject] private ScoreController scoreController;
+        [Inject] private PlayerDataModel playerDataModel;
+        [Inject] private ScoreConfigModel scoreConfig;
+
+        private GameplayModifiersModelSO modifiersModel;
+        private TMP_Text counter;
         private PlayerLevelStatsData stats;
 
-        private Color orange;
-        private TMP_Text _PbTrackerText;
-        private float beginningPB = 0;
 
-        private int _maxPossibleScore = 0;
+        private Color orange;
+        private Color white = Color.white; // Caching it beforehand, since calling the constant makes a new struct
+        private Color red = Color.red;
+
+        private int maxPossibleScore = 0;
         private int highScore;
 
-        internal override void Counter_Start()
+        public override void CounterInit()
         {
             ColorUtility.TryParseHtmlString("#FFA500", out orange);
-        }
 
-        internal override void Init(CountersData data, Vector3 position)
-        {
-            _scoreController = data.ScoreController;
-            PlayerDataModel player = data.PlayerData;
-            gameplayModsModel = data.ModifiersData;
-            gameplayMods = data.PlayerData.playerData.gameplayModifiers;
-            IDifficultyBeatmap beatmap = data.GCSSD.difficultyBeatmap;
-            stats = player.playerData.GetPlayerLevelStatsData(
-                beatmap.level.levelID, beatmap.difficulty, beatmap.parentDifficultyBeatmapSet.beatmapCharacteristic);
+            modifiersModel = SCGameplayModsModel(ref scoreController);
+            IDifficultyBeatmap beatmap = data.difficultyBeatmap;
             int maxRawScore = ScoreModel.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
-            _maxPossibleScore = Mathf.RoundToInt(maxRawScore * gameplayModsModel.GetTotalMultiplier(gameplayMods));
-            beginningPB = stats.highScore / (float)_maxPossibleScore;
+            maxPossibleScore = ScoreModel.GetModifiedScoreForGameplayModifiersScoreMultiplier(maxRawScore,
+                modifiersModel.GetTotalMultiplier(data.gameplayModifiers));
+            stats = playerDataModel.playerData.GetPlayerLevelStatsData(beatmap);
             highScore = stats.highScore;
 
-            TextHelper.CreateText(out _PbTrackerText, position);
-            _PbTrackerText.fontSize = settings.TextSize;
-            _PbTrackerText.color = Color.white;
-            _PbTrackerText.alignment = TextAlignmentOptions.Center;
-            
-            _scoreController.scoreDidChangeEvent += UpdateScore;
-            
-            SetPersonalBest(beginningPB);
-
-            if (settings.UnderScore) StartCoroutine(WaitForScoreCounter());
-        }
-
-        private IEnumerator WaitForScoreCounter()
-        {
-            ScoreCounter counter = CountersController.LoadedCounters.Where((GameObject x) => x?.GetComponent<ScoreCounter>() != null).FirstOrDefault()?.GetComponent<ScoreCounter>();
-            if (counter == null) yield break;
-            float offset = 0;
-            yield return new WaitUntil(() => counter.RankText != null);
-            if (!(CountersController.settings.scoreConfig.Mode == ICounterMode.BaseGame || CountersController.settings.scoreConfig.Mode == ICounterMode.BaseWithOutPoints))
+            if (scoreConfig.Enabled && Settings.UnderScore)
             {
-                if (CountersController.settings.scoreConfig.DisplayRank)
-                    offset = 0.35f;
-                else
-                    offset = 0.1f;
+                counter = CanvasUtility.CreateTextFromSettings(scoreConfig, SCORE_COUNTER_OFFSET);
             }
-
-            _PbTrackerText.rectTransform.SetParent(counter.RankText.rectTransform);
-            _PbTrackerText.rectTransform.localPosition = new Vector2(0, (TextHelper.PosScaleFactor / 2) + (settings.TextSize / 10) + offset) * -1;
-        }
-
-        internal override void Counter_Destroy()
-        {
-            _scoreController.scoreDidChangeEvent -= UpdateScore;
-        }
-        
-        public void SetPersonalBest(float pb)
-        {
-            //Force personal best percent to round down to decimal precision'
-            try
+            else
             {
-                pb = (float)Math.Round((decimal)pb * 100, settings.DecimalPrecision);
+                counter = CanvasUtility.CreateTextFromSettings(Settings);
             }
-            catch { pb = 0; } //yea something can go wrong here, like if you have all of the negative modifiers
-            if (settings.HideFirstScore && stats.highScore == 0) _PbTrackerText.text = "PB: --";
-            else _PbTrackerText.text = $"PB: {pb.ToString($"F{settings.DecimalPrecision}")}%";
+            counter.alignment = TextAlignmentOptions.Top;
+            counter.fontSize = Settings.TextSize;
+
+            SetPersonalBest((float)highScore / maxPossibleScore);
         }
 
-        public void UpdateScore(int score, int modifiedScore)
+        public void MaxScoreUpdated(int maxModifiedScore) { }
+
+        public void ScoreUpdated(int modifiedScore)
         {
-            if (_maxPossibleScore != 0)
+            if (maxPossibleScore != 0)
             {
-                float ratio = modifiedScore / (float)_maxPossibleScore;
+                float ratio = modifiedScore / (float)maxPossibleScore;
                 if (modifiedScore > highScore)
                 {
                     SetPersonalBest(ratio);
-                    if (!(settings.HideFirstScore && stats.highScore == 0)) _PbTrackerText.color = Color.red;
+                    if (!(Settings.HideFirstScore && stats.highScore == 0)) counter.color = red;
                 }
-                else _PbTrackerText.color = Color.Lerp(Color.white, orange, modifiedScore / (float)highScore);
+                else counter.color = Color.Lerp(white, orange, modifiedScore / (float)highScore);
             }
+        }
+
+        private void SetPersonalBest(float pb)
+        {
+            if (Settings.HideFirstScore && stats.highScore == 0) counter.text = "PB: --";
+            else counter.text = $"PB: {(pb * 100).ToString($"F{Settings.DecimalPrecision}")}%";
         }
     }
 }

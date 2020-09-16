@@ -1,8 +1,0 @@
-﻿<bg anchor-min-y='0.85'>
-  <vertical>
-    <tab-selector tab-tag='new-tab' anchor-pos-y='2'></tab-selector>
-    <tab id='main-settings' tags='new-tab' tab-name='Main'></tab>
-    <tab tags='new-tab' tab-name='HUD'></tab>
-    <tab tags='new-tab' tab-name='Counters'></tab>
-  </vertical>
-</bg>

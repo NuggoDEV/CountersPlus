@@ -1,0 +1,42 @@
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <vertical child-control-height='false'>
+    <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
+      <text text='Canvas Settings' align='Center' font-size='8'></text>
+    </horizontal>
+  </vertical>
+  <bg anchor-min-x='0' anchor-min-y='0.1'
+        anchor-max-x='1' anchor-max-y='0.85'
+        anchor-pos-x='0' anchor-pos-y='0'
+        size-delta-x='-5' size-delta-y='-5'
+        pivot-x='.5' pivot-y='1'>
+    <scrollable-container id='ScrollContent' mask-overflow='true' size-delta-x='0'>
+      <vertical bg='round-rect-panel' pad='5' vertical-fit='PreferredSize' spacing='1'>
+        <checkbox-setting text='Parent to Base Game HUD' apply-on-change='true' value='ParentedToBaseGameHUD' hover-hint='Have this Canvas move around with the Base Game HUD.' on-change='fire-update'></checkbox-setting>
+        <checkbox-setting text='Ignore No Text and HUD' apply-on-change='true' value='IgnoreNoTextAndHUDOption' hover-hint='Make this canvas ignore the players No Text and HUD option.' on-change='fire-update'></checkbox-setting>
+        <slider-setting text='Size' min='1' max='20' increment='1' apply-on-change='true' value='Size' hover-hint='Control the total size of this Canvas' on-change='fire-update'></slider-setting>
+        <slider-setting text='Position Scale' min='1' max='20' increment='1' apply-on-change='true' value='PositionScale' hover-hint='Control spacing between elements in this Canvas' on-change='fire-update'></slider-setting>
+        <text text='Position' font-size='6'></text>
+        <slider-setting text='X' min='-10' max='10' increment='0.5' apply-on-change='true' value='Pos_X' hover-hint='Control the position for this Canvas' on-change='fire-update'></slider-setting>
+        <slider-setting text='Y' min='-10' max='10' increment='0.5' apply-on-change='true' value='Pos_Y' hover-hint='Control the position for this Canvas' on-change='fire-update'></slider-setting>
+        <slider-setting text='Z' min='-10' max='10' increment='0.5' apply-on-change='true' value='Pos_Z' hover-hint='Control the position for this Canvas' on-change='fire-update'></slider-setting>
+        <text text='Rotation' font-size='6'></text>
+        <slider-setting text='X' min='0' max='360' increment='5' apply-on-change='true' value='Rot_X' hover-hint='Control the rotation for this Canvas' on-change='fire-update'></slider-setting>
+        <slider-setting text='Y' min='0' max='360' increment='5' apply-on-change='true' value='Rot_Y' hover-hint='Control the rotation for this Canvas' on-change='fire-update'></slider-setting>
+        <slider-setting text='Z' min='0' max='360' increment='5' apply-on-change='true' value='Rot_Z' hover-hint='Control the rotation for this Canvas' on-change='fire-update'></slider-setting>
+        <checkbox-setting text='Attach to a Camera' apply-on-change='true' value='AttachHUDToCamera' hover-hint='Attach this Canvas to a Camera.' on-change='fire-update'></checkbox-setting>
+        <checkbox-setting text='Ignore Shockwave Effect' apply-on-change='true' value='IgnoreShockwaveEffect' hover-hint='Have this Canvas ignore any shockwave effects when cutting notes.' on-change='fire-update'></checkbox-setting>
+      </vertical>
+    </scrollable-container>
+    <scroll-indicator tags='IndicatorFor:ScrollContent'
+                      anchor-pos-x='.5' anchor-pos-y='0'
+                      anchor-min-x='1' anchor-min-y='0'
+                      anchor-max-x='1' anchor-max-y='1'
+                      size-delta-x='1' size-delta-y='-2'
+                      pivot-x='0' pivot-y='.5' />
+  </bg>
+  <bottom-button-panel>
+    <button text='Scroll Up' tags='PageUpFor:ScrollContent'></button>
+    <button text='Apply' on-click='fire-apply'></button>
+    <button text='Scroll Down' tags='PageDownFor:ScrollContent'></button>
+  </bottom-button-panel>
+</bg>

@@ -1,8 +1,11 @@
-﻿<vertical spacing='1' horizontal-fit='PreferredSize'>
-  <checkbox-setting id='aprilfools' text='April Fools Tomfoolery' on-change='update_model' apply-on-change='true' value='april-fools' hover-hint='Who puts April Fools jokes in a Counters mod?'></checkbox-setting>
-  <checkbox-setting text='Enabled' on-change='update_model' apply-on-change='true' value='enabled' hover-hint='Toggles Counters+ on or off.'></checkbox-setting>
-  <list-setting text='Combo Offset' on-change='update_model' apply-on-change='true' value='combo_offset' options='offset_values' hover-hint='Positions counters further or closer to the Combo counter before Distance is taken into account.'></list-setting>
-  <list-setting text='Multiplier Offset' on-change='update_model' apply-on-change='true' value='mult_offset' options='offset_values' hover-hint='Positions counters further or closer to the Multiplier counter before Distance is taken into account.'></list-setting>
-  <checkbox-setting text='Hide Combo In-Game' on-change='update_model' apply-on-change='true' value='hide_combo' hover-hint='Hide the combo counter from play.'></checkbox-setting>
-  <checkbox-setting text='Hide Multiplier In-Game' on-change='update_model' apply-on-change='true' value='hide_mult' hover-hint='Hide the multiplier from play.'></checkbox-setting>
-</vertical>
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <horizontal>
+    <vertical spacing='1' horizontal-fit='PreferredSize' bg='round-rect-panel' pad='5'>
+      <checkbox-setting text='Enabled' apply-on-change='true' value='Enabled' hover-hint='Toggles Counters+.'></checkbox-setting>
+      <checkbox-setting text='Hide Combo' apply-on-change='true' value='HideCombo' hover-hint='Hides the Combo counter.'></checkbox-setting>
+      <checkbox-setting text='Hide Multiplier' apply-on-change='true' value='HideMultiplier' hover-hint='Hides the Multiplier.'></checkbox-setting>
+      <list-setting text='Combo Offset' apply-on-change='true' options='Offsets' value='ComboOffset' hover-hint='Applies additional offset to counters situated above or below the Combo.'></list-setting>
+      <list-setting text='Multiplier Offset' apply-on-change='true' options='Offsets' value='MultiplierOffset' hover-hint='Applies additional offset to counters situated above or below the Multiplier.'></list-setting>
+    </vertical>
+  </horizontal>
+</bg>

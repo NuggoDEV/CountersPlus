@@ -1,70 +1,58 @@
-﻿using System.Linq;
-using CountersPlus.Config;
-using UnityEngine;
-using TMPro;
+﻿using CountersPlus.ConfigModels;
+using System;
 using System.Collections;
+using System.Linq;
+using TMPro;
+using UnityEngine;
+using Zenject;
 
 namespace CountersPlus.Counters
 {
-    class FailCounter : Counter<FailConfigModel>
+    internal class FailCounter : Counter<FailConfigModel>
     {
-        private static int Restarts = 0;
-        private static IBeatmapLevel CurrentLevel = null;
-        private static IDifficultyBeatmap BeatmapDiff = null;
-        private TMP_Text failText;
-        private GameEnergyCounter energy;
-        private int fails = 0;
+        private static long difficulty = 0;
+        private static int restarts = 0;
 
-        internal override void Counter_Start() { }
+        [Inject] private GameEnergyCounter energyCounter;
+        [Inject] private PlayerDataModel playerData;
+        [Inject] private IDifficultyBeatmap beatmap;
+        private int count = 0;
+        private TMP_Text counter;
 
-        internal override void Init(CountersData data, Vector3 position)
+        public override void CounterInit()
         {
-            //Because CountersController.ReadyToInit relies on finding other objects via Resources.FindObjectsOfTypeAll<>()
-            //before invoking, it is safe to assume that the objects we find do indeed exist.
-            energy = Resources.FindObjectsOfTypeAll<GameEnergyCounter>().First();
-            fails = data.PlayerData.playerData.playerAllOverallStatsData.allOverallStatsData.failedLevelsCount;
-
-            if (settings.ShowRestartsInstead)
+            long currentHash = LongExponent(beatmap.level.levelID.ToCharArray().Sum(x => (long)x), beatmap.difficultyRank);
+            if (Settings.ShowRestartsInstead)
             {
-                bool SameLevel = false;
-                if (CurrentLevel != null) {
-                    SameLevel = data.GCSSD.difficultyBeatmap.level.songName == CurrentLevel.songName && //I mean,
-                        data.GCSSD.difficultyBeatmap.level.songSubName == CurrentLevel.songSubName && //Probably not the best way to compare levels,
-                        data.GCSSD.difficultyBeatmap.level.songAuthorName == CurrentLevel.songAuthorName && //But that means I have more lines to spend
-                        data.GCSSD.difficultyBeatmap.beatmapData.notesCount == BeatmapDiff.beatmapData.notesCount && //Making snarky comments like these
-                        data.GCSSD.difficultyBeatmap.beatmapData.obstaclesCount == BeatmapDiff.beatmapData.obstaclesCount && //For you to find
-                        data.GCSSD.difficultyBeatmap.beatmapData.bombsCount == BeatmapDiff.beatmapData.bombsCount; //And to @ me on Discord.
+                if (difficulty == currentHash)
+                {
+                    restarts++;
+                    count = restarts;
                 }
-                if (SameLevel) Restarts++;
                 else
                 {
-                    CurrentLevel = data.GCSSD.difficultyBeatmap.level;
-                    BeatmapDiff = data.GCSSD.difficultyBeatmap;
-                    Restarts = 0;
+                    restarts = count = 0;
+                    difficulty = currentHash;
                 }
             }
+            else
+            {
+                count = playerData.playerData.playerAllOverallStatsData.allOverallStatsData.failedLevelsCount;
+                energyCounter.gameEnergyDidReach0Event += SlowlyAnnoyThePlayerBecauseTheyFailed;
+            }
+            GenerateBasicText($"{(Settings.ShowRestartsInstead ? "Restarts" : "Fails")}", out counter);
+            counter.text = count.ToString();
+        }
 
-            TextHelper.CreateText(out failText, position - new Vector3(0, 0.4f, 0));
-            failText.text = settings.ShowRestartsInstead ? Restarts.ToString() : fails.ToString();
-            failText.fontSize = 4;
-            failText.color = Color.white;
-            failText.alignment = TextAlignmentOptions.Center;
-
-            GameObject labelGO = new GameObject("Counters+ | Fail Label");
-            labelGO.transform.parent = transform;
-            TextHelper.CreateText(out TMP_Text label, position);
-            label.text = settings.ShowRestartsInstead ? "Restarts" : "Fails";
-            label.fontSize = 3;
-            label.color = Color.white;
-            label.alignment = TextAlignmentOptions.Center;
-
-            if (!settings.ShowRestartsInstead) energy.gameEnergyDidReach0Event += SlowlyAnnoyThePlayerBecauseTheyFailed;
+        public override void CounterDestroy()
+        {
+            energyCounter.gameEnergyDidReach0Event -= SlowlyAnnoyThePlayerBecauseTheyFailed;
         }
 
         private void SlowlyAnnoyThePlayerBecauseTheyFailed()
         {
-            failText.text = (fails + 1).ToString();
-            StartCoroutine(ChangeTextColorToAnnoyThePlayerEvenMore());
+            counter.text = (count + 1).ToString();
+            SharedCoroutineStarter.instance.StartCoroutine(ChangeTextColorToAnnoyThePlayerEvenMore());
         }
 
         private IEnumerator ChangeTextColorToAnnoyThePlayerEvenMore()
@@ -74,14 +62,39 @@ namespace CountersPlus.Counters
             {
                 yield return new WaitForEndOfFrame();
                 t += Time.deltaTime;
-                failText.color = Color.Lerp(Color.white, Color.red, t);
+                counter.color = Color.Lerp(Color.white, Color.red, t);
             }
-            failText.color = Color.red;
+            counter.color = Color.red;
         }
 
-        internal override void Counter_Destroy()
+        private long LongExponent(long x, int pow)
         {
-            if (!settings.ShowRestartsInstead) energy.gameEnergyDidReach0Event -= SlowlyAnnoyThePlayerBecauseTheyFailed;
+            string binary = Convert.ToString(pow, 2);
+
+            int[] arr = new int[binary.Length];
+            int i = 0;
+            foreach (var ch in binary)
+            {
+                arr[i++] = Convert.ToInt32(ch.ToString());
+            }
+
+            // We use a nifty trick to calculate exponent in as little as 2 long2(n) multiplications.
+            long res = x;
+            for (int j = 1; j < arr.Length; j++)
+            {
+                switch (arr[j])
+                {
+                    case 0:
+                        res *= res;
+                        break;
+                    case 1:
+                        res *= res;
+                        res *= x;
+                        break;
+                }
+            }
+
+            return res;
         }
     }
 }

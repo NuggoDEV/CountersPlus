@@ -1,64 +1,61 @@
-﻿using TMPro;
-using UnityEngine;
-using CountersPlus.Config;
+﻿using CountersPlus.ConfigModels;
+using CountersPlus.Counters.Interfaces;
+using CountersPlus.Counters.NoteCountProcessors;
+using System.Linq;
+using TMPro;
+using Zenject;
 
 namespace CountersPlus.Counters
 {
-    class NotesLeftCounter : Counter<NotesLeftConfigModel>
+    internal class NotesLeftCounter : Counter<NotesLeftConfigModel>, INoteEventHandler
     {
+        [Inject] private GameplayCoreSceneSetupData setupData;
+        [Inject] private NoteCountProcessor noteCountProcessor;
+
         private int notesLeft = 0;
         private TMP_Text counter;
-        private BeatmapObjectManager beatmapObjectManager;
 
-        internal override void Counter_Start() { }
-
-        internal override void Init(CountersData data, Vector3 position)
+        public override void CounterInit()
         {
-            beatmapObjectManager = data.BOM;
-            beatmapObjectManager.noteWasCutEvent += OnNoteCut;
-            beatmapObjectManager.noteWasMissedEvent += OnNoteMiss;
-            notesLeft = data.GCSSD.difficultyBeatmap.beatmapData.notesCount;
-            TextHelper.CreateText(out counter, position - new Vector3(0, 0.4f, 0));
-            counter.text = $"Notes Remaining {notesLeft}";
-            counter.fontSize = 3f;
-            counter.color = Color.white;
-            counter.alignment = TextAlignmentOptions.Center;
-
-            if (settings.LabelAboveCount)
+            if (setupData.practiceSettings != null && setupData.practiceSettings.startInAdvanceAndClearNotes)
             {
-                counter.fontSize = 4;
+                float startTime = setupData.practiceSettings.startSongTime;
+                // This LINQ statement is to ensure compatibility with Practice Mode / Practice Plugin
+                notesLeft = noteCountProcessor.Data.Count(x => x.time > startTime);
+            }
+            else
+            {
+                notesLeft = noteCountProcessor.NoteCount;
+            }
+
+            if (Settings.LabelAboveCount)
+            {
+                GenerateBasicText("Notes Remaining", out counter);
                 counter.text = notesLeft.ToString();
-                GameObject labelGO = new GameObject("Counters+ | Notes Left Label");
-                labelGO.transform.parent = transform;
-                TextHelper.CreateText(out TMP_Text label, position);
-                label.text = "Notes Remaining";
-                label.fontSize = 3;
-                label.color = Color.white;
-                label.alignment = TextAlignmentOptions.Center;
+            }
+            else
+            {
+                counter = CanvasUtility.CreateTextFromSettings(Settings);
+                counter.text = $"Notes Remaining: {notesLeft}";
+                counter.fontSize = 2;
             }
         }
 
-        private void OnNoteCut(INoteController data, NoteCutInfo info)
+        public void OnNoteCut(NoteData data, NoteCutInfo info)
         {
-            if (data.noteData.noteType != NoteType.Bomb) DecrementCounter();
+            if (data.noteType != NoteType.Bomb && !noteCountProcessor.ShouldIgnoreNote(data)) DecrementCounter();
         }
 
-        private void OnNoteMiss(INoteController data)
+        public void OnNoteMiss(NoteData data)
         {
-            if (data.noteData.noteType != NoteType.Bomb) DecrementCounter();
+            if (data.noteType != NoteType.Bomb && !noteCountProcessor.ShouldIgnoreNote(data)) DecrementCounter();
         }
 
         private void DecrementCounter()
         {
             --notesLeft;
-            if (settings.LabelAboveCount) counter.text = notesLeft.ToString();
-            else counter.text = $"Notes Remaining {notesLeft}";
-        }
-
-        internal override void Counter_Destroy()
-        {
-            beatmapObjectManager.noteWasCutEvent -= OnNoteCut;
-            beatmapObjectManager.noteWasMissedEvent -= OnNoteMiss;
+            if (Settings.LabelAboveCount) counter.text = notesLeft.ToString();
+            else counter.text = $"Notes Remaining: {notesLeft}";
         }
     }
 }

@@ -1,0 +1,6 @@
+﻿<vertical spacing='1'  horizontal-fit='PreferredSize'>
+  <list-setting text='Percentage Precision' apply-on-change='true' value='DecimalPrecision' options='DecimalPrecisions' hover-hint='How precise should the precentage be?'></list-setting>
+  <list-setting text='Text Size' apply-on-change='true' value='TextSize' options='TextSizes' hover-hint='How large should the text be?'></list-setting>
+  <checkbox-setting text='Below Score Counter' apply-on-change='true' value='UnderScore' hover-hint='Will the Personal Best counter instead be positioned below the Score Counter?'></checkbox-setting>
+  <checkbox-setting text='Hide First Score' apply-on-change='true' value='HideFirstScore' hover-hint='Hides Personal Best if you play a map that doesnt yet have a personal best set.'></checkbox-setting>
+</vertical>

@@ -1,103 +1,95 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using CountersPlus.ConfigModels;
 using TMPro;
-using CountersPlus.Config;
+using UnityEngine;
+using Zenject;
+using static CountersPlus.Utils.Accessors;
 
 namespace CountersPlus.Counters
 {
-    public class ScoreCounter : Counter<ScoreConfigModel>
+    // REVIEW: Perhaps look into harmony patches to take control of the base game score counter more... sanely?
+    internal class ScoreCounter : Counter<ScoreConfigModel>
     {
-        internal TMP_Text ScoreMesh;
-        internal TMP_Text RankText;
-        internal TMP_Text PointsText;
-        private CountersData localData; //Used for transferring data
-        private Vector3 localPosition; //Used for transferring data
+        private readonly Vector3 offset = new Vector3(0, -2, 0);
 
-        GameObject _RankObject;
+        [Inject] private CoreGameHUDController coreGameHUD;
+        [Inject] private RelativeScoreAndImmediateRankCounter relativeScoreAndImmediateRank;
+        [Inject] private PBConfigModel personalBest;
 
-        internal override void Counter_Start() { }
+        private RankModel.Rank prevImmediateRank = RankModel.Rank.SSS;
+        private TextMeshProUGUI rankText;
+        private TextMeshProUGUI relativeScoreText;
 
-        internal override void Counter_Destroy() { }
-
-        internal override void Init(CountersData data, Vector3 position)
+        public override void CounterInit()
         {
-            localData = data;
-            localPosition = position;
-            if (gameObject.name != "ScoreCanvas")
+            ScoreUIController scoreUIController = coreGameHUD.GetComponentInChildren<ScoreUIController>();
+            TextMeshProUGUI old = ScoreUIText(ref scoreUIController);
+            GameObject baseGameScore = RelativeScoreGO(ref coreGameHUD);
+            relativeScoreText = baseGameScore.GetComponent<TextMeshProUGUI>();
+            relativeScoreText.color = Color.white;
+            GameObject baseGameRank = ImmediateRankGO(ref coreGameHUD);
+            rankText = baseGameRank.GetComponent<TextMeshProUGUI>();
+            rankText.color = Color.white;
+
+            Canvas currentCanvas = CanvasUtility.GetCanvasFromID(Settings.CanvasID);
+
+            old.rectTransform.SetParent(currentCanvas.transform, true);
+            baseGameScore.transform.SetParent(old.transform, true);
+            baseGameRank.transform.SetParent(old.transform, true);
+
+            switch (Settings.Mode)
             {
-                StartCoroutine(YeetToBaseCounter());
-                return;
+                case ScoreMode.RankOnly:
+                    Object.Destroy(baseGameScore.gameObject);
+                    break;
+                case ScoreMode.ScoreOnly:
+                    Object.Destroy(baseGameRank.gameObject);
+                    break;
             }
-            if (!(settings.Mode == ICounterMode.BaseGame || settings.Mode == ICounterMode.BaseWithOutPoints))
-            {
-                for (var i = 0; i < transform.childCount; i++)
-                {
-                    Transform child = transform.GetChild(i);
-                    if (child.gameObject.name != "ScoreText")
-                    {
-                        if (child.GetComponent<TextMeshProUGUI>() != null) Destroy(child.GetComponent<TextMeshProUGUI>());
-                        Destroy(child.gameObject);
-                    }
-                    else PointsText = child.GetComponent<TMP_Text>();
-                }
-                if (settings.Mode == ICounterMode.ScoreOnly) Destroy(GameObject.Find("ScoreText"));
-                CreateText(position);
-            }
-            else
-            {
-                transform.SetParent(TextHelper.CounterCanvas.transform, true);
-                transform.localPosition = position;
-            }
+
+            RectTransform pointsTextTransform = old.rectTransform;
+
+            HUDCanvas currentSettings = CanvasUtility.GetCanvasSettingsFromID(Settings.CanvasID);
+            float positionScale = currentSettings?.PositionScale ?? 10;
+
+            Vector2 anchoredPos = (CanvasUtility.GetAnchoredPositionFromConfig(Settings, currentSettings.IsMainCanvas) + offset) * positionScale;
+
+            Plugin.Logger.Warn(anchoredPos.ToString());
+
+            pointsTextTransform.anchoredPosition = anchoredPos;
+            // I dont know why Personal Best has even the SLIGHTEST of influence on the position of Score Counter... but it does?
+            if (!personalBest.Enabled) pointsTextTransform.anchoredPosition -= new Vector2(0, 25);
+            pointsTextTransform.localPosition = new Vector3(pointsTextTransform.localPosition.x, pointsTextTransform.localPosition.y, 0);
+            pointsTextTransform.localEulerAngles = Vector3.zero;
+
+            Object.Destroy(coreGameHUD.GetComponentInChildren<ImmediateRankUIPanel>());
+
+            relativeScoreAndImmediateRank.relativeScoreOrImmediateRankDidChangeEvent += UpdateText;
+
+            UpdateText();
         }
 
-        IEnumerator YeetToBaseCounter()
+        private void UpdateText()
         {
-            GameObject baseCounter;
-            yield return new WaitUntil(() => GameObject.Find("ScoreCanvas") != null);
-            baseCounter = GameObject.Find("ScoreCanvas");
-            CountersController.LoadedCounters.Remove(gameObject);
-            ScoreCounter newCounter = baseCounter.AddComponent<ScoreCounter>();
-            newCounter.settings = settings;
-            newCounter.Init(localData, localPosition);
-            Destroy(gameObject);
-            CountersController.LoadedCounters.Add(baseCounter);
+            RankModel.Rank immediateRank = relativeScoreAndImmediateRank.immediateRank;
+            if (immediateRank != prevImmediateRank)
+            {
+                rankText.text = RankModel.GetRankName(immediateRank);
+                prevImmediateRank = immediateRank;
+
+                Color RankColor = Color.white;
+                if (Settings.CustomRankColors)
+                {
+                    RankColor = Settings.GetRankColorFromRank(immediateRank);
+                }
+                rankText.color = RankColor;
+            }
+            float relativeScore = relativeScoreAndImmediateRank.relativeScore * 100;
+            relativeScoreText.text = $"{relativeScore.ToString($"F{Settings.DecimalPrecision}")}%";
         }
 
-        private void CreateText(Vector3 position)
+        public override void CounterDestroy()
         {
-            transform.localScale = Vector3.one;
-            PointsText.fontSize = 0.325f;
-            TextHelper.CreateText(out ScoreMesh, position);
-            ScoreMesh.text = "100.0%";
-            ScoreMesh.fontSize = 3;
-            ScoreMesh.color = Color.white;
-            ScoreMesh.alignment = TextAlignmentOptions.Center;
-            PointsText.rectTransform.SetParent(ScoreMesh.rectTransform, false);
-            PointsText.rectTransform.localScale = PointsText.rectTransform.localScale * TextHelper.SizeScaleFactor;
-            PointsText.rectTransform.localPosition = new Vector3(0, 77.7f, 0);
-            if (settings.DisplayRank)
-            {
-                _RankObject = new GameObject("Counters+ | Score Rank");
-                _RankObject.transform.SetParent(transform, false);
-                TextHelper.CreateText(out RankText, position);
-                RankText.text = "\nSS";
-                RankText.fontSize = 4;
-                if (!settings.CustomRankColors)
-                    RankText.color = Color.white; //if custom rank colors is disabled, just set color to white
-                if (settings.CustomRankColors)
-                {
-                    ColorUtility.TryParseHtmlString(settings.SSColor, out Color defaultColor);
-                    RankText.color = defaultColor;
-                }
-                RankText.alignment = TextAlignmentOptions.Center;
-            }
-            if (settings.Mode == ICounterMode.LeavePoints || settings.Mode == ICounterMode.BaseWithOutPoints)
-            {
-                PointsText.rectTransform.position = new Vector3(-3.2f,
-                    0.35f + (settings.Mode == ICounterMode.LeavePoints ? 7.8f : 0), 7);
-            }
-            //BS way of getting Harmony patch to function but "if it works its not stupid" ~Caeden117
-            GetComponent<ImmediateRankUIPanel>().Start();
+            relativeScoreAndImmediateRank.relativeScoreOrImmediateRankDidChangeEvent -= UpdateText;
         }
     }
 }

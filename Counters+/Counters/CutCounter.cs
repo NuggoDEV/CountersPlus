@@ -1,18 +1,14 @@
-﻿using System;
-using UnityEngine;
-using TMPro;
-using CountersPlus.Config;
+﻿using CountersPlus.ConfigModels;
+using CountersPlus.Counters.Interfaces;
 using System.Collections.Generic;
 using System.Globalization;
-using CountersPlus.UI.ViewControllers.ConfigModelControllers;
+using TMPro;
+using UnityEngine;
 
 namespace CountersPlus.Counters
 {
-    public class CutCounter : Counter<CutConfigModel>
+    internal class CutCounter : Counter<CutConfigModel>, INoteEventHandler
     {
-        private TMP_Text cutLabel;
-        private BeatmapObjectManager beatmapObjectManager;
-        private GameObject _RankObject;
         private TMP_Text cutCounterLeft;
         private TMP_Text cutCounterRight;
         private int totalCutCountLeft = 0;
@@ -20,71 +16,50 @@ namespace CountersPlus.Counters
         private int[] totalScoresLeft = new int[] { 0, 0, 0 }; // [0]=beforeCut, [1]=afterCut, [2]=cutDistance
         private int[] totalScoresRight = new int[] { 0, 0, 0 };
 
+        // For handling cut calculations
         private Dictionary<SaberSwingRatingCounter, NoteCutInfo> noteCutInfos = new Dictionary<SaberSwingRatingCounter, NoteCutInfo>();
 
-        internal override void Counter_Start() { }
-
-        internal override void Init(CountersData data, Vector3 position)
+        public override void CounterInit()
         {
-            string iniValue = FormatLabel(0, 0, settings.AveragePrecision);
-            Vector3 leftOffset; // Added this so you don't have to change position after creating the text
-            TextAlignmentOptions leftAlign;
+            string defaultValue = FormatLabel(0, 0, Settings.AveragePrecision);
 
-            _RankObject = new GameObject("Counters+ | Cut Label");
-            _RankObject.transform.parent = transform;
-            beatmapObjectManager = data.BOM;
-            TextHelper.CreateText(out cutLabel, position);
-            cutLabel.text = "Average Cut";
-            cutLabel.fontSize = 3;
-            cutLabel.color = Color.white;
-            cutLabel.alignment = TextAlignmentOptions.Center;
+            var label = CanvasUtility.CreateTextFromSettings(Settings);
+            label.text = "Average Cut";
+            label.fontSize = 3;
 
-            if (settings.SeparateSaberCounts)
+            Vector3 leftOffset = Vector3.up * -0.2f;
+            TextAlignmentOptions leftAlign = TextAlignmentOptions.Top;
+            if (Settings.SeparateSaberCounts)
             {
-                TextHelper.CreateText(out cutCounterRight, position - new Vector3(-0.2f, 0.2f, 0));
-                cutCounterRight.fontSize = 4;
-                cutCounterRight.color = Color.white;
+                cutCounterRight = CanvasUtility.CreateTextFromSettings(Settings, new Vector3(0.2f, -0.2f, 0));
                 cutCounterRight.lineSpacing = -26;
-                cutCounterRight.text = settings.SeparateCutValues ? $"{iniValue}\n{iniValue}\n{iniValue}" : $"{iniValue}";
+                cutCounterRight.text = Settings.SeparateCutValues ? $"{defaultValue}\n{defaultValue}\n{defaultValue}" : $"{defaultValue}";
                 cutCounterRight.alignment = TextAlignmentOptions.TopLeft;
 
-                leftOffset = new Vector3(0.2f, 0.2f, 0);
+                leftOffset = new Vector3(-0.2f, -0.2f, 0);
                 leftAlign = TextAlignmentOptions.TopRight;
             }
-            else
-            {
-                leftOffset = new Vector3(0, 0.2f, 0);
-                leftAlign = TextAlignmentOptions.Top;
-            }
 
-            TextHelper.CreateText(out cutCounterLeft, position - leftOffset);
-            cutCounterLeft.fontSize = 4;
-            cutCounterLeft.color = Color.white;
+            cutCounterLeft = CanvasUtility.CreateTextFromSettings(Settings, leftOffset);
             cutCounterLeft.lineSpacing = -26;
-            cutCounterLeft.text = settings.SeparateCutValues ? $"{iniValue}\n{iniValue}\n{iniValue}" : $"{iniValue}";
+            cutCounterLeft.text = Settings.SeparateCutValues ? $"{defaultValue}\n{defaultValue}\n{defaultValue}" : $"{defaultValue}";
             cutCounterLeft.alignment = leftAlign;
-
-            if (beatmapObjectManager != null)
-                beatmapObjectManager.noteWasCutEvent += UpdateScore;
         }
 
-        internal override void Counter_Destroy()
+        public void OnNoteCut(NoteData data, NoteCutInfo info)
         {
-            beatmapObjectManager.noteWasCutEvent -= UpdateScore;
-        }
-
-        private void UpdateScore(INoteController data, NoteCutInfo info)
-        {
-            if (data.noteData.noteType == NoteType.Bomb || !info.allIsOK) return;
+            if (data.noteType == NoteType.Bomb || !info.allIsOK) return;
             noteCutInfos.Add(info.swingRatingCounter, info);
             info.swingRatingCounter.didFinishEvent -= SaberSwingRatingCounter_didFinishEvent;
             info.swingRatingCounter.didFinishEvent += SaberSwingRatingCounter_didFinishEvent;
         }
 
+        public void OnNoteMiss(NoteData data) { }
+
         private void SaberSwingRatingCounter_didFinishEvent(SaberSwingRatingCounter v)
         {
             ScoreModel.RawScoreWithoutMultiplier(noteCutInfos[v], out int beforeCut, out int afterCut, out int cutDistance);
-            //"cutDistanceRawScore" is already calculated into "beforeCutRawScore"
+
             if (noteCutInfos[v].saberType == SaberType.SaberA)
             {
                 totalScoresLeft[0] += beforeCut;
@@ -107,9 +82,9 @@ namespace CountersPlus.Counters
 
         private void UpdateLabels()
         {
-            int shownDecimals = settings.AveragePrecision;
+            int shownDecimals = Settings.AveragePrecision;
 
-            if (settings.SeparateCutValues && settings.SeparateSaberCounts)
+            if (Settings.SeparateCutValues && Settings.SeparateSaberCounts) // Before/After/Distance, for both sabers
             {
                 string[] leftAverages = new string[3]
                 {
@@ -126,7 +101,7 @@ namespace CountersPlus.Counters
                 cutCounterLeft.text = $"{leftAverages[0]}\n{leftAverages[1]}\n{leftAverages[2]}";
                 cutCounterRight.text = $"{rightAverages[0]}\n{rightAverages[1]}\n{rightAverages[2]}";
             }
-            else if (settings.SeparateCutValues)
+            else if (Settings.SeparateCutValues) // Before/After/Distance, for combined sabers
             {
                 int totalCutCount = totalCutCountLeft + totalCutCountRight;
                 string[] cutValueAverages = new string[3]
@@ -137,7 +112,7 @@ namespace CountersPlus.Counters
                 };
                 cutCounterLeft.text = $"{cutValueAverages[0]}\n{cutValueAverages[1]}\n{cutValueAverages[2]}";
             }
-            else if (settings.SeparateSaberCounts)
+            else if (Settings.SeparateSaberCounts) // Combined cut, for separate sabers
             {
                 string[] saberAverages = new string[2]
                 {
@@ -147,7 +122,7 @@ namespace CountersPlus.Counters
                 cutCounterLeft.text = $"{saberAverages[0]}";
                 cutCounterRight.text = $"{saberAverages[1]}";
             }
-            else
+            else // Combined cut, for combined sabers
             {
                 string averages = FormatLabel(totalScoresLeft[0] + totalScoresLeft[1] + totalScoresLeft[2] + totalScoresRight[0] + totalScoresRight[1] + totalScoresRight[2], totalCutCountLeft + totalCutCountRight, shownDecimals);
                 cutCounterLeft.text = $"{averages}";
@@ -156,8 +131,8 @@ namespace CountersPlus.Counters
 
         private double SafeDivideScore(int total, int count)
         {
-            double result = (double)(total) / (count);
-            return Double.IsNaN(result) ? 0 : result;
+            double result = (double)total / count;
+            return double.IsNaN(result) ? 0 : result;
         }
 
         private string FormatLabel(int totalScore, int totalCuts, int decimals)
