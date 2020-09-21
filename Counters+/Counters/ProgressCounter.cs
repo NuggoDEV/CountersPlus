@@ -88,7 +88,7 @@ namespace CountersPlus.Counters
 
         private Image CreateRing(Canvas canvas)
         {
-            // Unfortunately, there is no garauntee that I have the CoreGameHUDController, since No Text and Huds
+            // Unfortunately, there is no guarantee that I have the CoreGameHUDController, since No Text and Huds
             // completely disables it from spawning. So, to be safe, we recreate this all from scratch.
             Image newImage = new GameObject("Ring Image", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
             newImage.sprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(x => x.name == multiplierImageSpriteName);
