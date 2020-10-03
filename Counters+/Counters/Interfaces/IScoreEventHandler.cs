@@ -1,7 +1,7 @@
 ﻿namespace CountersPlus.Counters.Interfaces
 {
     /// <summary>
-    /// An interface that exposes certain scoring-related events. Used with conjuction with a <see cref="ICounter"/>.
+    /// An interface that exposes certain scoring-related events. Used in conjunction with an <see cref="ICounter"/>.
     /// </summary>
     public interface IScoreEventHandler : IEventHandler
     {
