@@ -25,7 +25,7 @@ namespace CountersPlus.Utils
 
         private void Update()
         {
-            if (parent is null) return;
+            if (parent == null) return;
             transform.SetPositionAndRotation(parent.position, parent.rotation);
             Vector3 side = parent.right * posOffset.x;
             Vector3 forward = parent.forward * posOffset.z;
