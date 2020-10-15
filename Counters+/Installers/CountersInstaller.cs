@@ -5,14 +5,12 @@ using CountersPlus.Counters.Interfaces;
 using CountersPlus.Counters.NoteCountProcessors;
 using CountersPlus.Utils;
 using IPA.Loader;
-using SiraUtil.Zenject;
 using System;
 using UnityEngine;
 using Zenject;
 
 namespace CountersPlus.Installers
 {
-    [RequiresInstaller(typeof(CoreInstaller))]
     class CountersInstaller : MonoInstaller
     {
         private HUDConfigModel hudConfig;
@@ -30,14 +28,7 @@ namespace CountersPlus.Installers
             /// LOADING IMPORTANT SHIT LIKE CANVASES AND STUFF ///
             Container.Bind<CanvasUtility>().AsSingle().NonLazy();
 
-            if (PluginManager.GetPlugin("CustomJSONData") != null)
-            {
-                Container.Bind<NoteCountProcessor>().To<CustomJSONDataNoteCountProcessor>().AsSingle().NonLazy();
-            }
-            else
-            {
-                Container.Bind<NoteCountProcessor>().To<GenericNoteCountProcessor>().AsSingle().NonLazy();
-            }
+            Container.Bind<NoteCountProcessor>().To<GenericNoteCountProcessor>().AsSingle().NonLazy();
 
             /// LOADING COUNTERS ///
             Plugin.Logger.Notice("Loading counters...");
@@ -98,7 +89,7 @@ namespace CountersPlus.Installers
 
             if (typeof(R).BaseType == typeof(MonoBehaviour))
             {
-                Container.BindInterfacesAndSelfTo<R>().FromComponentOnRoot().NonLazy();
+                Container.BindInterfacesAndSelfTo<R>().FromNewComponentOnRoot().AsSingle().NonLazy();
             }
             else
             {
@@ -118,7 +109,7 @@ namespace CountersPlus.Installers
 
             if (counterType.BaseType == typeof(MonoBehaviour))
             {
-                Container.BindInterfacesAndSelfTo(counterType).FromNewComponentOnRoot().NonLazy();
+                Container.BindInterfacesAndSelfTo(counterType).FromNewComponentOnRoot().AsSingle().NonLazy();
             }
             else
             {

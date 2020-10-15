@@ -24,9 +24,9 @@ namespace CountersPlus.UI.ViewControllers
         [UIComponent("donate")] private Button donate = null;
         [UIComponent("issues")] private Button issues = null;
 
-        protected override void DidActivate(bool firstActivation, ActivationType activationType)
+        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
-            base.DidActivate(firstActivation, activationType);
+            base.DidActivate(firstActivation, firstActivation, screenSystemEnabling);
             if (!firstActivation) return;
 
             version.transform.parent.localPosition = new Vector3(0, 2.5f, 0);

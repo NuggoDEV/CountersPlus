@@ -1,4 +1,5 @@
-﻿using BeatSaberMarkupLanguage.Attributes;
+﻿using BeatSaberMarkupLanguage;
+using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.ViewControllers;
@@ -33,14 +34,14 @@ namespace CountersPlus.UI.ViewControllers
         [Inject] private LazyInject<CountersPlusSettingsFlowCoordinator> flowCoordinator;
         [Inject] private LazyInject<CountersPlusHUDEditViewController> hudEdit;
 
-        protected override void DidActivate(bool firstActivation, ActivationType type)
+        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
-            base.DidActivate(firstActivation, type);
+            base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
             RefreshData();
             IsDeleting = false;
         }
 
-        protected override void DidDeactivate(DeactivationType deactivationType)
+        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemEnabling)
         {
             DeactivateModals();
         }
@@ -54,7 +55,7 @@ namespace CountersPlus.UI.ViewControllers
                 int countersUsingCanvas = flowCoordinator.Value.AllConfigModels.Count(x => x.CanvasID == i);
                 var info = new CustomListTableData.CustomCellInfo(
                     settings?.Name ?? "Unknown",
-                    $"<i>{countersUsingCanvas} counter(s) use this Canvas.</i>", Texture2D.blackTexture);
+                    $"<i>{countersUsingCanvas} counter(s) use this Canvas.</i>", Utilities.LoadSpriteFromTexture(Texture2D.blackTexture));
                 data.data.Add(info);
             }
             data.tableView.ReloadData();
@@ -90,7 +91,6 @@ namespace CountersPlus.UI.ViewControllers
             }
             else
             {
-                flowCoordinator.Value.SetMainScreenOffset(flowCoordinator.Value.MAIN_SCREEN_OFFSET);
                 flowCoordinator.Value.SetRightViewController(hudEdit.Value);
                 hudEdit.Value.ApplyCanvasForEditing(SelectedCanvas);
             }

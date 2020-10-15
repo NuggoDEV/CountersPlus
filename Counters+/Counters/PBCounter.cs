@@ -1,5 +1,7 @@
 ﻿using CountersPlus.ConfigModels;
 using CountersPlus.Counters.Interfaces;
+using CountersPlus.Counters.NoteCountProcessors;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using Zenject;
@@ -15,6 +17,7 @@ namespace CountersPlus.Counters
         [Inject] private ScoreController scoreController;
         [Inject] private PlayerDataModel playerDataModel;
         [Inject] private ScoreConfigModel scoreConfig;
+        [Inject] private NoteCountProcessor noteCountProcessor;
 
         private GameplayModifiersModelSO modifiersModel;
         private TMP_Text counter;
@@ -34,7 +37,7 @@ namespace CountersPlus.Counters
 
             modifiersModel = SCGameplayModsModel(ref scoreController);
             IDifficultyBeatmap beatmap = data.difficultyBeatmap;
-            int maxRawScore = ScoreModel.MaxRawScoreForNumberOfNotes(beatmap.beatmapData.notesCount);
+            int maxRawScore = ScoreModel.MaxRawScoreForNumberOfNotes(noteCountProcessor.NoteCount);
             maxPossibleScore = ScoreModel.GetModifiedScoreForGameplayModifiersScoreMultiplier(maxRawScore,
                 modifiersModel.GetTotalMultiplier(data.gameplayModifiers));
             stats = playerDataModel.playerData.GetPlayerLevelStatsData(beatmap);

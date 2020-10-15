@@ -17,7 +17,7 @@ namespace CountersPlus.Counters
         private int[] totalScoresRight = new int[] { 0, 0, 0 };
 
         // For handling cut calculations
-        private Dictionary<SaberSwingRatingCounter, NoteCutInfo> noteCutInfos = new Dictionary<SaberSwingRatingCounter, NoteCutInfo>();
+        private Dictionary<ISaberSwingRatingCounter, NoteCutInfo> noteCutInfos = new Dictionary<ISaberSwingRatingCounter, NoteCutInfo>();
 
         public override void CounterInit()
         {
@@ -48,7 +48,7 @@ namespace CountersPlus.Counters
 
         public void OnNoteCut(NoteData data, NoteCutInfo info)
         {
-            if (data.noteType == NoteType.Bomb || !info.allIsOK) return;
+            if (data.colorType == ColorType.None || !info.allIsOK) return;
             noteCutInfos.Add(info.swingRatingCounter, info);
             info.swingRatingCounter.didFinishEvent -= SaberSwingRatingCounter_didFinishEvent;
             info.swingRatingCounter.didFinishEvent += SaberSwingRatingCounter_didFinishEvent;
@@ -56,7 +56,7 @@ namespace CountersPlus.Counters
 
         public void OnNoteMiss(NoteData data) { }
 
-        private void SaberSwingRatingCounter_didFinishEvent(SaberSwingRatingCounter v)
+        private void SaberSwingRatingCounter_didFinishEvent(ISaberSwingRatingCounter v)
         {
             ScoreModel.RawScoreWithoutMultiplier(noteCutInfos[v], out int beforeCut, out int afterCut, out int cutDistance);
 

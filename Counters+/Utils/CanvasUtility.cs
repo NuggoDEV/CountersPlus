@@ -1,5 +1,6 @@
 ﻿using BeatSaberMarkupLanguage;
 using CountersPlus.ConfigModels;
+using HMUI;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace CountersPlus.Utils
 {
     public class CanvasUtility
     {
-        public GameplayCoreHUDInstaller.HudType HUDType = GameplayCoreHUDInstaller.HudType.Basic;
+        // public GameplayCoreHUDInstaller.HudType HUDType = GameplayCoreHUDInstaller.HudType.Basic;
 
         private Dictionary<int, Canvas> CanvasIDToCanvas = new Dictionary<int, Canvas>();
         private Dictionary<Canvas, HUDCanvas> CanvasToSettings = new Dictionary<Canvas, HUDCanvas>();
@@ -37,7 +38,7 @@ namespace CountersPlus.Utils
             }
             if (data != null)
             {
-                HUDType = GetGameplayCoreHUDTypeForEnvironmentSize(data.environmentInfo.environmentSizeData.width);
+                // HUDType = GetGameplayCoreHUDTypeForEnvironmentSize(data.environmentInfo.environmentType);
             }
 
             RefreshAllCanvases(hudConfig, data, coreGameHUD);
@@ -52,7 +53,7 @@ namespace CountersPlus.Utils
             if (coreGameHUD != null && hudConfig.MainCanvasSettings.ParentedToBaseGameHUD)
             {
                 Transform parent = coreGameHUD.transform;
-                if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) parent = coreGameHUD.transform.GetChild(0);
+                //if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) parent = coreGameHUD.transform.GetChild(0);
                 SoftParent softParent = CanvasIDToCanvas[-1].gameObject.AddComponent<SoftParent>();
                 softParent.AssignParent(parent);
 
@@ -60,11 +61,11 @@ namespace CountersPlus.Utils
                 Vector3 posOofset = Vector3.Reflect(hudConfig.MainCanvasSettings.Position, Vector3.back); // yknow what, fuck it, its posOofset now.
                 Quaternion rotOofset = Quaternion.Euler(Vector3.Reflect(hudConfig.MainCanvasSettings.Rotation, Vector3.back));
 
-                if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) // Special case for Main HUD w/360 environments
+                /*if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) // Special case for Main HUD w/360 environments
                 {
                     posOofset = parent.up;
                     rotOofset = Quaternion.identity;
-                }
+                }*/
 
                 softParent.AssignOffsets(posOofset, rotOofset);
             }
@@ -76,7 +77,7 @@ namespace CountersPlus.Utils
                 if (coreGameHUD != null && hudConfig.OtherCanvasSettings[i].ParentedToBaseGameHUD)
                 {
                     Transform parent = coreGameHUD.transform;
-                    if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) parent = coreGameHUD.transform.GetChild(0);
+                    //if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) parent = coreGameHUD.transform.GetChild(0);
                     SoftParent softParent = CanvasIDToCanvas[i].gameObject.AddComponent<SoftParent>();
                     softParent.AssignParent(parent);
                 }
@@ -113,6 +114,9 @@ namespace CountersPlus.Utils
             CanvasGameObject.transform.localScale = Vector3.one / CanvasSize;
             CanvasGameObject.transform.position = CanvasPos;
             CanvasGameObject.transform.rotation = Quaternion.Euler(CanvasRot);
+
+            CurvedCanvasSettings curvedCanvasSettings = CanvasGameObject.AddComponent<CurvedCanvasSettings>();
+            curvedCanvasSettings.SetRadius(50f);
 
             // Inherit canvas properties from the Energy Bar to ignore the shockwave effect.
             // However, a caveat as that, when viewing through walls, UI elements will not appear.
@@ -197,7 +201,7 @@ namespace CountersPlus.Utils
             float aboveHighwayOffset = 0.75f;
             if (isMainCanvas)
             {
-                switch (HUDType)
+                /*switch (HUDType)
                 {
                     case GameplayCoreHUDInstaller.HudType.Narrow:
                         X = 2f;
@@ -207,7 +211,7 @@ namespace CountersPlus.Utils
                         belowEnergyOffset = -0.25f;
                         aboveHighwayOffset = 0.25f;
                         break;
-                }
+                }*/
             }
 
             switch (position)
@@ -246,18 +250,6 @@ namespace CountersPlus.Utils
                     Object.Destroy(child.gameObject);
                 }
             }
-        }
-
-        private GameplayCoreHUDInstaller.HudType GetGameplayCoreHUDTypeForEnvironmentSize(EnvironmentSizeData.Width environmentWidth)
-        {
-            switch (environmentWidth)
-            {
-                case EnvironmentSizeData.Width.Narrow:
-                    return GameplayCoreHUDInstaller.HudType.Narrow;
-                case EnvironmentSizeData.Width.Circle:
-                    return GameplayCoreHUDInstaller.HudType.Flying;
-            }
-            return GameplayCoreHUDInstaller.HudType.Basic;
         }
 
         private void HideBaseGameHUDElement<T>(CoreGameHUDController coreGameHUD) where T : MonoBehaviour

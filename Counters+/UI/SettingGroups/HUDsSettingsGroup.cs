@@ -57,20 +57,17 @@ namespace CountersPlus.UI.SettingGroups
             {
                 case 0:
                     flowCoordinator.Value.SetRightViewController(null);
-                    flowCoordinator.Value.SetMainScreenOffset(Vector3.zero);
                     hudList.Value.IsDeleting = false;
                     hudList.Value.CreateNewCanvasDialog();
                     break;
                 case 1:
                     hudList.Value.DeactivateModals();
                     hudList.Value.ClearSelection();
-                    flowCoordinator.Value.SetMainScreenOffset(Vector3.zero);
                     hudList.Value.IsDeleting = false;
                     break;
                 case 2:
                     hudList.Value.DeactivateModals();
                     hudList.Value.ClearSelection();
-                    flowCoordinator.Value.SetMainScreenOffset(Vector3.zero);
                     flowCoordinator.Value.SetRightViewController(null);
                     hudList.Value.IsDeleting = true;
                     break;

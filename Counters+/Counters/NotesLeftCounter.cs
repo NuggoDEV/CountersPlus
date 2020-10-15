@@ -43,12 +43,12 @@ namespace CountersPlus.Counters
 
         public void OnNoteCut(NoteData data, NoteCutInfo info)
         {
-            if (data.noteType != NoteType.Bomb && !noteCountProcessor.ShouldIgnoreNote(data)) DecrementCounter();
+            if (data.colorType != ColorType.None && !noteCountProcessor.ShouldIgnoreNote(data)) DecrementCounter();
         }
 
         public void OnNoteMiss(NoteData data)
         {
-            if (data.noteType != NoteType.Bomb && !noteCountProcessor.ShouldIgnoreNote(data)) DecrementCounter();
+            if (data.colorType != ColorType.None && !noteCountProcessor.ShouldIgnoreNote(data)) DecrementCounter();
         }
 
         private void DecrementCounter()

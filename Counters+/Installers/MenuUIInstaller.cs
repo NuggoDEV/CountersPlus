@@ -1,8 +1,6 @@
 ﻿using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.MenuButtons;
-using CountersPlus.ConfigModels;
 using CountersPlus.Custom;
-using CountersPlus.Harmony;
 using CountersPlus.UI;
 using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.UI.SettingGroups;
@@ -10,15 +8,13 @@ using CountersPlus.UI.ViewControllers;
 using CountersPlus.UI.ViewControllers.Editing;
 using CountersPlus.Utils;
 using HMUI;
-using SiraUtil.Zenject;
+using SiraUtil;
 using System;
 using UnityEngine;
 using Zenject;
-using HarmonyObj = HarmonyLib.Harmony;
 
 namespace CountersPlus.Installers
 {
-    [RequiresInstaller(typeof(CoreInstaller))]
     public class MenuUIInstaller : MonoInstaller
     {
         private MenuButton menuButton;
@@ -60,13 +56,7 @@ namespace CountersPlus.Installers
             BindViewController<CountersPlusHUDListViewController>();
             BindViewController<CountersPlusHUDEditViewController>();
 
-            var flowCoordinator = BeatSaberUI.CreateFlowCoordinator<CountersPlusSettingsFlowCoordinator>();
-            Container.InjectSpecialInstance<CountersPlusSettingsFlowCoordinator>(flowCoordinator);
-
-            MenuTransitionsHelperPatch.Patch(Container.ResolveId<HarmonyObj>(CoreInstaller.HARMONY_ID),
-                Container.Resolve<CanvasUtility>(),
-                Container.Resolve<HUDConfigModel>(),
-                this);
+            Container.BindFlowCoordinator<CountersPlusSettingsFlowCoordinator>(BeatSaberUI.CreateFlowCoordinator<CountersPlusSettingsFlowCoordinator>());
 
             AddButton();
         }
@@ -84,8 +74,7 @@ namespace CountersPlus.Installers
 
         private void BindViewController<T>() where T : ViewController
         {
-            T view = BeatSaberUI.CreateViewController<T>();
-            Container.InjectSpecialInstance<T>(view);
+            Container.BindViewController<T>(BeatSaberUI.CreateViewController<T>());
         }
 
         private void BindSettingsGroup<T>() where T : SettingsGroup
@@ -95,14 +84,10 @@ namespace CountersPlus.Installers
 
         private void OnClick()
         {
-            var flowCoordinator = Container.TryResolve<CountersPlusSettingsFlowCoordinator>();
+            var flowCoordinator = Container.Resolve<CountersPlusSettingsFlowCoordinator>();
             if (flowCoordinator != null)
             {
                 BeatSaberUI.MainFlowCoordinator.PresentFlowCoordinator(flowCoordinator);
-            }
-            else
-            {
-                Plugin.Logger.Error("Cannot obtain flow coordinator!");
             }
         }
     }

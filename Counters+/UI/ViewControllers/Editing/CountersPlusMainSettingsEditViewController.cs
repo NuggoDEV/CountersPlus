@@ -14,8 +14,9 @@ namespace CountersPlus.UI.ViewControllers.Editing
         [Inject] private MainConfigModel mainConfig;
         [Inject] private LazyInject<CountersPlusSettingsFlowCoordinator> flowCoordinator;
 
-        protected override void DidActivate(bool firstActivation, ActivationType activationType)
+        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
+            base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
             if (firstActivation) BSMLParser.instance.Parse(SettingsBase, gameObject, mainConfig);
             mainConfig.OnConfigChanged += MainConfig_OnConfigChanged;
         }
@@ -25,7 +26,7 @@ namespace CountersPlus.UI.ViewControllers.Editing
             flowCoordinator.Value.RefreshAllMockCounters();
         }
 
-        protected override void DidDeactivate(DeactivationType deactivationType)
+        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemEnabling)
         {
             mainConfig.OnConfigChanged -= MainConfig_OnConfigChanged;
         }

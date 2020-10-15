@@ -10,7 +10,7 @@ namespace CountersPlus.Counters
 {
     internal class Spinometer : Counter<SpinometerConfigModel>, ITickable
     {
-        [Inject] private PlayerController playerController;
+        [Inject] private SaberManager saberManager;
 
         private Saber leftSaber = null;
         private Saber rightSaber = null;
@@ -23,21 +23,21 @@ namespace CountersPlus.Counters
 
         public override void CounterInit()
         {
-            leftSaber = playerController.leftSaber;
-            rightSaber = playerController.rightSaber;
+            leftSaber = saberManager.leftSaber;
+            rightSaber = saberManager.rightSaber;
             GenerateBasicText("Spinometer", out spinometer);
             SharedCoroutineStarter.instance.StartCoroutine(SecondTick());
         }
 
         public void Tick()
         {
-            if (leftSaber != playerController.leftSaber)
+            if (leftSaber != saberManager.leftSaber)
             {
-                leftSaber = playerController.leftSaber;
+                leftSaber = saberManager.leftSaber;
             }
-            if (rightSaber != playerController.rightSaber)
+            if (rightSaber != saberManager.rightSaber)
             {
-                rightSaber = playerController.rightSaber;
+                rightSaber = saberManager.rightSaber;
             }
             leftQuaternions.Add(leftSaber.transform.rotation);
             rightQuaternions.Add(rightSaber.transform.rotation);

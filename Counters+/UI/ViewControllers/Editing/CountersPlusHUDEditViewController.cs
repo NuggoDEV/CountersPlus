@@ -40,7 +40,6 @@ namespace CountersPlus.UI.ViewControllers.Editing
 
         private void CurrentlyEditing_OnCanvasSettingsApply()
         {
-            flowCoordinator.Value.SetMainScreenOffset(Vector3.zero);
             flowCoordinator.Value.SetRightViewController(null);
             hudList.Value.ClearSelection();
         }

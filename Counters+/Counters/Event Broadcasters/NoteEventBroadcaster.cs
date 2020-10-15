@@ -16,7 +16,7 @@ namespace CountersPlus.Counters.Event_Broadcasters
             scoreController.noteWasMissedEvent += NoteWasMissedEvent;
         }
 
-        private void NoteWasCutEvent(INoteController data, NoteCutInfo noteCutInfo)
+        private void NoteWasCutEvent(NoteController data, NoteCutInfo noteCutInfo)
         {
             foreach (INoteEventHandler noteEventHandler in EventHandlers)
             {
@@ -24,7 +24,7 @@ namespace CountersPlus.Counters.Event_Broadcasters
             }
         }
 
-        private void NoteWasMissedEvent(INoteController data)
+        private void NoteWasMissedEvent(NoteController data)
         {
             foreach (INoteEventHandler noteEventHandler in EventHandlers)
             {

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Zenject;
 
 namespace CountersPlus.Counters.NoteCountProcessors
@@ -25,23 +26,19 @@ namespace CountersPlus.Counters.NoteCountProcessors
         private List<NoteData> data;
 
 
-        [Inject] private BeatmapData beatmapData;
+        [Inject] private IReadonlyBeatmapData beatmapData;
 
-        protected List<NoteData> GetNoteData(BeatmapData data)
+        protected List<NoteData> GetNoteData(IReadonlyBeatmapData data)
         {
             List<NoteData> allNoteData = new List<NoteData>();
-            BeatmapLineData[] beatmapLinesData = data.beatmapLinesData;
-            for (int i = 0; i < beatmapLinesData.Length; i++)
+            foreach (var beatmapObjectData in data.beatmapObjectsData)
             {
-                foreach (BeatmapObjectData beatmapObjectData in beatmapLinesData[i].beatmapObjectsData)
+                if (beatmapObjectData is NoteData note && note.colorType == ColorType.None)
                 {
-                    if (beatmapObjectData is NoteData note && note.noteType.IsBasicNote())
-                    {
-                        if (ShouldIgnoreNote(note))
-                            continue;
-                        else
-                            allNoteData.Add(note);
-                    }
+                    if (ShouldIgnoreNote(note))
+                        continue;
+                    else
+                        allNoteData.Add(note);
                 }
             }
 

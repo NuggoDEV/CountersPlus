@@ -1,17 +1,12 @@
 ﻿using CountersPlus.ConfigModels;
 using CountersPlus.Custom;
-using CountersPlus.Harmony;
 using CountersPlus.Utils;
 using Zenject;
-using HarmonyObj = HarmonyLib.Harmony;
 
 namespace CountersPlus.Installers
 {
     public class CoreInstaller : MonoInstaller
     {
-        public const string HARMONY_ID = "com.caeden117.countersplus";
-        private static HarmonyObj harmony;
-
         public override void InstallBindings()
         {
             Container.Bind<VersionUtility>().AsSingle().NonLazy();
@@ -21,12 +16,6 @@ namespace CountersPlus.Installers
             Container.Bind<MainConfigModel>().FromInstance(mainConfig);
             mainConfig.HUDConfig.MainCanvasSettings.IsMainCanvas = true;
             Container.Bind<HUDConfigModel>().FromInstance(mainConfig.HUDConfig);
-
-            if (harmony != null) harmony.UnpatchAll(HARMONY_ID); // Covers game restarts
-            harmony = new HarmonyObj(HARMONY_ID);
-            Container.Bind<HarmonyObj>().WithId(HARMONY_ID).FromInstance(harmony);
-            GameplayCoreSceneSetupPatch.Patch(harmony);
-            CoreGameHUDControllerPatch.Patch(harmony);
 
             BindConfig<MissedConfigModel>(mainConfig.MissedConfig);
             BindConfig<NoteConfigModel>(mainConfig.NoteConfig);

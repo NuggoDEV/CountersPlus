@@ -13,9 +13,9 @@ namespace CountersPlus.UI.ViewControllers
 
         public string ResourceName => "CountersPlus.UI.BSML.SettingsSectionSelection.bsml";
 
-        protected override void DidActivate(bool firstActivation, ActivationType type)
+        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
-            base.DidActivate(firstActivation, type);
+            base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
             // I need to mimick the functionality of a BSMLResourceViewController but on a NavigationController.
             if (firstActivation)
             {
@@ -30,9 +30,9 @@ namespace CountersPlus.UI.ViewControllers
             OnSettingsGroupChanged?.Invoke(cellIdx);
         }
 
-        protected override void DidDeactivate(DeactivationType deactivationType)
+        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemEnabling)
         {
-            base.DidDeactivate(deactivationType);
+            base.DidDeactivate(removedFromHierarchy, screenSystemEnabling);
             tab.textSegmentedControl.didSelectCellEvent -= HandleCellSelectedEvent;
         }
     }

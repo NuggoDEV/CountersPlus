@@ -10,7 +10,7 @@ namespace CountersPlus.Counters
 {
     internal class SpeedCounter : Counter<SpeedConfigModel>, ITickable
     {
-        [Inject] private PlayerController playerController;
+        [Inject] private SaberManager saberManager;
 
         private Saber right;
         private Saber left;
@@ -22,8 +22,8 @@ namespace CountersPlus.Counters
 
         public override void CounterInit()
         {
-            right = playerController.rightSaber;
-            left = playerController.leftSaber;
+            right = saberManager.rightSaber;
+            left = saberManager.leftSaber;
 
             switch (Settings.Mode)
             {

@@ -3,10 +3,10 @@ using CountersPlus.ConfigModels;
 using CountersPlus.UI.ViewControllers;
 using CountersPlus.Utils;
 using HMUI;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using static CountersPlus.Utils.Accessors;
 
 namespace CountersPlus.UI.FlowCoordinators
 {
@@ -17,6 +17,9 @@ namespace CountersPlus.UI.FlowCoordinators
         [Inject] public List<ConfigModel> AllConfigModels;
         [Inject] private CanvasUtility canvasUtility;
         [Inject] private MockCounter mockCounter;
+        [Inject] private MenuTransitionsHelper menuTransitionsHelper;
+        [Inject] private GameScenesManager gameScenesManager;
+        [Inject] private FadeInOutController fadeInOutController;
 
         [Inject] private CountersPlusCreditsViewController credits;
         [Inject] private CountersPlusBlankViewController blank;
@@ -24,26 +27,33 @@ namespace CountersPlus.UI.FlowCoordinators
         [Inject] private CountersPlusSettingSectionSelectionViewController settingsSelection;
         [Inject] private CountersPlusHorizontalSettingsListViewController horizontalSettingsList;
 
-        private TweenPosition mainScreenTween;
-        private Vector3 mainScreenOrigin;
+        private HashSet<string> persistentScenes = new HashSet<string>();
 
-        protected override void DidActivate(bool firstActivation, ActivationType activationType)
+        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
-            Plugin.Logger.Warn("FRICK");
-            Transform mainScreenTransform = GameObject.Find("MainScreen").transform;
-            if (firstActivation && activationType == ActivationType.AddedToHierarchy)
+            if (addedToHierarchy)
             {
-                mainScreenOrigin = mainScreenTransform.position;
-
                 showBackButton = true;
-                title = "Counters+";
+                SetTitle("Counters+");
+
+                persistentScenes = GSMPersistentScenes(ref gameScenesManager); // Get our hashset of persistent scenes
+
+                persistentScenes.Add("MenuViewControllers"); // Make sure our menu persists through the transition
+                persistentScenes.Add("MenuCore");
+                persistentScenes.Add("Menu");
+
+                var tutorialSceneSetup = MTHTutorialScenesSetup(ref menuTransitionsHelper); // Grab the scene transition setup data
+                tutorialSceneSetup.Init();
+
+                // We're actually transitioning to the Tutorial sequence, but disabling the tutorial itself from starting.
+                gameScenesManager.PushScenes(tutorialSceneSetup, 0.25f, null, (_) =>
+                {
+                    // Disable the tutorial from actually starting. I dont think there's a better way to do this...
+                    GameObject.Find("TutorialGameplay").SetActive(false);
+                });
             }
 
-            if (mainScreenTween != null) Destroy(mainScreenTween);
-            mainScreenTween = mainScreenTransform.gameObject.AddComponent<TweenPosition>();
-            mainScreenTween._duration = 1f;
-
-            SetMainScreenOffset(MAIN_SCREEN_OFFSET);
+            //fadeInOutController.FadeIn(1f, () => FadeInCallback(MenuEnvironmentManager.MenuEnvironmentType.Lobby));
 
             PushViewControllerToNavigationController(mainScreenNavigation, blank);
             PushViewControllerToNavigationController(settingsSelection, horizontalSettingsList);
@@ -61,34 +71,32 @@ namespace CountersPlus.UI.FlowCoordinators
             }
         }
 
-        public void SetRightViewController(ViewController controller) => SetRightScreenViewController(controller);
+        public void SetRightViewController(ViewController controller) => SetRightScreenViewController(controller, ViewController.AnimationType.In);
 
         public void PushToMainScreen(ViewController controller)
         {
             SetViewControllerToNavigationController(mainScreenNavigation, controller);
-            SetMainScreenOffset(Vector3.zero);
         }
 
         public void PopFromMainScreen()
         {
             SetViewControllerToNavigationController(mainScreenNavigation, blank);
-            if (mainScreenNavigation.viewControllers.Count <= 2)
-            {
-                SetMainScreenOffset(MAIN_SCREEN_OFFSET);
-            }
         }
 
         protected override void BackButtonWasPressed(ViewController topViewController)
         {
-            SetMainScreenOffset(Vector3.zero);
             BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(this);
             canvasUtility.ClearAllText();
-        }
 
-        internal void SetMainScreenOffset(Vector3 offset, float duration = 1)
-        {
-            mainScreenTween._duration = duration;
-            mainScreenTween.TargetPos = mainScreenOrigin + offset;
+            // Return back to the main menu.
+            gameScenesManager.PopScenes(0.25f, null, (_) =>
+            { 
+                // Unmark these scenes as persistent so they won't bother us in-game.
+                persistentScenes.Remove("MenuViewControllers");
+                persistentScenes.Remove("MenuCore");
+                persistentScenes.Remove("Menu");
+                fadeInOutController.FadeIn();
+            });
         }
     }
 }

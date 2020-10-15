@@ -18,13 +18,13 @@ namespace CountersPlus.Counters
         public void OnNoteCut(NoteData data, NoteCutInfo info)
         {
             allCuts++;
-            if (data.noteType != NoteType.Bomb && info.allIsOK) goodCuts++;
+            if (data.colorType != ColorType.None && info.allIsOK) goodCuts++;
             RefreshText();
         }
 
         public void OnNoteMiss(NoteData data)
         {
-            if (data.noteType == NoteType.Bomb) return;
+            if (data.colorType == ColorType.None) return;
             allCuts++;
             RefreshText();
         }

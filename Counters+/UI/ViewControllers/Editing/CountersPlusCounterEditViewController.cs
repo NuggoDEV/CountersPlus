@@ -95,10 +95,10 @@ namespace CountersPlus.UI.ViewControllers.Editing
 
         private IEnumerator WaitThenDirtyTheFuckingScrollView() // I'm still sad I have to do this.
         {
-            yield return new WaitUntil(() => scrollView != null && scrollView.ContentRect != null);
-            scrollView.ContentRect.gameObject.SetActive(false);
+            yield return new WaitUntil(() => scrollView != null);
+            scrollView.gameObject.SetActive(false);
             yield return new WaitForEndOfFrame();
-            scrollView.ContentRect.gameObject.SetActive(true);
+            scrollView.gameObject.SetActive(true);
         }
 
         private void ClearScreen()
@@ -107,7 +107,7 @@ namespace CountersPlus.UI.ViewControllers.Editing
                 Destroy(settingsContainer.transform.GetChild(i).gameObject);
         }
 
-        protected override void DidDeactivate(DeactivationType deactivationType)
+        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemEnabling)
         {
             mainConfig.OnConfigChanged -= MainConfig_OnConfigChanged;
         }

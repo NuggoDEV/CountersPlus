@@ -1,5 +1,6 @@
 ﻿using HMUI;
 using IPA.Utilities;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,20 +20,23 @@ namespace CountersPlus.Utils
         #endregion
 
         #region Counters+ UI
-        public static FieldAccessor<TableView, TableViewScroller>.Accessor TVTableViewScroller = FieldAccessor<TableView, TableViewScroller>.GetAccessor("_scroller");
+        public static FieldAccessor<TableView, TableViewScroller>.Accessor TVTableViewScroller = FieldAccessor<TableView, TableViewScroller>.GetAccessor("scroller");
         public static FieldAccessor<TableView, TableView.TableType>.Accessor TVTableType = FieldAccessor<TableView, TableView.TableType>.GetAccessor("_tableType");
         public static FieldAccessor<TableView, TableView.CellsGroup[]>.Accessor TVPreallocCells = FieldAccessor<TableView, TableView.CellsGroup[]>.GetAccessor("_preallocatedCells");
         public static FieldAccessor<TableView, bool>.Accessor TVIsInitialized = FieldAccessor<TableView, bool>.GetAccessor("_isInitialized");
         public static FieldAccessor<TableView, Button>.Accessor TVPageUpButton = FieldAccessor<TableView, Button>.GetAccessor("_pageUpButton");
         public static FieldAccessor<TableView, Button>.Accessor TVPageDownButton = FieldAccessor<TableView, Button>.GetAccessor("_pageDownButton");
-        public static FieldAccessor<TableView, RectTransform>.Accessor TVScrollRect = FieldAccessor<TableView, RectTransform>.GetAccessor("_scrollRectTransform");
+        public static FieldAccessor<TableView, RectTransform>.Accessor TVScrollRect = FieldAccessor<TableView, RectTransform>.GetAccessor("_viewportTransform");
 
 
         public static FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, TextMeshProUGUI>.Accessor PackInfoTextAccessor = FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, TextMeshProUGUI>.GetAccessor("_infoText");
         public static FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, Image>.Accessor CoverImageAccessor = FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, Image>.GetAccessor("_coverImage");
+        public static FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, ImageView>.Accessor SelectionImageAccessor = FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, ImageView>.GetAccessor("_selectionImage");
+        public static FieldAccessor<ImageView, float>.Accessor ImageViewSkewAccessor = FieldAccessor<ImageView, float>.GetAccessor("_skew");
         public static FieldAccessor<LevelListTableCell, TextMeshProUGUI>.Accessor LevelListNameAccessor = FieldAccessor<LevelListTableCell, TextMeshProUGUI>.GetAccessor("_songNameText");
-        public static FieldAccessor<LevelListTableCell, TextMeshProUGUI>.Accessor LevelListAuthorAccessor = FieldAccessor<LevelListTableCell, TextMeshProUGUI>.GetAccessor("_authorText");
-        public static FieldAccessor<LevelListTableCell, RawImage>.Accessor LevelListRawImage = FieldAccessor<LevelListTableCell, RawImage>.GetAccessor("_coverRawImage");
+
+        public static FieldAccessor<GameScenesManager, HashSet<string>>.Accessor GSMPersistentScenes = FieldAccessor<GameScenesManager, HashSet<string>>.GetAccessor("_neverUnloadScenes");
+        public static FieldAccessor<MenuTransitionsHelper, TutorialScenesTransitionSetupDataSO>.Accessor MTHTutorialScenesSetup = FieldAccessor<MenuTransitionsHelper, TutorialScenesTransitionSetupDataSO>.GetAccessor("_tutorialScenesTransitionSetupData");
         #endregion
 
         public static FieldAccessor<ScoreMultiplierUIController, Image>.Accessor MultiplierImage = FieldAccessor<ScoreMultiplierUIController, Image>.GetAccessor("_multiplierProgressImage");

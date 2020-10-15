@@ -16,12 +16,12 @@ namespace CountersPlus.Counters
 
         public void OnNoteCut(NoteData data, NoteCutInfo info)
         {
-            if (Settings.CountBadCuts && !info.allIsOK && data.noteType != NoteType.Bomb) counter.text = (++notesMissed).ToString();
+            if (Settings.CountBadCuts && !info.allIsOK && data.colorType != ColorType.None) counter.text = (++notesMissed).ToString();
         }
 
         public void OnNoteMiss(NoteData data)
         {
-            if (data.noteType != NoteType.Bomb) counter.text = (++notesMissed).ToString();
+            if (data.colorType != ColorType.None) counter.text = (++notesMissed).ToString();
         }
     }
 }

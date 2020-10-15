@@ -41,13 +41,12 @@ namespace CountersPlus.UI.ViewControllers
         private SettingsGroup selectedSettingsGroup = null;
         private TableView customListTableView;
 
-        protected override void DidActivate(bool firstActivation, ActivationType type)
+        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             try
             {
                 if (firstActivation)
                 {
-                    //loadedSettingsGroups = TypesUtility.GetListOfType<SettingsGroup>();
                     //Largely unchanged from CustomListController. Keep all of this.
                     levelPackTableCellInstance = Resources.FindObjectsOfTypeAll<AnnotatedBeatmapLevelCollectionTableCell>().First(x => x.name == "AnnotatedBeatmapLevelCollectionTableCell");
 
@@ -57,7 +56,8 @@ namespace CountersPlus.UI.ViewControllers
                     container.anchorMin = new Vector2(0.1f, 0); //Squish the list container a little bit
                     container.anchorMax = new Vector2(0.9f, 1); //To make room for the forward/backward buttons
 
-                    var go = new GameObject("CustomListTableView");
+                    var go = new GameObject("CustomListTableView", typeof(RectTransform), typeof(ImageView), typeof(EventSystemListener), typeof(ScrollRect));
+                    go.GetComponent<ImageView>().enabled = false;
                     go.SetActive(false); //Disable GameObject to not have scripts run.
                     customListTableView = go.AddComponent<TableView>(); //Add TableView
                     customListTableView.gameObject.AddComponent<RectMask2D>(); //Add Mask
@@ -75,24 +75,24 @@ namespace CountersPlus.UI.ViewControllers
                     // Code copied from monkeymanboy's Beat Saber Custom Campaigns mod. Keep these too.
                     PageLeftButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => x.name == "PageLeftButton"), transform);
                     RectTransform buttonTransform = PageLeftButton.transform.Find("BG") as RectTransform;
-                    RectTransform glow = Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Last(x => (x.name == "GlowContainer")), PageLeftButton.transform).transform as RectTransform;
+                    /*RectTransform glow = Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Last(x => (x.name == "GlowContainer")), PageLeftButton.transform).transform as RectTransform;
                     glow.localPosition = buttonTransform.localPosition;
                     glow.anchoredPosition = buttonTransform.anchoredPosition;
                     glow.anchorMin = buttonTransform.anchorMin;
                     glow.anchorMax = buttonTransform.anchorMax;
-                    glow.sizeDelta = buttonTransform.sizeDelta;
+                    glow.sizeDelta = buttonTransform.sizeDelta;*/
                     PageLeftButton.transform.localPosition = new Vector3(-80, 2.5f, -5);
                     (PageLeftButton.transform as RectTransform).anchoredPosition = Vector3.up * 2.5f;
                     PageLeftButton.interactable = true;
                     PageLeftButton.gameObject.SetActive(false);
-                    PageRightButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => (x.name == "PageRightButton")), transform);
+                    PageRightButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => x.name == "PageRightButton"), transform);
                     buttonTransform = PageRightButton.transform.Find("BG") as RectTransform;
-                    glow = Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Last(x => (x.name == "GlowContainer")), PageRightButton.transform).transform as RectTransform;
+                    /*glow = Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Last(x => (x.name == "GlowContainer")), PageRightButton.transform).transform as RectTransform;
                     glow.localPosition = buttonTransform.localPosition;
                     glow.anchoredPosition = buttonTransform.anchoredPosition;
                     glow.anchorMin = buttonTransform.anchorMin;
                     glow.anchorMax = buttonTransform.anchorMax;
-                    glow.sizeDelta = buttonTransform.sizeDelta;
+                    glow.sizeDelta = buttonTransform.sizeDelta;*/
                     PageRightButton.transform.localPosition = new Vector3(80, 2.5f, -5);
                     (PageRightButton.transform as RectTransform).anchoredPosition = Vector3.up * 2.5f;
                     PageRightButton.interactable = true;
@@ -104,9 +104,9 @@ namespace CountersPlus.UI.ViewControllers
 
                     TVPageUpButton(ref customListTableView) = PageLeftButton; // Set Up button to Left
                     TVPageDownButton(ref customListTableView) = PageRightButton; // Set Down button to Right
-                    customListTableView.Init(); // Init, have "_scrollRectTransform" be null.
-                    TVScrollRect(ref customListTableView) = viewport; // Set it with our hot-out-of-the-oven Viewport.
-                    customListTableView.dataSource = this; //Add data source
+                    go.GetComponent<ScrollRect>().viewport = viewport; // Set it with our hot-out-of-the-oven Viewport.
+                    customListTableView.LazyInit();
+                    customListTableView.SetDataSource(this, true); //Add data source
                     go.SetActive(true);
                     customListTableView.Show();
 
@@ -149,11 +149,11 @@ namespace CountersPlus.UI.ViewControllers
             scroller.ScrollToCellWithIdx(0, TableViewScroller.ScrollPositionType.Beginning, true);
         }
 
-        protected override void DidDeactivate(DeactivationType deactivationType)
+        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemEnabling)
         {
             sectionSelection.Value.OnSettingsGroupChanged -= HandleSettingsGroupChanged;
             customListTableView.didSelectCellWithIdxEvent -= OnCellSelect;
-            base.DidDeactivate(deactivationType);
+            base.DidDeactivate(removedFromHierarchy, screenSystemEnabling);
         }
 
         // I'd recommend keeping this as is (5 cells shown), unless you want more spread out cells.

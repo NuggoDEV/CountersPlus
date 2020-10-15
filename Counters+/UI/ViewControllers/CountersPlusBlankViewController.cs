@@ -14,16 +14,16 @@ namespace CountersPlus.UI.ViewControllers
 
         public override string ResourceName => "CountersPlus.UI.BSML.BlankScreen.bsml";
 
-        protected override void DidActivate(bool firstActivation, ActivationType type)
+        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
-            base.DidActivate(firstActivation, type);
+            base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
             if (firstActivation) group = hidden.AddComponent<CanvasGroup>();
             StartCoroutine(WaitThenPopUp());
         }
 
-        protected override void DidDeactivate(DeactivationType deactivationType)
+        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemEnabling)
         {
-            base.DidDeactivate(deactivationType);
+            base.DidDeactivate(removedFromHierarchy, screenSystemEnabling);
             group.alpha = 0;
         }
 

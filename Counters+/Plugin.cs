@@ -8,6 +8,8 @@ using SiraUtil.Zenject;
 using System.Collections.Generic;
 using System.Reflection;
 using IPALogger = IPA.Logging.Logger;
+using HarmonyObj = HarmonyLib.Harmony;
+using CountersPlus.Harmony;
 
 namespace CountersPlus
 {
@@ -19,30 +21,34 @@ namespace CountersPlus
         internal static MainConfigModel MainConfig { get; private set; }
         internal static Dictionary<Assembly, CustomCounter> LoadedCustomCounters { get; private set; } = new Dictionary<Assembly, CustomCounter>();
 
+        private const string HARMONY_ID = "com.caeden117.countersplus";
+        private HarmonyObj harmony;
+
         [Init]
         public Plugin(IPALogger logger,
-            [Config.Name("CountersPlus")] Config conf)
+            [Config.Name("CountersPlus")] Config conf,
+            Zenjector zenjector)
         {
             Instance = this;
             Logger = logger;
             MainConfig = conf.Generated<MainConfigModel>();
+            harmony = new HarmonyObj(HARMONY_ID);
+
+            zenjector.OnApp<CoreInstaller>();
+            zenjector.OnGame<CountersInstaller>().Expose<CoreGameHUDController>().ShortCircuitOnTutorial();
+            zenjector.OnMenu<MenuUIInstaller>();
         }
 
         [OnEnable]
         public void OnEnable()
         {
-            Installer.RegisterAppInstaller<CoreInstaller>();
-            Installer.RegisterGameCoreInstaller<CountersInstaller>();
-            Installer.RegisterMenuInstaller<MenuUIInstaller>();
+            CoreGameHUDControllerPatch.Patch(harmony);
         }
 
         [OnDisable]
         public void OnDisable()
         {
-            Installer.UnregisterAppInstaller<CoreInstaller>();
-            Installer.UnregisterGameCoreInstaller<CountersInstaller>();
-            Installer.UnregisterMenuInstaller<MenuUIInstaller>();
+            harmony.UnpatchAll(HARMONY_ID);
         }
-
     }
 }
