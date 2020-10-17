@@ -10,7 +10,7 @@
         size-delta-x='-5' size-delta-y='-5'
         pivot-x='.5' pivot-y='1'>
     <scrollable-container id='ScrollContent' mask-overflow='true' size-delta-x='0'>
-      <vertical id='body' bg='round-rect-panel' pad='5' vertical-fit='PreferredSize' spacing='1'>
+      <vertical id='body' pad='5' vertical-fit='PreferredSize' spacing='1'>
       </vertical>
     </scrollable-container>
     <scroll-indicator tags='IndicatorFor:ScrollContent'
@@ -20,8 +20,8 @@
                       size-delta-x='1' size-delta-y='-2'
                       pivot-x='0' pivot-y='.5' />
   </bg>
-  <bottom-button-panel>
-    <button text='Scroll Up' tags='PageUpFor:ScrollContent'></button>
-    <button text='Scroll Down' tags='PageDownFor:ScrollContent'></button>
-  </bottom-button-panel>
+  <horizontal anchor-max-y='0.15'>
+    <button text='Scroll Up' tags='PageUpFor:ScrollContent' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'></button>
+    <button text='Scroll Down' tags='PageDownFor:ScrollContent' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'></button>
+  </horizontal>
 </bg>

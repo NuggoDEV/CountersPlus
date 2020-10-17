@@ -43,6 +43,7 @@ namespace CountersPlus.UI.ViewControllers
 
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
+            rectTransform.anchorMax = new Vector2(1, 0.7f);
             try
             {
                 if (firstActivation)
@@ -56,8 +57,7 @@ namespace CountersPlus.UI.ViewControllers
                     container.anchorMin = new Vector2(0.1f, 0); //Squish the list container a little bit
                     container.anchorMax = new Vector2(0.9f, 1); //To make room for the forward/backward buttons
 
-                    var go = new GameObject("CustomListTableView", typeof(RectTransform), typeof(ImageView), typeof(EventSystemListener), typeof(ScrollRect));
-                    go.GetComponent<ImageView>().enabled = false;
+                    var go = new GameObject("CustomListTableView", typeof(RectTransform), typeof(Touchable), typeof(EventSystemListener), typeof(ScrollRect));
                     go.SetActive(false); //Disable GameObject to not have scripts run.
                     customListTableView = go.AddComponent<TableView>(); //Add TableView
                     customListTableView.gameObject.AddComponent<RectMask2D>(); //Add Mask

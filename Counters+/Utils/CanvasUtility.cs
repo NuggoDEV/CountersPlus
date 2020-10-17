@@ -116,7 +116,7 @@ namespace CountersPlus.Utils
             CanvasGameObject.transform.rotation = Quaternion.Euler(CanvasRot);
 
             CurvedCanvasSettings curvedCanvasSettings = CanvasGameObject.AddComponent<CurvedCanvasSettings>();
-            curvedCanvasSettings.SetRadius(50f);
+            curvedCanvasSettings.SetRadius(canvasSettings.Curved ? canvasSettings.CurveRadius : 0f);
 
             // Inherit canvas properties from the Energy Bar to ignore the shockwave effect.
             // However, a caveat as that, when viewing through walls, UI elements will not appear.
@@ -157,6 +157,13 @@ namespace CountersPlus.Utils
         {
             Canvas canvasToApply = CanvasIDToCanvas[settings.CanvasID];
             HUDCanvas hudSettings = CanvasToSettings[canvasToApply];
+            if (canvasToApply == null)
+            {
+                hudSettings = GetCanvasSettingsFromID(settings.CanvasID);
+                canvasToApply = CreateCanvasWithConfig(hudSettings);
+                CanvasIDToCanvas[settings.CanvasID] = canvasToApply;
+                CanvasToSettings.Add(canvasToApply, hudSettings);
+            }
             return CreateText(canvasToApply, GetAnchoredPositionFromConfig(settings, hudSettings.IsMainCanvas), offset);
         }
 

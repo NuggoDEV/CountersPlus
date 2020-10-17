@@ -38,6 +38,7 @@ namespace CountersPlus.UI.ViewControllers
         {
             base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
             RefreshData();
+            ClearSelection();
             IsDeleting = false;
         }
 
@@ -55,7 +56,7 @@ namespace CountersPlus.UI.ViewControllers
                 int countersUsingCanvas = flowCoordinator.Value.AllConfigModels.Count(x => x.CanvasID == i);
                 var info = new CustomListTableData.CustomCellInfo(
                     settings?.Name ?? "Unknown",
-                    $"<i>{countersUsingCanvas} counter(s) use this Canvas.</i>", Utilities.LoadSpriteFromTexture(Texture2D.blackTexture));
+                    $"{countersUsingCanvas} counter(s) use this Canvas.", Utilities.LoadSpriteFromTexture(Texture2D.blackTexture));
                 data.data.Add(info);
             }
             data.tableView.ReloadData();

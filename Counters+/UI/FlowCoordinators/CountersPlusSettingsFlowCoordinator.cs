@@ -3,8 +3,11 @@ using CountersPlus.ConfigModels;
 using CountersPlus.UI.ViewControllers;
 using CountersPlus.Utils;
 using HMUI;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using VRUIControls;
 using Zenject;
 using static CountersPlus.Utils.Accessors;
 
@@ -20,6 +23,7 @@ namespace CountersPlus.UI.FlowCoordinators
         [Inject] private MenuTransitionsHelper menuTransitionsHelper;
         [Inject] private GameScenesManager gameScenesManager;
         [Inject] private FadeInOutController fadeInOutController;
+        [Inject] private VRInputModule vrInputModule;
 
         [Inject] private CountersPlusCreditsViewController credits;
         [Inject] private CountersPlusBlankViewController blank;
@@ -48,8 +52,48 @@ namespace CountersPlus.UI.FlowCoordinators
                 // We're actually transitioning to the Tutorial sequence, but disabling the tutorial itself from starting.
                 gameScenesManager.PushScenes(tutorialSceneSetup, 0.25f, null, (_) =>
                 {
+                    // god this makes me want to retire from beat saber modding
+                    void DisableAllNonImportantObjects(Transform original, Transform source, IEnumerable<string> importantObjects)
+                    {
+                        foreach (Transform child in source)
+                        {
+                            if (importantObjects.Contains(child.name))
+                            {
+                                Transform loopback = child;
+                                while (loopback != original)
+                                {
+                                    loopback.gameObject.SetActive(true);
+                                    loopback = loopback.parent;
+                                }
+                            }
+                            else
+                            {
+                                child.gameObject.SetActive(false);
+                                DisableAllNonImportantObjects(original, child, importantObjects);
+                            }
+                        }
+                    }
+
+
                     // Disable the tutorial from actually starting. I dont think there's a better way to do this...
-                    GameObject.Find("TutorialGameplay").SetActive(false);
+                    Transform tutorial = GameObject.Find("TutorialGameplay").transform;
+
+                    // When not in FPFC, disable the Menu input, and re-enable the Tutorial menu input
+                    if (!Environment.GetCommandLineArgs().Any(x => x.ToLower() == "fpfc"))
+                    {
+                        vrInputModule.gameObject.SetActive(false);
+
+                        DisableAllNonImportantObjects(tutorial, tutorial, new string[]
+                        {
+                            "EventSystem",
+                            "ControllerLeft",
+                            "ControllerRight"
+                        });
+                    }
+                    else // If we're in FPFC, just disable everything as usual.
+                    {
+                        DisableAllNonImportantObjects(tutorial, tutorial, Array.Empty<string>());
+                    }
                 });
             }
 
@@ -87,6 +131,8 @@ namespace CountersPlus.UI.FlowCoordinators
         {
             BeatSaberUI.MainFlowCoordinator.DismissFlowCoordinator(this);
             canvasUtility.ClearAllText();
+
+            vrInputModule.gameObject.SetActive(true);
 
             // Return back to the main menu.
             gameScenesManager.PopScenes(0.25f, null, (_) =>

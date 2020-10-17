@@ -2,7 +2,9 @@
 using CountersPlus.Custom;
 using IPA.Config.Stores.Attributes;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace CountersPlus.ConfigModels
 {
@@ -42,10 +44,16 @@ namespace CountersPlus.ConfigModels
 
         public virtual void Changed()
         {
-            OnConfigChanged?.Invoke();
+            SharedCoroutineStarter.instance.StartCoroutine(DelayedFire(OnConfigChanged));
         }
 
         public List<object> Offsets => new List<object> { 0, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1 };
+
+        private IEnumerator DelayedFire(Action action)
+        {
+            yield return new WaitForEndOfFrame();
+            action?.Invoke();
+        }
     }
 
     public enum CounterPositions { BelowCombo, AboveCombo, BelowMultiplier, AboveMultiplier, BelowEnergy, AboveHighway }

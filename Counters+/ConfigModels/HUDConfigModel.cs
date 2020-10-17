@@ -2,6 +2,7 @@
 using IPA.Config.Stores.Attributes;
 using IPA.Config.Stores.Converters;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -51,6 +52,10 @@ namespace CountersPlus.ConfigModels
         public virtual string AttachedCamera { get; set; } = "Main Camera";
         [UIValue(nameof(IgnoreShockwaveEffect))]
         public virtual bool IgnoreShockwaveEffect { get; set; } = true;
+        [UIValue(nameof(Curved))]
+        public virtual bool Curved { get; set; } = false;
+        [UIValue(nameof(CurveRadius))]
+        public virtual float CurveRadius { get; set; } = 0;
 
         #region UI
         public event Action OnCanvasSettingsChanged;
@@ -59,13 +64,19 @@ namespace CountersPlus.ConfigModels
         [UIAction("fire-update")]
         public void OnChanged(object _)
         {
-            OnCanvasSettingsChanged?.Invoke();
+            SharedCoroutineStarter.instance.StartCoroutine(DelayedFire(OnCanvasSettingsChanged));
         }
 
         [UIAction("fire-apply")]
         public void OnApply()
         {
-            OnCanvasSettingsApply?.Invoke();
+            SharedCoroutineStarter.instance.StartCoroutine(DelayedFire(OnCanvasSettingsApply));
+        }
+
+        private IEnumerator DelayedFire(Action action)
+        {
+            yield return new WaitForEndOfFrame();
+            action?.Invoke();
         }
         #endregion
     }

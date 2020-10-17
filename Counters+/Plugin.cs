@@ -35,7 +35,10 @@ namespace CountersPlus
             harmony = new HarmonyObj(HARMONY_ID);
 
             zenjector.OnApp<CoreInstaller>();
-            zenjector.OnGame<CountersInstaller>().Expose<CoreGameHUDController>().ShortCircuitOnTutorial();
+            zenjector.OnGame<CountersInstaller>()
+                .Expose<CoreGameHUDController>()
+                .ShortCircuitOnTutorial()
+                .ShortCircuitOnMultiplayer(); // This is until I can safely confirm that C+ works with Multiplayer.
             zenjector.OnMenu<MenuUIInstaller>();
         }
 

@@ -1,4 +1,6 @@
-﻿using CountersPlus.ConfigModels;
+﻿using BeatSaberMarkupLanguage;
+using CountersPlus.ConfigModels;
+using HMUI;
 using System;
 using System.Linq;
 using TMPro;
@@ -19,7 +21,7 @@ namespace CountersPlus.Counters
         [Inject] private GameplayCoreSceneSetupData gcssd; // I hope this works
 
         private TMP_Text timeText;
-        private Image progressRing;
+        private ImageView progressRing;
         private float length = 0;
         private float songBPM = 100;
 
@@ -42,13 +44,13 @@ namespace CountersPlus.Counters
                 var canvas = CanvasUtility.GetCanvasFromID(Settings.CanvasID);
                 if (canvas != null)
                 {
-                    Image backgroundImage = CreateRing(canvas).GetComponent<Image>();
+                    ImageView backgroundImage = CreateRing(canvas);
                     backgroundImage.rectTransform.anchoredPosition = timeText.rectTransform.anchoredPosition;
                     backgroundImage.CrossFadeAlpha(0.05f, 1f, false);
                     backgroundImage.transform.localScale = ringSize / 10;
                     backgroundImage.type = Image.Type.Simple;
 
-                    progressRing = CreateRing(canvas).GetComponent<Image>();
+                    progressRing = CreateRing(canvas);
                     progressRing.rectTransform.anchoredPosition = timeText.rectTransform.anchoredPosition;
                     progressRing.transform.localScale = ringSize / 10;
                 }
@@ -74,10 +76,12 @@ namespace CountersPlus.Counters
                 if (Settings.IncludeRing)
                 {
                     progressRing.fillAmount = time / length;
+                    progressRing.SetVerticesDirty();
                 }
                 else
                 {
                     progressRing.fillAmount = atsc.songTime / length;
+                    progressRing.SetVerticesDirty();
                 }
             }
             else
@@ -86,17 +90,22 @@ namespace CountersPlus.Counters
             }
         }
 
-        private Image CreateRing(Canvas canvas)
+        private ImageView CreateRing(Canvas canvas)
         {
             // Unfortunately, there is no garauntee that I have the CoreGameHUDController, since No Text and Huds
             // completely disables it from spawning. So, to be safe, we recreate this all from scratch.
-            Image newImage = new GameObject("Ring Image", typeof(RectTransform), typeof(Image)).GetComponent<Image>();
+            GameObject imageGameObject = new GameObject("Ring Image", typeof(RectTransform));
+            imageGameObject.transform.SetParent(canvas.transform, false);
+            ImageView newImage = imageGameObject.AddComponent<ImageView>();
+            newImage.enabled = false;
+            newImage.material = Utilities.ImageResources.NoGlowMat;
             newImage.sprite = Resources.FindObjectsOfTypeAll<Sprite>().FirstOrDefault(x => x.name == multiplierImageSpriteName);
-            newImage.transform.SetParent(canvas.transform, false);
             newImage.type = Image.Type.Filled;
             newImage.fillClockwise = true;
             newImage.fillOrigin = 2;
+            newImage.fillAmount = 1;
             newImage.fillMethod = Image.FillMethod.Radial360;
+            newImage.enabled = true;
             return newImage;
         }
     }

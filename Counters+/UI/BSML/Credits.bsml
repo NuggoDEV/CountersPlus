@@ -1,8 +1,5 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
   <vertical child-control-height='false'>
-    <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
-      <text text='Counters+' align='Center' font-size='11'></text>
-    </horizontal>
     <vertical bg='round-rect-panel' size-delta-y='25' pad='5'>
       <text id='aprilFoolsText' align ='Center' font-size='6' text='April fools!'></text>
       <text id='versionText' align ='Center' font-size='3' text='Version 0.0.0'></text>
@@ -12,8 +9,8 @@
   </vertical>
   <text id='linkOpenedText' align ='Center' font-size='4' text='Link opened in your browser!'></text>
   <horizontal>
-    <button id='github' text='GitHub' hint-text='Opens in a new browser tab on your desktop. Feel free to explore the source code! Maybe try out experimental versions?'></button>
-    <button id='donate' pref-width='0' text='&lt;3' hint-text='Buy me a coffee if you feel like I%apos;m deserving of one.'></button>
-    <button id='issues' text='Report an Issue' hint-text='Opens in a new browser tab on your desktop. Be sure to read the Issue template thoroughly!'></button>
+    <button id='github' text='GitHub' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'></button>
+    <button id='donate' text='Donate' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'></button>
+    <button id='issues' text='Report an Issue' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'></button>
   </horizontal>
 </bg>
