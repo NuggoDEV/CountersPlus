@@ -27,7 +27,9 @@ namespace CountersPlus.Counters
             label.fontSize = 3;
             label.text = labelText;
 
-            count = CanvasUtility.CreateTextFromSettings(Settings, new Vector3(0, -0.4f, 0));
+            HUDCanvas canvas = CanvasUtility.GetCanvasSettingsFromID(Settings.CanvasID);
+
+            count = CanvasUtility.CreateTextFromSettings(Settings, new Vector3(0, -0.4f * (10 / canvas.PositionScale), 0));
             count.text = "0";
             count.fontSize = 4;
         }

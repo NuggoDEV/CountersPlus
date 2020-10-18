@@ -33,7 +33,7 @@ namespace CountersPlus.Counters.NoteCountProcessors
             List<NoteData> allNoteData = new List<NoteData>();
             foreach (var beatmapObjectData in data.beatmapObjectsData)
             {
-                if (beatmapObjectData is NoteData note && note.colorType == ColorType.None)
+                if (beatmapObjectData is NoteData note && note.colorType != ColorType.None)
                 {
                     if (ShouldIgnoreNote(note))
                         continue;

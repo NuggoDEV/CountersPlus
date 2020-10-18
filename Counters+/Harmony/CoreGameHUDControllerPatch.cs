@@ -69,7 +69,7 @@ namespace CountersPlus.Harmony
             HUDConfigModel hudConfig = Plugin.MainConfig.HUDConfig;
             ProgressConfigModel progress = Plugin.MainConfig.ProgressConfig;
             ScoreConfigModel score = Plugin.MainConfig.ScoreConfig;
-            isOverriding = original && !(
+            isOverriding = original && (
                 (progress.Enabled && progress.Mode == ProgressMode.BaseGame && CheckIgnoreOption(hudConfig, progress)) ||
                 (score.Enabled && CheckIgnoreOption(hudConfig, score)));
             return isOverriding;

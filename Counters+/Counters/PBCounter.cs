@@ -37,6 +37,7 @@ namespace CountersPlus.Counters
 
             modifiersModel = SCGameplayModsModel(ref scoreController);
             IDifficultyBeatmap beatmap = data.difficultyBeatmap;
+            Plugin.Logger.Warn($"Detected {noteCountProcessor.NoteCount} notes...");
             int maxRawScore = ScoreModel.MaxRawScoreForNumberOfNotes(noteCountProcessor.NoteCount);
             maxPossibleScore = ScoreModel.GetModifiedScoreForGameplayModifiersScoreMultiplier(maxRawScore,
                 modifiersModel.GetTotalMultiplier(data.gameplayModifiers));
@@ -63,9 +64,9 @@ namespace CountersPlus.Counters
         {
             if (maxPossibleScore != 0)
             {
-                float ratio = modifiedScore / (float)maxPossibleScore;
                 if (modifiedScore > highScore)
                 {
+                    float ratio = modifiedScore / (float)maxPossibleScore;
                     SetPersonalBest(ratio);
                     if (!(Settings.HideFirstScore && stats.highScore == 0)) counter.color = red;
                 }
