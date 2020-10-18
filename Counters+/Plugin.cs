@@ -45,7 +45,7 @@ namespace CountersPlus
         [OnEnable]
         public void OnEnable()
         {
-            CoreGameHUDControllerPatch.Patch(harmony);
+            harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
 
         [OnDisable]

@@ -18,20 +18,11 @@ namespace CountersPlus.Harmony
     [HarmonyPatch("Start")]
     internal class CoreGameHUDControllerPatch
     {
-        private static MethodInfo coreGame = typeof(CoreGameHUDController).GetMethod("Start",
-            BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-        private static MethodInfo transpiler = SymbolExtensions.GetMethodInfo(() => Transpiler(null));
-
         private static MethodInfo ProgressMethod = SymbolExtensions.GetMethodInfo(() => ShouldEnableProgressPanel(false));
         private static MethodInfo ScoreMethod = SymbolExtensions.GetMethodInfo(() => ShouldEnableScorePanel(false));
         private static MethodInfo SkipMethod = SymbolExtensions.GetMethodInfo(() => ShouldSkip(false));
 
         private static bool isOverriding = false;
-
-        public static void Patch(HarmonyObj obj)
-        {
-            obj.Patch(coreGame, null, null, new HarmonyMethod(transpiler));
-        }
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> original)
         {
