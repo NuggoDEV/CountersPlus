@@ -24,6 +24,7 @@ namespace CountersPlus.UI.FlowCoordinators
         [Inject] private GameScenesManager gameScenesManager;
         [Inject] private FadeInOutController fadeInOutController;
         [Inject] private VRInputModule vrInputModule;
+        [Inject] private MenuShockwave menuShockwave;
 
         [Inject] private CountersPlusCreditsViewController credits;
         [Inject] private CountersPlusBlankViewController blank;
@@ -82,6 +83,7 @@ namespace CountersPlus.UI.FlowCoordinators
                     if (!Environment.GetCommandLineArgs().Any(x => x.ToLower() == "fpfc"))
                     {
                         vrInputModule.gameObject.SetActive(false);
+                        menuShockwave.gameObject.SetActive(false);
 
                         DisableAllNonImportantObjects(tutorial, tutorial, new string[]
                         {
@@ -133,6 +135,7 @@ namespace CountersPlus.UI.FlowCoordinators
             canvasUtility.ClearAllText();
 
             vrInputModule.gameObject.SetActive(true);
+            menuShockwave.gameObject.SetActive(true);
 
             // Return back to the main menu.
             gameScenesManager.PopScenes(0.25f, null, (_) =>
