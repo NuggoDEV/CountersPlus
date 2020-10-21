@@ -79,11 +79,13 @@ namespace CountersPlus.UI.FlowCoordinators
                     // Disable the tutorial from actually starting. I dont think there's a better way to do this...
                     Transform tutorial = GameObject.Find("TutorialGameplay").transform;
 
+                    // Disable menu shockwave to forget about rendering order problems
+                    menuShockwave.gameObject.SetActive(false);
+
                     // When not in FPFC, disable the Menu input, and re-enable the Tutorial menu input
                     if (!Environment.GetCommandLineArgs().Any(x => x.ToLower() == "fpfc"))
                     {
                         vrInputModule.gameObject.SetActive(false);
-                        menuShockwave.gameObject.SetActive(false);
 
                         DisableAllNonImportantObjects(tutorial, tutorial, new string[]
                         {

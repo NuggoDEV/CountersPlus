@@ -11,13 +11,13 @@
         pivot-x='.5' pivot-y='1'>
     <scrollable-container id='ScrollContent' mask-overflow='true' size-delta-x='0'>
       <vertical pad='5' vertical-fit='PreferredSize' spacing='1'>
+        <string-setting text='Name' apply-on-change='true' value='Name' hover-hint='Change the name of this Canvas.' tags='name-field'></string-setting>
         <checkbox-setting text='Parent to Base Game HUD' apply-on-change='true' value='ParentedToBaseGameHUD' hover-hint='Have this Canvas move around with the Base Game HUD.' on-change='fire-update'></checkbox-setting>
         <checkbox-setting text='Ignore No Text and HUD' apply-on-change='true' value='IgnoreNoTextAndHUDOption' hover-hint='Make this canvas ignore the players No Text and HUD option.' on-change='fire-update'></checkbox-setting>
         <slider-setting text='Size' min='1' max='20' increment='1' apply-on-change='true' value='Size' hover-hint='Control the total size of this Canvas' on-change='fire-update'></slider-setting>
         <slider-setting text='Position Scale' min='1' max='20' increment='1' apply-on-change='true' value='PositionScale' hover-hint='Control spacing between elements in this Canvas' on-change='fire-update'></slider-setting>
         <checkbox-setting text='Ignore Shockwave Effect' apply-on-change='true' value='IgnoreShockwaveEffect' hover-hint='Have this Canvas ignore any shockwave effects when cutting notes.' on-change='fire-update'></checkbox-setting>
-        <checkbox-setting text='Curved' apply-on-change='true' value='Curved' hover-hint='Make this Canvas curved.' on-change='fire-update'></checkbox-setting>
-        <slider-setting text='Curve Radius' min='0' max='360' increment='5' apply-on-change='true' value='CurveRadius' hover-hint='Controls the radius of the curve on this Canvas. A value of 0 will disable the curve.' on-change='fire-update'></slider-setting>
+        <slider-setting text='Curve Radius' min='0' max='180' increment='5' apply-on-change='true' value='CurveRadius' hover-hint='Controls the radius of the curve on this Canvas. A value of 0 will disable the curve.' on-change='fire-update'></slider-setting>
         <text text='Position' font-size='6'></text>
         <slider-setting text='X' min='-10' max='10' increment='0.5' apply-on-change='true' value='Pos_X' hover-hint='Control the position for this Canvas' on-change='fire-update'></slider-setting>
         <slider-setting text='Y' min='-10' max='10' increment='0.5' apply-on-change='true' value='Pos_Y' hover-hint='Control the position for this Canvas' on-change='fire-update'></slider-setting>

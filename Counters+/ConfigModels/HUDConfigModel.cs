@@ -18,7 +18,8 @@ namespace CountersPlus.ConfigModels
 
     public class HUDCanvas
     {
-        public string Name { get; set; } = "New Canvas";
+        [UIValue(nameof(Name))]
+        public virtual string Name { get; set; } = "New Canvas";
 
         [Ignore]
         public bool IsMainCanvas = false;
@@ -52,8 +53,6 @@ namespace CountersPlus.ConfigModels
         public virtual string AttachedCamera { get; set; } = "Main Camera";
         [UIValue(nameof(IgnoreShockwaveEffect))]
         public virtual bool IgnoreShockwaveEffect { get; set; } = true;
-        [UIValue(nameof(Curved))]
-        public virtual bool Curved { get; set; } = false;
         [UIValue(nameof(CurveRadius))]
         public virtual float CurveRadius { get; set; } = 0;
 

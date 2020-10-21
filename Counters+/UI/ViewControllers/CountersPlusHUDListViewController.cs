@@ -47,7 +47,7 @@ namespace CountersPlus.UI.ViewControllers
             DeactivateModals();
         }
 
-        protected void RefreshData()
+        public void RefreshData()
         {
             data.data.Clear();
             for (int i = -1; i < hudConfig.OtherCanvasSettings.Count; i++)

@@ -1,8 +1,11 @@
 ﻿using BeatSaberMarkupLanguage;
+using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.Components.Settings;
 using CountersPlus.ConfigModels;
 using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.Utils;
 using HMUI;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using Zenject;
@@ -24,6 +27,10 @@ namespace CountersPlus.UI.ViewControllers.Editing
 
         public void ApplyCanvasForEditing(int id)
         {
+            if (id != canvasID)
+            {
+                hudList.Value.RefreshData();
+            }
             canvasID = id;
             HUDCanvas settings = canvasUtility.GetCanvasSettingsFromID(canvasID);
             if (currentlyEditing != null)
@@ -32,16 +39,19 @@ namespace CountersPlus.UI.ViewControllers.Editing
                 currentlyEditing.OnCanvasSettingsApply -= CurrentlyEditing_OnCanvasSettingsApply;
             }
             ClearScreen();
-            BSMLParser.instance.Parse(SettingsBase, gameObject, settings);
+            var param = BSMLParser.instance.Parse(SettingsBase, gameObject, settings);
             currentlyEditing = settings;
             currentlyEditing.OnCanvasSettingsChanged += CurrentlyEditing_OnCanvasSettingsChanged;
             currentlyEditing.OnCanvasSettingsApply += CurrentlyEditing_OnCanvasSettingsApply;
+            StringSetting nameFieldSetting = param.GetObjectsWithTag("name-field").First().GetComponent<StringSetting>();
+            nameFieldSetting.interactable = !(currentlyEditing?.IsMainCanvas ?? true);
         }
 
         private void CurrentlyEditing_OnCanvasSettingsApply()
         {
             flowCoordinator.Value.SetRightViewController(null);
             hudList.Value.ClearSelection();
+            hudList.Value.RefreshData();
         }
 
         private void CurrentlyEditing_OnCanvasSettingsChanged()
