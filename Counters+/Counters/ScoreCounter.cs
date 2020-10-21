@@ -9,7 +9,7 @@ namespace CountersPlus.Counters
     // REVIEW: Perhaps look into harmony patches to take control of the base game score counter more... sanely?
     internal class ScoreCounter : Counter<ScoreConfigModel>
     {
-        private readonly Vector3 offset = new Vector3(0, -4f, 0);
+        private readonly Vector3 offset = new Vector3(0, 1.91666f, 0);
 
         [Inject] private CoreGameHUDController coreGameHUD;
         [Inject] private RelativeScoreAndImmediateRankCounter relativeScoreAndImmediateRank;
@@ -48,11 +48,10 @@ namespace CountersPlus.Counters
             RectTransform pointsTextTransform = old.rectTransform;
 
             HUDCanvas currentSettings = CanvasUtility.GetCanvasSettingsFromID(Settings.CanvasID);
-            float positionScale = currentSettings?.PositionScale ?? 10;
 
-            Vector2 anchoredPos = (CanvasUtility.GetAnchoredPositionFromConfig(Settings, currentSettings.IsMainCanvas) + offset) * positionScale;
+            Vector2 anchoredPos = CanvasUtility.GetAnchoredPositionFromConfig(Settings, currentSettings.IsMainCanvas) + (offset * (3f / currentSettings.PositionScale));
 
-            pointsTextTransform.anchoredPosition = anchoredPos;
+            pointsTextTransform.localPosition = anchoredPos * currentSettings.PositionScale;
             pointsTextTransform.localPosition = new Vector3(pointsTextTransform.localPosition.x, pointsTextTransform.localPosition.y, 0);
             pointsTextTransform.localEulerAngles = Vector3.zero;
 

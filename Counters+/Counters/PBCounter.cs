@@ -11,7 +11,7 @@ namespace CountersPlus.Counters
 {
     internal class PBCounter : Counter<PBConfigModel>, IScoreEventHandler
     {
-        private readonly Vector3 SCORE_COUNTER_OFFSET = new Vector3(0, -0.7f, 0); 
+        private readonly Vector3 SCORE_COUNTER_OFFSET = new Vector3(0, -1.85f, 0); 
 
         [Inject] private GameplayCoreSceneSetupData data;
         [Inject] private ScoreController scoreController;
@@ -46,7 +46,8 @@ namespace CountersPlus.Counters
 
             if (scoreConfig.Enabled && Settings.UnderScore)
             {
-                counter = CanvasUtility.CreateTextFromSettings(scoreConfig, SCORE_COUNTER_OFFSET);
+                HUDCanvas scoreCanvas = CanvasUtility.GetCanvasSettingsFromID(scoreConfig.CanvasID);
+                counter = CanvasUtility.CreateTextFromSettings(scoreConfig, SCORE_COUNTER_OFFSET * (3f / scoreCanvas.PositionScale));
             }
             else
             {
