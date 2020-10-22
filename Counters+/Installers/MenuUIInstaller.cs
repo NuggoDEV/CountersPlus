@@ -57,19 +57,7 @@ namespace CountersPlus.Installers
             BindViewController<CountersPlusHUDEditViewController>();
 
             Container.BindFlowCoordinator<CountersPlusSettingsFlowCoordinator>();
-
-            AddButton();
-        }
-
-        public void AddButton()
-        {
-            menuButton = new MenuButton("Counters+", "Configure Counters+ settings.", OnClick);
-            MenuButtons.instance.RegisterButton(menuButton);
-        }
-
-        public void RemoveButton()
-        {
-            MenuButtons.instance.UnregisterButton(menuButton);
+            Container.BindInterfacesAndSelfTo<MenuButtonManager>().AsSingle().NonLazy();
         }
 
         private void BindViewController<T>() where T : ViewController
@@ -80,15 +68,6 @@ namespace CountersPlus.Installers
         private void BindSettingsGroup<T>() where T : SettingsGroup
         {
             Container.Bind<SettingsGroup>().To<T>().AsCached().NonLazy();
-        }
-
-        private void OnClick()
-        {
-            var flowCoordinator = Container.Resolve<CountersPlusSettingsFlowCoordinator>();
-            if (flowCoordinator != null)
-            {
-                BeatSaberUI.MainFlowCoordinator.PresentFlowCoordinator(flowCoordinator);
-            }
         }
     }
 }
