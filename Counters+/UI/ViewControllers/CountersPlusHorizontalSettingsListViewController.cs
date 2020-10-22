@@ -85,6 +85,10 @@ namespace CountersPlus.UI.ViewControllers
                     (PageLeftButton.transform as RectTransform).anchoredPosition = Vector3.up * 2.5f;
                     PageLeftButton.interactable = true;
                     PageLeftButton.gameObject.SetActive(false);
+                    foreach (Transform child in PageLeftButton.transform) // These child transforms are offset from the actual hitbox; need to fix.
+                    {
+                        child.localPosition = new Vector3(7.5f, 0, 0);
+                    }
                     PageRightButton = Instantiate(Resources.FindObjectsOfTypeAll<Button>().Last(x => x.name == "PageRightButton"), transform);
                     buttonTransform = PageRightButton.transform.Find("BG") as RectTransform;
                     /*glow = Instantiate(Resources.FindObjectsOfTypeAll<GameObject>().Last(x => (x.name == "GlowContainer")), PageRightButton.transform).transform as RectTransform;
@@ -97,6 +101,10 @@ namespace CountersPlus.UI.ViewControllers
                     (PageRightButton.transform as RectTransform).anchoredPosition = Vector3.up * 2.5f;
                     PageRightButton.interactable = true;
                     PageRightButton.gameObject.SetActive(false);
+                    foreach (Transform child in PageRightButton.transform) // These child transforms are offset from the actual hitbox; need to fix.
+                    {
+                        child.localPosition = new Vector3(-7.5f, 0, 0);
+                    }
 
                     RectTransform viewport = new GameObject("Viewport").AddComponent<RectTransform>(); //Make a Viewport RectTransform
                     viewport.SetParent(customListTableView.transform as RectTransform, false); //It expects one from a ScrollRect, so we have to make one ourselves.

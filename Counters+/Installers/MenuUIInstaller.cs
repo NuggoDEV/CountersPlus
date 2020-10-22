@@ -56,7 +56,7 @@ namespace CountersPlus.Installers
             BindViewController<CountersPlusHUDListViewController>();
             BindViewController<CountersPlusHUDEditViewController>();
 
-            Container.BindFlowCoordinator<CountersPlusSettingsFlowCoordinator>(BeatSaberUI.CreateFlowCoordinator<CountersPlusSettingsFlowCoordinator>());
+            Container.BindFlowCoordinator<CountersPlusSettingsFlowCoordinator>();
 
             AddButton();
         }
@@ -74,7 +74,7 @@ namespace CountersPlus.Installers
 
         private void BindViewController<T>() where T : ViewController
         {
-            Container.BindViewController<T>(BeatSaberUI.CreateViewController<T>());
+            Container.BindViewController<T>();
         }
 
         private void BindSettingsGroup<T>() where T : SettingsGroup
