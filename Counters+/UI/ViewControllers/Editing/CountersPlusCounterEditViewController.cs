@@ -29,6 +29,8 @@ namespace CountersPlus.UI.ViewControllers.Editing
         [UIComponent("ScrollContent")] private BSMLScrollableContainer scrollView;
         [UIComponent("name")] private TextMeshProUGUI settingsHeader;
 
+        private Dictionary<ConfigModel, HashSet<GameObject>> cachedSettings = new Dictionary<ConfigModel, HashSet<GameObject>>();
+
         private ConfigModel editingConfigModel = null;
 
         internal void ApplySettings(ConfigModel model)
@@ -50,31 +52,46 @@ namespace CountersPlus.UI.ViewControllers.Editing
             model.GetCanvasIDFromCanvasSettings = (v) => mainConfig.HUDConfig.OtherCanvasSettings.IndexOf(v);
             model.GetAllCanvases = () => GetAllCanvases();
 
-            // Loading settings base
-            BSMLParser.instance.Parse(SettingsBase, settingsContainer, model);
-
-            // Loading counter-specific settings
-            if (!(model is CustomConfigModel customConfig))
+            if (cachedSettings.TryGetValue(model, out var cache))
             {
-                string resourceLocation = $"CountersPlus.UI.BSML.Config.{model.DisplayName}.bsml";
-                string resourceContent = Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), resourceLocation);
-                BSMLParser.instance.Parse(resourceContent, settingsContainer, model);
+                if (model is CustomConfigModel customConfig)
+                {
+                    CustomCounter customCounter = customConfig.AttachedCustomCounter;
+                    settingsHeader.text = $"{customCounter.Name} Settings";
+                }
+                foreach (GameObject obj in cache)
+                {
+                    obj.SetActive(true);
+                }
             }
             else
             {
-                CustomCounter customCounter = customConfig.AttachedCustomCounter;
-                settingsHeader.text = $"{customCounter.Name} Settings";
-                if (customCounter.BSML != null && !string.IsNullOrEmpty(customCounter.BSML.Resource))
-                {
-                    string resourceLocation = customCounter.BSML.Resource;
-                    string resourceContent = Utilities.GetResourceContent(customCounter.CounterType.Assembly, resourceLocation);
+                // Loading settings base
+                BSMLParser.instance.Parse(SettingsBase, settingsContainer, model);
 
-                    object host = null;
-                    if (customCounter.BSML.HasType)
+                // Loading counter-specific settings
+                if (!(model is CustomConfigModel customConfig))
+                {
+                    string resourceLocation = $"CountersPlus.UI.BSML.Config.{model.DisplayName}.bsml";
+                    string resourceContent = Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), resourceLocation);
+                    BSMLParser.instance.Parse(resourceContent, settingsContainer, model);
+                }
+                else
+                {
+                    CustomCounter customCounter = customConfig.AttachedCustomCounter;
+                    settingsHeader.text = $"{customCounter.Name} Settings";
+                    if (customCounter.BSML != null && !string.IsNullOrEmpty(customCounter.BSML.Resource))
                     {
-                        host = diContainer.TryResolveId(customCounter.BSML.HostType, customCounter.Name);
+                        string resourceLocation = customCounter.BSML.Resource;
+                        string resourceContent = Utilities.GetResourceContent(customCounter.CounterType.Assembly, resourceLocation);
+
+                        object host = null;
+                        if (customCounter.BSML.HasType)
+                        {
+                            host = diContainer.TryResolveId(customCounter.BSML.HostType, customCounter.Name);
+                        }
+                        BSMLParser.instance.Parse(resourceContent, settingsContainer, host);
                     }
-                    BSMLParser.instance.Parse(resourceContent, settingsContainer, host);
                 }
             }
 
@@ -104,7 +121,19 @@ namespace CountersPlus.UI.ViewControllers.Editing
         private void ClearScreen()
         {
             for (int i = 0; i < settingsContainer.transform.childCount; i++)
-                Destroy(settingsContainer.transform.GetChild(i).gameObject);
+            {
+                GameObject child = settingsContainer.transform.GetChild(i).gameObject;
+                if (child.activeSelf)
+                {
+                    if (!cachedSettings.TryGetValue(editingConfigModel, out var cache))
+                    {
+                        cache = new HashSet<GameObject>() { };
+                        cachedSettings.Add(editingConfigModel, cache);
+                    }
+                    cache.Add(child);
+                    child.SetActive(false);
+                }
+            }
         }
 
         protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemEnabling)
