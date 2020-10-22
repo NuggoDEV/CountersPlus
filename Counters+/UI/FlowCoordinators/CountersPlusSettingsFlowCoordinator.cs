@@ -31,6 +31,7 @@ namespace CountersPlus.UI.FlowCoordinators
         [Inject] private CountersPlusMainScreenNavigationController mainScreenNavigation;
         [Inject] private CountersPlusSettingSectionSelectionViewController settingsSelection;
         [Inject] private CountersPlusHorizontalSettingsListViewController horizontalSettingsList;
+        [Inject] private SongPreviewPlayer songPreviewPlayer;
 
         private HashSet<string> persistentScenes = new HashSet<string>();
 
@@ -81,6 +82,9 @@ namespace CountersPlus.UI.FlowCoordinators
 
                     // Disable menu shockwave to forget about rendering order problems
                     menuShockwave.gameObject.SetActive(false);
+
+                    // Reset menu audio to original state.
+                    songPreviewPlayer.CrossfadeToDefault();
 
                     // When not in FPFC, disable the Menu input, and re-enable the Tutorial menu input
                     if (!Environment.GetCommandLineArgs().Any(x => x.ToLower() == "fpfc"))
@@ -147,6 +151,7 @@ namespace CountersPlus.UI.FlowCoordinators
                 persistentScenes.Remove("MenuCore");
                 persistentScenes.Remove("Menu");
                 fadeInOutController.FadeIn();
+                songPreviewPlayer.CrossfadeToDefault();
             });
         }
     }
