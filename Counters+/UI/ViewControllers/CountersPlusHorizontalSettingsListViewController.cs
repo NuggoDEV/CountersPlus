@@ -38,6 +38,7 @@ namespace CountersPlus.UI.ViewControllers
         internal AnnotatedBeatmapLevelCollectionTableCell levelPackTableCellInstance;
 
         [Inject] private List<SettingsGroup> loadedSettingsGroups = new List<SettingsGroup>();
+        private Dictionary<SettingsGroup, int> lastClickedCellsPerGroup = new Dictionary<SettingsGroup, int>();
         private SettingsGroup selectedSettingsGroup = null;
         private TableView customListTableView;
 
@@ -128,6 +129,10 @@ namespace CountersPlus.UI.ViewControllers
                     HandleSettingsGroupChanged(0);
                 }
                 selectedSettingsGroup?.OnEnable();
+                if (lastClickedCellsPerGroup.TryGetValue(selectedSettingsGroup, out int idx))
+                {
+                    selectedSettingsGroup.OnCellSelect(customListTableView, idx);
+                }
             }
             catch (Exception e)
             {  //Edit this with your logging system of choice, or delete it altogether (As this shouldn't really cause Exceptions)
@@ -170,8 +175,12 @@ namespace CountersPlus.UI.ViewControllers
         // Tune this to the amount of cells you'll have, whether dynamic or static.
         public int NumberOfCells() => selectedSettingsGroup?.NumberOfCells() ?? 0;
 
-        public TableCell CellForIdx(TableView view, int row) => selectedSettingsGroup?.CellForIdx(view, row) ?? null;
+        public TableCell CellForIdx(TableView view, int idx) => selectedSettingsGroup?.CellForIdx(view, idx) ?? null;
 
-        private void OnCellSelect(TableView view, int row) => selectedSettingsGroup?.OnCellSelect(view, row);
+        private void OnCellSelect(TableView view, int idx)
+        {
+            lastClickedCellsPerGroup[selectedSettingsGroup] = idx;
+            selectedSettingsGroup?.OnCellSelect(view, idx);
+        }
     }
 }
