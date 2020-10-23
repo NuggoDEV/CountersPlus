@@ -8,7 +8,7 @@
     </vertical>
   </vertical>
   <text id='linkOpenedText' align ='Center' font-size='4' text='Link opened in your browser!'></text>
-  <horizontal>
+  <horizontal anchor-max-y='0.5'>
     <button id='github' text='GitHub' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'></button>
     <button id='donate' text='Donate' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'></button>
     <button id='issues' text='Report an Issue' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'></button>
