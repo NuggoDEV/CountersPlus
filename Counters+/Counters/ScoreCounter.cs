@@ -13,6 +13,7 @@ namespace CountersPlus.Counters
 
         [Inject] private CoreGameHUDController coreGameHUD;
         [Inject] private RelativeScoreAndImmediateRankCounter relativeScoreAndImmediateRank;
+        [Inject] private MainConfigModel mainConfig;
 
         private RankModel.Rank prevImmediateRank = RankModel.Rank.SSS;
         private TextMeshProUGUI rankText;
@@ -34,6 +35,15 @@ namespace CountersPlus.Counters
             old.rectTransform.SetParent(currentCanvas.transform, true);
             baseGameScore.transform.SetParent(old.transform, true);
             baseGameRank.transform.SetParent(old.transform, true);
+
+            if (!mainConfig.ItalicText)
+            {
+                old.fontStyle = relativeScoreText.fontStyle = rankText.fontStyle = FontStyles.Normal;
+                Vector3 localPosition = relativeScoreText.rectTransform.localPosition;
+                relativeScoreText.rectTransform.localPosition = new Vector3(0, localPosition.y, localPosition.z);
+                localPosition = rankText.rectTransform.localPosition;
+                rankText.rectTransform.localPosition = new Vector3(0, localPosition.y, localPosition.z);
+            }
 
             switch (Settings.Mode)
             {

@@ -25,6 +25,8 @@ namespace CountersPlus.ConfigModels
         public virtual float ComboOffset { get; set; } = 0.2f;
         [UIValue(nameof(MultiplierOffset))]
         public virtual float MultiplierOffset { get; set; } = 0.4f;
+        [UIValue(nameof(ItalicText))]
+        public virtual bool ItalicText { get; set; } = false;
         public virtual HUDConfigModel HUDConfig { get; set; } = new HUDConfigModel();
         public virtual MissedConfigModel MissedConfig { get; set; } = new MissedConfigModel();
         public virtual NoteConfigModel NoteConfig { get; set; } = new NoteConfigModel();

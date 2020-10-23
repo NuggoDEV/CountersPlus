@@ -191,6 +191,18 @@ namespace CountersPlus.Utils
             tmp_text.enableWordWrapping = false;
             tmp_text.overflowMode = TextOverflowModes.Overflow;
             
+            if (mainConfig.ItalicText)
+            {
+                tmp_text.fontStyle = FontStyles.Italic;
+                if (offset != null)
+                {
+                    tmp_text.rectTransform.anchoredPosition += new Vector2(Mathf.Abs(offset.Value.x) * -1, 0)
+                        * posScaleFactor
+                        * 0.18f
+                        * tmp_text.fontSize;
+                }
+            }
+
             return tmp_text;
         }
 
