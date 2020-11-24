@@ -37,6 +37,7 @@ namespace CountersPlus.Utils
 
         public static FieldAccessor<GameScenesManager, HashSet<string>>.Accessor GSMPersistentScenes = FieldAccessor<GameScenesManager, HashSet<string>>.GetAccessor("_neverUnloadScenes");
         public static FieldAccessor<MenuTransitionsHelper, TutorialScenesTransitionSetupDataSO>.Accessor MTHTutorialScenesSetup = FieldAccessor<MenuTransitionsHelper, TutorialScenesTransitionSetupDataSO>.GetAccessor("_tutorialScenesTransitionSetupData");
+        public static FieldAccessor<SettingsFlowCoordinator, MainSettingsModelSO>.Accessor SFCMainSettingsModel = FieldAccessor<SettingsFlowCoordinator, MainSettingsModelSO>.GetAccessor("_mainSettingsModel");
         #endregion
 
         public static FieldAccessor<ScoreMultiplierUIController, Image>.Accessor MultiplierImage = FieldAccessor<ScoreMultiplierUIController, Image>.GetAccessor("_multiplierProgressImage");

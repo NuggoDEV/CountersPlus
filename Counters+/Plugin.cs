@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using IPALogger = IPA.Logging.Logger;
 using HarmonyObj = HarmonyLib.Harmony;
-using CountersPlus.Harmony;
 
 namespace CountersPlus
 {

@@ -31,8 +31,10 @@ namespace CountersPlus.UI.FlowCoordinators
         [Inject] private CountersPlusMainScreenNavigationController mainScreenNavigation;
         [Inject] private CountersPlusSettingSectionSelectionViewController settingsSelection;
         [Inject] private CountersPlusHorizontalSettingsListViewController horizontalSettingsList;
+        [Inject] private SettingsFlowCoordinator settingsFlowCoordinator;
         [Inject] private SongPreviewPlayer songPreviewPlayer;
-
+        
+        private MainSettingsModelSO mainSettings;
         private HashSet<string> persistentScenes = new HashSet<string>();
 
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
@@ -43,6 +45,7 @@ namespace CountersPlus.UI.FlowCoordinators
                 SetTitle("Counters+");
 
                 persistentScenes = GSMPersistentScenes(ref gameScenesManager); // Get our hashset of persistent scenes
+                mainSettings = SFCMainSettingsModel(ref settingsFlowCoordinator);
 
                 persistentScenes.Add("MenuViewControllers"); // Make sure our menu persists through the transition
                 persistentScenes.Add("MenuCore");
@@ -80,8 +83,11 @@ namespace CountersPlus.UI.FlowCoordinators
                     // Disable the tutorial from actually starting. I dont think there's a better way to do this...
                     Transform tutorial = GameObject.Find("TutorialGameplay").transform;
 
-                    // Disable menu shockwave to forget about rendering order problems
-                    menuShockwave.gameObject.SetActive(false);
+                    if (mainSettings.screenDisplacementEffectsEnabled)
+                    {
+                        // Disable menu shockwave to forget about rendering order problems
+                        menuShockwave.gameObject.SetActive(false);
+                    }
 
                     // Reset menu audio to original state.
                     songPreviewPlayer.CrossfadeToDefault();
@@ -141,7 +147,12 @@ namespace CountersPlus.UI.FlowCoordinators
             canvasUtility.ClearAllText();
 
             vrInputModule.gameObject.SetActive(true);
-            menuShockwave.gameObject.SetActive(true);
+
+            // This took a long time to figure out.
+            if (mainSettings.screenDisplacementEffectsEnabled)
+            {
+                menuShockwave.gameObject.SetActive(true);
+            }
 
             // Return back to the main menu.
             gameScenesManager.PopScenes(0.25f, null, (_) =>
