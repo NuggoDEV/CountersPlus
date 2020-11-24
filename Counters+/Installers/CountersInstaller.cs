@@ -26,9 +26,9 @@ namespace CountersPlus.Installers
             if (!mainConfig.Enabled) return;
 
             /// LOADING IMPORTANT SHIT LIKE CANVASES AND STUFF ///
-            Container.Bind<CanvasUtility>().AsSingle().NonLazy();
+            Container.Bind<CanvasUtility>().AsSingle();
 
-            Container.Bind<NoteCountProcessor>().To<GenericNoteCountProcessor>().AsSingle().NonLazy();
+            Container.Bind<NoteCountProcessor>().To<GenericNoteCountProcessor>().AsSingle();
 
             /// LOADING COUNTERS ///
             Plugin.Logger.Notice("Loading counters...");

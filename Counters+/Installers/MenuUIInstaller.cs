@@ -23,8 +23,8 @@ namespace CountersPlus.Installers
         public override void InstallBindings()
         {
             // CanvasUtility for UI
-            Container.Bind<CanvasUtility>().AsSingle().NonLazy();
-            Container.Bind<MockCounter>().AsSingle().NonLazy();
+            Container.Bind<CanvasUtility>().AsSingle();
+            Container.Bind<MockCounter>().AsSingle();
 
             BindSettingsGroup<MainSettingsGroup>();
             BindSettingsGroup<CountersSettingsGroup>();

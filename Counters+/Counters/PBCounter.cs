@@ -37,7 +37,6 @@ namespace CountersPlus.Counters
 
             modifiersModel = SCGameplayModsModel(ref scoreController);
             IDifficultyBeatmap beatmap = data.difficultyBeatmap;
-            Plugin.Logger.Warn($"Detected {noteCountProcessor.NoteCount} notes...");
             int maxRawScore = ScoreModel.MaxRawScoreForNumberOfNotes(noteCountProcessor.NoteCount);
             maxPossibleScore = ScoreModel.GetModifiedScoreForGameplayModifiersScoreMultiplier(maxRawScore,
                 modifiersModel.GetTotalMultiplier(data.gameplayModifiers));
