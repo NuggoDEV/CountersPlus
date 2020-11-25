@@ -20,6 +20,9 @@ namespace CountersPlus.Utils
         private Canvas energyCanvas = null;
         private MainConfigModel mainConfig;
 
+        private float hudWidth = 3.2f;
+        private float hudDepth = 7f;
+
         // Using the magical power of Zenject™, we magically find ourselves with an instance of
         // our HUDConfigModel and the CoreGameHUDController.
         internal CanvasUtility(HUDConfigModel hudConfig,
@@ -30,6 +33,9 @@ namespace CountersPlus.Utils
             this.mainConfig = mainConfig;
             if (coreGameHUD != null)
             {
+                hudWidth = Mathf.Abs(coreGameHUD.transform.Find("LeftPanel").transform.position.x);
+                hudDepth = Mathf.Abs(coreGameHUD.transform.Find("LeftPanel").transform.position.z);
+
                 energyCanvas = EnergyPanelGO(ref coreGameHUD).GetComponent<Canvas>();
 
                 // Hide Canvas and Multiplier if needed
@@ -58,14 +64,12 @@ namespace CountersPlus.Utils
                 softParent.AssignParent(parent);
 
                 // Base Game HUD is rotated backwards, so we have to reflect our vector to match.
-                Vector3 posOofset = Vector3.Reflect(hudConfig.MainCanvasSettings.Position, Vector3.back); // yknow what, fuck it, its posOofset now.
-                Quaternion rotOofset = Quaternion.Euler(Vector3.Reflect(hudConfig.MainCanvasSettings.Rotation, Vector3.back));
+                Vector3 position = hudConfig.MainCanvasSettings.Position;
 
-                /*if (HUDType == GameplayCoreHUDInstaller.HudType.Flying) // Special case for Main HUD w/360 environments
-                {
-                    posOofset = parent.up;
-                    rotOofset = Quaternion.identity;
-                }*/
+                if (hudConfig.MainCanvasSettings.MatchBaseGameHUDDepth) position.z = hudDepth;
+
+                Vector3 posOofset = Vector3.Reflect(position, Vector3.back); // yknow what, fuck it, its posOofset now.
+                Quaternion rotOofset = Quaternion.Euler(Vector3.Reflect(hudConfig.MainCanvasSettings.Rotation, Vector3.back));
 
                 softParent.AssignOffsets(posOofset, rotOofset);
             }
@@ -102,20 +106,26 @@ namespace CountersPlus.Utils
 
         public Canvas CreateCanvasWithConfig(HUDCanvas canvasSettings)
         {
-            GameObject CanvasGameObject = new GameObject($"Counters+ | {canvasSettings.Name} Canvas");
+            GameObject canvasGameObject = new GameObject($"Counters+ | {canvasSettings.Name} Canvas");
 
-            Vector3 CanvasPos = canvasSettings.Position;
-            Vector3 CanvasRot = canvasSettings.Rotation;
-            float CanvasSize = canvasSettings.Size;
+            Vector3 canvasPos = canvasSettings.Position;
 
-            Canvas canvas = CanvasGameObject.AddComponent<Canvas>();
+            if (canvasSettings.MatchBaseGameHUDDepth)
+            {
+                canvasPos = new Vector3(canvasPos.x, canvasPos.y, hudDepth);
+            }
+
+            Vector3 canvasRot = canvasSettings.Rotation;
+            float canvasSize = canvasSettings.Size;
+
+            Canvas canvas = canvasGameObject.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.WorldSpace;
 
-            CanvasGameObject.transform.localScale = Vector3.one / CanvasSize;
-            CanvasGameObject.transform.position = CanvasPos;
-            CanvasGameObject.transform.rotation = Quaternion.Euler(CanvasRot);
+            canvasGameObject.transform.localScale = Vector3.one / canvasSize;
+            canvasGameObject.transform.position = canvasPos;
+            canvasGameObject.transform.rotation = Quaternion.Euler(canvasRot);
 
-            CurvedCanvasSettings curvedCanvasSettings = CanvasGameObject.AddComponent<CurvedCanvasSettings>();
+            CurvedCanvasSettings curvedCanvasSettings = canvasGameObject.AddComponent<CurvedCanvasSettings>();
             curvedCanvasSettings.SetRadius(canvasSettings.CurveRadius);
 
             // Inherit canvas properties from the Energy Bar to ignore the shockwave effect.
@@ -164,7 +174,7 @@ namespace CountersPlus.Utils
                 CanvasIDToCanvas[settings.CanvasID] = canvasToApply;
                 CanvasToSettings.Add(canvasToApply, hudSettings);
             }
-            return CreateText(canvasToApply, GetAnchoredPositionFromConfig(settings, hudSettings.IsMainCanvas), offset);
+            return CreateText(canvasToApply, GetAnchoredPositionFromConfig(settings), offset);
         }
 
         public TMP_Text CreateText(Canvas canvas, Vector3 anchoredPosition, Vector3? offset = null)
@@ -206,7 +216,7 @@ namespace CountersPlus.Utils
             return tmp_text;
         }
 
-        public Vector3 GetAnchoredPositionFromConfig(ConfigModel settings, bool isMainCanvas = true)
+        public Vector3 GetAnchoredPositionFromConfig(ConfigModel settings)
         {
             float comboOffset = mainConfig.ComboOffset;
             float multOffset = mainConfig.MultiplierOffset;
@@ -215,22 +225,19 @@ namespace CountersPlus.Utils
             Vector3 pos = new Vector3(); // Base position
             Vector3 offset = new Vector3(0, -0.75f * index, 0); // Offset 
 
-            float X = 3.2f;
             float belowEnergyOffset = -1.5f;
             float aboveHighwayOffset = 0.75f;
-            if (isMainCanvas)
+
+            float X = 3.2f;
+
+            var canvasSettings = GetCanvasSettingsFromID(settings.CanvasID);
+
+            if (canvasSettings != null)
             {
-                /*switch (HUDType)
+                if (canvasSettings.ParentedToBaseGameHUD && (canvasSettings.MatchBaseGameHUDDepth || canvasSettings.IsMainCanvas))
                 {
-                    case GameplayCoreHUDInstaller.HudType.Narrow:
-                        X = 2f;
-                        break;
-                    case GameplayCoreHUDInstaller.HudType.Flying:
-                        X = 1.6f;
-                        belowEnergyOffset = -0.25f;
-                        aboveHighwayOffset = 0.25f;
-                        break;
-                }*/
+                    X = hudWidth;
+                }
             }
 
             switch (position)

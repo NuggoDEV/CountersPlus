@@ -59,7 +59,7 @@ namespace CountersPlus.Counters
 
             HUDCanvas currentSettings = CanvasUtility.GetCanvasSettingsFromID(Settings.CanvasID);
 
-            Vector2 anchoredPos = CanvasUtility.GetAnchoredPositionFromConfig(Settings, currentSettings.IsMainCanvas) + (offset * (3f / currentSettings.PositionScale));
+            Vector2 anchoredPos = CanvasUtility.GetAnchoredPositionFromConfig(Settings) + (offset * (3f / currentSettings.PositionScale));
 
             pointsTextTransform.localPosition = anchoredPos * currentSettings.PositionScale;
             pointsTextTransform.localPosition = new Vector3(pointsTextTransform.localPosition.x, pointsTextTransform.localPosition.y, 0);

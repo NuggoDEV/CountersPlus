@@ -52,7 +52,7 @@ namespace CountersPlus.Counters.Custom
             Canvas currentCanvas = CanvasUtility.GetCanvasFromID(Settings.CanvasID);
             HUDCanvas currentSettings = CanvasUtility.GetCanvasSettingsFromCanvas(currentCanvas);
             float positionScale = currentSettings?.PositionScale ?? 10;
-            Vector2 anchoredPos = CanvasUtility.GetAnchoredPositionFromConfig(Settings, currentSettings.IsMainCanvas) * positionScale;
+            Vector2 anchoredPos = CanvasUtility.GetAnchoredPositionFromConfig(Settings) * positionScale;
 
             canvas.transform.SetParent(currentCanvas.transform, true);
 

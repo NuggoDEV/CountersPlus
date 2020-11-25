@@ -22,6 +22,7 @@
         <slider-setting text='X' min='-10' max='10' increment='0.5' apply-on-change='true' value='Pos_X' hover-hint='Control the position for this Canvas' on-change='fire-update'></slider-setting>
         <slider-setting text='Y' min='-10' max='10' increment='0.5' apply-on-change='true' value='Pos_Y' hover-hint='Control the position for this Canvas' on-change='fire-update'></slider-setting>
         <slider-setting text='Z' min='-10' max='10' increment='0.5' apply-on-change='true' value='Pos_Z' hover-hint='Control the position for this Canvas' on-change='fire-update'></slider-setting>
+        <checkbox-setting text='Match Base Game Z' apply-on-change='true' value='MatchBaseGameHUDDepth' hover-hint='When enabled, Counters+ overrides the current Z position, and sets it to the Z position of the Base Game HUD.' on-change='fire-update'></checkbox-setting>
         <text text='Rotation' font-size='6'></text>
         <slider-setting text='X' min='0' max='360' increment='5' apply-on-change='true' value='Rot_X' hover-hint='Control the rotation for this Canvas' on-change='fire-update'></slider-setting>
         <slider-setting text='Y' min='0' max='360' increment='5' apply-on-change='true' value='Rot_Y' hover-hint='Control the rotation for this Canvas' on-change='fire-update'></slider-setting>

@@ -11,7 +11,14 @@ namespace CountersPlus.ConfigModels
     public class HUDConfigModel
     {
         public string DisplayName => "HUD Settings";
-        public HUDCanvas MainCanvasSettings { get; set; } = new HUDCanvas() { Name = "Main", IsMainCanvas = true };
+        
+        public HUDCanvas MainCanvasSettings { get; set; } = new HUDCanvas()
+        { 
+            Name = "Main",
+            IsMainCanvas = true,
+            MatchBaseGameHUDDepth = true
+        };
+
         [UseConverter(typeof(ListConverter<HUDCanvas>))]
         public List<HUDCanvas> OtherCanvasSettings { get; set; } = new List<HUDCanvas>();
     }
@@ -40,6 +47,9 @@ namespace CountersPlus.ConfigModels
         public virtual float Pos_Y { get; set; } = 0;
         [UIValue(nameof(Pos_Z))]
         public virtual float Pos_Z { get; set; } = 7;
+
+        [UIValue(nameof(MatchBaseGameHUDDepth))]
+        public virtual bool MatchBaseGameHUDDepth { get; set; } = false;
         [Ignore]
         public virtual Vector3 Rotation => new Vector3(Rot_X, Rot_Y, Rot_Z);
         [UIValue(nameof(Rot_X))]
