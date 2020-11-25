@@ -22,6 +22,7 @@ namespace CountersPlus.Utils
 
         private float hudWidth = 3.2f;
         private float hudDepth = 7f;
+        private float hudHeight = 0f;
 
         // Using the magical power of Zenject™, we magically find ourselves with an instance of
         // our HUDConfigModel and the CoreGameHUDController.
@@ -33,8 +34,9 @@ namespace CountersPlus.Utils
             this.mainConfig = mainConfig;
             if (coreGameHUD != null)
             {
-                hudWidth = Mathf.Abs(coreGameHUD.transform.Find("LeftPanel").transform.position.x);
-                hudDepth = Mathf.Abs(coreGameHUD.transform.Find("LeftPanel").transform.position.z);
+                hudWidth = Mathf.Abs(coreGameHUD.GetComponentInChildren<ComboUIController>().transform.position.x);
+                hudDepth = Mathf.Abs(coreGameHUD.GetComponentInChildren<ComboUIController>().transform.position.z);
+                hudHeight = Mathf.Abs(coreGameHUD.GetComponentInChildren<ComboUIController>().transform.position.y) - 1.5f;
 
                 energyCanvas = EnergyPanelGO(ref coreGameHUD).GetComponent<Canvas>();
 
@@ -65,6 +67,8 @@ namespace CountersPlus.Utils
 
                 // Base Game HUD is rotated backwards, so we have to reflect our vector to match.
                 Vector3 position = hudConfig.MainCanvasSettings.Position;
+
+                position.y = hudHeight * -1;
 
                 if (hudConfig.MainCanvasSettings.MatchBaseGameHUDDepth) position.z = hudDepth;
 
