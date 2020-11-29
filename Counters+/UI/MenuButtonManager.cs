@@ -27,7 +27,7 @@ namespace CountersPlus.UI
 
         public void Dispose()
         {
-            if (MenuButtons.IsSingletonAvailable)
+            if (MenuButtons.IsSingletonAvailable && BSMLParser.IsSingletonAvailable)
             {
                 MenuButtons.instance.UnregisterButton(menuButton);
             }
