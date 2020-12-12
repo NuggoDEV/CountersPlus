@@ -25,7 +25,6 @@ namespace CountersPlus.Counters
         private PlayerLevelStatsData stats;
 
         private Color white = Color.white; // Caching it beforehand, since calling the constant makes a new struct
-        private Color red = Color.red;
 
         private int maxPossibleScore = 0;
         private int highScore;
