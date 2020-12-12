@@ -33,9 +33,6 @@ namespace CountersPlus.Counters
 
         public override void CounterInit()
         {
-            Color orange;
-            ColorUtility.TryParseHtmlString("#FFA500", out orange);
-
             modifiersModel = SCGameplayModsModel(ref scoreController);
             IDifficultyBeatmap beatmap = data.difficultyBeatmap;
             int maxRawScore = ScoreModel.MaxRawScoreForNumberOfNotes(noteCountProcessor.NoteCount);
