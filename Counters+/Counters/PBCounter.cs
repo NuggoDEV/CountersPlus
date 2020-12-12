@@ -18,21 +18,22 @@ namespace CountersPlus.Counters
         [Inject] private PlayerDataModel playerDataModel;
         [Inject] private ScoreConfigModel scoreConfig;
         [Inject] private NoteCountProcessor noteCountProcessor;
+        [Inject] private RelativeScoreAndImmediateRankCounter relativeScoreAndImmediateRank;
 
         private GameplayModifiersModelSO modifiersModel;
         private TMP_Text counter;
         private PlayerLevelStatsData stats;
 
-
-        private Color orange;
         private Color white = Color.white; // Caching it beforehand, since calling the constant makes a new struct
         private Color red = Color.red;
 
         private int maxPossibleScore = 0;
         private int highScore;
+        private float pbRatio;
 
         public override void CounterInit()
         {
+            Color orange;
             ColorUtility.TryParseHtmlString("#FFA500", out orange);
 
             modifiersModel = SCGameplayModsModel(ref scoreController);
@@ -55,22 +56,47 @@ namespace CountersPlus.Counters
             counter.alignment = TextAlignmentOptions.Top;
             counter.fontSize = Settings.TextSize;
 
+            pbRatio = (float)highScore / maxPossibleScore;
+
             SetPersonalBest((float)highScore / maxPossibleScore);
+            ScoreUpdated(0);
         }
 
         public void MaxScoreUpdated(int maxModifiedScore) { }
 
         public void ScoreUpdated(int modifiedScore)
         {
+
             if (maxPossibleScore != 0)
             {
                 if (modifiedScore > highScore)
                 {
                     float ratio = modifiedScore / (float)maxPossibleScore;
                     SetPersonalBest(ratio);
+                }
+            }
+
+            if (Settings.Mode == PBMode.Relative)
+            {
+                if (relativeScoreAndImmediateRank.relativeScore > pbRatio)
+                {
+                    counter.color = Settings.BetterColor;
+                }
+                else
+                {
+                    counter.color = Settings.DefaultColor;
+                }
+            }
+            else
+            {
+                if (modifiedScore > highScore)
+                {
                     if (!(Settings.HideFirstScore && stats.highScore == 0)) counter.color = red;
                 }
-                else counter.color = Color.Lerp(white, orange, modifiedScore / (float)highScore);
+                else
+                {
+                    counter.color = Color.Lerp(white, Settings.DefaultColor, modifiedScore / (float)highScore);
+                }
             }
         }
 
