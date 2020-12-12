@@ -87,7 +87,7 @@ namespace CountersPlus.Counters
             {
                 if (modifiedScore > highScore)
                 {
-                    if (!(Settings.HideFirstScore && stats.highScore == 0)) counter.color = red;
+                    if (!(Settings.HideFirstScore && stats.highScore == 0)) counter.color = Settings.BetterColor;
                 }
                 else
                 {
