@@ -1,4 +1,7 @@
 ﻿<vertical spacing='1'  horizontal-fit='PreferredSize'>
+  <list-setting text='Mode' apply-on-change='true' value='Mode' options='Modes' hover-hint='Change color based on absolute (song maximum) or relative (current maximum) score.'></list-setting>
+  <color-setting text='Default Color' apply-on-change='true' value='DefaultColor' hover-hint='Color when current score &lt;= PB'></color-setting>
+  <color-setting text='New PB Color' apply-on-change='true' value='BetterColor' hover-hint='Color when current score &gt; PB'></color-setting>
   <list-setting text='Percentage Precision' apply-on-change='true' value='DecimalPrecision' options='DecimalPrecisions' hover-hint='How precise should the precentage be?'></list-setting>
   <list-setting text='Text Size' apply-on-change='true' value='TextSize' options='TextSizes' hover-hint='How large should the text be?'></list-setting>
   <checkbox-setting text='Below Score Counter' apply-on-change='true' value='UnderScore' hover-hint='Will the Personal Best counter instead be positioned below the Score Counter?'></checkbox-setting>
