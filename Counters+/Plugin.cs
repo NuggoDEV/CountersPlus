@@ -36,7 +36,8 @@ namespace CountersPlus
             zenjector.OnApp<CoreInstaller>();
             zenjector.OnGame<CountersInstaller>()
                 .Expose<CoreGameHUDController>()
-                .ShortCircuitForTutorial();
+                .ShortCircuitForTutorial()
+                .ShortCircuitForMultiplayer(); // still dont have the time for this
             zenjector.OnMenu<MenuUIInstaller>();
         }
 
