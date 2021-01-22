@@ -62,7 +62,7 @@ namespace CountersPlus.Installers
 
         private void BindViewController<T>() where T : ViewController
         {
-            Container.BindViewController<T>();
+            Container.Bind<T>().FromNewComponentAsViewController().AsSingle();
         }
 
         private void BindSettingsGroup<T>() where T : SettingsGroup
