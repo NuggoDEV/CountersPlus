@@ -58,7 +58,7 @@ namespace CountersPlus.UI.FlowCoordinators
                 gameScenesManager.PushScenes(tutorialSceneSetup, 0.25f, null, (_) =>
                 {
                     // god this makes me want to retire from beat saber modding
-                    void DisableAllNonImportantObjects(Transform original, Transform source, IEnumerable<string> importantObjects)
+                    static void DisableAllNonImportantObjects(Transform original, Transform source, IEnumerable<string> importantObjects)
                     {
                         foreach (Transform child in source)
                         {
@@ -107,6 +107,7 @@ namespace CountersPlus.UI.FlowCoordinators
                     else // If we're in FPFC, just disable everything as usual.
                     {
                         DisableAllNonImportantObjects(tutorial, tutorial, Array.Empty<string>());
+                        vrInputModule.enabled = true;
                     }
                 });
             }

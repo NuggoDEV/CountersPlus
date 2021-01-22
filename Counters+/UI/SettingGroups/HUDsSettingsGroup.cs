@@ -22,7 +22,7 @@ namespace CountersPlus.UI.SettingGroups
             flowCoordinator.Value.PopFromMainScreen();
         }
 
-        public override float GetSize() => 49f;
+        public override float GetSize() => 30f;
 
         public override int CellToSelect() => 1;
 

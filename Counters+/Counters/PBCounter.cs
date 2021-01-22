@@ -36,7 +36,7 @@ namespace CountersPlus.Counters
             IDifficultyBeatmap beatmap = data.difficultyBeatmap;
             int maxRawScore = ScoreModel.MaxRawScoreForNumberOfNotes(noteCountProcessor.NoteCount);
             maxPossibleScore = ScoreModel.GetModifiedScoreForGameplayModifiersScoreMultiplier(maxRawScore,
-                modifiersModel.GetTotalMultiplier(data.gameplayModifiers));
+                modifiersModel.GetTotalMultiplier(data.gameplayModifiers, 1));
             stats = playerDataModel.playerData.GetPlayerLevelStatsData(beatmap);
             highScore = stats.highScore;
 

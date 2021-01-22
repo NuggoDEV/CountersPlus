@@ -36,8 +36,7 @@ namespace CountersPlus
             zenjector.OnApp<CoreInstaller>();
             zenjector.OnGame<CountersInstaller>()
                 .Expose<CoreGameHUDController>()
-                .ShortCircuitForTutorial()
-                .ShortCircuitForMultiplayer(); // This is until I can safely confirm that C+ works with Multiplayer.
+                .ShortCircuitForTutorial();
             zenjector.OnMenu<MenuUIInstaller>();
         }
 
