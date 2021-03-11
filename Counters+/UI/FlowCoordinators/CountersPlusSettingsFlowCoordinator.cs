@@ -115,7 +115,6 @@ namespace CountersPlus.UI.FlowCoordinators
             //fadeInOutController.FadeIn(1f, () => FadeInCallback(MenuEnvironmentManager.MenuEnvironmentType.Lobby));
 
             PushViewControllerToNavigationController(mainScreenNavigation, blank);
-            PushViewControllerToNavigationController(settingsSelection, horizontalSettingsList);
 
             ProvideInitialViewControllers(mainScreenNavigation, credits, null, settingsSelection);
 

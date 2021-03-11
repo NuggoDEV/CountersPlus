@@ -7,6 +7,7 @@ using UnityEngine;
 using CountersPlus.Utils;
 using static CountersPlus.Utils.Accessors;
 using IPA.Utilities;
+using BeatSaberMarkupLanguage.Components;
 
 namespace CountersPlus.UI.SettingGroups
 {
@@ -22,6 +23,9 @@ namespace CountersPlus.UI.SettingGroups
         public abstract int NumberOfCells();
 
         public abstract TableCell CellForIdx(TableView view, int idx);
+
+        public virtual CustomListTableData.CustomCellInfo CellInfoForIdx(int idx)
+            => new CustomListTableData.CustomCellInfo("Unimplemented", "If you see this, lists work!");
 
         public abstract void OnCellSelect(TableView view, int idx);
 

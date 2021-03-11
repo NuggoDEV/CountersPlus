@@ -111,9 +111,15 @@ namespace CountersPlus.UI.ViewControllers
                     viewport.SetParent(customListTableView.transform as RectTransform, false); //It expects one from a ScrollRect, so we have to make one ourselves.
                     viewport.sizeDelta = Vector2.zero; //Important to set this to zero so the TableView can scroll through all available cells.
 
-                    TVPageUpButton(ref customListTableView) = PageLeftButton; // Set Up button to Left
-                    TVPageDownButton(ref customListTableView) = PageRightButton; // Set Down button to Right
+                    var scrollView = customListTableView.gameObject.AddComponent<ScrollView>();
+
+                    SVViewportRect(ref scrollView) = viewport;
+                    SVContentRect(ref scrollView) = container;
+
+                    SVPageUpButton(ref scrollView) = PageLeftButton; // Set Up button to Left
+                    SVPageDownButton(ref scrollView) = PageRightButton; // Set Down button to Right
                     go.GetComponent<ScrollRect>().viewport = viewport; // Set it with our hot-out-of-the-oven Viewport.
+                    TVScrollView(ref customListTableView) = scrollView;
                     customListTableView.LazyInit();
                     customListTableView.SetDataSource(this, true); //Add data source
                     go.SetActive(true);
@@ -158,8 +164,7 @@ namespace CountersPlus.UI.ViewControllers
             else
                 customListTableView.SelectCellWithIdx(initialCell);
 
-            TableViewScroller scroller = TVTableViewScroller(ref customListTableView);
-            scroller.ScrollToCellWithIdx(0, TableViewScroller.ScrollPositionType.Beginning, true);
+            customListTableView.ScrollToCellWithIdx(0, TableView.ScrollPositionType.Beginning, true);
         }
 
         protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemEnabling)

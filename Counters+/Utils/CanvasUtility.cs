@@ -36,7 +36,7 @@ namespace CountersPlus.Utils
             {
                 hudWidth = Mathf.Abs(coreGameHUD.GetComponentInChildren<ComboUIController>().transform.position.x);
                 hudDepth = Mathf.Abs(coreGameHUD.GetComponentInChildren<ComboUIController>().transform.position.z);
-                hudHeight = Mathf.Abs(coreGameHUD.GetComponentInChildren<ComboUIController>().transform.position.y) - 1.5f;
+                hudHeight = Mathf.Abs(coreGameHUD.GetComponentInChildren<ComboUIController>().transform.position.y);
 
                 energyCanvas = EnergyPanelGO(ref coreGameHUD).GetComponent<Canvas>();
 
@@ -227,7 +227,6 @@ namespace CountersPlus.Utils
             CounterPositions position = settings.Position;
             int index = settings.Distance;
             Vector3 pos = new Vector3(); // Base position
-            Vector3 offset = new Vector3(0, -0.75f * index, 0); // Offset 
 
             float belowEnergyOffset = -1.5f;
             float aboveHighwayOffset = 0.75f;
@@ -236,11 +235,14 @@ namespace CountersPlus.Utils
 
             var canvasSettings = GetCanvasSettingsFromID(settings.CanvasID);
 
+            Vector3 offset = new Vector3(0, -0.75f * (index * canvasSettings.DistanceModifier), 0); // Offset 
+
             if (canvasSettings != null)
             {
                 if (canvasSettings.ParentedToBaseGameHUD && (canvasSettings.MatchBaseGameHUDDepth || canvasSettings.IsMainCanvas))
                 {
                     X = hudWidth;
+                    offset -= new Vector3(0, hudHeight, 0);
                 }
             }
 

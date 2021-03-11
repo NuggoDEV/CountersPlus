@@ -1,8 +1,11 @@
-﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd' anchor-min-y='0.7'>
-  <vertical ignore-layout='true'>
-    <tab-selector tab-tag='new-tab' anchor-pos-y='2'></tab-selector>
-    <tab tags='new-tab' tab-name='Main'></tab>
-    <tab tags='new-tab' tab-name='Counters'></tab>
-    <tab tags='new-tab' tab-name='HUDs'></tab>
-  </vertical>
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  ﻿<horizontal anchor-pos-y="-20" child-align="MiddleCenter">
+    <vertical ignore-layout='true'>
+      <tab-selector tab-tag='new-tab' anchor-pos-y='2'></tab-selector>
+      <tab tags='new-tab' tab-name='Main'></tab>
+      <tab tags='new-tab' tab-name='Counters'></tab>
+      <tab tags='new-tab' tab-name='HUDs'></tab>
+    </vertical>
+    <list size-delta-y="25" id="list" list-style="Box" list-direction="Horizontal" visible-cells="6"  align-to-center="true" select-cell="option-selected" cell-size="20" />
+  </horizontal>
 </bg>

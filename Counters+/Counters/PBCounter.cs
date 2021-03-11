@@ -35,8 +35,13 @@ namespace CountersPlus.Counters
             modifiersModel = SCGameplayModsModel(ref scoreController);
             IDifficultyBeatmap beatmap = data.difficultyBeatmap;
             int maxRawScore = ScoreModel.MaxRawScoreForNumberOfNotes(noteCountProcessor.NoteCount);
-            maxPossibleScore = ScoreModel.GetModifiedScoreForGameplayModifiersScoreMultiplier(maxRawScore,
-                modifiersModel.GetTotalMultiplier(data.gameplayModifiers, 1));
+
+            var modifiersList = modifiersModel.CreateModifierParamsList(data.gameplayModifiers);
+
+            var totalModifier = modifiersModel.GetTotalMultiplier(modifiersList, 1);
+
+            maxPossibleScore = ScoreModel.GetModifiedScoreForGameplayModifiersScoreMultiplier(maxRawScore, totalModifier);
+
             stats = playerDataModel.playerData.GetPlayerLevelStatsData(beatmap);
             highScore = stats.highScore;
 

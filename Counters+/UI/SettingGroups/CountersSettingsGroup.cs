@@ -55,7 +55,7 @@ namespace CountersPlus.UI.SettingGroups
 
         public override int CellToSelect() => -1;
 
-        public override float GetSize() => 19f;
+        public override float GetSize() => 19.25f;
 
         public override void OnCellSelect(TableView view, int idx)
         {
