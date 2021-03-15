@@ -1,11 +1,19 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
-  ﻿<horizontal anchor-pos-y="-20" child-align="MiddleCenter">
-    <vertical ignore-layout='true'>
-      <tab-selector tab-tag='new-tab' anchor-pos-y='2'></tab-selector>
-      <tab tags='new-tab' tab-name='Main'></tab>
-      <tab tags='new-tab' tab-name='Counters'></tab>
-      <tab tags='new-tab' tab-name='HUDs'></tab>
-    </vertical>
-    <list size-delta-y="25" id="list" list-style="Box" list-direction="Horizontal" visible-cells="6"  align-to-center="true" select-cell="option-selected" cell-size="20" />
+  <vertical ignore-layout='true' anchor-pos-y='-10' anchor-min-y='0.7'>
+    <tab-selector tab-tag='new-tab' select-cell='select-section'></tab-selector>
+    <tab tags='new-tab' tab-name='Main'></tab>
+    <tab tags='new-tab' tab-name='Counters'></tab>
+    <tab tags='new-tab' tab-name='HUDs'></tab>
+  </vertical>
+  <horizontal child-align="MiddleCenter" spacing="4">
+    <page-button click-event="list#PageUp" direction="Left"/>
+    <custom-list size-delta-y="25" id="list" list-direction="Horizontal" visible-cells="5" select-cell="option-selected" cell-size="20">
+      <bg>
+        <image id='selectedImage' source='#ArtworkSmallGlow' tags='hovered,selected' size-delta-x='27.5' size-delta-y='27.5' img-color='#00C0FF'/>
+        <image id='coverImage'/>
+        <text id='infoText' tags='hovered,selected' size-delta-x='0' size-delta-y='0' anchor-min-x='0' anchor-max-x='1' align='Center'/>
+      </bg>
+    </custom-list>
+    <page-button click-event="list#PageDown" direction="Right"/>
   </horizontal>
 </bg>

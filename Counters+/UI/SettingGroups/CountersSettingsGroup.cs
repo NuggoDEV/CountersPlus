@@ -1,4 +1,5 @@
-﻿using CountersPlus.ConfigModels;
+﻿using BeatSaberMarkupLanguage.Components;
+using CountersPlus.ConfigModels;
 using CountersPlus.Custom;
 using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.UI.ViewControllers.Editing;
@@ -13,43 +14,41 @@ namespace CountersPlus.UI.SettingGroups
         [Inject] protected LazyInject<CountersPlusSettingsFlowCoordinator> flowCoordinator;
         [Inject] protected LazyInject<CountersPlusCounterEditViewController> editViewController;
 
-        public override TableCell CellForIdx(TableView view, int idx)
+        public override CustomListTableData.CustomCellInfo CellInfoForIdx(int idx)
         {
-            GetCell(view, out var cell, out var packInfoText, out var packCoverImage);
-
-            ConfigModel model = flowCoordinator.Value.AllConfigModels[idx];
-            if (!(model is CustomConfigModel customConfig))
+            var model = flowCoordinator.Value.AllConfigModels[idx];
+            var customCellInfo = new CountersPlusListTableCell(idx, model.DisplayName);
+            
+            if (model is CustomConfigModel customConfig)
             {
-                packInfoText.text = $"{model.DisplayName}";
-                try
-                {
-                    packCoverImage.sprite = LoadSprite($"Counters.{model.DisplayName}");
-                }
-                catch { }
-            }
-            else
-            {
-                packInfoText.text = $"{customConfig.AttachedCustomCounter.Name}";
+                customCellInfo.text = customConfig.AttachedCustomCounter.Name;
                 if (customConfig.AttachedCustomCounter.BSML != null && !string.IsNullOrEmpty(customConfig.AttachedCustomCounter.BSML.Icon))
                 {
                     try
                     {
-                        packCoverImage.sprite = ImagesUtility.LoadSpriteFromExternalAssemblyResources(
+                        customCellInfo.icon = ImagesUtility.LoadSpriteFromExternalAssemblyResources(
                             customConfig.AttachedCustomCounter.CounterType.Assembly, customConfig.AttachedCustomCounter.BSML.Icon);
                     }
                     catch
                     {
-                        packCoverImage.sprite = LoadSprite("Counters.Custom");
-                        packInfoText.text += "\n<i>(Failed to load custom icon.)</i>";
+                        customCellInfo.icon = LoadSprite("Counters.Custom");
+                        customCellInfo.subtext = "\n<i>(Failed to load custom icon.)</i>";
                     }
                 }
                 else
                 {
-                    packCoverImage.sprite = LoadSprite("Counters.Custom");
+                    customCellInfo.icon = LoadSprite("Counters.Custom");
                 }
             }
-            return cell;
+            else
+            {
+                customCellInfo.icon = LoadSprite($"Counters.{model.DisplayName}");
+            }
+
+            return customCellInfo;
         }
+
+        public override TableCell CellForIdx(TableView view, int idx) => null;
 
         public override int NumberOfCells() => flowCoordinator.Value.AllConfigModels.Count;
 

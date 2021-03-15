@@ -46,7 +46,7 @@ namespace CountersPlus.UI.SettingGroups
                     break;
             }
 
-            return cell;
+            return null;
         }
 
         public override int NumberOfCells() => 3;

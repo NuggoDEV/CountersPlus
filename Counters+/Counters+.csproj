@@ -237,6 +237,7 @@
     <Compile Include="UI\ViewControllers\Editing\CountersPlusMainSettingsEditViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusHUDListViewController.cs" />
     <Compile Include="Utils\Accessors.cs" />
+    <Compile Include="Utils\AprilFools.cs" />
     <Compile Include="Utils\CanvasUtility.cs" />
     <Compile Include="Utils\ImagesUtility.cs" />
     <Compile Include="Utils\SimpleJSON.cs" />
@@ -290,6 +291,7 @@
     <EmbeddedResource Include="UI\BSML\MainSettings.bsml" />
     <EmbeddedResource Include="UI\BSML\HUDs\HUDList.bsml" />
     <EmbeddedResource Include="UI\BSML\HUDs\HUDEdit.bsml" />
+    <EmbeddedResource Include="UI\BSML\CountersPlusCell.bsml" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

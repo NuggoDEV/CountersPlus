@@ -2,8 +2,13 @@
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
 using BeatSaberMarkupLanguage.ViewControllers;
+using CountersPlus.UI.SettingGroups;
 using HMUI;
+using IPA.Utilities;
 using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Zenject;
 
 namespace CountersPlus.UI.ViewControllers
 {
@@ -11,44 +16,58 @@ namespace CountersPlus.UI.ViewControllers
     {
         internal Action<int> OnSettingsGroupChanged;
 
-        private TabSelector tab;
+        [Inject] private List<SettingsGroup> loadedSettingsGroups = new List<SettingsGroup>();
 
-        [UIComponent("list")]
-        private CustomListTableData tableList;
+        [UIComponent("list")] private CustomCellListTableData tableList;
 
-        [UIValue("#text")]
-        private string text => "A";
+        private SettingsGroup selectedGroup;
+
+        private ScrollView scrollView;
 
         public override string ResourceName => "CountersPlus.UI.BSML.SettingsSectionSelection.bsml";
 
-        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
-        {
-            base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
-            //tab = gameObject.GetComponentInChildren<TabSelector>();
-            //tab.textSegmentedControl.didSelectCellEvent += HandleCellSelectedEvent;
-        }
+        private readonly string cellTemplate = Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), "CountersPlus.UI.BSML.CountersPlusCell.bsml");
 
         [UIAction("#post-parse")]
         private void Parsed()
         {
-            Plugin.Logger.Info("william gay");
-            tableList.data.Add(new CustomListTableData.CustomCellInfo("Hi Twitch!"));
+            //tableList.cellTemplate = cellTemplate;
+
+            scrollView = tableList.tableView.GetField<ScrollView, TableView>("_scrollView");
+
+            // Need to do some hard reflection bullshittery to get the ScrollView to scroll horizontally
+            var directionField = scrollView.GetType().GetField("_scrollViewDirection", BindingFlags.Instance | BindingFlags.NonPublic);
+
+            var horizontalDirection = Enum.Parse(directionField.FieldType, "Horizontal");
+
+            directionField.SetValue(scrollView, horizontalDirection);
         }
 
         [UIAction("option-selected")]
-        protected void OptionSelected(TableView _, int id)
+        protected void OptionSelected(TableView view, CountersPlusListTableCell cell)
         {
+            selectedGroup.OnCellSelect(view, cell.CellIdx);
         }
 
-        private void HandleCellSelectedEvent(SegmentedControl control, int cellIdx)
+        [UIAction("select-section")]
+        private void HandleCellSelectedEvent(SegmentedControl _, int cellIdx)
         {
-            OnSettingsGroupChanged?.Invoke(cellIdx);
-        }
+            selectedGroup?.OnDisable();
+            
+            selectedGroup = loadedSettingsGroups[cellIdx];
 
-        protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemEnabling)
-        {
-            base.DidDeactivate(removedFromHierarchy, screenSystemEnabling);
-            tab.textSegmentedControl.didSelectCellEvent -= HandleCellSelectedEvent;
+            selectedGroup.OnEnable();
+
+            tableList.data.Clear();
+
+            for (var i = 0; i < selectedGroup.NumberOfCells(); i++)
+            {
+                tableList.data.Add(selectedGroup.CellInfoForIdx(i));
+            }
+
+            tableList.tableView.ReloadData();
+
+            tableList.tableView.ScrollToCellWithIdx(selectedGroup.CellToSelect(), TableView.ScrollPositionType.Beginning, true);
         }
     }
 }

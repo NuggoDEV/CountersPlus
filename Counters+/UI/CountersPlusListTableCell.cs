@@ -1,28 +1,28 @@
-﻿using UnityEngine;
+﻿using HMUI;
+using UnityEngine;
+using BeatSaberMarkupLanguage.Components;
+using BeatSaberMarkupLanguage.Attributes;
 
 namespace CountersPlus.UI
 {
-    public class CountersPlusListTableCell : AnnotatedBeatmapLevelCollectionTableCell
+    public class CountersPlusListTableCell : CustomListTableData.CustomCellInfo
     {
-        protected override void SelectionDidChange(TransitionType transitionType)
+        public int CellIdx { get; private set; } = 0;
+
+        [UIComponent("selectedImage")] private ImageView selectionImage;
+        [UIComponent("coverImage")] private ImageView coverImage;
+        [UIComponent("infoText")] private CurvedTextMeshPro infoText;
+
+        public CountersPlusListTableCell(int idx, string text, Sprite icon = null) : base(text, null, icon)
         {
-            _infoText.gameObject.SetActive(selected || highlighted);
-            RefreshColors();
-            base.RefreshVisuals();
+            CellIdx = idx;
         }
 
-        protected override void HighlightDidChange(TransitionType transitionType)
+        [UIAction("#post-parse")]
+        private void Parsed()
         {
-            _infoText.gameObject.SetActive(selected || highlighted);
-            RefreshColors();
-            base.RefreshVisuals();
-        }
-
-        private void RefreshColors()
-        {
-            _coverImage.color = Color.white;
-            if (highlighted) _coverImage.color = new Color(0.25f, 0.25f, 0.25f);
-            if (selected) _coverImage.color = (Color.yellow / 4f).ColorWithAlpha(1);
+            coverImage.sprite = icon;
+            infoText.text = text;
         }
     }
 }
