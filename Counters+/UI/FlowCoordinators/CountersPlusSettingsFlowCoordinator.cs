@@ -30,7 +30,6 @@ namespace CountersPlus.UI.FlowCoordinators
         [Inject] private CountersPlusBlankViewController blank;
         [Inject] private CountersPlusMainScreenNavigationController mainScreenNavigation;
         [Inject] private CountersPlusSettingSectionSelectionViewController settingsSelection;
-        [Inject] private CountersPlusHorizontalSettingsListViewController horizontalSettingsList;
         [Inject] private SettingsFlowCoordinator settingsFlowCoordinator;
         [Inject] private SongPreviewPlayer songPreviewPlayer;
         

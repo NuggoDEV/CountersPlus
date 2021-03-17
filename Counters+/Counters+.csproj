@@ -213,7 +213,6 @@
     <Compile Include="Custom\CustomCounter.cs" />
     <Compile Include="Custom\CustomCounterFeature.cs" />
     <Compile Include="Harmony\CoreGameHUDControllerPatch.cs" />
-    <Compile Include="Harmony\ImageViewFilledImagePatch.cs" />
     <Compile Include="Installers\CoreInstaller.cs" />
     <Compile Include="Installers\CountersInstaller.cs" />
     <Compile Include="Installers\MenuUIInstaller.cs" />
@@ -229,7 +228,6 @@
     <Compile Include="UI\SettingGroups\SettingsGroup.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusBlankViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusCreditsViewController.cs" />
-    <Compile Include="UI\ViewControllers\CountersPlusHorizontalSettingsListViewController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusMainScreenNavigationController.cs" />
     <Compile Include="UI\ViewControllers\CountersPlusSettingSectionSelectionViewController.cs" />
     <Compile Include="UI\ViewControllers\Editing\CountersPlusCounterEditViewController.cs" />

@@ -7,7 +7,7 @@ using HMUI;
 using IPA.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
+using UnityEngine.UI;
 using Zenject;
 
 namespace CountersPlus.UI.ViewControllers
@@ -19,28 +19,25 @@ namespace CountersPlus.UI.ViewControllers
         [Inject] private List<SettingsGroup> loadedSettingsGroups = new List<SettingsGroup>();
 
         [UIComponent("list")] private CustomCellListTableData tableList;
+        [UIComponent("right-button")] private Button leftButton;
+        [UIComponent("left-button")] private Button rightButton;
 
         private SettingsGroup selectedGroup;
 
-        private ScrollView scrollView;
-
         public override string ResourceName => "CountersPlus.UI.BSML.SettingsSectionSelection.bsml";
 
-        private readonly string cellTemplate = Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), "CountersPlus.UI.BSML.CountersPlusCell.bsml");
+        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+        {
+            base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
+            HandleCellSelectedEvent(null, (selectedGroup != null) ? loadedSettingsGroups.IndexOf(selectedGroup) : 0);
+        }
 
         [UIAction("#post-parse")]
         private void Parsed()
         {
-            //tableList.cellTemplate = cellTemplate;
-
-            scrollView = tableList.tableView.GetField<ScrollView, TableView>("_scrollView");
-
-            // Need to do some hard reflection bullshittery to get the ScrollView to scroll horizontally
-            var directionField = scrollView.GetType().GetField("_scrollViewDirection", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            var horizontalDirection = Enum.Parse(directionField.FieldType, "Horizontal");
-
-            directionField.SetValue(scrollView, horizontalDirection);
+            var scrollView = tableList.tableView.GetField<ScrollView, TableView>("_scrollView");
+            scrollView.SetField("_pageUpButton", rightButton);
+            scrollView.SetField("_pageDownButton", leftButton);
         }
 
         [UIAction("option-selected")]
@@ -59,6 +56,8 @@ namespace CountersPlus.UI.ViewControllers
             selectedGroup.OnEnable();
 
             tableList.data.Clear();
+
+            tableList.cellSize = selectedGroup.GetSize();
 
             for (var i = 0; i < selectedGroup.NumberOfCells(); i++)
             {

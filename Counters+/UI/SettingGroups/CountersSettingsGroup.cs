@@ -48,13 +48,9 @@ namespace CountersPlus.UI.SettingGroups
             return customCellInfo;
         }
 
-        public override TableCell CellForIdx(TableView view, int idx) => null;
-
         public override int NumberOfCells() => flowCoordinator.Value.AllConfigModels.Count;
 
         public override int CellToSelect() => -1;
-
-        public override float GetSize() => 19.25f;
 
         public override void OnCellSelect(TableView view, int idx)
         {
@@ -63,9 +59,6 @@ namespace CountersPlus.UI.SettingGroups
             editViewController.Value.ApplySettings(selectedModel);
         }
 
-        public override void OnDisable()
-        {
-            flowCoordinator.Value.SetRightViewController(null);
-        }
+        public override void OnDisable() => flowCoordinator.Value.SetRightViewController(null);
     }
 }

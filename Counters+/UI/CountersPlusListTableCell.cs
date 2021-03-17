@@ -1,7 +1,9 @@
-﻿using HMUI;
-using UnityEngine;
+﻿using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
-using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.Parser;
+using HMUI;
+using System.Linq;
+using UnityEngine;
 
 namespace CountersPlus.UI
 {
@@ -9,9 +11,7 @@ namespace CountersPlus.UI
     {
         public int CellIdx { get; private set; } = 0;
 
-        [UIComponent("selectedImage")] private ImageView selectionImage;
-        [UIComponent("coverImage")] private ImageView coverImage;
-        [UIComponent("infoText")] private CurvedTextMeshPro infoText;
+        [UIParams] private BSMLParserParams parserParams;
 
         public CountersPlusListTableCell(int idx, string text, Sprite icon = null) : base(text, null, icon)
         {
@@ -21,8 +21,11 @@ namespace CountersPlus.UI
         [UIAction("#post-parse")]
         private void Parsed()
         {
-            coverImage.sprite = icon;
-            infoText.text = text;
+            var coverImages = parserParams.GetObjectsWithTag("coverImage").Select(x => x.GetComponent<ImageView>());
+            foreach (var image in coverImages) image.sprite = icon;
+
+            var infoTexts = parserParams.GetObjectsWithTag("infoText").Select(x => x.GetComponent<CurvedTextMeshPro>());
+            foreach (var infoText in infoTexts) infoText.text = text;
         }
     }
 }

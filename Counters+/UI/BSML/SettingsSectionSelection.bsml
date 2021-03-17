@@ -6,14 +6,25 @@
     <tab tags='new-tab' tab-name='HUDs'></tab>
   </vertical>
   <horizontal child-align="MiddleCenter" spacing="4">
-    <page-button click-event="list#PageUp" direction="Left"/>
+    <page-button id="left-button" click-event="list#PageUp" direction="Left"/>
     <custom-list size-delta-y="25" id="list" list-direction="Horizontal" visible-cells="5" select-cell="option-selected" cell-size="20">
-      <bg>
-        <image id='selectedImage' source='#ArtworkSmallGlow' tags='hovered,selected' size-delta-x='27.5' size-delta-y='27.5' img-color='#00C0FF'/>
-        <image id='coverImage'/>
-        <text id='infoText' tags='hovered,selected' size-delta-x='0' size-delta-y='0' anchor-min-x='0' anchor-max-x='1' align='Center'/>
+      
+      <!--Cell Template-->
+      <bg tags="hovered">
+        <image tags='coverImage' size-delta-x='17.5' size-delta-y='17.5' img-color='#808080' preserve-aspect='true'/>
+        <image tags='selectedImage' source='#ArtworkSmallGlow' size-delta-x='27.5' size-delta-y='27.5' preserve-aspect='true'/>
+        <text tags='infoText' size-delta-x='0' size-delta-y='0' anchor-min-x='0' anchor-max-x='1' align='Center'/>
       </bg>
+      <bg tags="selected">
+        <image tags='coverImage' size-delta-x='17.5' size-delta-y='17.5' img-color='#808000' preserve-aspect='true'/>
+        <image tags='selectedImage' source='#ArtworkSmallGlow' size-delta-x='27.5' size-delta-y='27.5' img-color='#00C0FF' preserve-aspect='true'/>
+        <text tags='infoText' size-delta-x='0' size-delta-y='0' anchor-min-x='0' anchor-max-x='1' align='Center'/>
+      </bg>
+      <bg tags="un-selected-un-hovered">
+        <image tags='coverImage' size-delta-x='17.5' size-delta-y='17.5' preserve-aspect='true'/>
+      </bg>
+    
     </custom-list>
-    <page-button click-event="list#PageDown" direction="Right"/>
+    <page-button id="right-button" click-event="list#PageDown" direction="Right"/>
   </horizontal>
 </bg>

@@ -50,13 +50,12 @@ namespace CountersPlus.Installers
             BindViewController<CountersPlusMainScreenNavigationController>();
             BindViewController<CountersPlusBlankViewController>();
             BindViewController<CountersPlusSettingSectionSelectionViewController>();
-            BindViewController<CountersPlusHorizontalSettingsListViewController>();
             BindViewController<CountersPlusCounterEditViewController>();
             BindViewController<CountersPlusMainSettingsEditViewController>();
             BindViewController<CountersPlusHUDListViewController>();
             BindViewController<CountersPlusHUDEditViewController>();
 
-            Container.BindFlowCoordinator<CountersPlusSettingsFlowCoordinator>();
+            Container.Bind<CountersPlusSettingsFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
             Container.BindInterfacesAndSelfTo<MenuButtonManager>().AsSingle().NonLazy();
         }
 
