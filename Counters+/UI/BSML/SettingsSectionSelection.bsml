@@ -1,8 +1,30 @@
-﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd' anchor-min-y='0.7'>
-  <vertical ignore-layout='true'>
-    <tab-selector tab-tag='new-tab' anchor-pos-y='2'></tab-selector>
+﻿<bg anchor-pos-y="-25" xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <vertical ignore-layout='true' anchor-pos-y='-10' anchor-min-y='0.7'>
+    <tab-selector tab-tag='new-tab' select-cell='select-section'></tab-selector>
     <tab tags='new-tab' tab-name='Main'></tab>
     <tab tags='new-tab' tab-name='Counters'></tab>
     <tab tags='new-tab' tab-name='HUDs'></tab>
   </vertical>
+  <horizontal child-align="MiddleCenter" spacing="4">
+    <page-button id="left-button" click-event="list#PageUp" direction="Left"/>
+    <custom-list size-delta-y="25" id="list" list-direction="Horizontal" visible-cells="5" select-cell="option-selected" cell-size="20">
+      
+      <!--Cell Template-->
+      <bg tags="hovered">
+        <image tags='coverImage' size-delta-x='17.5' size-delta-y='17.5' img-color='#808080' preserve-aspect='true'/>
+        <image tags='selectedImage' source='#ArtworkSmallGlow' size-delta-x='27.5' size-delta-y='27.5' preserve-aspect='true'/>
+        <text tags='infoText' size-delta-x='0' size-delta-y='0' anchor-min-x='0' anchor-max-x='1' align='Center'/>
+      </bg>
+      <bg tags="selected">
+        <image tags='coverImage' size-delta-x='17.5' size-delta-y='17.5' img-color='#808000' preserve-aspect='true'/>
+        <image tags='selectedImage' source='#ArtworkSmallGlow' size-delta-x='27.5' size-delta-y='27.5' img-color='#00C0FF' preserve-aspect='true'/>
+        <text tags='infoText' size-delta-x='0' size-delta-y='0' anchor-min-x='0' anchor-max-x='1' align='Center'/>
+      </bg>
+      <bg tags="un-selected-un-hovered">
+        <image tags='coverImage' size-delta-x='17.5' size-delta-y='17.5' preserve-aspect='true'/>
+      </bg>
+    
+    </custom-list>
+    <page-button id="right-button" click-event="list#PageDown" direction="Right"/>
+  </horizontal>
 </bg>

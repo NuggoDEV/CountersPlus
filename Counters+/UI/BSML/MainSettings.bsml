@@ -7,6 +7,7 @@
       <checkbox-setting text='Use Italic Text' apply-on-change='true' value='ItalicText' hover-hint='Text elements will be italicized to match the base game.'></checkbox-setting>
       <list-setting text='Combo Offset' apply-on-change='true' options='Offsets' value='ComboOffset' hover-hint='Applies additional offset to counters situated above or below the Combo.'></list-setting>
       <list-setting text='Multiplier Offset' apply-on-change='true' options='Offsets' value='MultiplierOffset' hover-hint='Applies additional offset to counters situated above or below the Multiplier.'></list-setting>
+      <checkbox-setting text='April Fools Tomfoolery' apply-on-change='true' value='AprilFoolsTomfoolery' hover-hint='April fools!' active='~IsAprilFools'></checkbox-setting>
     </vertical>
   </horizontal>
 </bg>

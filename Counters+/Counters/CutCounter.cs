@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace CountersPlus.Counters
 {
-    internal class CutCounter : Counter<CutConfigModel>, INoteEventHandler
+    internal class CutCounter : Counter<CutConfigModel>, INoteEventHandler, ISaberSwingRatingCounterDidFinishReceiver
     {
         private TMP_Text cutCounterLeft;
         private TMP_Text cutCounterRight;
@@ -50,15 +50,15 @@ namespace CountersPlus.Counters
         {
             if (data.colorType == ColorType.None || !info.allIsOK) return;
             noteCutInfos.Add(info.swingRatingCounter, info);
-            info.swingRatingCounter.didFinishEvent -= SaberSwingRatingCounter_didFinishEvent;
-            info.swingRatingCounter.didFinishEvent += SaberSwingRatingCounter_didFinishEvent;
+
+            info.swingRatingCounter.RegisterDidFinishReceiver(this);
         }
 
         public void OnNoteMiss(NoteData data) { }
 
-        private void SaberSwingRatingCounter_didFinishEvent(ISaberSwingRatingCounter v)
+        public void HandleSaberSwingRatingCounterDidFinish(ISaberSwingRatingCounter v)
         {
-            ScoreModel.RawScoreWithoutMultiplier(noteCutInfos[v], out int beforeCut, out int afterCut, out int cutDistance);
+            ScoreModel.RawScoreWithoutMultiplier(v, noteCutInfos[v].cutDistanceToCenter, out int beforeCut, out int afterCut, out int cutDistance);
 
             if (noteCutInfos[v].saberType == SaberType.SaberA)
             {

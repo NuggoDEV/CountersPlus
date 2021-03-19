@@ -64,6 +64,11 @@ namespace CountersPlus.Installers
                 AddCustomCounter(customCounter, customCounter.CounterType);
             }
 
+            if (mainConfig.AprilFoolsTomfoolery && mainConfig.IsAprilFools)
+            {
+                Container.BindInterfacesAndSelfTo<AprilFools>().AsSingle().NonLazy();
+            }
+
             /// LOADING BROADCASTERS WITH BROADCAST IN-GAME EVENTS TO COUNTERS AND STUFF ///
             Container.BindInterfacesAndSelfTo<CounterEventBroadcaster>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<NoteEventBroadcaster>().AsSingle().NonLazy();

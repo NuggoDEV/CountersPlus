@@ -20,13 +20,15 @@ namespace CountersPlus.Utils
         #endregion
 
         #region Counters+ UI
-        public static FieldAccessor<TableView, TableViewScroller>.Accessor TVTableViewScroller = FieldAccessor<TableView, TableViewScroller>.GetAccessor("scroller");
+        public static FieldAccessor<TableView, ScrollView>.Accessor TVScrollView = FieldAccessor<TableView, ScrollView>.GetAccessor("_scrollView");
         public static FieldAccessor<TableView, TableView.TableType>.Accessor TVTableType = FieldAccessor<TableView, TableView.TableType>.GetAccessor("_tableType");
         public static FieldAccessor<TableView, TableView.CellsGroup[]>.Accessor TVPreallocCells = FieldAccessor<TableView, TableView.CellsGroup[]>.GetAccessor("_preallocatedCells");
         public static FieldAccessor<TableView, bool>.Accessor TVIsInitialized = FieldAccessor<TableView, bool>.GetAccessor("_isInitialized");
-        public static FieldAccessor<TableView, Button>.Accessor TVPageUpButton = FieldAccessor<TableView, Button>.GetAccessor("_pageUpButton");
-        public static FieldAccessor<TableView, Button>.Accessor TVPageDownButton = FieldAccessor<TableView, Button>.GetAccessor("_pageDownButton");
-        public static FieldAccessor<TableView, RectTransform>.Accessor TVScrollRect = FieldAccessor<TableView, RectTransform>.GetAccessor("_viewportTransform");
+        public static FieldAccessor<ScrollView, Button>.Accessor SVPageUpButton = FieldAccessor<ScrollView, Button>.GetAccessor("_pageUpButton");
+        public static FieldAccessor<ScrollView, Button>.Accessor SVPageDownButton = FieldAccessor<ScrollView, Button>.GetAccessor("_pageDownButton");
+
+        public static FieldAccessor<ScrollView, RectTransform>.Accessor SVViewportRect = FieldAccessor<ScrollView, RectTransform>.GetAccessor("_viewport");
+        public static FieldAccessor<ScrollView, RectTransform>.Accessor SVContentRect = FieldAccessor<ScrollView, RectTransform>.GetAccessor("_contentRectTransform");
 
 
         public static FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, TextMeshProUGUI>.Accessor PackInfoTextAccessor = FieldAccessor<AnnotatedBeatmapLevelCollectionTableCell, TextMeshProUGUI>.GetAccessor("_infoText");
