@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CountersPlus.Utils
 {
@@ -25,7 +19,7 @@ namespace CountersPlus.Utils
 
         private void Update()
         {
-            if (parent is null) return;
+            if (parent == null) return;
             transform.SetPositionAndRotation(parent.position, parent.rotation);
             Vector3 side = parent.right * posOffset.x;
             Vector3 forward = parent.forward * posOffset.z;
