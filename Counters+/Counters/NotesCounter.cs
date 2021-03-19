@@ -34,7 +34,7 @@ namespace CountersPlus.Counters
             counter.text = $"{goodCuts} / {allCuts}";
             if (Settings.ShowPercentage)
             {
-                float percentage = (float)goodCuts / allCuts;
+                float percentage = (float)goodCuts / allCuts * 100.0;
                 counter.text += $" - {percentage.ToString($"F{Settings.DecimalPrecision}")}%";
             }
         }
