@@ -41,7 +41,7 @@ namespace CountersPlus.Utils
 
             t += Time.deltaTime;
 
-            // TL;DR: animate italicizing and make it look good
+            // THESE GUYS ARE GONNA BECOME MORE AND MORE ITALIC WHILE THE SONG GOES ON
             mainFont.italicStyle = (byte)Mathf.Clamp(Mathf.Abs(t / 5 * Mathf.Sin(t / 5) / 5), 0, byte.MaxValue);
 
             // THIS IS SUPER EXPENSIVE, PROBABLY FRAME KILLING, BUT THE OPPORTUNITY IS TOO GOOD TO PASS UP
@@ -58,6 +58,7 @@ namespace CountersPlus.Utils
             if (!info.allIsOK) t += 30;
         }
 
+        // EVEN BETTER: IF SOMEONE MISSES THEN TEXT BECOMES EVEN MORE ITALIC
         public void OnNoteMiss(NoteData data)
         {
             if (data.colorType != ColorType.None) t += 30;

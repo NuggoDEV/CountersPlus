@@ -289,7 +289,6 @@
     <EmbeddedResource Include="UI\BSML\MainSettings.bsml" />
     <EmbeddedResource Include="UI\BSML\HUDs\HUDList.bsml" />
     <EmbeddedResource Include="UI\BSML\HUDs\HUDEdit.bsml" />
-    <EmbeddedResource Include="UI\BSML\CountersPlusCell.bsml" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

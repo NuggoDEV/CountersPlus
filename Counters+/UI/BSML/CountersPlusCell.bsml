@@ -1,5 +1,0 @@
-﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
-  <image id='selectedImage' source='#ArtworkSmallGlow' tags='hovered,selected' size-delta-x='27.5' size-delta-y='27.5' img-color='#00C0FF'/>
-  <image id='coverImage'/>
-  <text id='infoText' tags='hovered,selected' size-delta-x='0' size-delta-y='0' anchor-min-x='0' anchor-max-x='1' align='Center'/>
-</bg>

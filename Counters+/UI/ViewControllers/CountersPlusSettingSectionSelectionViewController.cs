@@ -66,7 +66,8 @@ namespace CountersPlus.UI.ViewControllers
 
             tableList.tableView.ReloadData();
 
-            tableList.tableView.ScrollToCellWithIdx(selectedGroup.CellToSelect(), TableView.ScrollPositionType.Beginning, true);
+            tableList.tableView.ScrollToCellWithIdx(0, TableView.ScrollPositionType.Beginning, false);
+            tableList.tableView.SelectCellWithIdx(selectedGroup.CellToSelect(), false);
         }
     }
 }

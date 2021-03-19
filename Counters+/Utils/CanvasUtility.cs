@@ -13,7 +13,7 @@ namespace CountersPlus.Utils
 {
     public class CanvasUtility
     {
-        // public GameplayCoreHUDInstaller.HudType HUDType = GameplayCoreHUDInstaller.HudType.Basic;
+        private readonly int UILayer = LayerMask.NameToLayer("UI");
 
         private Dictionary<int, Canvas> CanvasIDToCanvas = new Dictionary<int, Canvas>();
         private Dictionary<Canvas, HUDCanvas> CanvasToSettings = new Dictionary<Canvas, HUDCanvas>();
@@ -111,6 +111,7 @@ namespace CountersPlus.Utils
         public Canvas CreateCanvasWithConfig(HUDCanvas canvasSettings)
         {
             GameObject canvasGameObject = new GameObject($"Counters+ | {canvasSettings.Name} Canvas");
+            canvasGameObject.layer = UILayer;
 
             Vector3 canvasPos = canvasSettings.Position;
 
@@ -198,6 +199,7 @@ namespace CountersPlus.Utils
             }
 
             TMP_Text tmp_text = BeatSaberUI.CreateText(rectTransform, "", anchoredPosition * posScaleFactor);
+            tmp_text.gameObject.layer = UILayer;
             tmp_text.alignment = TextAlignmentOptions.Center;
             tmp_text.fontSize = 4f;
             tmp_text.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 2f);
