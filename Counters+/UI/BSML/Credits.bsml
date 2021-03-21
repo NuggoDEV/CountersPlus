@@ -1,16 +1,19 @@
 ﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  
   <vertical child-control-height='false'>
     <vertical bg='round-rect-panel' size-delta-y='25' pad='5'>
-      <text id='aprilFoolsText' align ='Center' font-size='6' text='April fools!'></text>
-      <text id='versionText' align ='Center' font-size='3' text='Version 0.0.0'></text>
-      <text id='updateText' align ='Center' font-size='3' text='Version 0.0.0 available for download!'></text>
-      <text id='creatorText' align ='Center' font-size='5' text='Developed by Caeden117'></text>
+      <text id='aprilFoolsText' align ='Center' font-size='6' text='April fools!'/>
+      <text id='versionText' align ='Center' font-size='3' text='Version 0.0.0'/>
+      <text id='updateText' align ='Center' font-size='3' text='Version 0.0.0 available for download!'/>
+      <text id='creatorText' align ='Center' font-size='5' text='Developed by Caeden117'/>
     </vertical>
   </vertical>
-  <text id='linkOpenedText' align ='Center' font-size='4' text='Link opened in your browser!'></text>
+  
+  <text id='linkOpenedText' align ='Center' font-size='4' text='Link opened in your browser!'/>
+  
   <horizontal anchor-max-y='0.5'>
-    <button id='github' text='GitHub' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'></button>
-    <button id='donate' text='Donate' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'></button>
-    <button id='issues' text='Report an Issue' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'></button>
+    <button id='github' text='GitHub' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'/>
+    <button id='donate' text='Donate' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'/>
+    <button id='issues' text='Report an Issue' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'/>
   </horizontal>
 </bg>

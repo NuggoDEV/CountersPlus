@@ -1,5 +1,5 @@
 ﻿<vertical spacing='1' horizontal-fit='PreferredSize'>
-  <checkbox-setting text='Show Time Left' apply-on-change='true' value='ProgressTimeLeft' hover-hint='Starts the counter from the end of the song and decreases while the song is played.'></checkbox-setting>
-  <dropdown-list-setting text='Mode' apply-on-change='true' value='Mode' options='Modes' formatter='ModeFormat' hover-hint='How should this Counter display data?'></dropdown-list-setting>
-  <checkbox-setting text='Include Progress Ring' apply-on-change='true' value='IncludeRing' hover-hint='Whether or not the Progress Ring will also be affected by the "Show Time Left" setting. Only active in "Original" mode.'></checkbox-setting>
+  <checkbox-setting text='Show Time Left' apply-on-change='true' value='ProgressTimeLeft' hover-hint='Starts the counter from the end of the song and decreases while the song is played.'/>
+  <dropdown-list-setting text='Mode' apply-on-change='true' value='Mode' options='Modes' formatter='ModeFormat' hover-hint='How should this Counter display data?'/>
+  <checkbox-setting text='Include Progress Ring' apply-on-change='true' value='IncludeRing' hover-hint='Whether or not the Progress Ring will also be affected by the "Show Time Left" setting. Only active in "Original" mode.'/>
 </vertical>

@@ -1,17 +1,20 @@
-﻿<bg>
+﻿<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
+  <!--Header-->
   <vertical child-control-height='false'>
     <horizontal bg='panel-top' pad-left='15' pad-right='15' horizontal-fit='PreferredSize'>
-      <text id='name' text='Counter Settings' align='Center' font-size='8'></text>
+      <text id='name' text='Counter Settings' align='Center' font-size='8'/>
     </horizontal>
   </vertical>
+  
+  <!--Content-->
   <bg anchor-min-x='0' anchor-min-y='0.1'
         anchor-max-x='1' anchor-max-y='0.85'
         anchor-pos-x='0' anchor-pos-y='0'
         size-delta-x='-5' size-delta-y='-5'
         pivot-x='.5' pivot-y='1'>
     <scrollable-container id='ScrollContent' mask-overflow='true' size-delta-x='0'>
-      <vertical id='body' pad='5' vertical-fit='PreferredSize' spacing='1'>
-      </vertical>
+      <!--Actual content goes inside this 'body' object-->
+      <vertical id='body' pad='5' vertical-fit='PreferredSize' spacing='1'/>
     </scrollable-container>
     <scroll-indicator tags='IndicatorFor:ScrollContent'
                       anchor-pos-x='.5' anchor-pos-y='0'
@@ -20,8 +23,10 @@
                       size-delta-x='1' size-delta-y='-2'
                       pivot-x='0' pivot-y='.5' />
   </bg>
+  
+  <!--Scroll buttons-->
   <horizontal anchor-max-y='0.15'>
-    <button text='Scroll Up' tags='PageUpFor:ScrollContent' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'></button>
-    <button text='Scroll Down' tags='PageDownFor:ScrollContent' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'></button>
+    <button text='Scroll Up' tags='PageUpFor:ScrollContent' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'/>
+    <button text='Scroll Down' tags='PageDownFor:ScrollContent' vertical-fit='Unconstrained' horizontal-fit='Unconstrained'/>
   </horizontal>
 </bg>

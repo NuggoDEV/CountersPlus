@@ -1,4 +1,4 @@
 ﻿<vertical spacing='1' horizontal-fit='PreferredSize'>
-  <checkbox-setting text='Show Percentage' apply-on-change='true' value='ShowPercentage' hover-hint='Toggles the percentage of notes hit over total notes.'></checkbox-setting>
-  <list-setting text='Percentage Precision' apply-on-change='true' value='DecimalPrecision' options='DecimalPrecisions' hover-hint='How precise should the precentage be?'></list-setting>
+  <checkbox-setting text='Show Percentage' apply-on-change='true' value='ShowPercentage' hover-hint='Toggles the percentage of notes hit over total notes.'/>
+  <list-setting text='Percentage Precision' apply-on-change='true' value='DecimalPrecision' options='DecimalPrecisions' hover-hint='How precise should the precentage be?'/>
 </vertical>
