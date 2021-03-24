@@ -34,19 +34,17 @@ namespace CountersPlus.Utils
             this.mainConfig = mainConfig;
             if (coreGameHUD != null)
             {
-                hudWidth = Mathf.Abs(coreGameHUD.GetComponentInChildren<ComboUIController>().transform.position.x);
-                hudDepth = Mathf.Abs(coreGameHUD.GetComponentInChildren<ComboUIController>().transform.position.z);
-                hudHeight = Mathf.Abs(coreGameHUD.GetComponentInChildren<ComboUIController>().transform.position.y);
+                var comboPos = coreGameHUD.GetComponentInChildren<ComboUIController>().transform.position;
+
+                hudWidth = Mathf.Abs(comboPos.x);
+                hudHeight = comboPos.y;
+                hudDepth = comboPos.z;
 
                 energyCanvas = EnergyPanelGO(ref coreGameHUD).GetComponent<Canvas>();
 
                 // Hide Canvas and Multiplier if needed
                 if (mainConfig.HideCombo) HideBaseGameHUDElement<ComboUIController>(coreGameHUD);
                 if (mainConfig.HideMultiplier) HideBaseGameHUDElement<ScoreMultiplierUIController>(coreGameHUD);
-            }
-            if (data != null)
-            {
-                // HUDType = GetGameplayCoreHUDTypeForEnvironmentSize(data.environmentInfo.environmentType);
             }
 
             RefreshAllCanvases(hudConfig, data, coreGameHUD);
@@ -117,7 +115,7 @@ namespace CountersPlus.Utils
 
             if (canvasSettings.MatchBaseGameHUDDepth)
             {
-                canvasPos = new Vector3(canvasPos.x, canvasPos.y, hudDepth);
+                canvasPos.Set(canvasPos.x, canvasPos.y, hudDepth);
             }
 
             Vector3 canvasRot = canvasSettings.Rotation;
@@ -171,10 +169,9 @@ namespace CountersPlus.Utils
         public TMP_Text CreateTextFromSettings(ConfigModel settings, Vector3? offset = null)
         {
             Canvas canvasToApply = CanvasIDToCanvas[settings.CanvasID];
-            HUDCanvas hudSettings = CanvasToSettings[canvasToApply];
             if (canvasToApply == null)
             {
-                hudSettings = GetCanvasSettingsFromID(settings.CanvasID);
+                var hudSettings = GetCanvasSettingsFromID(settings.CanvasID);
                 canvasToApply = CreateCanvasWithConfig(hudSettings);
                 CanvasIDToCanvas[settings.CanvasID] = canvasToApply;
                 CanvasToSettings.Add(canvasToApply, hudSettings);
@@ -222,13 +219,15 @@ namespace CountersPlus.Utils
             return tmp_text;
         }
 
+        // TODO: holy shit can i please rewrite this method and make it not gross
         public Vector3 GetAnchoredPositionFromConfig(ConfigModel settings)
         {
             float comboOffset = mainConfig.ComboOffset;
             float multOffset = mainConfig.MultiplierOffset;
             CounterPositions position = settings.Position;
             int index = settings.Distance;
-            Vector3 pos = new Vector3(); // Base position
+            var pos = new Vector3(); // Base position
+            var hudHeightOffset = new Vector3();
 
             float belowEnergyOffset = -1.5f;
             float aboveHighwayOffset = 0.75f;
@@ -244,7 +243,7 @@ namespace CountersPlus.Utils
                 if (canvasSettings.ParentedToBaseGameHUD && (canvasSettings.MatchBaseGameHUDDepth || canvasSettings.IsMainCanvas))
                 {
                     X = hudWidth;
-                    offset -= new Vector3(0, hudHeight, 0);
+                    hudHeightOffset = new Vector3(0, -hudHeight, 0);
                 }
             }
 
@@ -272,7 +271,7 @@ namespace CountersPlus.Utils
                     offset = new Vector3(0, (offset.y * -1) + aboveHighwayOffset, 0);
                     break;
             }
-            return pos + offset;
+            return pos + offset + hudHeightOffset;
         }
         
         public void ClearAllText()
