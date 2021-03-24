@@ -1,6 +1,7 @@
 ﻿using BeatSaberMarkupLanguage;
 using CountersPlus.ConfigModels;
 using CountersPlus.Counters.Interfaces;
+using HarmonyLib;
 using HMUI;
 using System;
 using System.Collections.Generic;
@@ -23,8 +24,20 @@ namespace CountersPlus.Utils
 
         public void Initialize()
         {
+            // BEHOLD! MY NO-NOITALICS-INATOR!!!
+            var dummy = FontStyles.Normal;
+            var harmony = new HarmonyLib.Harmony("com.caeden117.countersplus.haha-april-fools-funny");
+            harmony.Patch(typeof(TMP_Text).GetProperty("fontStyle").GetSetMethod(),
+                new HarmonyMethod(SymbolExtensions.GetMethodInfo(() => Prefix(ref dummy))));
+
             Plugin.Logger.Info("April Fools active.");
             originalItalicStyle = mainFont.italicStyle;
+        }
+
+        [HarmonyPriority(int.MinValue)]
+        private static void Prefix(ref FontStyles value)
+        {
+            value |= FontStyles.Italic;
         }
 
         public void Dispose()
@@ -47,7 +60,7 @@ namespace CountersPlus.Utils
             // THIS IS SUPER EXPENSIVE, PROBABLY FRAME KILLING, BUT THE OPPORTUNITY IS TOO GOOD TO PASS UP
             foreach (var tmp in allText)
             {
-                tmp.fontStyle |= FontStyles.Italic; // WE ARE FORCING THESE GUYS TO BE ITALIC
+                tmp.fontStyle = tmp.fontStyle;
                 tmp.font = mainFont;
                 tmp.SetAllDirty(); // holy shit this is so dirty
             }

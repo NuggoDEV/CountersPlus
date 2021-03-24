@@ -62,32 +62,23 @@ namespace CountersPlus.Counters
             var time = atsc.songTime;
             if (Settings.ProgressTimeLeft) time = length - time;
             if (time <= 0f) return;
-            if (Settings.Mode == ProgressMode.Original || Settings.Mode == ProgressMode.TimeInBeats)
+
+            switch (Settings.Mode)
             {
-                if (Settings.Mode == ProgressMode.TimeInBeats)
-                {
+                case ProgressMode.TimeInBeats:
                     float beats = Mathf.Round(songBPM / 60 * time / 0.25f) * 0.25f;
                     timeText.text = beats.ToString("F2");
-                }
-                else
-                {
+                    break;
+                case ProgressMode.Original:
                     timeText.text = $"{Math.Floor(time / 60):N0}:{Math.Floor(time % 60):00}";
-                }
-                if (Settings.IncludeRing)
-                {
-                    progressRing.fillAmount = time / length;
-                    progressRing.SetVerticesDirty();
-                }
-                else
-                {
-                    progressRing.fillAmount = atsc.songTime / length;
-                    progressRing.SetVerticesDirty();
-                }
+                    break;
+                default:
+                    timeText.text = $"{time / length * 100:00}%";
+                    return;
             }
-            else
-            {
-                timeText.text = $"{time / length * 100:00}%";
-            }
+
+            progressRing.fillAmount = (Settings.IncludeRing ? time : atsc.songTime) / length;
+            progressRing.SetVerticesDirty();
         }
 
         private ImageView CreateRing(Canvas canvas)
