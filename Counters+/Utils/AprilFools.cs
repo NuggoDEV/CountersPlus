@@ -28,13 +28,12 @@ namespace CountersPlus.Utils
             var dummy = FontStyles.Normal;
             var harmony = new HarmonyLib.Harmony("com.caeden117.countersplus.haha-april-fools-funny");
             harmony.Patch(typeof(TMP_Text).GetProperty("fontStyle").GetSetMethod(),
-                new HarmonyMethod(SymbolExtensions.GetMethodInfo(() => Prefix(ref dummy))));
+                new HarmonyMethod(SymbolExtensions.GetMethodInfo(() => Prefix(ref dummy)), int.MinValue));
 
             Plugin.Logger.Info("April Fools active.");
             originalItalicStyle = mainFont.italicStyle;
         }
 
-        [HarmonyPriority(int.MinValue)]
         private static void Prefix(ref FontStyles value)
         {
             value |= FontStyles.Italic;
