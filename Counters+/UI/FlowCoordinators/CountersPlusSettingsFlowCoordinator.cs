@@ -92,7 +92,7 @@ namespace CountersPlus.UI.FlowCoordinators
                     songPreviewPlayer.CrossfadeToDefault();
 
                     // When not in FPFC, disable the Menu input, and re-enable the Tutorial menu input
-                    if (!Environment.GetCommandLineArgs().Any(x => x.ToLower() == "fpfc"))
+                    if (!Resources.FindObjectsOfTypeAll<FirstPersonFlyingController>().Any(x => x.isActiveAndEnabled))
                     {
                         vrInputModule.gameObject.SetActive(false);
 
