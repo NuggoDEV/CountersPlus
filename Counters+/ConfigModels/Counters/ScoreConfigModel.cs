@@ -62,19 +62,16 @@ namespace CountersPlus.ConfigModels
             { ScoreMode.RankOnly, "Remove Percentage" },
         };
 
-        public Color GetRankColorFromRank(RankModel.Rank rank)
-        {
-            switch (rank)
+        public Color GetRankColorFromRank(RankModel.Rank rank) => rank switch
             {
-                case RankModel.Rank.S: return SColor;
-                case RankModel.Rank.A: return AColor;
-                case RankModel.Rank.B: return BColor;
-                case RankModel.Rank.C: return CColor;
-                case RankModel.Rank.D: return DColor;
-                case RankModel.Rank.E: return EColor;
-                default: return SSColor;
-            }
-        }
+                RankModel.Rank.S => SColor,
+                RankModel.Rank.A => AColor,
+                RankModel.Rank.B => BColor,
+                RankModel.Rank.C => CColor,
+                RankModel.Rank.D => DColor,
+                RankModel.Rank.E => EColor,
+                _ => SSColor,
+            };
     }
 
     public enum ScoreMode { Original, ScoreOnly, LeavePoints, RankOnly }

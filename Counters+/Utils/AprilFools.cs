@@ -48,7 +48,7 @@ namespace CountersPlus.Utils
         {
             if (!allText.Any())
             {
-                allText = Resources.FindObjectsOfTypeAll<CurvedTextMeshPro>().Where(x => x.isActiveAndEnabled);
+                allText = Resources.FindObjectsOfTypeAll<CurvedTextMeshPro>().Where(x => x != null && x.isActiveAndEnabled);
             }
 
             t += Time.deltaTime;

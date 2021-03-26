@@ -21,6 +21,11 @@ namespace CountersPlus.Counters
 
         public override void CounterInit()
         {
+            // Yeah this is required.
+            // If the Score Counter is all alone on its own Canvas with nothing to accompany them,
+            // I need to give 'em a friend or else they get shy and hide away in the void.
+            _ = CanvasUtility.CreateTextFromSettings(Settings, null);
+
             ScoreUIController scoreUIController = coreGameHUD.GetComponentInChildren<ScoreUIController>();
             TextMeshProUGUI old = ScoreUIText(ref scoreUIController);
             GameObject baseGameScore = RelativeScoreGO(ref coreGameHUD);
@@ -80,12 +85,7 @@ namespace CountersPlus.Counters
                 rankText.text = RankModel.GetRankName(immediateRank);
                 prevImmediateRank = immediateRank;
 
-                Color RankColor = Color.white;
-                if (Settings.CustomRankColors)
-                {
-                    RankColor = Settings.GetRankColorFromRank(immediateRank);
-                }
-                rankText.color = RankColor;
+                rankText.color = Settings.CustomRankColors ? Settings.GetRankColorFromRank(immediateRank) : Color.white;
             }
             float relativeScore = relativeScoreAndImmediateRank.relativeScore * 100;
             relativeScoreText.text = $"{relativeScore.ToString($"F{Settings.DecimalPrecision}")}%";
