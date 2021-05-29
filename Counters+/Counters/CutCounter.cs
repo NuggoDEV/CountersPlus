@@ -50,7 +50,7 @@ namespace CountersPlus.Counters
         {
             if (data.colorType == ColorType.None || !info.allIsOK) return;
             noteCutInfos.Add(info.swingRatingCounter, info);
-
+            info.swingRatingCounter.UnregisterDidFinishReceiver(this);
             info.swingRatingCounter.RegisterDidFinishReceiver(this);
         }
 

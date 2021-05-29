@@ -22,7 +22,10 @@ namespace CountersPlus.UI
 
         private void SummonFlowCoordinator()
         {
-            mainFlowCoordinator.PresentFlowCoordinator(flowCoordinator, animationDirection: ViewController.AnimationDirection.Vertical);
+            flowCoordinator.DoSceneTransition(() =>
+            {
+                mainFlowCoordinator.PresentFlowCoordinator(flowCoordinator);
+            });
         }
 
         public void Dispose()
