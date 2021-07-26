@@ -1,6 +1,17 @@
 # CountersPlus
 A combination of widely-used counters, all configurable in one Beat Saber mod.
 
+## Looking For New Maintainers
+It's been pretty obvious that, for the past several Beat Saber updates, Counters+ has mostly been on "life support" status. The plugin has recently only been recieving changes necessary for it to function on the newest versions of the game.
+
+To keep it brief, I've run out of any motivation to continue working on Counters+. My focus has been entirely dedicated to other projects (both public and private), and with University starting in late August, my time to dedicate towards Counters+ is only going to decrease.
+
+As such, I am looking for a new maintainer to breathe new life into Counters+. I would like someone who can continue to maintain the plugin for future Beat Saber updates, but also to give the plugin the love and care that it deserves, something I know I won't be able to do myself.
+
+This does not mean I am abandoning the project; Counters+ will still continue to recieve updates for new game versions, however minor issues and feature requests will more than likely be ignored for the forseeable future.
+
+If anyone is interested in picking up the project, please contact me on Discord: `Caeden117#0117`.
+
 ## What is this?
 **Counters+** (also known as CountersPlus) is a powerful UI Enhancement mod for the popular VR rhythm game Beat Saber. It features a variety of different counters that track varying statistics, all bundled into one core system.
 
