@@ -2,11 +2,13 @@
 A combination of widely-used counters, all configurable in one Beat Saber mod.
 
 ## Looking For New Maintainers
-It's been pretty obvious that, for the past several Beat Saber updates, Counters+ has mostly been on "life support" status. The plugin has recently only been recieving changes necessary for it to function on the newest versions of the game.
+It's been pretty obvious that for the past several Beat Saber updates, Counters+ has mostly been on "life support" status, only been recieving changes necessary for it to function on the newest versions of the game.
 
-To keep it brief, I've run out of any motivation to continue working on Counters+. My focus has been entirely dedicated to other projects (both public and private), and with University starting in late August, my time to dedicate towards Counters+ is only going to decrease.
+To keep it brief, I've run out of any motivation to continue working on Counters+. My focus has been entirely dedicated to other projects, and with DigiPen starting in late August, my time to dedicate towards Counters+ is only going to decrease.
 
 As such, I am looking for a new maintainer to breathe new life into Counters+. I would like someone who can continue to maintain the plugin for future Beat Saber updates, but also to give the plugin the love and care that it deserves, something I know I won't be able to do myself.
+
+I am not looking for a developer who will treat Counters+ the same way I treat it now. I want someone who means better.
 
 This does not mean I am abandoning the project; Counters+ will still continue to recieve updates for new game versions, however minor issues and feature requests will more than likely be ignored for the forseeable future.
 
