@@ -1,5 +1,5 @@
-﻿using IPA.Loader;
-using SemVer;
+﻿using Hive.Versioning;
+using IPA.Loader;
 using SimpleJSON;
 using System.Collections;
 using UnityEngine.Networking;
@@ -15,7 +15,7 @@ namespace CountersPlus.Utils
         public VersionUtility()
         {
             // I could grab this straight from PluginMetadata but this is for cleanness.
-            PluginVersion = PluginManager.GetPlugin("Counters+").Version;
+            PluginVersion = PluginManager.GetPlugin("Counters+").HVersion;
 
             SharedCoroutineStarter.instance.StartCoroutine(GetBeatModsVersion());
         }
