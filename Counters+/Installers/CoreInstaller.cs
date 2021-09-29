@@ -1,6 +1,8 @@
 ﻿using CountersPlus.ConfigModels;
+using CountersPlus.ConfigModels.SettableSettings;
 using CountersPlus.Custom;
 using CountersPlus.Utils;
+using IPA.Loader;
 using Zenject;
 
 namespace CountersPlus.Installers
@@ -39,6 +41,11 @@ namespace CountersPlus.Installers
                 customCounter.Config = config;
                 BindCustomCounter(customCounter, config);
             }
+
+            if (PluginManager.GetPlugin("Heck") != null)
+            {
+                InstallHeckCompatibility();
+            }
         }
 
         // Helper function, allows easy modification to how configs are binded to zenject
@@ -52,8 +59,12 @@ namespace CountersPlus.Installers
         private void BindCustomCounter(CustomCounter counter, CustomConfigModel settings)
         {
             Container.Bind<ConfigModel>().WithId(counter.Name).To<CustomConfigModel>().FromInstance(settings).AsCached();
-            Container.Bind<ConfigModel>().To<CustomConfigModel>().FromInstance(settings).AsCached();
             Container.BindInterfacesAndSelfTo<CustomConfigModel>().FromInstance(settings).WhenInjectedInto(counter.CounterType);
+        }
+
+        private void InstallHeckCompatibility()
+        {
+            Container.BindInterfacesAndSelfTo<CountersPlusSettableSettings>().AsSingle().NonLazy();
         }
     }
 }
