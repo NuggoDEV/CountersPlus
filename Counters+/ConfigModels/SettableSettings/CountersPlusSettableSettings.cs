@@ -11,17 +11,23 @@ namespace CountersPlus.ConfigModels.SettableSettings
 {
     internal class CountersPlusSettableSettings : IDisposable
     {
+        public static bool HasExecutedBefore { get; private set; } = false;
+
         private const string countersPlusIdentifier = "_countersPlus";
 
         private readonly BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance;
 
-        private List<ISettableSetting> settableSettings = new();
+        private static List<ISettableSetting> settableSettings = new();
 
         // ALRIGHT this is going to be a dousy
         // We have hundreds of settings to expose to Heck, aint no way in heck (haha) that I'm manually registering all of them.
         // Time to Reflection this bitch!
         public CountersPlusSettableSettings(List<ConfigModel> configs, MainConfigModel mainConfigModel, HUDConfigModel hudConfig)
         {
+            if (HasExecutedBefore) return;
+
+            HasExecutedBefore = true;
+
             // Grab all of the objects i'll make configurable to the mapper
             // (All counter config models, plus main settings and main canvas)
             // and ensure only one of each is in the collection
@@ -74,7 +80,7 @@ namespace CountersPlus.ConfigModels.SettableSettings
                     // Haha register
                     SettingSetterSettableSettingsManager.RegisterSettableSetting(countersPlusIdentifier, fieldName, settableSetting);
 
-                    Plugin.Logger.Debug($"Registered {fieldName}.");
+                    //Plugin.Logger.Debug($"Registered {fieldName}.");
                 }
             }
 
