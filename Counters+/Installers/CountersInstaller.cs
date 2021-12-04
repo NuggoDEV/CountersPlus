@@ -55,7 +55,7 @@ namespace CountersPlus.Installers
 
             AddCounter<PBConfigModel, PBCounter>((settings) => {
                 ScoreConfigModel scoreConfig = Container.Resolve<ScoreConfigModel>();
-                HUDCanvas canvasSettings = scoreConfig.CanvasID == -1 ? hudConfig.MainCanvasSettings : hudConfig.OtherCanvasSettings[scoreConfig.CanvasID];
+                HUDCanvas canvasSettings = GrabCanvasForCounter(scoreConfig);
                 return scoreConfig.Enabled && settings.UnderScore && (dataModel.playerData.playerSpecificSettings.noTextsAndHuds ? canvasSettings.IgnoreNoTextAndHUDOption : true);
                 });
 
@@ -85,7 +85,7 @@ namespace CountersPlus.Installers
         {
             T settings = Container.Resolve<T>();
 
-            HUDCanvas canvasSettings = settings.CanvasID == -1 ? hudConfig.MainCanvasSettings : hudConfig.OtherCanvasSettings[settings.CanvasID];
+            HUDCanvas canvasSettings = GrabCanvasForCounter(settings);
 
             if (!settings.Enabled || (!canvasSettings.IgnoreNoTextAndHUDOption && dataModel.playerData.playerSpecificSettings.noTextsAndHuds
                 && !additionalReasonToSpawn(settings))) return;
@@ -106,7 +106,7 @@ namespace CountersPlus.Installers
         {
             ConfigModel settings = Container.TryResolveId<ConfigModel>(customCounter.Name);
 
-            HUDCanvas canvasSettings = settings.CanvasID == -1 ? hudConfig.MainCanvasSettings : hudConfig.OtherCanvasSettings[settings.CanvasID];
+            HUDCanvas canvasSettings = GrabCanvasForCounter(settings);
 
             if (!settings.Enabled || (!canvasSettings.IgnoreNoTextAndHUDOption && dataModel.playerData.playerSpecificSettings.noTextsAndHuds)) return;
 
@@ -121,5 +121,10 @@ namespace CountersPlus.Installers
                 Container.BindInterfacesAndSelfTo(counterType).AsSingle().NonLazy();
             }
         }
+
+        private HUDCanvas GrabCanvasForCounter(ConfigModel settings)
+            => settings.CanvasID == -1 || settings.CanvasID >= hudConfig.OtherCanvasSettings.Count
+            ? hudConfig.MainCanvasSettings
+            : hudConfig.OtherCanvasSettings[settings.CanvasID];
     }
 }
