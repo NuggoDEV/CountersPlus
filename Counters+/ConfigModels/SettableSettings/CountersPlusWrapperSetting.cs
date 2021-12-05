@@ -50,7 +50,7 @@ namespace CountersPlus.ConfigModels.SettableSettings
 
                 settingsProperty.SetValue(settingsInstance, tempValue);
             }
-            else
+            else if (originalValue != null)
             {
                 settingsProperty.SetValue(settingsInstance, originalValue);
                 originalValue = null;
