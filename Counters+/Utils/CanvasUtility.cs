@@ -147,16 +147,14 @@ namespace CountersPlus.Utils
 
 #nullable enable
         public Canvas? GetCanvasFromID(int id)
-        {
-            if (CanvasIDToCanvas.TryGetValue(id, out Canvas canvas)) return canvas;
-            return null;
-        }
+            => id == -1 || id >= mainConfig.HUDConfig.OtherCanvasSettings.Count
+                ? CanvasIDToCanvas[-1]
+                : CanvasIDToCanvas[id];
 
         public HUDCanvas? GetCanvasSettingsFromID(int id)
-        {
-            if (id == -1) return mainConfig.HUDConfig.MainCanvasSettings;
-            return mainConfig.HUDConfig.OtherCanvasSettings.ElementAtOrDefault(id);
-        }
+            => id == -1 || id >= mainConfig.HUDConfig.OtherCanvasSettings.Count
+                ? mainConfig.HUDConfig.MainCanvasSettings
+                : mainConfig.HUDConfig.OtherCanvasSettings[id];
 
         public HUDCanvas? GetCanvasSettingsFromCanvas(Canvas canvas)
         {
@@ -168,7 +166,7 @@ namespace CountersPlus.Utils
 
         public TMP_Text CreateTextFromSettings(ConfigModel settings, Vector3? offset = null)
         {
-            Canvas canvasToApply = CanvasIDToCanvas[settings.CanvasID];
+            Canvas canvasToApply = GetCanvasFromID(settings.CanvasID);
             if (canvasToApply == null)
             {
                 var hudSettings = GetCanvasSettingsFromID(settings.CanvasID);
