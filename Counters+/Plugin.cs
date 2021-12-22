@@ -33,24 +33,18 @@ namespace CountersPlus
             MainConfig = conf.Generated<MainConfigModel>();
             harmony = new HarmonyObj(HARMONY_ID);
 
-            zenjector.OnApp<CoreInstaller>();
-            zenjector.OnGame<CountersInstaller>()
-                .Expose<CoreGameHUDController>()
-                .ShortCircuitForTutorial()
-                .ShortCircuitForMultiplayer(); // still dont have the time for this
-            zenjector.OnMenu<MenuUIInstaller>();
+            zenjector.Expose<CoreGameHUDController>("Environment");
+            zenjector.Install<CoreInstaller>(Location.App);
+            zenjector.Install<MenuUIInstaller>(Location.Menu);
+
+            // ....Yep, still do not have the time (nor interest) to get Counters+ working in Multiplayer.
+            zenjector.Install<CountersInstaller>(Location.StandardPlayer);
         }
 
         [OnEnable]
-        public void OnEnable()
-        {
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
-        }
+        public void OnEnable() => harmony.PatchAll(Assembly.GetExecutingAssembly());
 
         [OnDisable]
-        public void OnDisable()
-        {
-            harmony.UnpatchAll(HARMONY_ID);
-        }
+        public void OnDisable() => harmony.UnpatchSelf();
     }
 }
