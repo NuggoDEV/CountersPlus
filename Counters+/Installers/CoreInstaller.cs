@@ -37,6 +37,8 @@ namespace CountersPlus.Installers
                     config = customCounter.ConfigDefaults;
                     mainConfig.CustomCounters.Add(customCounter.Name, config);
                 }
+
+                config.DisplayName = customCounter.Name;
                 config.AttachedCustomCounter = customCounter;
                 customCounter.Config = config;
                 BindCustomCounter(customCounter, config);

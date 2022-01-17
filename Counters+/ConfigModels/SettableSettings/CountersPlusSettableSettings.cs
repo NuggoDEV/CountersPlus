@@ -32,10 +32,10 @@ namespace CountersPlus.ConfigModels.SettableSettings
             // (All counter config models, plus main settings and main canvas)
             // and ensure only one of each is in the collection
             var configurableObjects = configs
+                .DistinctBy(x => x.DisplayName) // DistinctBy LINQ method might not be needed, zenject supposedly doesn't return duplicate objects but it currently acts as a safe-guard.
                 .Cast<object>()
                 .Append(mainConfigModel)
-                .Append(hudConfig.MainCanvasSettings)
-                .DistinctBy(x => x.GetType());
+                .Append(hudConfig.MainCanvasSettings);
 
             // Caching these before the loop
             var settableSettingType = typeof(CountersPlusWrapperSetting);

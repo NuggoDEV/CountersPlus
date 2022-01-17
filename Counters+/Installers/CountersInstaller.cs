@@ -57,7 +57,7 @@ namespace CountersPlus.Installers
                 ScoreConfigModel scoreConfig = Container.Resolve<ScoreConfigModel>();
                 HUDCanvas canvasSettings = GrabCanvasForCounter(scoreConfig);
                 return scoreConfig.Enabled && settings.UnderScore && (dataModel.playerData.playerSpecificSettings.noTextsAndHuds ? canvasSettings.IgnoreNoTextAndHUDOption : true);
-                });
+            });
 
             foreach (Custom.CustomCounter customCounter in Plugin.LoadedCustomCounters.Values)
             {
