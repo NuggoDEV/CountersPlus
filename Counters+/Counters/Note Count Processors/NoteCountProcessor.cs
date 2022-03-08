@@ -31,7 +31,7 @@ namespace CountersPlus.Counters.NoteCountProcessors
         protected List<NoteData> GetNoteData(IReadonlyBeatmapData data)
         {
             List<NoteData> allNoteData = new List<NoteData>();
-            foreach (var beatmapObjectData in data.beatmapObjectsData)
+            foreach (var beatmapObjectData in data.allBeatmapDataItems)
             {
                 if (beatmapObjectData is NoteData note && note.colorType != ColorType.None)
                 {

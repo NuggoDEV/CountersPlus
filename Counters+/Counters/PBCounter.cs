@@ -19,6 +19,7 @@ namespace CountersPlus.Counters
         [Inject] private ScoreConfigModel scoreConfig;
         [Inject] private NoteCountProcessor noteCountProcessor;
         [Inject] private RelativeScoreAndImmediateRankCounter relativeScoreAndImmediateRank;
+        [Inject] private IReadonlyBeatmapData beatmapData;
 
         private GameplayModifiersModelSO modifiersModel;
         private TMP_Text counter;
@@ -34,13 +35,8 @@ namespace CountersPlus.Counters
         {
             modifiersModel = SCGameplayModsModel(ref scoreController);
             IDifficultyBeatmap beatmap = data.difficultyBeatmap;
-            int maxRawScore = ScoreModel.MaxRawScoreForNumberOfNotes(noteCountProcessor.NoteCount);
-
-            var modifiersList = modifiersModel.CreateModifierParamsList(data.gameplayModifiers);
-
-            var totalModifier = modifiersModel.GetTotalMultiplier(modifiersList, 1);
-
-            maxPossibleScore = ScoreModel.GetModifiedScoreForGameplayModifiersScoreMultiplier(maxRawScore, totalModifier);
+            
+            maxPossibleScore = ScoreModel.ComputeMaxMultipliedScoreForBeatmap(beatmapData);
 
             stats = playerDataModel.playerData.GetPlayerLevelStatsData(beatmap);
             highScore = stats.highScore;

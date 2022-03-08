@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 namespace CountersPlus.Counters
 {
-    internal class CutCounter : Counter<CutConfigModel>, INoteEventHandler, ISaberSwingRatingCounterDidFinishReceiver
+    internal class CutCounter : Counter<CutConfigModel>
     {
+        [Inject] ScoreController scoreController;
+
         private TMP_Text cutCounterLeft;
         private TMP_Text cutCounterRight;
         private int totalCutCountLeft = 0;
@@ -44,40 +47,42 @@ namespace CountersPlus.Counters
             cutCounterLeft.lineSpacing = -26;
             cutCounterLeft.text = Settings.SeparateCutValues ? $"{defaultValue}\n{defaultValue}\n{defaultValue}" : $"{defaultValue}";
             cutCounterLeft.alignment = leftAlign;
+
+            scoreController.scoringForNoteFinishedEvent += ScoreController_scoringForNoteFinishedEvent;
         }
 
-        public void OnNoteCut(NoteData data, NoteCutInfo info)
+        public override void CounterDestroy()
         {
-            if (data.colorType == ColorType.None || !info.allIsOK) return;
-            noteCutInfos.Add(info.swingRatingCounter, info);
-            info.swingRatingCounter.UnregisterDidFinishReceiver(this);
-            info.swingRatingCounter.RegisterDidFinishReceiver(this);
+            scoreController.scoringForNoteFinishedEvent -= ScoreController_scoringForNoteFinishedEvent;
         }
 
-        public void OnNoteMiss(NoteData data) { }
-
-        public void HandleSaberSwingRatingCounterDidFinish(ISaberSwingRatingCounter v)
+        private void ScoreController_scoringForNoteFinishedEvent(ScoringElement scoringElement)
         {
-            ScoreModel.RawScoreWithoutMultiplier(v, noteCutInfos[v].cutDistanceToCenter, out int beforeCut, out int afterCut, out int cutDistance);
-
-            if (noteCutInfos[v].saberType == SaberType.SaberA)
+            if (scoringElement is GoodCutScoringElement goodCut && goodCut.noteData.scoringType == NoteData.ScoringType.Normal)
             {
-                totalScoresLeft[0] += beforeCut;
-                totalScoresLeft[1] += afterCut;
-                totalScoresLeft[2] += cutDistance;
-                ++totalCutCountLeft;
-            }
-            else
-            {
-                totalScoresRight[0] += beforeCut;
-                totalScoresRight[1] += afterCut;
-                totalScoresRight[2] += cutDistance;
-                ++totalCutCountRight;
-            }
+                var cutScoreBuffer = goodCut.cutScoreBuffer;
 
-            UpdateLabels();
+                var beforeCut = cutScoreBuffer.beforeCutScore;
+                var afterCut = cutScoreBuffer.afterCutScore;
+                var cutDistance = cutScoreBuffer.centerDistanceCutScore;
 
-            noteCutInfos.Remove(v);
+                if (goodCut.noteData.colorType == ColorType.ColorA)
+                {
+                    totalScoresLeft[0] += beforeCut;
+                    totalScoresLeft[1] += afterCut;
+                    totalScoresLeft[2] += cutDistance;
+                    ++totalCutCountLeft;
+                }
+                else
+                {
+                    totalScoresRight[0] += beforeCut;
+                    totalScoresRight[1] += afterCut;
+                    totalScoresRight[2] += cutDistance;
+                    ++totalCutCountRight;
+                }
+
+                UpdateLabels();
+            }
         }
 
         private void UpdateLabels()

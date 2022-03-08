@@ -13,7 +13,6 @@ namespace CountersPlus.Counters.Event_Broadcasters
         public override void Initialize()
         {
             scoreController.scoreDidChangeEvent += ScoreDidChangeEvent;
-            scoreController.immediateMaxPossibleScoreDidChangeEvent += MaxScoreDidChangeEvent;
         }
 
         private void ScoreDidChangeEvent(int rawScore, int modifiedScore)
@@ -21,13 +20,6 @@ namespace CountersPlus.Counters.Event_Broadcasters
             foreach (IScoreEventHandler scoreEventHandler in EventHandlers)
             {
                 scoreEventHandler?.ScoreUpdated(modifiedScore);
-            }
-        }
-
-        private void MaxScoreDidChangeEvent(int rawScore, int modifiedScore)
-        {
-            foreach (IScoreEventHandler scoreEventHandler in EventHandlers)
-            {
                 scoreEventHandler?.MaxScoreUpdated(modifiedScore);
             }
         }
@@ -35,7 +27,6 @@ namespace CountersPlus.Counters.Event_Broadcasters
         public override void Dispose()
         {
             scoreController.scoreDidChangeEvent -= ScoreDidChangeEvent;
-            scoreController.immediateMaxPossibleScoreDidChangeEvent -= MaxScoreDidChangeEvent;
         }
     }
 }
