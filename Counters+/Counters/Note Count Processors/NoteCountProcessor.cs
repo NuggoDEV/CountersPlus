@@ -30,19 +30,10 @@ namespace CountersPlus.Counters.NoteCountProcessors
 
         protected List<NoteData> GetNoteData(IReadonlyBeatmapData data)
         {
-            List<NoteData> allNoteData = new List<NoteData>();
-            foreach (var beatmapObjectData in data.allBeatmapDataItems)
-            {
-                if (beatmapObjectData is NoteData note && note.colorType != ColorType.None)
-                {
-                    if (ShouldIgnoreNote(note))
-                        continue;
-                    else
-                        allNoteData.Add(note);
-                }
-            }
-
-            return allNoteData;
+            return beatmapData
+                .GetBeatmapDataItems<NoteData>()
+                .Where(noteData => noteData.gameplayType != NoteData.GameplayType.Bomb && ShouldIgnoreNote(noteData))
+                .ToList();
         }
 
         public abstract bool ShouldIgnoreNote(NoteData data);
