@@ -12,14 +12,7 @@ namespace CountersPlus.Counters.NoteCountProcessors
     /// </summary>
     public abstract class NoteCountProcessor
     {
-        public List<NoteData> Data
-        {
-            get
-            {
-                if (data is null) data = GetNoteData(beatmapData);
-                return data;
-            }
-        }
+        public List<NoteData> Data => data ??= GetNoteData(beatmapData);
 
         public int NoteCount => Data.Count;
 
