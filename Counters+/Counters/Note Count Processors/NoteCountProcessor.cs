@@ -30,9 +30,9 @@ namespace CountersPlus.Counters.NoteCountProcessors
 
         protected List<NoteData> GetNoteData(IReadonlyBeatmapData data)
         {
-            return beatmapData
+            return data
                 .GetBeatmapDataItems<NoteData>()
-                .Where(noteData => noteData.gameplayType != NoteData.GameplayType.Bomb && ShouldIgnoreNote(noteData))
+                .Where(noteData => noteData.gameplayType != NoteData.GameplayType.Bomb && !ShouldIgnoreNote(noteData))
                 .ToList();
         }
 
