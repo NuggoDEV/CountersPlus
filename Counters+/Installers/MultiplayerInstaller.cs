@@ -4,23 +4,36 @@ using CountersPlus.Counters.Event_Broadcasters;
 using CountersPlus.Counters.Interfaces;
 using CountersPlus.Counters.NoteCountProcessors;
 using CountersPlus.Utils;
-using IPA.Loader;
+using IPA.Utilities;
 using System;
 using UnityEngine;
 using Zenject;
 
 namespace CountersPlus.Installers
 {
-    class CountersInstaller : MonoInstaller
+    class MultiplayerInstaller : MonoInstaller
     {
+        [Inject]
+        private MultiplayerPlayersManager _playersManager;
+
         [Inject]
         private readonly HUDConfigModel hudConfig;
 
         [Inject]
         private readonly PlayerDataModel dataModel;
 
+        private readonly FieldAccessor<MultiplayerPlayersManager, MultiplayerLocalActivePlayerFacade>.Accessor _activeLocalPlayerFacade = FieldAccessor<MultiplayerPlayersManager, MultiplayerLocalActivePlayerFacade>.GetAccessor("_activeLocalPlayerFacade");
+
         public override void InstallBindings()
         {
+            _playersManager.playerSpawningDidFinishEvent += InstallCounters;
+        }
+
+        private void InstallCounters()
+        {
+            var activeLocalPlayer = _activeLocalPlayerFacade(ref _playersManager);
+            Container.Bind<CoreGameHUDController>().FromInstance(activeLocalPlayer.GetComponentInChildren<CoreGameHUDController>());
+
             MainConfigModel mainConfig = Plugin.MainConfig;
 
             if (!mainConfig.Enabled) return;
@@ -74,6 +87,8 @@ namespace CountersPlus.Installers
             Container.BindInterfacesAndSelfTo<NoteEventBroadcaster>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<ScoreEventBroadcaster>().AsSingle().NonLazy();
             Plugin.Logger.Notice("Counters loaded!");
+
+            _playersManager.playerSpawningDidFinishEvent -= InstallCounters;
         }
 
         private void AddCounter<T, R>() where T : ConfigModel where R : ICounter
