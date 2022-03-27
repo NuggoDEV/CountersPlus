@@ -55,7 +55,9 @@ namespace CountersPlus.Counters
 
             old.rectTransform.SetParent(currentCanvas.transform, true);
             baseGameScore.transform.SetParent(old.transform, true);
+            baseGameScore.GetComponent<TextMeshProUGUI>().enabled = true;
             baseGameRank.transform.SetParent(old.transform, true);
+            baseGameRank.GetComponent<TextMeshProUGUI>().enabled = true;
 
             if (!mainConfig.ItalicText)
             {
