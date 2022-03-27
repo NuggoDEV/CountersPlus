@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using CountersPlus.Multiplayer;
+using Zenject;
 
 namespace CountersPlus.Installers
 {
@@ -10,6 +11,8 @@ namespace CountersPlus.Installers
             Container.Bind<CoreGameHUDController>()
                 .FromInstance(GetComponentInChildren<CoreGameHUDController>())
                 .AsSingle();
+
+            Container.BindInterfacesAndSelfTo<CanvasIntroFadeController>().AsSingle();
         }
     }
 }
