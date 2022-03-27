@@ -211,6 +211,7 @@
     <Compile Include="Counters\Interfaces\INoteEventHandler.cs" />
     <Compile Include="Counters\Interfaces\IScoreEventHandler.cs" />
     <Compile Include="Counters\MissedCounter.cs" />
+    <Compile Include="Counters\MultiplayerScoreCounter.cs" />
     <Compile Include="Counters\Note Count Processors\CustomJSONDataNoteCountProcessor.cs" />
     <Compile Include="Counters\Note Count Processors\GenericNoteCountProcessor.cs" />
     <Compile Include="Counters\Note Count Processors\NoteCountProcessor.cs" />
