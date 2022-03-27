@@ -22,8 +22,6 @@ namespace CountersPlus.Installers
         {
             MainConfigModel mainConfig = Plugin.MainConfig;
 
-            bool isMultiplayer = Container.TryResolve<MultiplayerPlayersManager>() != null;
-
             if (!mainConfig.Enabled) return;
 
             /// LOADING IMPORTANT SHIT LIKE CANVASES AND STUFF ///
@@ -46,16 +44,12 @@ namespace CountersPlus.Installers
                 AddCounter<ProgressConfigModel, ProgressBaseGameCounter>();
             }
 
-            if (!isMultiplayer)
-                AddCounter<ScoreConfigModel, ScoreCounter>();
-            else
-                AddCounter<ScoreConfigModel, MultiplayerScoreCounter>();
+            AddCounter<ScoreConfigModel, ScoreCounter>();
             AddCounter<CutConfigModel, CutCounter>();
             AddCounter<FailConfigModel, FailCounter>();
             AddCounter<NotesLeftConfigModel, NotesLeftCounter>();
             AddCounter<SpeedConfigModel, SpeedCounter>();
             AddCounter<SpinometerConfigModel, Spinometer>();
-
 
             AddCounter<PBConfigModel, PBCounter>((settings) => {
                 ScoreConfigModel scoreConfig = Container.Resolve<ScoreConfigModel>();

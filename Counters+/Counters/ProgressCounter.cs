@@ -17,7 +17,7 @@ namespace CountersPlus.Counters
         private readonly string multiplierImageSpriteName = "Circle";
 
         [Inject] private AudioTimeSyncController atsc;
-        [Inject(Optional = true)] private CoreGameHUDController coreGameHUD; // For getting multiplier image
+        [Inject] private CoreGameHUDController coreGameHUD; // For getting multiplier image
         [Inject] private GameplayCoreSceneSetupData gcssd; // I hope this works
 
         private TMP_Text timeText;
@@ -48,11 +48,9 @@ namespace CountersPlus.Counters
                 _ when !Settings.ProgressTimeLeft => "0:00"
             };
 
-            if (coreGameHUD != null)
-            {
-                GameObject baseGameProgress = SongProgressPanelGO(ref coreGameHUD);
-                UnityEngine.Object.Destroy(baseGameProgress); // I'm sorry, little one.
-            }
+            // I'm sorry, little one.
+            GameObject baseGameProgress = SongProgressPanelGO(ref coreGameHUD);
+            UnityEngine.Object.Destroy(baseGameProgress);
 
             if (Settings.Mode != ProgressMode.Percent)
             {

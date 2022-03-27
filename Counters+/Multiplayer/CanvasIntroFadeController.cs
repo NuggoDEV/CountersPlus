@@ -28,7 +28,10 @@ namespace CountersPlus.Multiplayer
             {
                 var canvas = canvasUtility.GetCanvasFromID(i).gameObject;
 
-                countersPlusCanvasGroups.Add(canvas.AddComponent<CanvasGroup>());
+                var canvasGroup = canvas.AddComponent<CanvasGroup>();
+                canvasGroup.alpha = 0;
+
+                countersPlusCanvasGroups.Add(canvasGroup);
             }
 
             multiplayerController.stateChangedEvent += MultiplayerController_stateChangedEvent;
