@@ -2,6 +2,6 @@
   <checkbox-setting text='Separate Saber Cuts' apply-on-change='true' value='SeparateSaberCounts' hover-hint='Shows the average cut for the left and right sabers separately.'/>
   <checkbox-setting text='Separate Cut Values' apply-on-change='true' value='SeparateCutValues' hover-hint='Show separate averages for pre-swing angle (0-70), post-swing angle (0-30), and accuracy (0-15).'/>
   <list-setting text='Average Cut Precision'  apply-on-change='true' value='AveragePrecision' options='DecimalPrecisions' hover-hint='How many decimals should be shown on the average cuts?'/>
-	<checkbox-setting text='Include Arc Notes' apply-on-change='true' value='IncludeArcs' hover-hint='Include arc notes in average cut calculations. These may not have a pre-swing or a post-swing score.'/>
-	<checkbox-setting text='Include Chain Notes' apply-on-change='true' value='IncludeChains' hover-hint='Include chain notes in average cut calculations. Chains will always give 20 accuracy points.'/>
+  <checkbox-setting text='Include Arc Notes' apply-on-change='true' value='IncludeArcs' hover-hint='Include arc notes in average cut calculations. These may not have a pre-swing or a post-swing score.'/>
+  <checkbox-setting text='Include Chain Notes' apply-on-change='true' value='IncludeChains' hover-hint='Include chain notes in average cut calculations. Chains will always give 20 accuracy points.'/>
 </vertical>

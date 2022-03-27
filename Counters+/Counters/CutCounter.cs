@@ -1,6 +1,4 @@
 ﻿using CountersPlus.ConfigModels;
-using CountersPlus.Counters.Interfaces;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using TMPro;
