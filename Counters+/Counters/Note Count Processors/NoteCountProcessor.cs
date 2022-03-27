@@ -12,14 +12,7 @@ namespace CountersPlus.Counters.NoteCountProcessors
     /// </summary>
     public abstract class NoteCountProcessor
     {
-        public List<NoteData> Data
-        {
-            get
-            {
-                if (data is null) data = GetNoteData(beatmapData);
-                return data;
-            }
-        }
+        public List<NoteData> Data => data ??= GetNoteData(beatmapData);
 
         public int NoteCount => Data.Count;
 
@@ -30,19 +23,10 @@ namespace CountersPlus.Counters.NoteCountProcessors
 
         protected List<NoteData> GetNoteData(IReadonlyBeatmapData data)
         {
-            List<NoteData> allNoteData = new List<NoteData>();
-            foreach (var beatmapObjectData in data.allBeatmapDataItems)
-            {
-                if (beatmapObjectData is NoteData note && note.colorType != ColorType.None)
-                {
-                    if (ShouldIgnoreNote(note))
-                        continue;
-                    else
-                        allNoteData.Add(note);
-                }
-            }
-
-            return allNoteData;
+            return data
+                .GetBeatmapDataItems<NoteData>()
+                .Where(noteData => noteData.gameplayType != NoteData.GameplayType.Bomb && !ShouldIgnoreNote(noteData))
+                .ToList();
         }
 
         public abstract bool ShouldIgnoreNote(NoteData data);

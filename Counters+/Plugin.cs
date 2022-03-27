@@ -36,9 +36,9 @@ namespace CountersPlus
             zenjector.Expose<CoreGameHUDController>("Environment");
             zenjector.Install<CoreInstaller>(Location.App);
             zenjector.Install<MenuUIInstaller>(Location.Menu);
-
-            // ....Yep, still do not have the time (nor interest) to get Counters+ working in Multiplayer.
             zenjector.Install<CountersInstaller>(Location.StandardPlayer);
+            zenjector.Install<CountersInstaller, MultiplayerLocalActivePlayerInstaller>();
+            zenjector.Install<MultiplayerInstaller, MultiplayerLocalActivePlayerInstaller>();
         }
 
         [OnEnable]
