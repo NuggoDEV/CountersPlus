@@ -13,15 +13,17 @@ namespace CountersPlus.Installers
 {
     class CountersInstaller : MonoInstaller
     {
-        private HUDConfigModel hudConfig;
-        private PlayerDataModel dataModel;
+        [Inject]
+        private readonly HUDConfigModel hudConfig;
+
+        [Inject]
+        private readonly PlayerDataModel dataModel;
 
         public override void InstallBindings()
         {
             MainConfigModel mainConfig = Plugin.MainConfig;
-            
-            hudConfig = Container.Resolve<HUDConfigModel>();
-            dataModel = Container.Resolve<PlayerDataModel>();
+
+            bool isMultiplayer = Container.TryResolve<MultiplayerPlayersManager>() != null;
 
             if (!mainConfig.Enabled) return;
 
@@ -45,7 +47,10 @@ namespace CountersPlus.Installers
                 AddCounter<ProgressConfigModel, ProgressBaseGameCounter>();
             }
 
-            AddCounter<ScoreConfigModel, ScoreCounter>();
+            if (!isMultiplayer)
+                AddCounter<ScoreConfigModel, ScoreCounter>();
+            else
+                AddCounter<ScoreConfigModel, MultiplayerScoreCounter>();
             AddCounter<CutConfigModel, CutCounter>();
             AddCounter<FailConfigModel, FailCounter>();
             AddCounter<NotesLeftConfigModel, NotesLeftCounter>();
