@@ -27,11 +27,26 @@ namespace CountersPlus.Counters
 
         public override void CounterInit()
         {
+            length = atsc.songLength;
+            songBPM = gcssd.difficultyBeatmap.level.beatsPerMinute;
+
             timeText = CanvasUtility.CreateTextFromSettings(Settings);
             timeText.fontSize = 4;
 
-            length = atsc.songLength;
-            songBPM = gcssd.difficultyBeatmap.level.beatsPerMinute;
+            // Set default text, which is visible in Multiplayer
+            // Missing cases are covered by the default "_" case
+            timeText.text = Settings.Mode switch
+            {
+                ProgressMode.Percent when Settings.ProgressTimeLeft => "100%",
+                ProgressMode.Percent when !Settings.ProgressTimeLeft => "0%",
+
+                ProgressMode.TimeInBeats when Settings.ProgressTimeLeft
+                    => $"{Mathf.Round(songBPM / 60 * length / 0.25f) * 0.25f:F2}",
+                ProgressMode.TimeInBeats when !Settings.ProgressTimeLeft => "0.00",
+
+                _ when Settings.ProgressTimeLeft => $"{atsc.songLength:F2}",
+                _ when !Settings.ProgressTimeLeft => "0:00"
+            };
 
             if (coreGameHUD != null)
             {
@@ -53,6 +68,9 @@ namespace CountersPlus.Counters
                     progressRing = CreateRing(canvas);
                     progressRing.rectTransform.anchoredPosition = timeText.rectTransform.anchoredPosition;
                     progressRing.transform.localScale = ringSize / 10;
+
+                    // Start progress ring at 100% or 0%, depending on how the ring will behave
+                    progressRing.fillAmount = (Settings.ProgressTimeLeft && Settings.IncludeRing) ? 1 : 0;
                 }
             }
         }
