@@ -28,11 +28,17 @@ namespace CountersPlus.Counters
 
             ScoreUIController scoreUIController = coreGameHUD.GetComponentInChildren<ScoreUIController>();
             TextMeshProUGUI old = ScoreUIText(ref scoreUIController);
+            
             GameObject baseGameScore = RelativeScoreGO(ref coreGameHUD);
+            baseGameScore.SetActive(true);
             relativeScoreText = baseGameScore.GetComponent<TextMeshProUGUI>();
+            relativeScoreText.enabled = true;
             relativeScoreText.color = Color.white;
+
             GameObject baseGameRank = ImmediateRankGO(ref coreGameHUD);
+            baseGameRank.SetActive(true);
             rankText = baseGameRank.GetComponent<TextMeshProUGUI>();
+            rankText.enabled = true;
             rankText.color = Color.white;
 
             Canvas currentCanvas = CanvasUtility.GetCanvasFromID(Settings.CanvasID);
@@ -73,8 +79,6 @@ namespace CountersPlus.Counters
             Object.Destroy(coreGameHUD.GetComponentInChildren<ImmediateRankUIPanel>());
 
             relativeScoreAndImmediateRank.relativeScoreOrImmediateRankDidChangeEvent += UpdateText;
-
-            UpdateText();
         }
 
         private void UpdateText()

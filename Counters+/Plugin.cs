@@ -34,11 +34,14 @@ namespace CountersPlus
             harmony = new HarmonyObj(HARMONY_ID);
 
             zenjector.Expose<CoreGameHUDController>("Environment");
+
             zenjector.Install<CoreInstaller>(Location.App);
             zenjector.Install<MenuUIInstaller>(Location.Menu);
+
             zenjector.Install<CountersInstaller>(Location.StandardPlayer);
-            zenjector.Install<CountersInstaller, MultiplayerLocalActivePlayerInstaller>();
+
             zenjector.Install<MultiplayerInstaller, MultiplayerLocalActivePlayerInstaller>();
+            zenjector.Install<CountersInstaller, MultiplayerLocalActivePlayerInstaller>();
         }
 
         [OnEnable]
