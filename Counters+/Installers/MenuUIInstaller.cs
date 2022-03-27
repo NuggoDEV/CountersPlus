@@ -1,6 +1,4 @@
-﻿using BeatSaberMarkupLanguage;
-using BeatSaberMarkupLanguage.MenuButtons;
-using CountersPlus.Custom;
+﻿using CountersPlus.Custom;
 using CountersPlus.UI;
 using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.UI.SettingGroups;
@@ -8,17 +6,14 @@ using CountersPlus.UI.ViewControllers;
 using CountersPlus.UI.ViewControllers.Editing;
 using CountersPlus.Utils;
 using HMUI;
-using SiraUtil;
 using System;
 using UnityEngine;
 using Zenject;
 
 namespace CountersPlus.Installers
 {
-    public class MenuUIInstaller : MonoInstaller
+    public class MenuUIInstaller : Installer
     {
-        private MenuButton menuButton;
-
         // Using Zenject for UI lets goooooooooooo
         public override void InstallBindings()
         {

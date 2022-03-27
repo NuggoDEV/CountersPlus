@@ -7,7 +7,7 @@ using Zenject;
 
 namespace CountersPlus.Installers
 {
-    public class CoreInstaller : MonoInstaller
+    public class CoreInstaller : Installer
     {
         public override void InstallBindings()
         {
@@ -19,16 +19,16 @@ namespace CountersPlus.Installers
             mainConfig.HUDConfig.MainCanvasSettings.IsMainCanvas = true;
             Container.Bind<HUDConfigModel>().FromInstance(mainConfig.HUDConfig);
 
-            BindConfig<MissedConfigModel>(mainConfig.MissedConfig);
-            BindConfig<NoteConfigModel>(mainConfig.NoteConfig);
-            BindConfig<ProgressConfigModel>(mainConfig.ProgressConfig);
-            BindConfig<ScoreConfigModel>(mainConfig.ScoreConfig);
-            BindConfig<SpeedConfigModel>(mainConfig.SpeedConfig);
-            BindConfig<SpinometerConfigModel>(mainConfig.SpinometerConfig);
-            BindConfig<PBConfigModel>(mainConfig.PBConfig);
-            BindConfig<CutConfigModel>(mainConfig.CutConfig);
-            BindConfig<FailConfigModel>(mainConfig.FailsConfig);
-            BindConfig<NotesLeftConfigModel>(mainConfig.NotesLeftConfig);
+            BindConfig(mainConfig.MissedConfig);
+            BindConfig(mainConfig.NoteConfig);
+            BindConfig(mainConfig.ProgressConfig);
+            BindConfig(mainConfig.ScoreConfig);
+            BindConfig(mainConfig.SpeedConfig);
+            BindConfig(mainConfig.SpinometerConfig);
+            BindConfig(mainConfig.PBConfig);
+            BindConfig(mainConfig.CutConfig);
+            BindConfig(mainConfig.FailsConfig);
+            BindConfig(mainConfig.NotesLeftConfig);
 
             foreach (CustomCounter customCounter in Plugin.LoadedCustomCounters.Values)
             {

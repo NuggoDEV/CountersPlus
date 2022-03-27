@@ -4,14 +4,13 @@ using CountersPlus.Counters.Event_Broadcasters;
 using CountersPlus.Counters.Interfaces;
 using CountersPlus.Counters.NoteCountProcessors;
 using CountersPlus.Utils;
-using IPA.Loader;
 using System;
 using UnityEngine;
 using Zenject;
 
 namespace CountersPlus.Installers
 {
-    class CountersInstaller : MonoInstaller
+    class CountersInstaller : Installer
     {
         [Inject]
         private readonly HUDConfigModel hudConfig;
