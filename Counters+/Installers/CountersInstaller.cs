@@ -58,6 +58,8 @@ namespace CountersPlus.Installers
                 return scoreConfig.Enabled && settings.UnderScore && (dataModel.playerData.playerSpecificSettings.noTextsAndHuds ? canvasSettings.IgnoreNoTextAndHUDOption : true);
             });
 
+            InstallCustomCounters();
+
             if (mainConfig.AprilFoolsTomfoolery && mainConfig.IsAprilFools)
             {
                 Container.BindInterfacesAndSelfTo<AprilFools>().AsSingle().NonLazy();
