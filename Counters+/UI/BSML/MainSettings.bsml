@@ -4,6 +4,7 @@
       <checkbox-setting text='Enabled' apply-on-change='true' value='Enabled' hover-hint='Toggles Counters+.'/>
       <checkbox-setting text='Hide Combo' apply-on-change='true' value='HideCombo' hover-hint='Hides the Combo counter.'/>
       <checkbox-setting text='Hide Multiplier' apply-on-change='true' value='HideMultiplier' hover-hint='Hides the Multiplier.'/>
+		<checkbox-setting text='Hide Multiplayer Rank' apply-on-change='true' value='HideMultiplayerRank' hover-hint='Hides the rank/position display in Multiplayer.'/>
       <checkbox-setting text='Use Italic Text' apply-on-change='true' value='ItalicText' hover-hint='Text elements will be italicized to match the base game.'/>
       <list-setting text='Combo Offset' apply-on-change='true' options='Offsets' value='ComboOffset' hover-hint='Applies additional offset to counters situated above or below the Combo.'/>
       <list-setting text='Multiplier Offset' apply-on-change='true' options='Offsets' value='MultiplierOffset' hover-hint='Applies additional offset to counters situated above or below the Multiplier.'/>

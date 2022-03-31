@@ -21,6 +21,8 @@ namespace CountersPlus.ConfigModels
         public virtual bool HideCombo { get; set; } = false;
         [UIValue(nameof(HideMultiplier))]
         public virtual bool HideMultiplier { get; set; } = false;
+        [UIValue(nameof(HideMultiplayerRank))]
+        public virtual bool HideMultiplayerRank { get; set; } = false;
         [UIValue(nameof(ComboOffset))]
         public virtual float ComboOffset { get; set; } = 0.2f;
         [UIValue(nameof(MultiplierOffset))]
