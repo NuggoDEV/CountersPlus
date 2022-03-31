@@ -43,13 +43,21 @@ namespace CountersPlus.Counters
 
         public void OnNoteCut(NoteData data, NoteCutInfo info)
         {
-            if (data.colorType != ColorType.None && !noteCountProcessor.ShouldIgnoreNote(data)) DecrementCounter();
+            if (ShouldProcessNote(data) && !noteCountProcessor.ShouldIgnoreNote(data)) DecrementCounter();
         }
 
         public void OnNoteMiss(NoteData data)
         {
-            if (data.colorType != ColorType.None && !noteCountProcessor.ShouldIgnoreNote(data)) DecrementCounter();
+            if (ShouldProcessNote(data) && !noteCountProcessor.ShouldIgnoreNote(data)) DecrementCounter();
         }
+
+        private bool ShouldProcessNote(NoteData data)
+            => data.gameplayType switch
+            {
+                NoteData.GameplayType.Normal => true,
+                NoteData.GameplayType.BurstSliderHead => true,
+                _ => false,
+            };
 
         private void DecrementCounter()
         {

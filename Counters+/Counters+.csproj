@@ -185,6 +185,7 @@
     <Compile Include="ConfigModels\ConfigModel.cs" />
     <Compile Include="ConfigModels\Counters\CutConfigModel.cs" />
     <Compile Include="ConfigModels\Counters\FailConfigModel.cs" />
+    <Compile Include="ConfigModels\Counters\MultiplayerRankConfigModel.cs" />
     <Compile Include="ConfigModels\HUDConfigModel.cs" />
     <Compile Include="ConfigModels\MainConfigModel.cs" />
     <Compile Include="ConfigModels\Counters\MissedConfigModel.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="Counters\Interfaces\INoteEventHandler.cs" />
     <Compile Include="Counters\Interfaces\IScoreEventHandler.cs" />
     <Compile Include="Counters\MissedCounter.cs" />
+    <Compile Include="Counters\MultiplayerRankCounter.cs" />
     <Compile Include="Counters\Note Count Processors\CustomJSONDataNoteCountProcessor.cs" />
     <Compile Include="Counters\Note Count Processors\GenericNoteCountProcessor.cs" />
     <Compile Include="Counters\Note Count Processors\NoteCountProcessor.cs" />
@@ -229,7 +231,7 @@
     <Compile Include="Installers\CoreInstaller.cs" />
     <Compile Include="Installers\CountersInstaller.cs" />
     <Compile Include="Installers\MenuUIInstaller.cs" />
-    <Compile Include="Installers\MultiplayerInstaller.cs" />
+    <Compile Include="Installers\MultiplayerCountersInstaller.cs" />
     <Compile Include="Multiplayer\CanvasIntroFadeController.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -305,9 +307,13 @@
     <EmbeddedResource Include="UI\BSML\MainSettings.bsml" />
     <EmbeddedResource Include="UI\BSML\HUDs\HUDList.bsml" />
     <EmbeddedResource Include="UI\BSML\HUDs\HUDEdit.bsml" />
+    <EmbeddedResource Include="UI\BSML\Config\Multiplayer Rank.bsml" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UI\Images\Counters\Multiplayer Rank.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="BuildTargets.targets" />

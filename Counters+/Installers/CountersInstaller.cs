@@ -10,7 +10,7 @@ using Zenject;
 
 namespace CountersPlus.Installers
 {
-    class CountersInstaller : Installer
+    class CountersInstaller : MonoInstaller
     {
         [Inject]
         private readonly HUDConfigModel hudConfig;
@@ -71,15 +71,14 @@ namespace CountersPlus.Installers
             Container.BindInterfacesAndSelfTo<CounterEventBroadcaster>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<NoteEventBroadcaster>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<ScoreEventBroadcaster>().AsSingle().NonLazy();
-            Plugin.Logger.Notice("Counters loaded!");
         }
 
-        private void AddCounter<T, R>() where T : ConfigModel where R : ICounter
+        protected void AddCounter<T, R>() where T : ConfigModel where R : ICounter
         {
             AddCounter<T, R>(_ => false);
         }
 
-        private void AddCounter<T, R>(Func<T, bool> additionalReasonToSpawn) where T : ConfigModel where R : ICounter
+        protected void AddCounter<T, R>(Func<T, bool> additionalReasonToSpawn) where T : ConfigModel where R : ICounter
         {
             T settings = Container.Resolve<T>();
 
@@ -100,7 +99,7 @@ namespace CountersPlus.Installers
             }
         }
 
-        private void AddCustomCounter(Custom.CustomCounter customCounter, Type counterType)
+        protected void AddCustomCounter(Custom.CustomCounter customCounter, Type counterType)
         {
             ConfigModel settings = Container.TryResolveId<ConfigModel>(customCounter.Name);
 
@@ -120,7 +119,7 @@ namespace CountersPlus.Installers
             }
         }
 
-        private HUDCanvas GrabCanvasForCounter(ConfigModel settings)
+        protected HUDCanvas GrabCanvasForCounter(ConfigModel settings)
             => settings.CanvasID == -1 || settings.CanvasID >= hudConfig.OtherCanvasSettings.Count
             ? hudConfig.MainCanvasSettings
             : hudConfig.OtherCanvasSettings[settings.CanvasID];

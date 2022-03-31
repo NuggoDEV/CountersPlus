@@ -1,0 +1,5 @@
+﻿<vertical spacing='1' horizontal-fit='PreferredSize'>
+  <text align='Center' text='Warning!' color='#FF7F7F'/>
+  <text align='Center' text='This counter does not disable the Multiplayer Rank.'/>
+  <text align='Center' text='If you wish to disable the base game Multiplayer Rank, please check out Main Settings.'/>
+</vertical>

@@ -40,6 +40,7 @@ namespace CountersPlus.ConfigModels
         public virtual SpinometerConfigModel SpinometerConfig { get; set; } = new SpinometerConfigModel();
         public virtual NotesLeftConfigModel NotesLeftConfig { get; set; } = new NotesLeftConfigModel();
         public virtual FailConfigModel FailsConfig { get; set; } = new FailConfigModel();
+        public virtual MultiplayerRankConfigModel MultiplayerRankConfig { get; set; } = new MultiplayerRankConfigModel();
 
         [UseConverter]
         public virtual Dictionary<string, CustomConfigModel> CustomCounters { get; set; } = new Dictionary<string, CustomConfigModel>();
