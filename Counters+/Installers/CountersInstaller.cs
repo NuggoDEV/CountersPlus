@@ -3,6 +3,7 @@ using CountersPlus.Counters;
 using CountersPlus.Counters.Event_Broadcasters;
 using CountersPlus.Counters.Interfaces;
 using CountersPlus.Counters.NoteCountProcessors;
+using CountersPlus.Custom;
 using CountersPlus.Utils;
 using System;
 using UnityEngine;
@@ -57,11 +58,6 @@ namespace CountersPlus.Installers
                 return scoreConfig.Enabled && settings.UnderScore && (dataModel.playerData.playerSpecificSettings.noTextsAndHuds ? canvasSettings.IgnoreNoTextAndHUDOption : true);
             });
 
-            foreach (Custom.CustomCounter customCounter in Plugin.LoadedCustomCounters.Values)
-            {
-                AddCustomCounter(customCounter, customCounter.CounterType);
-            }
-
             if (mainConfig.AprilFoolsTomfoolery && mainConfig.IsAprilFools)
             {
                 Container.BindInterfacesAndSelfTo<AprilFools>().AsSingle().NonLazy();
@@ -71,6 +67,14 @@ namespace CountersPlus.Installers
             Container.BindInterfacesAndSelfTo<CounterEventBroadcaster>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<NoteEventBroadcaster>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<ScoreEventBroadcaster>().AsSingle().NonLazy();
+        }
+
+        protected virtual void InstallCustomCounters()
+        {
+            foreach (CustomCounter customCounter in Plugin.LoadedCustomCounters)
+            {
+                AddCustomCounter(customCounter, customCounter.CounterType);
+            }
         }
 
         protected void AddCounter<T, R>() where T : ConfigModel where R : ICounter

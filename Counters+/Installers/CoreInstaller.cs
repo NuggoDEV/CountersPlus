@@ -31,7 +31,7 @@ namespace CountersPlus.Installers
             BindConfig(mainConfig.NotesLeftConfig);
             BindConfig(mainConfig.MultiplayerRankConfig);
 
-            foreach (CustomCounter customCounter in Plugin.LoadedCustomCounters.Values)
+            foreach (CustomCounter customCounter in Plugin.LoadedCustomCounters)
             {
                 if (!mainConfig.CustomCounters.TryGetValue(customCounter.Name, out CustomConfigModel config))
                 {

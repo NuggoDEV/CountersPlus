@@ -1,5 +1,6 @@
 ﻿using CountersPlus.ConfigModels;
 using CountersPlus.Counters;
+using CountersPlus.Custom;
 using CountersPlus.Multiplayer;
 using UnityEngine;
 
@@ -39,6 +40,15 @@ namespace CountersPlus.Installers
             
             // Then add our multiplayer rank counter
             AddCounter<MultiplayerRankConfigModel, MultiplayerRankCounter>();
+        }
+
+        protected override void InstallCustomCounters()
+        {
+            // Only load multiplayer-ready custom counters
+            foreach (CustomCounter customCounter in Plugin.LoadedCustomCounters.FindAll(x => x.MultiplayerReady))
+            {
+                AddCustomCounter(customCounter, customCounter.CounterType);
+            }
         }
     }
 }

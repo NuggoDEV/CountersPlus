@@ -18,7 +18,7 @@ namespace CountersPlus
         internal static Plugin Instance { get; private set; }
         internal static IPALogger Logger { get; private set; }
         internal static MainConfigModel MainConfig { get; private set; }
-        internal static Dictionary<Assembly, CustomCounter> LoadedCustomCounters { get; private set; } = new Dictionary<Assembly, CustomCounter>();
+        internal static List<CustomCounter> LoadedCustomCounters { get; private set; } = new List<CustomCounter>();
 
         private const string HARMONY_ID = "com.caeden117.countersplus";
         private HarmonyObj harmony;

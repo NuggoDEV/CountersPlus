@@ -43,7 +43,7 @@ namespace CountersPlus.Custom
                     return;
                 }
 
-                Plugin.LoadedCustomCounters.Add(meta.Assembly, counter);
+                Plugin.LoadedCustomCounters.Add(counter);
                 Plugin.Logger.Notice($"Loaded a Custom Counter ({counter.Name}).");
             }
             else

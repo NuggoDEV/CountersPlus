@@ -6,15 +6,22 @@ namespace CountersPlus.Custom
     // Not to be confused with CountersPlus.Counters.CustomCounter
     internal class CustomCounter
     {
-        [JsonProperty(nameof(Name), Required = Required.Always)]
+        [JsonProperty(Required = Required.Always)]
         public string Name;
-        [JsonProperty(nameof(Description), Required = Required.DisallowNull)]
+
+        [JsonProperty(Required = Required.DisallowNull)]
         public string Description;
-        [JsonProperty(nameof(BSML), Required = Required.DisallowNull)]
+
+        [JsonProperty]
+        public bool MultiplayerReady = false;
+
+        [JsonProperty(Required = Required.DisallowNull)]
         public BSMLSettings BSML = null;
-        [JsonProperty(nameof(CounterLocation), Required = Required.Always)]
+        
+        [JsonProperty(Required = Required.Always)]
         internal string CounterLocation;
-        [JsonProperty(nameof(ConfigDefaults), Required = Required.DisallowNull)]
+        
+        [JsonProperty(Required = Required.DisallowNull)]
         internal CustomConfigModel ConfigDefaults = new CustomConfigModel();
 
         public CustomConfigModel Config;

@@ -25,7 +25,7 @@ namespace CountersPlus.Installers
             BindSettingsGroup<CountersSettingsGroup>();
             BindSettingsGroup<HUDsSettingsGroup>();
 
-            foreach (CustomCounter customCounter in Plugin.LoadedCustomCounters.Values)
+            foreach (CustomCounter customCounter in Plugin.LoadedCustomCounters)
             {
                 if (customCounter.BSML != null && customCounter.BSML.HasType)
                 {
