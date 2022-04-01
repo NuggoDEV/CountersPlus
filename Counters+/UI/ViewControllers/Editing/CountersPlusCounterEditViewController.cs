@@ -67,14 +67,20 @@ namespace CountersPlus.UI.ViewControllers.Editing
             else
             {
                 // Loading settings base
-                BSMLParser.instance.Parse(SettingsBase, settingsContainer, model);
+                var settingsBaseParams = BSMLParser.instance.Parse(SettingsBase, settingsContainer, model);
+                var multiplayerWarning = settingsBaseParams.GetObjectsWithTag("multiplayer-warning")[0];
+
+                // Only show multiplayer warning if this is a Custom Counter that is not enabled in multiplayer
 
                 // Loading counter-specific settings
-                if (!(model is CustomConfigModel customConfig))
+                if (model is not CustomConfigModel customConfig)
                 {
                     string resourceLocation = $"CountersPlus.UI.BSML.Config.{model.DisplayName}.bsml";
                     string resourceContent = Utilities.GetResourceContent(Assembly.GetExecutingAssembly(), resourceLocation);
                     BSMLParser.instance.Parse(resourceContent, settingsContainer, model);
+
+                    // All base Counters+ counters are (or should be) multiplayer ready.
+                    multiplayerWarning.SetActive(false);
                 }
                 else
                 {
@@ -92,6 +98,9 @@ namespace CountersPlus.UI.ViewControllers.Editing
                         }
                         BSMLParser.instance.Parse(resourceContent, settingsContainer, host);
                     }
+
+                    // Show multiplayer warning if the custom counter is not multiplayer ready.
+                    multiplayerWarning.SetActive(!customCounter.MultiplayerReady);
                 }
             }
 
