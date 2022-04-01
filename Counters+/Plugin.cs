@@ -38,7 +38,7 @@ namespace CountersPlus
             zenjector.Install<CoreInstaller>(Location.App);
             zenjector.Install<MenuUIInstaller>(Location.Menu);
 
-            zenjector.Install<CountersInstaller>(Location.StandardPlayer);
+            zenjector.Install<CountersInstaller>(Location.StandardPlayer | Location.CampaignPlayer);
             zenjector.Install<MultiplayerCountersInstaller, MultiplayerLocalActivePlayerInstaller>();
         }
 
