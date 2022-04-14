@@ -5,7 +5,6 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using Zenject;
-using static CountersPlus.Utils.Accessors;
 
 namespace CountersPlus.Counters
 {
@@ -14,14 +13,11 @@ namespace CountersPlus.Counters
         private readonly Vector3 SCORE_COUNTER_OFFSET = new Vector3(0, -1.85f, 0); 
 
         [Inject] private GameplayCoreSceneSetupData data;
-        [Inject] private ScoreController scoreController;
         [Inject] private PlayerDataModel playerDataModel;
         [Inject] private ScoreConfigModel scoreConfig;
-        [Inject] private NoteCountProcessor noteCountProcessor;
         [Inject] private RelativeScoreAndImmediateRankCounter relativeScoreAndImmediateRank;
         [Inject] private IReadonlyBeatmapData beatmapData;
 
-        private GameplayModifiersModelSO modifiersModel;
         private TMP_Text counter;
         private PlayerLevelStatsData stats;
 
@@ -33,7 +29,6 @@ namespace CountersPlus.Counters
 
         public override void CounterInit()
         {
-            modifiersModel = SCGameplayModsModel(ref scoreController);
             IDifficultyBeatmap beatmap = data.difficultyBeatmap;
             
             maxPossibleScore = ScoreModel.ComputeMaxMultipliedScoreForBeatmap(beatmapData);
@@ -55,7 +50,7 @@ namespace CountersPlus.Counters
 
             pbRatio = (float)highScore / maxPossibleScore;
 
-            SetPersonalBest((float)highScore / maxPossibleScore);
+            SetPersonalBest(pbRatio);
             ScoreUpdated(0);
         }
 
@@ -63,38 +58,35 @@ namespace CountersPlus.Counters
 
         public void ScoreUpdated(int modifiedScore)
         {
-
-            if (maxPossibleScore != 0)
+            if (maxPossibleScore != 0 && modifiedScore > highScore)
             {
-                if (modifiedScore > highScore)
-                {
-                    float ratio = modifiedScore / (float)maxPossibleScore;
-                    SetPersonalBest(ratio);
-                }
+                SetPersonalBest(modifiedScore / (float)maxPossibleScore);
             }
 
-            if (Settings.Mode == PBMode.Relative)
+            counter.color = Settings.Mode switch
             {
-                if (relativeScoreAndImmediateRank.relativeScore > pbRatio)
-                {
-                    counter.color = Settings.BetterColor;
-                }
-                else
-                {
-                    counter.color = Settings.DefaultColor;
-                }
-            }
-            else
-            {
-                if (modifiedScore > highScore)
-                {
-                    if (!(Settings.HideFirstScore && stats.highScore == 0)) counter.color = Settings.BetterColor;
-                }
-                else
-                {
-                    counter.color = Color.Lerp(white, Settings.DefaultColor, modifiedScore / (float)highScore);
-                }
-            }
+                // Show default color when setting the first PB and setting is enabled
+                _ when Settings.HideFirstScore && stats.highScore == 0 => Settings.DefaultColor,
+
+                // Relative % is above PB %
+                PBMode.Relative when relativeScoreAndImmediateRank.relativeScore >= pbRatio
+                    => Settings.BetterColor,
+
+                // Relative % is approaching PB %
+                PBMode.Relative when relativeScoreAndImmediateRank.relativeScore < pbRatio
+                    => Color.Lerp(white, Settings.DefaultColor, relativeScoreAndImmediateRank.relativeScore / pbRatio),
+
+                // New high score, show PB color
+                PBMode.Absolute when modifiedScore > highScore
+                    => Settings.BetterColor,
+
+                // Current score is approaching high school
+                PBMode.Absolute when modifiedScore < highScore
+                    => Color.Lerp(white, Settings.DefaultColor, modifiedScore / (float)highScore),
+
+                // The "C# stop yelling at me" case
+                _ => Settings.DefaultColor,
+            };
         }
 
         private void SetPersonalBest(float pb)
