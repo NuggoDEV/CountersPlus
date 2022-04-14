@@ -105,23 +105,26 @@ namespace CountersPlus.Installers
             }
         }
 
-        protected void AddCustomCounter(Custom.CustomCounter customCounter, Type counterType)
+        protected void AddCustomCounter(CustomCounter customCounter, Type counterType)
         {
-            ConfigModel settings = Container.TryResolveId<ConfigModel>(customCounter.Name);
+            ConfigModel settings;
 
-            HUDCanvas canvasSettings = GrabCanvasForCounter(settings);
-
-            if (!settings.Enabled || (!canvasSettings.IgnoreNoTextAndHUDOption && dataModel.playerData.playerSpecificSettings.noTextsAndHuds)) return;
-
-            Plugin.Logger.Debug($"Loading counter {customCounter.Name}...");
-
-            if (counterType.BaseType == typeof(MonoBehaviour))
+            if ((settings = Container.TryResolveId<ConfigModel>(customCounter.Name)) != null)
             {
-                Container.BindInterfacesAndSelfTo(counterType).FromNewComponentOnRoot().AsSingle().NonLazy();
-            }
-            else
-            {
-                Container.BindInterfacesAndSelfTo(counterType).AsSingle().NonLazy();
+                HUDCanvas canvasSettings = GrabCanvasForCounter(settings);
+
+                if (!settings.Enabled || (!canvasSettings.IgnoreNoTextAndHUDOption && dataModel.playerData.playerSpecificSettings.noTextsAndHuds)) return;
+
+                Plugin.Logger.Debug($"Loading counter {customCounter.Name}...");
+
+                if (counterType.BaseType == typeof(MonoBehaviour))
+                {
+                    Container.BindInterfacesAndSelfTo(counterType).FromNewComponentOnRoot().AsSingle().NonLazy();
+                }
+                else
+                {
+                    Container.BindInterfacesAndSelfTo(counterType).AsSingle().NonLazy();
+                }
             }
         }
 
