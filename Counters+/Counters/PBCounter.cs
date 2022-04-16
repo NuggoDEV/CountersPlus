@@ -77,7 +77,7 @@ namespace CountersPlus.Counters
                     => Color.Lerp(white, Settings.DefaultColor, relativeScoreAndImmediateRank.relativeScore / pbRatio),
 
                 // New high score, show PB color
-                PBMode.Absolute when modifiedScore > highScore
+                PBMode.Absolute when modifiedScore >= highScore
                     => Settings.BetterColor,
 
                 // Current score is approaching high school
