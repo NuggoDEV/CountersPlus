@@ -15,7 +15,7 @@ namespace CountersPlus.Harmony
      * of CoreGameHUDController are hidden.
      */
     [HarmonyPatch(typeof(CoreGameHUDController))]
-    [HarmonyPatch("Start")]
+    [HarmonyPatch("Initialize")]
     internal class CoreGameHUDControllerPatch
     {
         private static MethodInfo ProgressMethod = SymbolExtensions.GetMethodInfo(() => ShouldEnableProgressPanel(false));
