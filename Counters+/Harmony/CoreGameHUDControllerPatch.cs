@@ -98,7 +98,7 @@ namespace CountersPlus.Harmony
         private static void Postfix(CoreGameHUDController __instance)
         {
             if (isOverriding)
-                SharedCoroutineStarter.instance.StartCoroutine(RemoveAfterOneFrame(__instance));
+                Utils.SharedCoroutineStarter.instance.StartCoroutine(RemoveAfterOneFrame(__instance));
         }
 
         private static IEnumerator RemoveAfterOneFrame(CoreGameHUDController coreGameHUD)
