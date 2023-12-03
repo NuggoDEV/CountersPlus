@@ -80,10 +80,12 @@ namespace CountersPlus.UI.ViewControllers
 
             tableList.cellSize = selectedGroup.GetSize();
 
+            CustomListTableData.CustomCellInfo[] items = new CustomListTableData.CustomCellInfo[selectedGroup.NumberOfCells()];
             for (var i = 0; i < selectedGroup.NumberOfCells(); i++)
             {
-                tableList.data.Add(selectedGroup.CellInfoForIdx(i));
+                items[i] = selectedGroup.CellInfoForIdx(i);
             }
+            tableList.data = items;
 
             tableList.tableView.ReloadData();
 
