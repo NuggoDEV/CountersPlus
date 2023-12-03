@@ -30,10 +30,7 @@ namespace CountersPlus.UI
 
         public void Dispose()
         {
-            if (MenuButtons.instance != null && BSMLParser.instance != null)
-            {
-                MenuButtons.instance.UnregisterButton(menuButton);
-            }
+            MenuButtons.instance.UnregisterButton(menuButton);
         }
     }
 }
