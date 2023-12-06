@@ -91,13 +91,13 @@ namespace CountersPlus.ConfigModels
         [UIAction("fire-update")]
         public void OnChanged(object _)
         {
-            SharedCoroutineStarter.instance.StartCoroutine(DelayedFire(OnCanvasSettingsChanged));
+            Utils.SharedCoroutineStarter.instance.StartCoroutine(DelayedFire(OnCanvasSettingsChanged));
         }
 
         [UIAction("fire-apply")]
         public void OnApply()
         {
-            SharedCoroutineStarter.instance.StartCoroutine(DelayedFire(OnCanvasSettingsApply));
+            Utils.SharedCoroutineStarter.instance.StartCoroutine(DelayedFire(OnCanvasSettingsApply));
         }
 
         private IEnumerator DelayedFire(Action action)
