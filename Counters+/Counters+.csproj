@@ -18,7 +18,7 @@
     <ReferencePath>$(SolutionDir)Refs</ReferencePath>
     <AppOutputBase>$(MSBuildProjectDirectory)\</AppOutputBase>
     <PathMap>$(AppOutputBase)=X:\$(AssemblyName)\</PathMap>
-    <LangVersion>Latest</LangVersion>
+    <LangVersion>11</LangVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -234,7 +234,6 @@
     <Compile Include="Counters\Spinometer.cs" />
     <Compile Include="Custom\CustomConfigModel.cs" />
     <Compile Include="Custom\CustomCounter.cs" />
-    <Compile Include="Custom\CustomCounterFeature.cs" />
     <Compile Include="Harmony\CoreGameHUDControllerPatch.cs" />
     <Compile Include="Installers\CoreInstaller.cs" />
     <Compile Include="Installers\CountersInstaller.cs" />
@@ -265,7 +264,6 @@
     <Compile Include="Utils\EnumerableExtensions.cs" />
     <Compile Include="Utils\ImagesUtility.cs" />
     <Compile Include="Utils\SharedCoroutineStarter.cs" />
-    <Compile Include="Utils\SimpleJSON.cs" />
     <Compile Include="Utils\SoftParent.cs" />
     <Compile Include="Utils\VersionUtility.cs" />
   </ItemGroup>
