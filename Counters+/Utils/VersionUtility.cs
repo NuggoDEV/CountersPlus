@@ -1,8 +1,8 @@
 ﻿using Hive.Versioning;
 using IPA.Loader;
-using SimpleJSON;
 using System.Collections;
 using UnityEngine.Networking;
+using Newtonsoft.Json;
 
 namespace CountersPlus.Utils
 {
@@ -17,7 +17,7 @@ namespace CountersPlus.Utils
             // I could grab this straight from PluginMetadata but this is for cleanness.
             PluginVersion = PluginManager.GetPlugin("Counters+").HVersion;
 
-            Utils.SharedCoroutineStarter.instance.StartCoroutine(GetBeatModsVersion());
+            SharedCoroutineStarter.instance.StartCoroutine(GetBeatModsVersion());
         }
 
         private IEnumerator GetBeatModsVersion()
@@ -30,15 +30,22 @@ namespace CountersPlus.Utils
                     Plugin.Logger.Error("Failed to download version info.");
                     yield break;
                 }
-                JSONNode node = JSON.Parse(www.downloadHandler.text);
-                foreach (JSONNode child in node)
+                BeatmodsResult[] results = JsonConvert.DeserializeObject<BeatmodsResult[]>(www.downloadHandler.text);
+                foreach (BeatmodsResult result in results)
                 {
-                    if (child["status"] != "approved") continue;
-                    BeatModsVersion = new Version(child["version"].Value);
+                    if (result.status != "approved") continue;
+                    BeatModsVersion = new Version(result.version);
                     break;
                 }
             }
             if (!HasLatestVersion) Plugin.Logger.Warn("Uh oh! We aren't up to date!");
         }
+
+        
+    }
+    class BeatmodsResult
+    {
+        [JsonProperty("status")] internal string status;
+        [JsonProperty("version")] internal string version;
     }
 }
