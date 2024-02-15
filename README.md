@@ -20,7 +20,7 @@ If you want to get access to any potential Hotfix or Prelease/Beta builds Counte
 |***Notes***|`1.0.0`|Notes hit over notes in total. Now in percentages!|
 |***Speed***|`1.1.0`|*"Speed, motherfucker, do you speak it?"* Displays how fast your arms are swinging!|
 |***Cut***|`1.1.0`|Displays the average cut score (Anywhere from 0-110), so you can see how well you are hitting those notes!|
-|***Spinometer***|`1.4.1`|Displays angular velocity of your sabers. Can you beat 3600 degress per second?|
+|***Spinometer***|`1.4.1`|Displays angular velocity of your sabers. Can you beat 3600 degrees per second?|
 |***Personal Best***|`1.5.5`|Displays your high score in a map, and changes color depending on how close you are to beating it!|
 |***Notes Left***|`1.5.8`|Notes Left counter has now been merged into Counters+. It's pretty self explanatory.|
 |***Fail***|`1.5.8`|Display how many times you've failed across every song, or how many times you've restarted the same song!|
