@@ -93,10 +93,10 @@
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <Private>False</Private>
       <HintPath>$(BeatSaberDir)\Libs\Newtonsoft.Json.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
+      <SpecificVersion>True</SpecificVersion>
     </Reference>
     <Reference Include="SemVer, Version=1.2.2.0, Culture=neutral, PublicKeyToken=a89bb7dc6f7a145c, processorArchitecture=MSIL">
       <Private>False</Private>
@@ -234,6 +234,7 @@
     <Compile Include="Counters\Spinometer.cs" />
     <Compile Include="Custom\CustomConfigModel.cs" />
     <Compile Include="Custom\CustomCounter.cs" />
+    <Compile Include="Custom\CustomCounterFeature.cs" />
     <Compile Include="Harmony\CoreGameHUDControllerPatch.cs" />
     <Compile Include="Installers\CoreInstaller.cs" />
     <Compile Include="Installers\CountersInstaller.cs" />
