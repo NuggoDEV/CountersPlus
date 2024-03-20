@@ -29,11 +29,11 @@ namespace CountersPlus.Counters
 
         public override void CounterInit()
         {
-            IDifficultyBeatmap beatmap = data.difficultyBeatmap;
+            BeatmapBasicData beatmap = data.beatmapBasicData;
             
             maxPossibleScore = ScoreModel.ComputeMaxMultipliedScoreForBeatmap(beatmapData);
 
-            stats = playerDataModel.playerData.GetPlayerLevelStatsData(beatmap);
+            stats = playerDataModel.playerData.GetOrCreatePlayerLevelStatsData(data.beatmapKey);
             highScore = stats.highScore;
 
             if (scoreConfig.Enabled && Settings.UnderScore)

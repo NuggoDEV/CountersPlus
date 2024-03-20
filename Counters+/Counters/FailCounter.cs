@@ -22,7 +22,8 @@ namespace CountersPlus.Counters
 
         public override void CounterInit()
         {
-            long currentHash = LongExponent(beatmap.levelID.ToCharArray().Sum(x => (long)x), beatmapKey.)
+            long currentHash = LongExponent(beatmap.levelID.ToCharArray().Sum(x => (long)x), (int)beatmapKey.difficulty);
+            if (Settings.ShowRestartsInstead)
             {
                 if (difficulty == currentHash)
                 {
