@@ -3,14 +3,14 @@
   "id": "Counters+",
   "name": "Counters+",
   "author": "Caeden117",
-  "version": "2.3.5",
+  "version": "2.3.6",
   "description": "A suite of enhancements for Beat Saber's UI.",
   "icon": "CountersPlus.UI.Images.Logo.png",
   "gameVersion": "1.34.2",
   "dependsOn": {
-    "BSIPA": "^4.3.2",
-    "BeatSaberMarkupLanguage": "^1.8.1",
-    "SiraUtil": "^3.1.6"
+    "BSIPA": "^4.3.3",
+    "BeatSaberMarkupLanguage": "^1.9.0",
+    "SiraUtil": "^3.1.7"
   },
   "features": {
     "IPA.DefineFeature": {
