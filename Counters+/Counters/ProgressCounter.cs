@@ -28,7 +28,7 @@ namespace CountersPlus.Counters
         public override void CounterInit()
         {
             length = atsc.songLength;
-            songBPM = gcssd.difficultyBeatmap.level.beatsPerMinute;
+            songBPM = gcssd.beatmapLevel.beatsPerMinute;
 
             timeText = CanvasUtility.CreateTextFromSettings(Settings);
             timeText.fontSize = 4;

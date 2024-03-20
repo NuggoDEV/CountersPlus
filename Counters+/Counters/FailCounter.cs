@@ -15,13 +15,14 @@ namespace CountersPlus.Counters
 
         [Inject] private GameEnergyCounter energyCounter;
         [Inject] private PlayerDataModel playerData;
-        [Inject] private IDifficultyBeatmap beatmap;
+        [Inject] private BeatmapLevel beatmap;
+        [Inject] private BeatmapKey beatmapKey;
         private int count = 0;
         private TMP_Text counter;
 
         public override void CounterInit()
         {
-            long currentHash = LongExponent(beatmap.level.levelID.ToCharArray().Sum(x => (long)x), beatmap.difficultyRank);
+            long currentHash = LongExponent(beatmap.levelID.ToCharArray().Sum(x => (long)x), (int)beatmapKey.difficulty);
             if (Settings.ShowRestartsInstead)
             {
                 if (difficulty == currentHash)
