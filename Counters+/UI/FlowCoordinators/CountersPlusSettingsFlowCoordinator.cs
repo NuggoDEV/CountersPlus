@@ -34,10 +34,9 @@ namespace CountersPlus.UI.FlowCoordinators
         [Inject] private CountersPlusBlankViewController blank;
         [Inject] private CountersPlusMainScreenNavigationController mainScreenNavigation;
         [Inject] private CountersPlusSettingSectionSelectionViewController settingsSelection;
-        [Inject] private SettingsFlowCoordinator settingsFlowCoordinator;
+        [Inject] private GraphicSettingsHandler graphicSettingsHandler;
         [Inject] private SongPreviewPlayer songPreviewPlayer;
 
-        private GraphicSettingsHandler graphicSettingsHandler;
         private HashSet<string> persistentScenes = new HashSet<string>();
         private bool hasTransitioned = false;
 
