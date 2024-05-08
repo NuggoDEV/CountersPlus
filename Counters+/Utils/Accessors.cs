@@ -1,4 +1,5 @@
-﻿using HMUI;
+﻿using BeatSaber.GameSettings;
+using HMUI;
 using IPA.Utilities;
 using System.Collections.Generic;
 using TMPro;
@@ -22,7 +23,6 @@ namespace CountersPlus.Utils
         #region Counters+ UI
         public static FieldAccessor<GameScenesManager, HashSet<string>>.Accessor GSMPersistentScenes = FieldAccessor<GameScenesManager, HashSet<string>>.GetAccessor("_neverUnloadScenes");
         public static FieldAccessor<MenuTransitionsHelper, TutorialScenesTransitionSetupDataSO>.Accessor MTHTutorialScenesSetup = FieldAccessor<MenuTransitionsHelper, TutorialScenesTransitionSetupDataSO>.GetAccessor("_tutorialScenesTransitionSetupData");
-        public static FieldAccessor<SettingsFlowCoordinator, MainSettingsModelSO>.Accessor SFCMainSettingsModel = FieldAccessor<SettingsFlowCoordinator, MainSettingsModelSO>.GetAccessor("_mainSettingsModel");
         #endregion
 
         public static FieldAccessor<ScoreUIController, TextMeshProUGUI>.Accessor ScoreUIText = FieldAccessor<ScoreUIController, TextMeshProUGUI>.GetAccessor("_scoreText");
