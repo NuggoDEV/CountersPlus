@@ -9,7 +9,7 @@ using System.Linq;
 using UnityEngine;
 using VRUIControls;
 using Zenject;
-using BeatSaber.GameSettings;
+using BeatSaber.Settings;
 using static CountersPlus.Utils.Accessors;
 
 namespace CountersPlus.UI.FlowCoordinators
@@ -34,7 +34,7 @@ namespace CountersPlus.UI.FlowCoordinators
         [Inject] private CountersPlusBlankViewController blank;
         [Inject] private CountersPlusMainScreenNavigationController mainScreenNavigation;
         [Inject] private CountersPlusSettingSectionSelectionViewController settingsSelection;
-        [Inject] private GraphicSettingsHandler graphicSettingsHandler;
+        [Inject] private SettingsManager settingsManager;
         [Inject] private SongPreviewPlayer songPreviewPlayer;
 
         private HashSet<string> persistentScenes = new HashSet<string>();
@@ -107,7 +107,7 @@ namespace CountersPlus.UI.FlowCoordinators
                 // Gotta do some jank to re-activate the Root Container
                 menuEnvironmentManager.transform.root.gameObject.SetActive(true);
 
-                if (graphicSettingsHandler.instance.customPreset.screenDisplacementEffects)
+                if (settingsManager.settings.quality.screenDisplacementEffects)
                 {
                     // Disable menu shockwave to forget about rendering order problems
                     menuShockwave.gameObject.SetActive(false);
@@ -179,7 +179,7 @@ namespace CountersPlus.UI.FlowCoordinators
             vrInputModule.gameObject.SetActive(true);
 
             // This took a long time to figure out.
-            if (graphicSettingsHandler.instance.customPreset.screenDisplacementEffects)
+            if (settingsManager.settings.quality.screenDisplacementEffects)
             {
                 menuShockwave.gameObject.SetActive(true);
             }
