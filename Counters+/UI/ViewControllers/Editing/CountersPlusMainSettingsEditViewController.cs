@@ -17,7 +17,7 @@ namespace CountersPlus.UI.ViewControllers.Editing
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
-            if (firstActivation) BSMLParser.instance.Parse(SettingsBase, gameObject, mainConfig);
+            if (firstActivation) BSMLParser.Instance.Parse(SettingsBase, gameObject, mainConfig);
             mainConfig.OnConfigChanged += MainConfig_OnConfigChanged;
         }
 

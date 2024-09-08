@@ -49,7 +49,7 @@ namespace CountersPlus.UI.ViewControllers
 
         public void RefreshData()
         {
-            data.data.Clear();
+            data.Data.Clear();
             for (int i = -1; i < hudConfig.OtherCanvasSettings.Count; i++)
             {
                 HUDCanvas settings = canvasUtility.GetCanvasSettingsFromID(i);
@@ -57,21 +57,21 @@ namespace CountersPlus.UI.ViewControllers
                 var info = new CustomListTableData.CustomCellInfo(
                     settings?.Name ?? "Unknown",
                     $"{countersUsingCanvas} counter(s) use this Canvas.", Utilities.LoadSpriteFromTexture(Texture2D.blackTexture));
-                data.data.Add(info);
+                data.Data.Add(info);
             }
-            data.tableView.ReloadData();
+            data.TableView.ReloadData();
         }
 
         public void CreateNewCanvasDialog()
         {
             flowCoordinator.Value.SetRightViewController(null);
             DeactivateModals();
-            newCanvasKeyboard.modalView.Show(true);
+            newCanvasKeyboard.ModalView.Show(true);
         }
 
         public void DeactivateModals() => parserParams.EmitEvent("on-deactivate");
 
-        public void ClearSelection() => data.tableView.ClearSelection();
+        public void ClearSelection() => data.TableView.ClearSelection();
 
         [UIAction("cell-selected")]
         private void CellSelected (TableView view, int idx)

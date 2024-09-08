@@ -5,6 +5,7 @@ using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.UI.ViewControllers.Editing;
 using CountersPlus.Utils;
 using HMUI;
+using IPA.Utilities;
 using Zenject;
 
 namespace CountersPlus.UI.SettingGroups
@@ -17,32 +18,29 @@ namespace CountersPlus.UI.SettingGroups
         public override CustomListTableData.CustomCellInfo CellInfoForIdx(int idx)
         {
             var model = flowCoordinator.Value.AllConfigModels[idx];
-            var customCellInfo = new CountersPlusListTableCell(idx, model.DisplayName);
-            
+            CountersPlusListTableCell customCellInfo = null; 
             if (model is CustomConfigModel customConfig)
             {
-                customCellInfo.text = customConfig.AttachedCustomCounter.Name;
                 if (customConfig.AttachedCustomCounter.BSML != null && !string.IsNullOrEmpty(customConfig.AttachedCustomCounter.BSML.Icon))
                 {
                     try
                     {
-                        customCellInfo.icon = ImagesUtility.LoadSpriteFromExternalAssemblyResources(
-                            customConfig.AttachedCustomCounter.CounterType.Assembly, customConfig.AttachedCustomCounter.BSML.Icon);
+                        customCellInfo = new CountersPlusListTableCell(idx, customConfig.AttachedCustomCounter.Name, null, ImagesUtility.LoadSpriteFromExternalAssemblyResources(
+                            customConfig.AttachedCustomCounter.CounterType.Assembly, customConfig.AttachedCustomCounter.BSML.Icon));
                     }
                     catch
                     {
-                        customCellInfo.icon = LoadSprite("Counters.Custom");
-                        customCellInfo.subtext = "\n<i>(Failed to load custom icon.)</i>";
+                        customCellInfo = new CountersPlusListTableCell(idx, customConfig.AttachedCustomCounter.Name,"\n<i>(Failed to load custom icon.)</i>", LoadSprite("Counters.Custom"));
                     }
                 }
                 else
                 {
-                    customCellInfo.icon = LoadSprite("Counters.Custom");
+                    customCellInfo = new CountersPlusListTableCell(idx, customConfig.AttachedCustomCounter.Name, null, LoadSprite("Counters.Custom"));
                 }
             }
             else
             {
-                customCellInfo.icon = LoadSprite($"Counters.{model.DisplayName}");
+                customCellInfo = new CountersPlusListTableCell(idx, model.DisplayName, null, LoadSprite($"Counters.{model.DisplayName}"));
             }
 
             return customCellInfo;
