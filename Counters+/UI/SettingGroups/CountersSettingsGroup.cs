@@ -5,7 +5,6 @@ using CountersPlus.UI.FlowCoordinators;
 using CountersPlus.UI.ViewControllers.Editing;
 using CountersPlus.Utils;
 using HMUI;
-using IPA.Utilities;
 using Zenject;
 
 namespace CountersPlus.UI.SettingGroups
@@ -18,32 +17,29 @@ namespace CountersPlus.UI.SettingGroups
         public override CustomListTableData.CustomCellInfo CellInfoForIdx(int idx)
         {
             var model = flowCoordinator.Value.AllConfigModels[idx];
-            CountersPlusListTableCell customCellInfo = null; 
             if (model is CustomConfigModel customConfig)
             {
                 if (customConfig.AttachedCustomCounter.BSML != null && !string.IsNullOrEmpty(customConfig.AttachedCustomCounter.BSML.Icon))
                 {
                     try
                     {
-                        customCellInfo = new CountersPlusListTableCell(idx, customConfig.AttachedCustomCounter.Name, null, ImagesUtility.LoadSpriteFromExternalAssemblyResources(
+                        return new CountersPlusListTableCell(idx, customConfig.AttachedCustomCounter.Name, null, ImagesUtility.LoadSpriteFromExternalAssemblyResources(
                             customConfig.AttachedCustomCounter.CounterType.Assembly, customConfig.AttachedCustomCounter.BSML.Icon));
                     }
                     catch
                     {
-                        customCellInfo = new CountersPlusListTableCell(idx, customConfig.AttachedCustomCounter.Name,"\n<i>(Failed to load custom icon.)</i>", LoadSprite("Counters.Custom"));
+                        return new CountersPlusListTableCell(idx, customConfig.AttachedCustomCounter.Name,"\n<i>(Failed to load custom icon.)</i>", LoadSprite("Counters.Custom"));
                     }
                 }
                 else
                 {
-                    customCellInfo = new CountersPlusListTableCell(idx, customConfig.AttachedCustomCounter.Name, null, LoadSprite("Counters.Custom"));
+                    return new CountersPlusListTableCell(idx, customConfig.AttachedCustomCounter.Name, null, LoadSprite("Counters.Custom"));
                 }
             }
             else
             {
-                customCellInfo = new CountersPlusListTableCell(idx, model.DisplayName, null, LoadSprite($"Counters.{model.DisplayName}"));
+                return new CountersPlusListTableCell(idx, model.DisplayName, null, LoadSprite($"Counters.{model.DisplayName}"));
             }
-
-            return customCellInfo;
         }
 
         public override int NumberOfCells() => flowCoordinator.Value.AllConfigModels.Count;
