@@ -13,7 +13,7 @@ namespace CountersPlus.UI
 
         [UIParams] private BSMLParserParams parserParams;
 
-        public CountersPlusListTableCell(int idx, string text, Sprite icon = null) : base(text, null, icon)
+        public CountersPlusListTableCell(int idx, string text, string subtext, Sprite icon = null) : base(text, subtext, icon)
         {
             CellIdx = idx;
         }
@@ -22,10 +22,10 @@ namespace CountersPlus.UI
         private void Parsed()
         {
             var coverImages = parserParams.GetObjectsWithTag("coverImage").Select(x => x.GetComponent<ImageView>());
-            foreach (var image in coverImages) image.sprite = icon;
+            foreach (var image in coverImages) image.sprite = Icon;
 
             var infoTexts = parserParams.GetObjectsWithTag("infoText").Select(x => x.GetComponent<CurvedTextMeshPro>());
-            foreach (var infoText in infoTexts) infoText.text = text;
+            foreach (var infoText in infoTexts) infoText.text = Text;
         }
     }
 }

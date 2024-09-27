@@ -29,7 +29,7 @@ namespace CountersPlus.UI.ViewControllers
         {
             base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
 
-            scrollView = tableList.tableView.GetField<ScrollView, TableView>("_scrollView");
+            scrollView = tableList.TableView.GetField<ScrollView, TableView>("_scrollView");
             scrollView.scrollPositionChangedEvent += ScrollView_scrollPositionChangedEvent;
 
             HandleCellSelectedEvent(null, (selectedGroup != null) ? loadedSettingsGroups.IndexOf(selectedGroup) : 0);
@@ -76,21 +76,21 @@ namespace CountersPlus.UI.ViewControllers
 
             selectedGroup.OnEnable();
 
-            tableList.data.Clear();
+            tableList.Data.Clear();
 
-            tableList.cellSize = selectedGroup.GetSize();
+            tableList.CellSizeValue = selectedGroup.GetSize();
 
             CustomListTableData.CustomCellInfo[] items = new CustomListTableData.CustomCellInfo[selectedGroup.NumberOfCells()];
             for (var i = 0; i < selectedGroup.NumberOfCells(); i++)
             {
                 items[i] = selectedGroup.CellInfoForIdx(i);
             }
-            tableList.data = items;
+            tableList.Data = items;
 
-            tableList.tableView.ReloadData();
+            tableList.TableView.ReloadData();
 
-            tableList.tableView.ScrollToCellWithIdx(0, TableView.ScrollPositionType.Beginning, false);
-            tableList.tableView.SelectCellWithIdx(selectedGroup.CellToSelect(), false);
+            tableList.TableView.ScrollToCellWithIdx(0, TableView.ScrollPositionType.Beginning, false);
+            tableList.TableView.SelectCellWithIdx(selectedGroup.CellToSelect(), false);
 
             ScrollView_scrollPositionChangedEvent(0f);
         }

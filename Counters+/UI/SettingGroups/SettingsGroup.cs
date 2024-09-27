@@ -13,7 +13,7 @@ namespace CountersPlus.UI.SettingGroups
         public abstract int NumberOfCells();
 
         public virtual CustomListTableData.CustomCellInfo CellInfoForIdx(int idx)
-            => new CountersPlusListTableCell(idx, "Unimplemented", LoadSprite("MainSettings"));
+            => new CountersPlusListTableCell(idx, "Unimplemented", null, LoadSprite("MainSettings"));
 
         public abstract void OnCellSelect(TableView view, int idx);
 

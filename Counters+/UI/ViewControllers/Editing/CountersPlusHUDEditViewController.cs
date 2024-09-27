@@ -39,12 +39,12 @@ namespace CountersPlus.UI.ViewControllers.Editing
                 currentlyEditing.OnCanvasSettingsApply -= CurrentlyEditing_OnCanvasSettingsApply;
             }
             ClearScreen();
-            var param = BSMLParser.instance.Parse(SettingsBase, gameObject, settings);
+            var param = BSMLParser.Instance.Parse(SettingsBase, gameObject, settings);
             currentlyEditing = settings;
             currentlyEditing.OnCanvasSettingsChanged += CurrentlyEditing_OnCanvasSettingsChanged;
             currentlyEditing.OnCanvasSettingsApply += CurrentlyEditing_OnCanvasSettingsApply;
             StringSetting nameFieldSetting = param.GetObjectsWithTag("name-field").First().GetComponent<StringSetting>();
-            nameFieldSetting.interactable = !(currentlyEditing?.IsMainCanvas ?? true);
+            nameFieldSetting.Interactable = !(currentlyEditing?.IsMainCanvas ?? true);
         }
 
         private void CurrentlyEditing_OnCanvasSettingsApply()

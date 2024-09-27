@@ -9,7 +9,6 @@ using System.Linq;
 using UnityEngine;
 using VRUIControls;
 using Zenject;
-using BeatSaber.Settings;
 using static CountersPlus.Utils.Accessors;
 
 namespace CountersPlus.UI.FlowCoordinators
