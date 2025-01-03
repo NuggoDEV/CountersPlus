@@ -56,6 +56,9 @@ namespace CountersPlus.UI.FlowCoordinators
             ProvideInitialViewControllers(mainScreenNavigation, credits, null, settingsSelection);
 
             RefreshAllMockCounters();
+
+            // temp fix for menu env showing in settings
+            GameObject.Find("RootContainer/Wrapper/MenuEnvironmentManager/DefaultMenuEnvironment").SetActive(false);
         }
 
         public void DoSceneTransition(Action callback = null)

@@ -84,21 +84,21 @@ namespace CountersPlus.Counters
                         cutCountForHand[1]++;
                         cutCountForHand[2]++;
                         break;
-                    case NoteData.ScoringType.SliderHead when Settings.IncludeArcs:
+                    case NoteData.ScoringType.ArcHead when Settings.IncludeArcs:
                         totalScoresForHand[0] += beforeCut;
                         totalScoresForHand[2] += cutDistance;
 
                         cutCountForHand[0]++;
                         cutCountForHand[2]++;
                         break;
-                    case NoteData.ScoringType.SliderTail when Settings.IncludeArcs:
+                    case NoteData.ScoringType.ArcTail when Settings.IncludeArcs:
                         totalScoresForHand[1] += afterCut;
                         totalScoresForHand[2] += cutDistance;
 
                         cutCountForHand[1]++;
                         cutCountForHand[2]++;
                         break;
-                    case NoteData.ScoringType.BurstSliderHead when Settings.IncludeChains:
+                    case NoteData.ScoringType.ChainHead when Settings.IncludeChains:
                         totalScoresForHand[0] += beforeCut;
                         totalScoresForHand[2] += cutDistance;
 
