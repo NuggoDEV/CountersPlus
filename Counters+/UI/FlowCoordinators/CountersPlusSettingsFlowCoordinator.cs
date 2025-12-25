@@ -16,7 +16,7 @@ namespace CountersPlus.UI.FlowCoordinators
     public class CountersPlusSettingsFlowCoordinator : FlowCoordinator
     {
         public readonly Vector3 MAIN_SCREEN_OFFSET = new Vector3(0, -4, 0);
-        
+
 
         [Inject] public List<ConfigModel> AllConfigModels;
         [Inject] private CanvasUtility canvasUtility;
@@ -43,7 +43,7 @@ namespace CountersPlus.UI.FlowCoordinators
 
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
-            
+
             if (addedToHierarchy)
             {
                 showBackButton = true;
@@ -73,7 +73,11 @@ namespace CountersPlus.UI.FlowCoordinators
             persistentScenes.Add("MenuCore");
 
             var tutorialSceneSetup = MTHTutorialScenesSetup(ref menuTransitionsHelper); // Grab the scene transition setup data
-            tutorialSceneSetup.Init(playerDataModel.playerData.playerSpecificSettings);
+
+            // Provide the three arguments TutorialScenesTransitionSetupDataSO.Init expects:
+            var environmentsListModel = EnvironmentsListModel.CreateFromAddressables();
+            var gameplayAdditionalInformation = new GameplayAdditionalInformation();
+            tutorialSceneSetup.Init(playerDataModel.playerData.playerSpecificSettings, environmentsListModel, gameplayAdditionalInformation);
 
             menuEnvironmentManager.ShowEnvironmentType(MenuEnvironmentManager.MenuEnvironmentType.None);
 
